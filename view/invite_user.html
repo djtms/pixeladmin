@@ -1,0 +1,14 @@
+<form method="post">
+	<label>Adı Soyadı:</label>
+	<input type="text" name="displayname" value="<%displayname%>" />
+	<label>E-Posta:</label>
+	<input type="text" name="email" value="<%email%>" />
+	<label>Kullanıcı Tipi:</label>
+	<select name="user_type">
+		<option value="1">Konuk</option>
+		<option value="5">Yazar</option>
+		<option value="10">Yönetici</option>
+	</select>
+	
+	<button type="submit" name="action" value="inviteUser">Davet Gönder</button>
+</form>

@@ -1,0 +1,159 @@
+@CHARSET "UTF-8";
+
+body
+{
+	background: url(../images/menu_bg.png);
+	margin:0;
+}
+
+*
+{
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+}
+
+#centerer
+{
+	width:467px;
+	margin:100px auto;
+}
+
+#wholeContentsOuter
+{
+	width:377px;
+	min-height: 250px;
+	float:left;
+	padding:24px 44px 44px 44px;
+	border:solid 1px #bbb;
+	background:#FFF url(../images/content_bg.png) repeat-x bottom;
+}
+
+#errorText
+{
+	width:285px;
+	line-height:29px;
+	float:right;
+	margin:20px 10px 0 0;
+	min-height:29px;
+	text-align: right;
+	color:#fc5900;
+}
+
+label
+{
+	width:150px;
+	height:25px;
+	float:left;
+	clear:left;
+	display:block;
+	margin:20px 10px 3px 0;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	line-height:25px;
+	color:#828282;
+}
+
+h2{
+	font:24px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#666666;
+	width:100%;
+	float:left;
+}
+
+input[type=text],input[type=password]
+{
+	float:left;
+	margin:18px 0 0 0;
+	display:block;
+	background:#fff url(../images/inputBg_normal.png) repeat-x top;
+	height:17px;
+	width:205px;
+	border:1px #e2e2e2 solid;
+	outline:none;
+	padding:5px;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#828282;
+}
+
+input[type=text]:hover, textarea:hover, input[type=password]:hover
+{
+	border:1px #CCC solid;
+	background:#FFF url(../images/inputBg_hover.png) repeat-x;
+}
+input[type=text]:focus, textarea:focus, input[type=password]:focus 
+{
+	border:1px #999 solid;
+	background:#FFF url(../images/inputBg_hover.png) repeat-x;
+}
+
+input[type=submit],input[type=button],button,.button
+{
+	width:82px;
+	height:29px;
+	display:block;
+	background: url(../images/main_btn.png) no-repeat 0 0;
+	float:left;
+	clear:left;
+	text-align:center;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#828282;
+	margin:20px 0 20px 0;
+	border:none;
+	cursor: pointer;
+}
+
+
+
+input[type=submit]:hover,input[type=button]:hover,button:hover,.button:hover
+{
+	background: url(../images/main_btn.png) no-repeat 0 -29px;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#FFF;
+}
+
+.button,.button:hover,.button:active
+{
+	line-height: 29px;
+}
+
+input[type=radio],input[type=checkbox]
+{
+	width:20px;
+	height:25px;
+	float:left;
+	margin:0 5px 0 0;
+}
+
+textarea {
+	float:left;
+	clear:left;
+	display:block;
+	margin:0 20px 20px 0;
+	background:#FFF url(../images/inputBg_normal.png) repeat-x top;
+	border:1px #e2e2e2 solid;
+	outline:none;
+	padding:5px;
+	width:690px;
+	height:207px;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#828282;
+	width:690px;
+}
+
+textarea.medium
+{
+	height:100px;
+}
+
+select{
+	float:left;
+	clear:left;
+	display:block;
+	background:#FFF url(../images/inputBg_normal.png) repeat-x top;
+	border:1px #e2e2e2 solid;
+	outline:none;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#828282;
+	width:315px;
+	height:27px;
+}
+
+	

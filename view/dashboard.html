@@ -1,0 +1,48 @@
+<div id="dashboardContentsLeft">
+	<div class="container_345_Outer">
+		<div class="container_345_Header">Sistem Ayarları</div>
+		<ul class="container_345_Contents">
+			<li>
+				<span class="title">
+					<input id="btnMaintananceMode" type="checkbox" style="height:20px;" <%maintanenceChecked%> />
+					<span style="color:#fc5900;">Bakım Modu</span>
+				</span>
+				<p class="content">
+					&nbsp; &nbsp; &nbsp; Siteyi "Bakım Modu'na" alır.
+				</p>
+			</li>
+			<li>
+				<span class="title">
+					<input id="btnMultilanguageMode" type="checkbox" style="height:20px;" <%multilanguageChecked%> />
+					<span style="color:#fc5900;">Çoklu Dil</span>
+				</span>
+				<p class="content">
+					&nbsp; &nbsp; &nbsp; Sitenin "Çoklu Dil" özelliğini aktif eder.
+				</p>
+			</li>
+			<li>
+				<span class="title">
+					<input id="btnDebugMode" type="checkbox" style="height:20px;" <%debugmodeChecked%> />
+					<span style="color:#fc5900;">Hata Ayıklama Modu</span>
+				</span>
+				<p class="content">
+					&nbsp; &nbsp; &nbsp; Sitenizi "Hata Ayıklama Modu'na" alır.
+				</p>
+			</li>
+		</ul>
+	</div>
+	<div class="container_345_Outer">
+		<div class="container_345_Header">Mesajlar </div>
+		<ul class="container_345_Contents">
+			<%messagesHtml%>
+		</ul>
+	</div>
+</div><!-- #dashboardContentsLeft -->
+<div id="dashboardContentsRight">
+	<div class="container_345_Outer" style="float:right;">
+		<div class="container_345_Header">Aktiviteler</div>
+		<ul class="container_345_Contents">
+			<%logsHtml%>
+		</ul>
+	</div>
+</div><!-- #dashboardContentsRight -->

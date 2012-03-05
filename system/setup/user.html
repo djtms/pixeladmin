@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>AdminFramework - Configuration</title>
+		<link rel="stylesheet" href="css/style.css" />
+		
+		<script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
+		<script type="text/javascript" src="js/SHA1.js"></script>
+		<script type="text/javascript" src="js/validate.js"></script>
+		<script type="text/javascript" src="js/user.js"></script>
+	</head>
+	<body>
+		<div id="centerer">
+			<div id="wholeContentsOuter">
+				<form method="post" onsubmit="return checkForm();">
+					<input type="hidden" name="action" value="createSuperUser" />
+					<input type="hidden" name="password" value="" />
+					<label style="margin-top:0;">MVC Etkin</label>
+					<input type="checkbox" name="use_mvc" value="use" checked="checked" style="margin:0 !important;" />
+					<label>Site Başlığı:</label><input type="text" name="siteTitle" value="" />
+					<label>Kullanıcı Adı:</label><input type="text" name="username" value="" />
+					<label>Parola:</label><input id="password" type="password"  value="" />
+					<label>Parola (Tekrar):</label><input id="password_again" type="password" value="" />
+					<label>Mail Adresi:</label><input id="email" type="text" name="email" value="" />
+					<input type="submit" value="Kaydet" style="float:right;" />
+					<div id="errorText"><%errorText%></div>
+				</form>
+			</div><!-- wholeContentsOuter -->
+		</div><!-- centerer -->
+	</body>
+</html>

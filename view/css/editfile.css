@@ -1,0 +1,153 @@
+@CHARSET "UTF-8";
+
+.editFileOuter label
+{
+	width:317px;
+	height:25px;
+	float:left;
+	clear:left;
+	display:block;
+	margin:0 10px 3px 0;
+	margin-top:10px;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	line-height:25px;
+	color:#828282;
+}
+
+.editFileOuter input[type=text],.editFileOuter input[type=password]
+{
+	float:left;
+	clear:left;
+	display:block;
+	background:#fff url(../images/fileeditor/inputBg_normal.png) repeat-x top;
+	height:17px;
+	width:305px;
+	border:1px #e2e2e2 solid;
+	outline:none;
+	padding:5px;
+	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	color:#828282;
+}
+
+.editFileOuter input[type=text]:hover, .editFileOuter textarea:hover, .editFileOuter input[type=password]:hover
+{
+	border:1px #CCC solid;
+	background:#FFF url(../images/fileeditor/inputBg_hover.png) repeat-x;
+}
+
+.editFileOuter input[type=text]:focus, .editFileOuter textarea:focus, .editFileOuter input[type=password]:focus 
+{
+	border:1px #999 solid;
+	background:#FFF url(../images/fileeditor/inputBg_hover.png) repeat-x;
+}
+
+.editFileOuter
+{
+	width:100%;
+	height:100%;
+	position:fixed;
+	left:0;
+	top:0;
+	z-index:1000;
+}
+
+.editFileBackHider
+{
+	width:100%;
+	height:100%;
+	position:fixed;
+	left:0;
+	top:0;
+	background: #000;
+	opacity:0;
+}
+
+.editFileContentsOuter
+{
+	width:760px;
+	background: #fff;
+	position:absolute;
+	padding:20px;
+	left:200px;
+	top:100px;
+	opacity:0;
+}
+
+.fileThumbArea
+{
+	width:390px;
+	height:100%;
+	float:left;
+}
+
+.fileThumbOuter
+{
+	width:390px;
+	height:300px;
+	float:left;
+	position:relative;
+	overflow: hidden;
+	border:solid 1px #dcdcdc;
+	background: #f8f8f8;
+}
+
+.lookAtFile
+{
+	width:67px;
+	height:71px;
+	display:block;
+	position:absolute;
+	left:165px;
+	top:100px;
+	cursor:pointer;
+	background: url(../images/fileeditor/magnifyingGlass.jpg) no-repeat left top;
+}
+
+.btnChangeLogo
+{
+	margin: 20px 0 0 150px !important;
+}
+
+.btnCancelLogo
+{
+	float:left; 
+	clear:left;
+	margin:10px 160px !important;
+}
+
+.fileInfosOuter
+{
+	width:317px;
+	float:right;
+	position:relative;
+}
+
+.btnSave, .btnCancel
+{
+	float:right !important;
+	clear:none !important;
+	margin:30px 0 0 10px !important;
+}
+
+.loader
+{
+	width:29px !important;
+	height:29px !important;
+	float:right !important;
+	margin:30px 0 0 10px !important;
+	display:none;
+}
+
+.resultText
+{
+	position:absolute;
+	right:184px;
+	top:422px;
+	display:block;
+	width:450px;
+	height:29px;
+	font:12px Arial;
+	color:#f00;
+	text-align:right;
+	line-height: 29px;
+}

@@ -1,0 +1,67 @@
+.datePickerOuter
+{
+	width:210px !important;
+	height:20px !important;
+	float:left !important;
+	padding:0 !important;
+	margin:0;
+}
+
+.dateInputsList
+{
+	width:100% !important;
+	margin:0 !important;
+	padding:0 !important;
+	float:left !important;
+	list-style:none !important;
+}
+
+.dateInputsList li
+{
+	float:left !important;
+	diplay:block !important;
+	clear:none !important;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.dateInputsList select
+{
+	float:left !important;
+	margin:2px 0 0 0 !important;
+	border:1px #e2e2e2 solid;
+}
+
+.year
+{
+	width:60px !important;
+}
+
+.month
+{
+	width:90px !important;
+}
+
+.day
+{
+	width:40px !important;
+}
+
+.yearLi
+{
+	width:60px !important;
+	float:left !important;
+}
+
+.monthLi
+{
+	width:90px !important;
+	margin:0 5px !important;
+	float:left !important;
+}
+
+.dayLi
+{
+	width:40px !important;
+	float:left !important;
+}

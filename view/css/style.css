@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+@IMPORT url("defaults.css");
+
+body
+{
+	background: #222;
+	text-align: center;
+	color:#fff;
+}

@@ -1,0 +1,53 @@
+@CHARSET "UTF-8";
+
+.fileTree
+{
+	float:left;
+	list-style: none;
+	margin:0;
+	padding:0;
+}
+
+.fileTree .directory
+{
+	float:left;
+	clear:both;
+	padding:0 0 0 12px;
+	cursor:pointer;
+	background: url(../images/fileeditor/directory_open.png) no-repeat -4px top;
+}
+
+.fileTree .directory.collapsed
+{
+	height:25px !important;
+	overflow:hidden;
+	background: url(../images/fileeditor/directory_close.png) no-repeat -4px top;
+}
+
+.fileTree .directory.expanded
+{
+	background: url(../images/fileeditor/directory_open.png) no-repeat -4px top;
+}
+
+.fileTree a
+{
+	margin:0 0 8px 0;
+	width:100%;
+	height:17px;
+	float:left;
+	font:13px Arial;
+	line-height:17px;
+	color:#999;
+	cursor: pointer;
+}
+
+.fileTree a.active
+{
+	font-weight:bold;
+	color:#333;
+}
+
+.fileTree .single
+{
+	background-image: none !important;
+}

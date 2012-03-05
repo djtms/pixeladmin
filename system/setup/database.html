@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>AdminFramework - Configuration</title>
+		<link rel="stylesheet" href="css/style.css" />
+		
+		<script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
+		<script type="text/javascript" src="js/master.js"></script>
+	</head>
+	<body>
+		<div id="centerer">
+			<div id="wholeContentsOuter">
+				<form method="post">
+					<input type="hidden" name="action" value="checkForDB" />
+					<label>Database Adı:</label><input type="text" name="dbname" value="db" />
+					<label>Kullanıcı Adı:</label><input type="text" name="dbuser" value="root" />
+					<label>Parola:</label><input type="text" name="dbpass" />
+					<label>Database Host:</label><input type="text" name="dbhost" value="localhost" />
+					<label>Tablo Öneki:</label><input type="text" name="prefix" value="pa_" />
+					<input type="submit" value="Kaydet" style="float:right;" />
+					<div id="errorText"><%errorText%></div>
+				</form>
+			</div><!-- wholeContentsOuter -->
+		</div><!-- centerer -->
+	</body>
+</html>
