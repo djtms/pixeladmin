@@ -46,14 +46,18 @@ function I18nStart()
 		var languageTabs = '<div id="i18nLanguageOuter">';
 		
 		languageTabs += '<div id="i18nButtonsOuter">';
+		
 		for(var i=0; i<languageCount; i++)
 		{
-			var isCurrentLanguage = availableLanguages[i].abbreviation == activeLanguage ? true : false;
+			var isCurrentLanguage = availableLanguages[i].locale == activeLanguage ? true : false;
 			var _attrClass = ' class="' +(isCurrentLanguage ? 'activeLanguage' : "") + ' i18nLanguage"';
-			var _attrAbbreviation = ' abbreviation="' + availableLanguages[i].abbreviation + '" ';
-			var _attrTitle = ' title="' + availableLanguages[i].name + '" ';
-			var text = (isCurrentLanguage ? availableLanguages[i].name : availableLanguages[i].abbreviation);
-			languageTabs += "<span " + _attrClass + _attrAbbreviation + _attrTitle + " >" + text + "</span>";
+			var _attrLocale = ' locale="' + availableLanguages[i].locale + '" ';
+			var _attrLanguageAbbr = ' language_abbr="' + availableLanguages[i].language_abbr + '" ';
+			var _attrTitle = ' title="' + availableLanguages[i].language_name + '" ';
+			var _attrCountryAbbr = ' country_abbr="' + availableLanguages[i].country_abbr + '" ';
+			var _attrCountryName = ' country_name="' + availableLanguages[i].country_name + '" ';
+			var text = (isCurrentLanguage ? availableLanguages[i].language_name : availableLanguages[i].language_abbr);
+			languageTabs += "<span " + _attrClass + _attrLocale + _attrLanguageAbbr +  _attrTitle + _attrCountryAbbr + _attrCountryName + " >" + text + "</span>";
 		}
 		languageTabs += '</div>';
 		languageTabs += '<img id="i18nLoader" src="' + VIEW_URL + '/images/loader.gif" />';
@@ -68,12 +72,12 @@ function I18nStart()
 	
 	$(".i18nLanguage").click(function(){
 		
-		requestedLanguage = $(this).attr("abbreviation");
-		activeLanguage = $(".activeLanguage").attr("abbreviation");
+		requestedLanguage = $(this).attr("locale");
+		activeLanguage = $(".activeLanguage").attr("locale");
 		
 		if((requestedLanguage != activeLanguage) && !isI18nSencronised)
 		{
-			messageBox("Kaydedilmeyen Veriler!", "\"" + $("span[abbreviation=" + activeLanguage + "]").html() + "\" içerik henüz kaydedilmedi, bu sayfadan ayrılmadan önce bilgilerinizin kaybolmaması için Lütfen Kaydedin.",messageType.WARNING,[{"name":"Kaydet","click":ajaxSaveI18n},{"name":"Atla","click":selectI18n}]);
+			messageBox("Kaydedilmeyen Veriler!", "\"" + $("span[locale=" + activeLanguage + "]").html() + "\" içerik henüz kaydedilmedi, bu sayfadan ayrılmadan önce bilgilerinizin kaybolmaması için Lütfen Kaydedin.",messageType.WARNING,[{"name":"Kaydet","click":ajaxSaveI18n},{"name":"Atla","click":selectI18n}]);
 		}
 		else
 			selectI18n();
@@ -170,10 +174,10 @@ function updateStyles()
 {
 	i18nCodesArray = new Array();
 	
-	var t1 = "span[abbreviation=" + activeLanguage + "]";
-	var t2 = "span[abbreviation=" + requestedLanguage + "]";
+	var t1 = "span[locale=" + activeLanguage + "]";
+	var t2 = "span[locale=" + requestedLanguage + "]";
 	
-	$(t1).html($(t1).attr("abbreviation"));
+	$(t1).html($(t1).attr("language_abbr"));
 	$(t1).removeClass("activeLanguage");
 	$(t2).html($(t2).attr("title"));
 	$(t2).addClass("activeLanguage");

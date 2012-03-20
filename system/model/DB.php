@@ -120,7 +120,12 @@ class DB
 			}
 			
 			if($sth->execute())
-				return $this->dbh->lastInsertId();
+			{
+				if($id = $this->dbh->lastInsertId())
+					return $id;
+				else
+					return true;
+			}
 			else
 				return false;
 		}

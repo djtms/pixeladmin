@@ -6,20 +6,21 @@ if(in_admin)
 	
 	global $master;
 	global $MODEL;
-	global $defaultLanguage;
 	
-	$defaultLanguage = $MODEL->LANGUAGE->getDefaultLanguage();
-	$MODEL->I18N->language = $defaultLanguage;
-	$master->setGlobal("defaultLanguage", $defaultLanguage);
-	$master->setGlobal("availableLanguages",$MODEL->LANGUAGE->listLanguages());	
+	$MODEL->I18N->language = $MODEL->LANGUAGE->getDefaultLanguage();
+	$master->setGlobal("defaultLanguage", $MODEL->I18N->language);
+	$master->setGlobal("availableLanguages",$MODEL->LANGUAGE->listActiveLanguages());	
 }
 else
 {
 	if(isset($_GET["language"]) && ($_GET["language"] != ""))
 	{
 		setLanguage($_GET["language"]);
-		header("Location:" .$_GET["back"] );
-		exit;
+		if(isset($_GET["back"]))
+		{
+			header("Location:" . $_GET["back"]);
+			exit;
+		}
 	}
 }
 
@@ -88,7 +89,9 @@ function saveI18n()
 function setLanguage($language)
 {
 	global $MODEL;
+	global $DB;
 	
+	$DB->execute("SET LC_TIME_NAMES=?", array($language));
 	$MODEL->I18N->language = $language;
 	$_SESSION["language"] = $language;
 }
@@ -118,7 +121,7 @@ function generateLanguageLinks($targetPage = null)
 	
 	foreach($languages as $l)
 	{
-		$languageLinks .= '<a href="index.php?language=' . $l->abbreviation . '&back=' . $targetPage . '" ' . ($currentLanguage == $l->abbreviation ? ' class="selected" ' : "") . '>' . $l->name . '</a>';
+		$languageLinks .= '<a href="index.php?language=' . $l->locale . '&back=' . $targetPage . '" ' . ($currentLanguage == $l->locale ? ' class="selected" ' : "") . '>' . $l->name . '</a>';
 	}
 	
 	return $languageLinks;

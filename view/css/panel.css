@@ -683,8 +683,22 @@ ul.cs3 li {
 
 .dataGridAddButton
 {
-	float:right; 
+	float:right;
+	clear:none; 
 	margin:0;
+}
+
+.dataGridOuter
+{
+	width: 100%;
+	float:left;
+	clear:both;
+}
+
+.dataGridTitle
+{
+	width:75% !important;
+	float:left;
 }
 
 .activation

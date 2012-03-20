@@ -1,4 +1,5 @@
 <?php 
+
 if($_POST["action"] == "Kaydet")
 {
 	if(saveGallery() && saveI18n() && set_option("sampleLogoId", $_POST["sampleLogoId"]) && set_option("sampleGalleryId", $_POST["sampleGalleryId"]))
@@ -8,7 +9,7 @@ if($_POST["action"] == "Kaydet")
 }
 
 ?>
-
+ 
 <form method="post">
 	<label>Logo</label>
 	<input type="file" name="sampleLogoId" fileid="<?php echo get_option("sampleLogoId"); ?>" />

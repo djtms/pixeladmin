@@ -19,6 +19,11 @@ if($MODEL->USER->getUserCount() <= 0)
 		set_option("SiteDebugMode","debugmode");
 		/**************************************************************************************************************/
 		
+		// Setup Default Language ////////////////////////////////////////////////////////////////////////////////////////
+		$MODEL->LANGUAGE->addLanguage("tr_TR");
+		$MODEL->LANGUAGE->setDefaultLanguage("tr_TR");
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		$use_mvc = ($_POST["use_mvc"] == "use") ? true : false;
 		
 		if(!$MODEL->USER->createFirstAdminUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]))

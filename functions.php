@@ -11,6 +11,7 @@ addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings"
 if(get_option("SiteMultilanguageMode") == "multilanguage")
 {
 	addSettingsMenu("Dil Seçenekleri", "Dil Seçenekleri", "languageoptions", "languages.php",10,USER_SUPER);
+	addPage("Dil Ekle", "settings", "edit_language", "edit_language.php");
 }
 
 addSettingsMenu("Geliştiriciler", "Geliştiriciler", "developers", "developers.php",1000,USER_GUEST);

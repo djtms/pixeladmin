@@ -25,99 +25,101 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 	}
 	
 	?>
-	<h2><?php echo $gridTitle; ?></h2>
-	<?php if($addDataLink != null){ ?>
-	<button class="dataGridAddButton" page="<?php echo $addDataLink; ?>">Yeni Ekle</button>
-	<?php }?>
-	<div class="itemsList">
-		<ul id="<?php echo $gridId; ?>"  <?php echo ($sortablekey != null ? ' class="sortableList" sort_action="sortDataGrid_' . $gridId . '" ' : '') ?>>
-			<?php
-			if(is_array($data) && sizeof($data) > 0)
-			{
-				preg_match_all("/\<\%([a-zA-Z0-9\.\_\-\=]+)\%\>/", $rowTitleQuery, $rowTitleColumnsMatches);
-				preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $editDataLinkQuery, $editDataColumnsMatches);
-				preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
-				
-				$index = 0;
-				foreach($data as $d)
+	<div class="dataGridOuter">
+		<h2 class="dataGridTitle"><?php echo $gridTitle; ?></h2>
+		<?php if($addDataLink != null){ ?>
+		<button class="dataGridAddButton" page="<?php echo $addDataLink; ?>">Yeni Ekle</button>
+		<?php }?>
+		<div class="itemsList">
+			<ul id="<?php echo $gridId; ?>"  <?php echo ($sortablekey != null ? ' class="sortableList" sort_action="sortDataGrid_' . $gridId . '" ' : '') ?>>
+				<?php
+				if(is_array($data) && sizeof($data) > 0)
 				{
-					$index++;
-					?>
-					<li class="item" <?php 
-					if($sortablekey != null)
+					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-\=]+)\%\>/", $rowTitleQuery, $rowTitleColumnsMatches);
+					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $editDataLinkQuery, $editDataColumnsMatches);
+					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
+					
+					$index = 0;
+					foreach($data as $d)
 					{
-						echo 'id="order_' . $d->{$sortablekey} . '"';
-					}
-					?>><label class="text"><?php
-							$rowTitle = $rowTitleQuery;
-							
-							for($i=0; $i<sizeof($rowTitleColumnsMatches[0]); $i++)
-							{
-								$search = $rowTitleColumnsMatches[0][$i];
-								$column = $rowTitleColumnsMatches[1][$i];
+						$index++;
+						?>
+						<li class="item" <?php 
+						if($sortablekey != null)
+						{
+							echo 'id="order_' . $d->{$sortablekey} . '"';
+						}
+						?>><label class="text"><?php
+								$rowTitle = $rowTitleQuery;
 								
-								if(preg_match("/=/", $column))
+								for($i=0; $i<sizeof($rowTitleColumnsMatches[0]); $i++)
 								{
-									$columnParts = explode("=", $column);
+									$search = $rowTitleColumnsMatches[0][$i];
+									$column = $rowTitleColumnsMatches[1][$i];
 									
-									if($columnParts[0] == "i18n")
+									if(preg_match("/=/", $column))
 									{
-										$columnData = getI18n($d->{$columnParts[1]});
+										$columnParts = explode("=", $column);
+										
+										if($columnParts[0] == "i18n")
+										{
+											$columnData = getI18n($d->{$columnParts[1]});
+										}
 									}
-								}
-								else
-									$columnData = $d->{$column};
-								
-								$rowTitle = preg_replace("/" . preg_quote($search) . "/", $columnData, $rowTitle);
-							}
-							
-							echo $rowTitle;
-						?></label>
-						<div class="rowEditButtonsOuter">
-							<a class="crossBtn" href="<?php 
-								$deleteLink = $deleteDataLinkQuery;
-
-								for($i=0; $i<sizeof($deleteDataColumnsMatches[0]); $i++)
-								{
-									$search = $deleteDataColumnsMatches[0][$i];
-									$column = $deleteDataColumnsMatches[1][$i];
-									$value = $search == "<%_index_%>" ? $index : $d->{$column};
+									else
+										$columnData = $d->{$column};
 									
-									$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
+									$rowTitle = preg_replace("/" . preg_quote($search) . "/", $columnData, $rowTitle);
 								}
 								
-								echo $deleteLink;
-								
-							?>" onclick="return false;"></a>
-							<a href="<?php 
-								$editLink = $editDataLinkQuery;
-						
-								for($i=0; $i<sizeof($editDataColumnsMatches[0]); $i++)
-								{
-									$search = $editDataColumnsMatches[0][$i];
-									$column = $editDataColumnsMatches[1][$i];
-									$value = $search == "<%_index_%>" ? $index : $d->{$column};
+								echo $rowTitle;
+							?></label>
+							<div class="rowEditButtonsOuter">
+								<a class="crossBtn" href="<?php 
+									$deleteLink = $deleteDataLinkQuery;
+	
+									for($i=0; $i<sizeof($deleteDataColumnsMatches[0]); $i++)
+									{
+										$search = $deleteDataColumnsMatches[0][$i];
+										$column = $deleteDataColumnsMatches[1][$i];
+										$value = $search == "<%_index_%>" ? $index : $d->{$column};
+										
+										$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
+									}
 									
-									$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
-								}
-								
-								echo $editLink;
+									echo $deleteLink;
+									
+								?>" onclick="return false;"></a>
+								<a href="<?php 
+									$editLink = $editDataLinkQuery;
 							
-							?>" class="editBtn"></a>
-						</div>
-					</li>
+									for($i=0; $i<sizeof($editDataColumnsMatches[0]); $i++)
+									{
+										$search = $editDataColumnsMatches[0][$i];
+										$column = $editDataColumnsMatches[1][$i];
+										$value = $search == "<%_index_%>" ? $index : $d->{$column};
+										
+										$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
+									}
+									
+									echo $editLink;
+								
+								?>" class="editBtn"></a>
+							</div>
+						</li>
+						<?php 
+					}
+				}
+				else
+				{
+					?>
+					<li class="item"><label class="text" style="color:#e00 !important;">Kayıt Bulunamadı!</label></li>
 					<?php 
 				}
-			}
-			else
-			{
 				?>
-				<li class="item"><label class="text" style="color:#e00 !important;">Kayıt Bulunamadı!</label></li>
-				<?php 
-			}
-			?>
-		</ul>
-	</div><!--itemsList-->
+			</ul>
+		</div><!--itemsList-->
+	</div>
 	<?php 
 }
 

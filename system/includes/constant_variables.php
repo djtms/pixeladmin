@@ -13,7 +13,6 @@ $currenturl = $_SERVER["REQUEST_URI"];
 $currentpage = "admin.php?page=" . $_GET["page"];
 $ajax_functions = array();
 $ajaxurl = "$currentpage&type_of_post=ajax";
-$defaultLanguage = "";
 $default_menu_icon = "view/images/icons/default_icon.png";
 $allowed_dirs_in_maintanance_mode = array("mobile"); // "Maintanance Mode" dayken erişime izin verilecek dizinlerin listesi
 

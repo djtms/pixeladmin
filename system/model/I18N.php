@@ -7,7 +7,7 @@ class PA_I18N
 	public $language;
 	public $table;
 	
-	function PA_I18N($language = "tr")
+	function PA_I18N($language = "tr_TR")
 	{
 		global $DB;
 		$this->language = $language;
