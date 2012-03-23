@@ -7,7 +7,7 @@ define("USER_SUPER",100);
 $pa_menu_array = array(); // Menü özelliklerinin tutulduğu global değişken
 $register_module_function; // Herhangi bir Modülün aktivastonu esnasında çalıştırılması istenen fonsiyonu tutan değişken
 
-$admin_version = "BETA 0.6.3";
+$admin_version = "BETA 0.6.4";
 $track_wait_limit = 300; // Kullanıcı için açılan track'in kullanıcı browser'ı kapattığında veya internet bağlantısı kesildiğinde ne kadar süre daha açık kalacağını belirtir
 $currenturl = $_SERVER["REQUEST_URI"];
 $currentpage = "admin.php?page=" . $_GET["page"];
