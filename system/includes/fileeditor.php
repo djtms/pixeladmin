@@ -1,35 +1,35 @@
 <?php
 if(in_admin):
 
-$folder_image = $MODEL->DIRECTORY->selectSystemFileByFilename("folder");
-$exclamation_image = $MODEL->DIRECTORY->selectSystemFileByFilename("exclamation");
+$folder_image = $ADMIN->DIRECTORY->selectSystemFileByFilename("folder");
+$exclamation_image = $ADMIN->DIRECTORY->selectSystemFileByFilename("exclamation");
 
 setGlobal("folder_image", $folder_image);
 setGlobal("exclamation_image", $exclamation_image);
 
 function loadFileTree()
 {
-	global $MODEL;
-	if(isset($MODEL->DIRECTORY))
-		echo $MODEL->DIRECTORY->generateFileTreeHtmlByParentId(-1);
+	global $ADMIN;
+	if(isset($ADMIN->DIRECTORY))
+		echo $ADMIN->DIRECTORY->generateFileTreeHtmlByParentId(-1);
 }
 
 function listDirectoryTree()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$directory = $_POST['dir'];
 	 
 	if($uploadurl != $directory)
 	{
-		$parentDirectory =  $MODEL->DIRECTORY->selectDirectoryByDirectory(str_ireplace($uploadurl, "", $directory));
+		$parentDirectory =  $ADMIN->DIRECTORY->selectDirectoryByDirectory(str_ireplace($uploadurl, "", $directory));
 		$parent_id = $parentDirectory->directory_id;
 	}
 	else
 		$parent_id = -1;
 		
-	$files = $MODEL->DIRECTORY->listDirectoriesByParentId($parent_id);
+	$files = $ADMIN->DIRECTORY->listDirectoriesByParentId($parent_id);
 	
 	echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
 	foreach( $files as $file ) {
@@ -42,10 +42,10 @@ function listDirectoryTree()
 
 function listFavouritedDirectories()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
-	if($favs = $MODEL->DIRECTORY->listFavouritedDirectories())
+	if($favs = $ADMIN->DIRECTORY->listFavouritedDirectories())
 	{
 		foreach($favs as $f)
 		{
@@ -58,14 +58,14 @@ function listFavouritedDirectories()
 
 function setFavouriteStatus()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$directory = $_POST["dir"];
 	$status = $_POST["status"];
 	$directory = preg_replace("/" . preg_quote($uploadurl,"/") . "/", "",$directory);
 
-	if($MODEL->DIRECTORY->setDirectoryFavouriteStatus($directory,$status))
+	if($ADMIN->DIRECTORY->setDirectoryFavouriteStatus($directory,$status))
 		echo "succeed";
 	else
 		echo "error";
@@ -73,25 +73,25 @@ function setFavouriteStatus()
 
 function browseFiles()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$directory = $_POST["directory"];
 	 
 	if("" != $directory)
 	{
-		$parentDirectory =  $MODEL->DIRECTORY->selectDirectoryByDirectory(str_ireplace($uploadurl, "", $directory));
+		$parentDirectory =  $ADMIN->DIRECTORY->selectDirectoryByDirectory(str_ireplace($uploadurl, "", $directory));
 		$parent_id = $parentDirectory->directory_id;
 	}
 	else
 		$parent_id = -1;
 	
-	$return->directories = $MODEL->DIRECTORY->listDirectoriesByParentId($parent_id);
-	$return->files = $MODEL->DIRECTORY->listFilesByDirectory($directory);
+	$return->directories = $ADMIN->DIRECTORY->listDirectoriesByParentId($parent_id);
+	$return->files = $ADMIN->DIRECTORY->listFilesByDirectory($directory);
 	
 	foreach($return->files as &$f)
 	{
-		if(!$f->browser_thumb = $MODEL->DIRECTORY->getThumbUrl($f->file_id, 123, 87, false, true, "center top", "FFFFFF"))
+		if(!$f->browser_thumb = $ADMIN->DIRECTORY->getThumbUrl($f->file_id, 123, 87, false, true, "center top", "FFFFFF"))
 			$f->browser_thumb = "../upload/system/exclamation.jpg";
 	}
 	
@@ -100,12 +100,12 @@ function browseFiles()
 
 function checkDirectoryExists()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$directory = str_ireplace($uploadurl, "", $_POST["directory"]);
 	
-	if($MODEL->DIRECTORY->selectDirectoryByDirectory($directory))
+	if($ADMIN->DIRECTORY->selectDirectoryByDirectory($directory))
 	{
 		echo "exists";
 	}
@@ -117,20 +117,20 @@ function checkDirectoryExists()
 
 function createNewDirectory()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$directory = str_ireplace($uploadurl, "", $_POST["parent_directory"]);
 	
 	if("" != $directory)
 	{
-		$parentDirectory =  $MODEL->DIRECTORY->selectDirectoryByDirectory(str_ireplace($uploadurl, "", $directory));
+		$parentDirectory =  $ADMIN->DIRECTORY->selectDirectoryByDirectory(str_ireplace($uploadurl, "", $directory));
 		$parent_id = $parentDirectory->directory_id;
 	}
 	else
 		$parent_id = -1;
 		
-	if($MODEL->DIRECTORY->createDirectory("$directory{$_POST["dirname"]}/",$parent_id))
+	if($ADMIN->DIRECTORY->createDirectory("$directory{$_POST["dirname"]}/",$parent_id))
 		echo "created"; // bu yazıyı değiştirme
 	else
 		echo "error_happened"; // bu yazıyı değiştirme
@@ -139,37 +139,37 @@ function createNewDirectory()
 
 function selectFileInfo()
 {
-	global $MODEL;
+	global $ADMIN;
 
-	echo json_encode($MODEL->DIRECTORY->selectFileById($_POST["fileId"]));
+	echo json_encode($ADMIN->DIRECTORY->selectFileById($_POST["fileId"]));
 }
 
 function getBrowserThumb()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	echo $MODEL->DIRECTORY->getThumbUrl($_POST["fileId"], 123, 87, false, true, "center top", "FFFFFF");
+	echo $ADMIN->DIRECTORY->getThumbUrl($_POST["fileId"], 123, 87, false, true, "center top", "FFFFFF");
 }
 
 function getBrowserThumbInfo()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	echo json_encode($MODEL->DIRECTORY->getThumbInfo($_POST["fileId"], 123, 87, false, true, "center top", "FFFFFF"));
+	echo json_encode($ADMIN->DIRECTORY->getThumbInfo($_POST["fileId"], 123, 87, false, true, "center top", "FFFFFF"));
 }
 
 function getFileDetailThumb()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	echo $MODEL->DIRECTORY->getThumbUrl($_POST["fileId"], 390, 300, false, true, "center top", "FFFFFF");
+	echo $ADMIN->DIRECTORY->getThumbUrl($_POST["fileId"], 390, 300, false, true, "center top", "FFFFFF");
 }
 
 function deleteFile()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	if($MODEL->DIRECTORY->deleteFileByUrl($_POST["fileUrl"]))
+	if($ADMIN->DIRECTORY->deleteFileByUrl($_POST["fileUrl"]))
 		echo "deleted";
 	else
 		echo "error";	
@@ -177,7 +177,7 @@ function deleteFile()
 
 function deleteFilesAndDirectories()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$fileUrls = (object)json_decode($_POST["fileurls"]);
@@ -187,15 +187,15 @@ function deleteFilesAndDirectories()
 	{
 		if($f->id <= 0) // Dosya id'si -1 ise bu bir dizindir. bunu js ile belirliyoruz
 		{
-			if(!$MODEL->DIRECTORY->deleteDirectoryByDirectory($f->url))
+			if(!$ADMIN->DIRECTORY->deleteDirectoryByDirectory($f->url))
 				$error = true;
 		}
 		else 
 		{
-			if(!$MODEL->DIRECTORY->deleteFileByUrl($f->url))
+			if(!$ADMIN->DIRECTORY->deleteFileByUrl($f->url))
 				$error = true;
 			else
-				$MODEL->DIRECTORY->deleteFileThumbs($f->id);
+				$ADMIN->DIRECTORY->deleteFileThumbs($f->id);
 		}
 	}
 	
@@ -204,23 +204,23 @@ function deleteFilesAndDirectories()
 
 function updateFileInfo()
 {
-	global $MODEL;
+	global $ADMIN;
 	global $uploadurl;
 	
 	$fixedurl = preg_replace("/^" . preg_quote($uploadurl,"/") . "/", "", $_POST["url"]);
-	$checkedFileId = $MODEL->DIRECTORY->checkFileExists($fixedurl);
+	$checkedFileId = $ADMIN->DIRECTORY->checkFileExists($fixedurl);
 	
 	if(($checkedFileId > 0) && ($checkedFileId != $_POST["file_id"]))
 	{
 		echo json_encode(array("error"=>true,"message"=>"varolan bir dosya adı girdiniz, lütfen başka bir isim girin!"));
 	}
-	else if(!$MODEL->DIRECTORY->updateFileInfo($_POST["file_id"], $_POST["basename"], $_POST["filename"],$_POST["thumb_file_id"]))
+	else if(!$ADMIN->DIRECTORY->updateFileInfo($_POST["file_id"], $_POST["basename"], $_POST["filename"],$_POST["thumb_file_id"]))
 		echo json_encode(array("error"=>true,"message"=>"bir hata oluştu, lütfen tekrar deneyin!"));
 	else
 		echo json_encode(array("error"=>false,"message"=>"başarıyla kaydedildi!"));
 }
 
-switch($_POST["action"])
+switch($_POST["admin_action"])
 {
 	case("listDirectoryTree")			:	listDirectoryTree();			exit;
 	case("browseFiles")					:	browseFiles();					exit;

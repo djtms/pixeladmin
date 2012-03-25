@@ -5,7 +5,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 	// DataGrid sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
 	if(($sortablekey != null) && ($sortEvent != null))
 	{
-		if($_POST["action"] == "sortDataGrid_$gridId")
+		if($_POST["admin_action"] == "sortDataGrid_$gridId")
 		{
 			$fixed_array = array();
 			$orderList = $_POST["order"];
@@ -38,6 +38,9 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-\=]+)\%\>/", $rowTitleQuery, $rowTitleColumnsMatches);
 					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $editDataLinkQuery, $editDataColumnsMatches);
 					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
+					
+					$use_edit_button = true;//(($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
+					$use_cross_button = true; //(($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
 					
 					$index = 0;
 					foreach($data as $d)
@@ -74,38 +77,45 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 								
 								echo $rowTitle;
 							?></label>
-							<div class="rowEditButtonsOuter">
-								<a class="crossBtn" href="<?php 
-									$deleteLink = $deleteDataLinkQuery;
-	
-									for($i=0; $i<sizeof($deleteDataColumnsMatches[0]); $i++)
-									{
-										$search = $deleteDataColumnsMatches[0][$i];
-										$column = $deleteDataColumnsMatches[1][$i];
-										$value = $search == "<%_index_%>" ? $index : $d->{$column};
+							<?php if($use_edit_button || $use_cross_button){ ?>
+								<div class="rowEditButtonsOuter">
+									<?php if($use_cross_button){ ?>
+										<a class="crossBtn" href="<?php 
+											$deleteLink = $deleteDataLinkQuery;
+			
+											for($i=0; $i<sizeof($deleteDataColumnsMatches[0]); $i++)
+											{
+												$search = $deleteDataColumnsMatches[0][$i];
+												$column = $deleteDataColumnsMatches[1][$i];
+												$value = $search == "<%_index_%>" ? $index : $d->{$column};
+												
+												$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
+											}
+											
+											echo $deleteLink;
+											
+										?>" onclick="return false;"></a>
+									<?php }
+									
+									if($use_edit_button){ ?>
+										<a href="<?php 
+											$editLink = $editDataLinkQuery;
+									
+											for($i=0; $i<sizeof($editDataColumnsMatches[0]); $i++)
+											{
+												$search = $editDataColumnsMatches[0][$i];
+												$column = $editDataColumnsMatches[1][$i];
+												$value = $search == "<%_index_%>" ? $index : $d->{$column};
+												
+												$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
+											}
+											
+											echo $editLink;
 										
-										$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
-									}
-									
-									echo $deleteLink;
-									
-								?>" onclick="return false;"></a>
-								<a href="<?php 
-									$editLink = $editDataLinkQuery;
-							
-									for($i=0; $i<sizeof($editDataColumnsMatches[0]); $i++)
-									{
-										$search = $editDataColumnsMatches[0][$i];
-										$column = $editDataColumnsMatches[1][$i];
-										$value = $search == "<%_index_%>" ? $index : $d->{$column};
-										
-										$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
-									}
-									
-									echo $editLink;
-								
-								?>" class="editBtn"></a>
-							</div>
+										?>" class="editBtn"></a>
+									<?php } ?>
+								</div>
+							<?php } ?>
 						</li>
 						<?php 
 					}

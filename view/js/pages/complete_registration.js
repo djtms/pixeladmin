@@ -31,7 +31,7 @@ function checkForm()
 		$.ajax({
 			type:"post",
 			url:"complete_registration.php",
-			data:"action=checkusername&username=" + $("[name=username]").val(),
+			data:"admin_action=checkusername&username=" + $("[name=username]").val(),
 			dataType:"json",
 			async:false,
 			success:function(response)

@@ -2,28 +2,28 @@
 
 function validateName($name)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->VALIDATE->validateName($name);
+	return $ADMIN->VALIDATE->validateName($name);
 }
 
 function validateEmail($email)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->VALIDATE->validateEmail($email);
+	return $ADMIN->VALIDATE->validateEmail($email);
 }
 
 function validatePhone($phone)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->VALIDATE->validatePhone($phone);
+	return $ADMIN->VALIDATE->validatePhone($phone);
 }
 
 function validateFileFormat($filename, $formats = array("docx","doc","pdf","jpeg","jpg","png","gif"))
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->VALIDATE->validateFileFormat($filename,$formats);
+	return $ADMIN->VALIDATE->validateFileFormat($filename,$formats);
 }

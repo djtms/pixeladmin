@@ -12,7 +12,7 @@ function GalleryStart()
 		if((galleryId == undefined) || (galleryId==null) || (galleryId <= 0))
 		{
 			$.ajax({
-				data:"action=createTemporaryGallery",
+				data:"admin_action=createTemporaryGallery",
 				dataType:"json",
 				success:function(response){
 					galleryId = response.galleryId;
@@ -184,7 +184,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 				galleryObject.find(".lastAdded").each(function(){
 					var imageObject = $(this).find("img");
 					$.ajax({
-						data:"action=getBrowserThumb&fileId=" + imageObject.attr("fileId"),
+						data:"admin_action=getBrowserThumb&fileId=" + imageObject.attr("fileId"),
 						success:function(response){
 							imageObject.attr("src", response);
 						}
@@ -210,7 +210,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 	
 	// Galerinin varolan dosyalarını listele
 	$.ajax({
-		data:"action=listGalleryFiles&galleryId=" + galleryId,
+		data:"admin_action=listGalleryFiles&galleryId=" + galleryId,
 		dataType:"json",
 		success:function(response){
 			
@@ -269,7 +269,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 			galleryObject.find(".galleryItem").each(function(){
 				var imageObject = $(this).find("img");
 				$.ajax({
-					data:"action=getBrowserThumb&fileId=" + imageObject.attr("fileId"),
+					data:"admin_action=getBrowserThumb&fileId=" + imageObject.attr("fileId"),
 					success:function(response){
 						if((response == "") || (response == undefined) || (response == null))
 							imageObject.attr("src",exclamation_image);

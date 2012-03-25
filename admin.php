@@ -47,12 +47,6 @@ if(file_exists($page))
 		
 		$master->content = $modulesContent . ob_get_contents();
 	ob_end_clean();	
-	
-	/* Yapılan çağrının AJAX çağrısı olup olmadığını kontrol ediyoruz, bunun için "ajaxurl" ye atadığımız değişkeni kontrol ediyoruz */
-	if($_GET["type_of_post"] == "ajax")
-	{
-		executeAjaxCall($_POST["action"]);
-	}
 }	
 else
 {

@@ -59,7 +59,7 @@ function checkEmail()
 	{
 		$("#emailCheckLoader p").html("");
 		$.ajax({
-			data:"action=checkemail&email=" + email,
+			data:"admin_action=checkemail&email=" + email,
 			success:function(response){
 				$("#emailCheckLoader img").css("display","none");
 				try

@@ -24,7 +24,7 @@ function GuiStart()
 				var order = $(this).sortable("serialize");
 				
 				$.ajax({
-					data:"action=" + action + "&" + order
+					data:"admin_action=" + action + "&" + order
 				});
 			}
 		});

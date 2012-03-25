@@ -5,11 +5,11 @@ if(in_admin)
 	$_SESSION["i18nLanguage"] = isset($_POST["i18nLanguage"]) ? $_POST["i18nLanguage"] : $_SESSION["i18nLanguage"];
 	
 	global $master;
-	global $MODEL;
+	global $ADMIN;
 	
-	$MODEL->I18N->language = $MODEL->LANGUAGE->getDefaultLanguage();
-	$master->setGlobal("defaultLanguage", $MODEL->I18N->language);
-	$master->setGlobal("availableLanguages",$MODEL->LANGUAGE->listActiveLanguages());	
+	$ADMIN->I18N->language = $ADMIN->LANGUAGE->getDefaultLanguage();
+	$master->setGlobal("defaultLanguage", $ADMIN->I18N->language);
+	$master->setGlobal("availableLanguages",$ADMIN->LANGUAGE->listActiveLanguages());	
 }
 else
 {
@@ -24,7 +24,7 @@ else
 	}
 }
 
-switch($_POST["action"])
+switch($_POST["admin_action"])
 {
 	case("ajaxSaveI18n"):	ajaxSaveI18n();	exit;
 	case("selectI18n"):		ajaxSelectI18N(); exit;
@@ -32,18 +32,18 @@ switch($_POST["action"])
 
 function ajaxSaveI18n()
 {
-	global $MODEL;
+	global $ADMIN;
 	
 	if(!isset($_POST["i18nLanguage"]))
 		return false;
 	
-	$MODEL->I18N->language = $_POST["i18nLanguage"];
+	$ADMIN->I18N->language = $_POST["i18nLanguage"];
 	$codes = $_POST["i18nCode"];
 	$texts = $_POST["i18nText"];
 	
 	for($i = 0, $j = sizeof($codes); $i<$j; $i++)
 	{
-		$MODEL->I18N->setI18n($codes[$i], $texts[$i]);
+		$ADMIN->I18N->setI18n($codes[$i], $texts[$i]);
 	}
 
 	return true;
@@ -55,30 +55,30 @@ function ajaxSelectI18N()
 	$_SESSION["i18nLanguage"] = $language;
 	$codes = json_decode($_POST["codes"]);
 	$response = array();
-	global $MODEL;
+	global $ADMIN;
 
-	$MODEL->I18N->language = $language;
+	$ADMIN->I18N->language = $language;
 
 	foreach($codes as $c)
 	{
-		$response[] = array("i18nCode"=>$c->i18nCode,"text"=>$MODEL->I18N->getI18n($c->i18nCode));
+		$response[] = array("i18nCode"=>$c->i18nCode,"text"=>$ADMIN->I18N->getI18n($c->i18nCode));
 	}
 	echo json_encode($response);
 }
 	
 function saveI18n()
 {
-	global $MODEL;
+	global $ADMIN;
 	
 	if(!isset($_POST["i18nLanguage"]))
 		return false;
 		
-	$MODEL->I18N->language = $_POST["i18nLanguage"];
+	$ADMIN->I18N->language = $_POST["i18nLanguage"];
 	$texts = json_decode($_POST["i18nTextsGroup"]);
 	
 	foreach($texts as $t)
 	{
-		$MODEL->I18N->setI18n($t->i18nCode, $t->text);
+		$ADMIN->I18N->setI18n($t->i18nCode, $t->text);
 	}
 	
 	return true;
@@ -88,34 +88,33 @@ function saveI18n()
 
 function setLanguage($language)
 {
-	global $MODEL;
-	global $DB;
+	global $ADMIN;
 	
-	$DB->execute("SET LC_TIME_NAMES=?", array($language));
-	$MODEL->I18N->language = $language;
+	$ADMIN->DB->execute("SET LC_TIME_NAMES=?", array($language));
+	$ADMIN->I18N->language = $language;
 	$_SESSION["language"] = $language;
 }
 
 function getLanguage()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return isset($_SESSION["language"]) ? $_SESSION["language"] : $MODEL->LANGUAGE->getDefaultLanguage();
+	return isset($_SESSION["language"]) ? $_SESSION["language"] : $ADMIN->LANGUAGE->getDefaultLanguage();
 }
 
 function getDefaultLanguage()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->LANGUAGE->getDefaultLanguage();
+	return $ADMIN->LANGUAGE->getDefaultLanguage();
 }
 
 function generateLanguageLinks($targetPage = null)
 {
-	global $MODEL;
+	global $ADMIN;
 	
 	$currentLanguage = getLanguage();
-	$languages = $MODEL->LANGUAGE->listActiveLanguages();
+	$languages = $ADMIN->LANGUAGE->listActiveLanguages();
 	$targetPage = $targetPage == null ? $_SERVER["REQUEST_URI"] : $targetPage;
 	$languageLinks = "";
 	
@@ -129,28 +128,28 @@ function generateLanguageLinks($targetPage = null)
 
 function setI18n($i18nCode, $text, $scope="")
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->I18N->setI18n($i18nCode, $text, $scope);
+	return $ADMIN->I18N->setI18n($i18nCode, $text, $scope);
 }
 
 function getI18n($i18nCode)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->I18N->getI18n($i18nCode);
+	return $ADMIN->I18N->getI18n($i18nCode);
 }
 
 function listI18nByScope($scope="global")
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->I18N->listI18nByScope($scope);
+	return $ADMIN->I18N->listI18nByScope($scope);
 }
 
 function deleteI18n($i18nCode)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->I18N->deleteI18n($i18nCode);
+	return $ADMIN->I18N->deleteI18n($i18nCode);
 }

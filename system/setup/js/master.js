@@ -10,7 +10,7 @@ function checkDatabase()
 	$.ajax({
 		type:"post",
 		url:"setup.php",
-		data:"action=checkForDB&" + $("#dbInfoForm").serialize(),
+		data:"admin_action=checkForDB&" + $("#dbInfoForm").serialize(),
 		success:function(response){
 			alert(response);
 			try

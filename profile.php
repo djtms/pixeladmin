@@ -1,29 +1,29 @@
 <?php	require_once 'includes.php';
 
-if($_POST["pa_action"] == "Kaydet")
+if($_POST["admin_action"] == "Kaydet")
 {
-	global $MODEL;
+	global $ADMIN;
 	$error = false;
 	
 	$password = isset($_POST["password"]) ? $_POST["password"] : null;
-	$user = $MODEL->USER->loggedInUser;
+	$user = $ADMIN->USER->loggedInUser;
 	$postedEmail = $_POST["email"];
 	$userEmail = $user->email;
 	
 	
-	if(!$MODEL->VALIDATE->validateEmail($_POST["email"]))
+	if(!$ADMIN->VALIDATE->validateEmail($_POST["email"]))
 	{
 		$error = true;
 		$message = 'Geçerli bir "E-Posta" girin!';
 	}
 	else if($postedEmail != $userEmail)
 	{
-		if($MODEL->USER->getUserByEmail($postedEmail))
+		if($ADMIN->USER->getUserByEmail($postedEmail))
 		{
 			$error = true;
 			$message = 'Girdiğiniz "E-Posta" kullanımda!';
 		}
-		else if(!$MODEL->USER->updateUser($_POST["user_id"], $_POST["image_id"], $_POST["displayname"], $_POST["birthday"], $_POST["email"], $password))
+		else if(!$ADMIN->USER->updateUser($_POST["user_id"], $_POST["image_id"], $_POST["displayname"], $_POST["birthday"], $_POST["email"], $password))
 		{
 			$error = true;
 			$message = "Hata oluştu.";
@@ -33,7 +33,7 @@ if($_POST["pa_action"] == "Kaydet")
 			$message = "Profil Bilgileriniz Güncellendi.";
 		}
 	}	
-	else if(!$MODEL->USER->updateUser($_POST["user_id"], $_POST["image_id"], $_POST["displayname"], $_POST["birthday"], $_POST["email"], $password))
+	else if(!$ADMIN->USER->updateUser($_POST["user_id"], $_POST["image_id"], $_POST["displayname"], $_POST["birthday"], $_POST["email"], $password))
 	{
 		$error = true;
 		$message = "Hata oluştu.";
@@ -47,6 +47,6 @@ if($_POST["pa_action"] == "Kaydet")
 
 
 $profile->addScript("js/pages/profile.js");
-$profile->user = $MODEL->USER->loggedInUser;
+$profile->user = $ADMIN->USER->loggedInUser;
 $profile->render();
 

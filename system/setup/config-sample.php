@@ -10,7 +10,7 @@ $dbcharset = 'utf8';
 $timezone = '+02:00';
 $prefix = "<%prefix%>";
 
-require_once "system/model/DB.php";
+require_once "system/classes/DB.php";
 /****************************************************/
 
 require_once "system/includes/options.php";

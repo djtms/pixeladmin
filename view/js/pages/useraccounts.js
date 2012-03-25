@@ -25,7 +25,7 @@ function deleteUser()
 	if(del)
 	{
 		$.ajax({
-			data:"action=deleteuser&user_id=" + user_id,
+			data:"admin_action=deleteuser&user_id=" + user_id,
 			success:function(response){
 				button.html("");
 				try
@@ -104,7 +104,7 @@ function checkUsername()
 	{
 		$("#usernameLoader p").html("");
 		$.ajax({
-			data:"action=checkusername&username=" + username,
+			data:"admin_action=checkusername&username=" + username,
 			success:function(response){
 				
 				$("#usernameLoader img").css("display","none");
@@ -142,7 +142,7 @@ function checkEmail()
 	{
 		$("#emailCheckLoader p").html("");
 		$.ajax({
-			data:"action=checkemail&email=" + email,
+			data:"admin_action=checkemail&email=" + email,
 			success:function(response){
 				$("#emailCheckLoader img").css("display","none");
 				try

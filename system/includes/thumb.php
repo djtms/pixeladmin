@@ -61,9 +61,9 @@ function generateThumbBase64($fileUrl,$width=129,$height=-1)
 
 function getThumbImage($file_id, $width, $height, $squeeze = false, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	if($thumb = $MODEL->DIRECTORY->getThumbUrl($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
+	if($thumb = $ADMIN->DIRECTORY->getThumbUrl($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
 		return $thumb;
 	else
 		return false;
@@ -71,7 +71,7 @@ function getThumbImage($file_id, $width, $height, $squeeze = false, $proportion 
 
 function getThumbInfo($file_id, $width, $height, $squeeze = false, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
+	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
 }

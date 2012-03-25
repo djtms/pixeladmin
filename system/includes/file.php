@@ -1,9 +1,9 @@
 <?php
 function getFileUrl($file_id)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	if($file = $MODEL->DIRECTORY->selectFileUrlById($file_id))
+	if($file = $ADMIN->DIRECTORY->selectFileUrlById($file_id))
 		return $file;
 	else
 		return false;		
@@ -11,7 +11,7 @@ function getFileUrl($file_id)
 
 function getFileInfo($file_id)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->DIRECTORY->selectFileById($file_id);
+	return $ADMIN->DIRECTORY->selectFileById($file_id);
 }

@@ -15,7 +15,7 @@ else
 
 $errorMessage = "";
 
-if($_POST["action"]=="checkForDB")
+if($_POST["admin_action"]=="checkForDB")
 {
 	if($dbh = connectToDB($_POST["dbname"],$_POST["dbhost"],$_POST["dbuser"],$_POST["dbpass"]))
 		generateAdminConfigurationFile($dbh);

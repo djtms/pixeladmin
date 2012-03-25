@@ -10,9 +10,9 @@
  */
 function sendMessage($gonderenAdi,$konu,$mesaj,$aliciAdresi = null)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	$messageId = $MODEL->MESSAGE->sendMessage($gonderenAdi,$konu,$mesaj);
+	$messageId = $ADMIN->MESSAGE->sendMessage($gonderenAdi,$konu,$mesaj);
 	$submitTime = date("d.m.Y / H:i",time());
 	global $admin_folder_name;
 	
@@ -31,6 +31,6 @@ function sendMessage($gonderenAdi,$konu,$mesaj,$aliciAdresi = null)
 
 if(in_admin)
 {
-	global $MODEL;
-	$master->unreadMessageCount = $MODEL->MESSAGE->getMessageCount("unread");
+	global $ADMIN;
+	$master->unreadMessageCount = $ADMIN->MESSAGE->getMessageCount("unread");
 }

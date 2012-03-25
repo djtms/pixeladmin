@@ -15,7 +15,7 @@ function listCountries()
 {
 	$.ajax({
 		type:"post",
-		data:"pa_action=l_c_b_l&language=" + $("[name='language']").val(),
+		data:"admin_action=l_c_b_l&language=" + $("[name='language']").val(),
 		dataType:"json",
 		success:function(response){
 			var length = response.length;

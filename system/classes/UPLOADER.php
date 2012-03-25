@@ -14,8 +14,7 @@ class PA_UPLOADER
 	
 	function uploadFile($directory,$file=null)
 	{
-		global $DB;
-		global $MODEL;
+		global $ADMIN;
 		global $uploadurl;
 		
 		$size = $file["size"];
@@ -37,10 +36,10 @@ class PA_UPLOADER
 		
 		if($properties->type == "image")
 		{
-			$resolution = $MODEL->IMAGE_PROCESSOR->getImageResolution($uploadurl . $properties->url);
+			$resolution = $ADMIN->IMAGE_PROCESSOR->getImageResolution($uploadurl . $properties->url);
 		}
 		
-		if(!$DB->insert($this->table,array("basename"=>$properties->basename,
+		if(!$ADMIN->DB->insert($this->table,array("basename"=>$properties->basename,
 												"filename"=>$properties->filename,
 												"directory"=>$properties->directory,
 												"url"=>$properties->url,
@@ -60,7 +59,7 @@ class PA_UPLOADER
 		}
 		else
 		{ 
-			return $DB->lastInsertId();
+			return $ADMIN->DB->lastInsertId();
 		}
 	}
 	
@@ -83,7 +82,6 @@ class PA_UPLOADER
 	
 	function calculateFileProperties($directory,$fileName)
 	{
-		global $DB;
 		$file = array();
 		$creation_time = currentDateTime();
 		$directory = trim($directory);
@@ -99,9 +97,9 @@ class PA_UPLOADER
 				$basename = basename($fileName);
 			
 			$pInfo = (object)pathinfo($basename);
-			$basename = $pInfo->basename;
 			$extension = strtolower($pInfo->extension);
-			$filename = basename($basename,".$extension"); // PHP 5.2.0 sürümü öncesinde pathinfo() fonksiyonu "basename" değeri üretmediği için kendimiz üretiyoruz.
+			$filename = basename($pInfo->basename,".$pInfo->extension"); // PHP 5.2.0 sürümü öncesinde pathinfo() fonksiyonu "basename" değeri üretmediği için kendimiz üretiyoruz.
+			$basename = $filename . ".{$extension}";
 			$type = $this->getType($basename);
 			$url = $directory . $basename;
 			

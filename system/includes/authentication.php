@@ -14,15 +14,15 @@ if(in_admin):
 	}
 	
 	
-	if($_GET["action"] == "logout")
+	if($_GET["admin_action"] == "logout")
 	{
 		add_log("çıkış yaptı");
-		$MODEL->USER->logout();
+		$ADMIN->USER->logout();
 	}
 	
 	$page = basename($_SERVER["SCRIPT_NAME"],".php");
 
-	if($MODEL->USER->loggedInUser)
+	if($ADMIN->USER->loggedInUser)
 	{
 		$allowed = false;
 		foreach($allowed_pages_if_logged as $ap)

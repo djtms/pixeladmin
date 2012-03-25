@@ -23,6 +23,6 @@ if($add_modules_menu)
 	addMenu("Modüller","$VIEW_URL/images/icons/modules_icon.png","Modüller","modules","modules.php",11,USER_SUPER);
 	
 global $master;
-$master->user = $MODEL->USER->loggedInUser;
+$master->user = $ADMIN->USER->loggedInUser;
 $master->siteTitle = get_option("siteTitle");
 $master->siteLink = dirname($_SERVER["SCRIPT_NAME"]) . "/../";

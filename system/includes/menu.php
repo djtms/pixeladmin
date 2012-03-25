@@ -3,10 +3,10 @@ function addMenu($menuTitle,$menuIcon,$pageTitle,$menuId,$menuPage,$order=2,$per
 {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
 	
-	global $MODEL;
+	global $ADMIN;
 	global $pa_menu_array;
 	
-	$user = $MODEL->USER->loggedInUser;
+	$user = $ADMIN->USER->loggedInUser;
 	
 	if($user->user_type >= $permission)
 		$pa_menu_array[] = array("subMenus"=>array(),"menuTitle"=>$menuTitle,"menuIcon"=>$menuIcon,"pageTitle"=>$pageTitle,"menuId"=>$menuId,"menuPage"=>$menuPage,"menuOrder"=>$order,"permission"=>$permission,"addLinkToSubMenu"=>$addLinkToSubMenu);
@@ -16,10 +16,10 @@ function addSubMenu($menuTitle,$pageTitle,$parentMenuId,$menuId,$menuPage,$order
 {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
 	
-	global $MODEL;
+	global $ADMIN;
 	global $pa_menu_array;
 	
-	$user = $MODEL->USER->loggedInUser;
+	$user = $ADMIN->USER->loggedInUser;
 	
 	if($user->user_type >= $permission)
 	{
@@ -42,10 +42,10 @@ function addPage($pageTitle,$parentMenuId,$pageId,$page,$permission=USER_AUTHOR)
 {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
 	
-	global $MODEL;
+	global $ADMIN;
 	global $pa_menu_array;
 	
-	$user = $MODEL->USER->loggedInUser;
+	$user = $ADMIN->USER->loggedInUser;
 	
 	if($user->user_type >= $permission)
 	{

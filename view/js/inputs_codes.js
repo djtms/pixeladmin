@@ -52,7 +52,7 @@ function ModuleCodesStart()
 		else
 		{
 			$.ajax({
-				data:"action=getBrowserThumbInfo&fileId=" + fileId,
+				data:"admin_action=getBrowserThumbInfo&fileId=" + fileId,
 				dataType:"json",
 				success:function(response){
 					if((response.url != undefined) && (response.url != ""))

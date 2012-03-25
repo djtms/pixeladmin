@@ -1,13 +1,13 @@
 <?php require_once dirname(__FILE__) . '/../../includes.php';
 
-if($MODEL->USER->getUserCount() <= 0)
+if($ADMIN->USER->getUserCount() <= 0)
 {
 	$errorMessage = "";
 	
 	if(basename($_SERVER["SCRIPT_FILENAME"],".php") != "user")
 		header("Location:system/setup/user.php");
 	
-	if($_POST["action"] == "createSuperUser")
+	if($_POST["admin_action"] == "createSuperUser")
 	{
 		// Setup Default Options ////////////////////////////////////////////////////////////////////////////////////////
 		set_option("siteTitle", $_POST["siteTitle"],"pa_settings");
@@ -20,13 +20,13 @@ if($MODEL->USER->getUserCount() <= 0)
 		/**************************************************************************************************************/
 		
 		// Setup Default Language ////////////////////////////////////////////////////////////////////////////////////////
-		$MODEL->LANGUAGE->addLanguage("tr_TR");
-		$MODEL->LANGUAGE->setDefaultLanguage("tr_TR");
+		$ADMIN->LANGUAGE->addLanguage("tr_TR");
+		$ADMIN->LANGUAGE->setDefaultLanguage("tr_TR");
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		$use_mvc = ($_POST["use_mvc"] == "use") ? true : false;
 		
-		if(!$MODEL->USER->createFirstAdminUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]))
+		if(!$ADMIN->USER->createFirstAdminUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]))
 		{
 			$errorMessage = "* kullanıcı oluşturma esnasında hata oluştu!";
 		}

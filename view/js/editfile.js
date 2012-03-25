@@ -100,7 +100,7 @@ jQuery.fn.editfile = function(properties){
 		function openDetailsEditor()
 		{
 			$.ajax({
-				data:"action=getFileDetailThumb&fileId=" + fileId.val(),
+				data:"admin_action=getFileDetailThumb&fileId=" + fileId.val(),
 				success:function(response){
 					fileThumb.attr("src",response);
 				}
@@ -134,7 +134,7 @@ jQuery.fn.editfile = function(properties){
 					thumbFileId.val(fileId);
 					
 					$.ajax({
-						data:"action=getFileDetailThumb&fileId=" + fileId,
+						data:"admin_action=getFileDetailThumb&fileId=" + fileId,
 						success:function(response){
 							fileThumb.attr("src",response);
 						}
@@ -159,7 +159,7 @@ jQuery.fn.editfile = function(properties){
 			{
 				loader.css("display","block");
 				$.ajax({
-					data:"action=updateFileInfo&" + infoForm.serialize(),
+					data:"admin_action=updateFileInfo&" + infoForm.serialize(),
 					dataType:"json",
 					success:function(response)
 					{

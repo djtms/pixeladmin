@@ -1,6 +1,6 @@
 <?php	require_once 'includes.php';
 
-if(isset($_POST["pa_action"]) == "Kaydet")
+if(isset($_POST["admin_action"]) == "Kaydet")
 {
 	$isSmtp = (isset($_POST["smtp"]) && (trim($_POST["smtp"]) != "")) ? ' checked="checked" ' : "";
 	

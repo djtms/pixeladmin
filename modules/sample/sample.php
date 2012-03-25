@@ -9,7 +9,7 @@ if($_POST["action"] == "Kaydet")
 }
 
 ?>
- 
+
 <form method="post">
 	<label>Logo</label>
 	<input type="file" name="sampleLogoId" fileid="<?php echo get_option("sampleLogoId"); ?>" />

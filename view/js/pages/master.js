@@ -8,8 +8,7 @@ function MasterStart()
 	validate = new Validate();
 	
 	$.ajaxSetup({
-		type:"post",
-		url:ajaxurl
+		type:"post"
 	});
 	
 	bindComponents();

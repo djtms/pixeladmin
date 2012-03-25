@@ -2,12 +2,12 @@
 $existingModules = array();
 $modulesListHtml = "";
 
-if(isset($_GET["action"]))
+if(isset($_GET["admin_action"]))
 {
 	$moduleFolder = $_GET["moduleFolder"];
 	$activeModules = get_option("active_modules");
 	
-	switch($_GET["action"])
+	switch($_GET["admin_action"])
 	{
 		case("activateModule"):
 			if(!preg_match("/" . preg_quote($moduleFolder,"/") . "/",$activeModules))
@@ -103,8 +103,8 @@ if(sizeof($existingModules) > 0)
 		$moduleFolder = urlencode($em["moduleFolder"]);
 		
 		$modulesListHtml .= sprintf('<li class="item"><label class="text">%s</label><div class="rowEditButtonsOuter">
-											<a href="admin.php?page=modules&action=%s&moduleFolder=%s" class="%s">%s</a>
-											<!--<a href="admin.php?page=modules&action=deactivateModules&moduleFolder=%s" class="remove">Sil</a>-->
+											<a href="admin.php?page=modules&admin_action=%s&moduleFolder=%s" class="%s">%s</a>
+											<!--<a href="admin.php?page=modules&admin_action=deactivateModules&moduleFolder=%s" class="remove">Sil</a>-->
 										</div><!--up_down_close--></li>',$em["moduleName"],$activeAction,$moduleFolder,$className,$activateTitle,$moduleFolder);
 	}
 }

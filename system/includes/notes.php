@@ -2,28 +2,28 @@
 
 function add_note($noteText)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->LOG->add_log($noteText,"note");
+	return $ADMIN->LOG->add_log($noteText,"note");
 }
 
 function delete_note($note_id)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->LOG->delete_log($note_id);
+	return $ADMIN->LOG->delete_log($note_id);
 }
 
 function select_note($note_id)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->LOG->select_log($note_id);
+	return $ADMIN->LOG->select_log($note_id);
 }
 
 function list_notes($limit = -1)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->LOG->list_logs("note",$limit);
+	return $ADMIN->LOG->list_logs("note",$limit);
 }

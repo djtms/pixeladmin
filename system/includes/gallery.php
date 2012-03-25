@@ -1,71 +1,71 @@
 <?php
 function deleteGallery($galleryId)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->deleteGallery($galleryId);
+	return $ADMIN->GALLERY->deleteGallery($galleryId);
 }
 
 function listGalleryFiles($galleryId,$limit = -1)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->listGalleryFiles($galleryId,$limit,false);
+	return $ADMIN->GALLERY->listGalleryFiles($galleryId,$limit,false);
 }
 
 function listGalleryFilesByPage($galleryId,$limit, $offset)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->listGalleryFilesByPage($galleryId, $limit, $offset, false);
+	return $ADMIN->GALLERY->listGalleryFilesByPage($galleryId, $limit, $offset, false);
 }
 
 function getGalleryFileCount($galleryId)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->getGalleryFileCount($galleryId,false);
+	return $ADMIN->GALLERY->getGalleryFileCount($galleryId,false);
 }
 
 function getFirstFileInGallery($galleryId)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->selectFirstFileInGallery($galleryId);
+	return $ADMIN->GALLERY->selectFirstFileInGallery($galleryId);
 }
 
 function getLastFileInGallery($galleryId)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->selectLastFileInGallery($galleryId);
+	return $ADMIN->GALLERY->selectLastFileInGallery($galleryId);
 }
 
 function getNTHFileInGallery($galleryId,$nthIndex)
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	return $MODEL->GALLERY->selectNTHFileInGallery($galleryId,$nthIndex);
+	return $ADMIN->GALLERY->selectNTHFileInGallery($galleryId,$nthIndex);
 }
 
 if(in_admin)
 {
-	global $MODEL;
+	global $ADMIN;
 	
 	function createTemporaryGallery()
 	{
-		global $MODEL;
+		global $ADMIN;
 	
-		if($galleryId = $MODEL->GALLERY->createGallery())
+		if($galleryId = $ADMIN->GALLERY->createGallery())
 			echo json_encode(array("galleryId"=>$galleryId));
 		else
 			echo json_encode(array("galleryId"=>-1));
 	}
 	
-	switch($_POST["action"])
+	switch($_POST["admin_action"])
 	{
 		case("listGalleryFiles"):		
-			echo json_encode($MODEL->GALLERY->listGalleryFiles($_POST["galleryId"],-1,true));
+			echo json_encode($ADMIN->GALLERY->listGalleryFiles($_POST["galleryId"],-1,true));
 		exit;
 		
 		case("createTemporaryGallery"):		
@@ -75,9 +75,8 @@ if(in_admin)
 	
 	function saveGallery()
 	{
-		global $MODEL;
-		global $DB;
-	
+		global $ADMIN;
+		
 		if(is_array($_POST["galleries"]) && (sizeof($_POST["galleries"]) > 0))
 		{
 			foreach((object)$_POST["galleries"] as $g)
@@ -86,7 +85,7 @@ if(in_admin)
 				$galleryId = $g->galleryId;
 				$filesInfo = $g->filesInfo;
 					
-				$gallery = $MODEL->GALLERY->selectGallery($galleryId);
+				$gallery = $ADMIN->GALLERY->selectGallery($galleryId);
 					
 				if(is_array($filesInfo) && (sizeof($filesInfo) > 0))
 				{
@@ -94,20 +93,20 @@ if(in_admin)
 					{
 						if($f->status == "new")
 						{
-							$MODEL->GALLERY->addGalleryFile($galleryId, $f->id, $f->order);
+							$ADMIN->GALLERY->addGalleryFile($galleryId, $f->id, $f->order);
 						}
 						else if($f->status == "deleted")
 						{
-							$MODEL->GALLERY->deleteGalleryFile($galleryId, $f->id);
+							$ADMIN->GALLERY->deleteGalleryFile($galleryId, $f->id);
 						}
 						else
 						{
-							$MODEL->GALLERY->updateGalleryFile($galleryId, $f->id, $f->order);
+							$ADMIN->GALLERY->updateGalleryFile($galleryId, $f->id, $f->order);
 						}
 					}
 				}
 					
-				$DB->execute("UPDATE gallery SET status='active' WHERE gallery_id=?",array($galleryId));
+				$ADMIN->DB->execute("UPDATE gallery SET status='active' WHERE gallery_id=?",array($galleryId));
 			}
 	
 			return true;

@@ -1,9 +1,10 @@
 <?php
-$MODEL = new PA_MODEL();
+$ADMIN = new PA_ADMIN();
 
-class PA_MODEL
+class PA_ADMIN
 {
-	public $MODEL;
+	public $ADMIN;
+	public $DB;
 	public $USER;
 	public $I18N;
 	public $LANGUAGE;
@@ -16,8 +17,11 @@ class PA_MODEL
 	public $UPLOADER;
 	public $GALLERY;
 	
-	function PA_MODEL()
+	function PA_ADMIN()
 	{
+		global $DB;
+		
+		$this->DB = &$DB; 
 		$this->VALIDATE = new PA_VALIDATE();
 		$this->USER = new PA_USER();
 		$this->I18N = new PA_I18N();

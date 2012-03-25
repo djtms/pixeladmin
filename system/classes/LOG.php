@@ -14,15 +14,14 @@ class PA_LOG
 	
 	function add_log($logText,$type)
 	{
-		global $DB;
-		global $MODEL;
+		global $ADMIN;
 		
-		$user = $MODEL->USER->loggedInUser;
+		$user = $ADMIN->USER->loggedInUser;
 		$user_id = $user->user_id;
 		$date = currentDateTime();
 		
 		$temp = array("user_id"=>$user_id,"date"=>$date,"log"=>$logText,"type"=>$type);
-		return $DB->insert($this->table,$temp);
+		return $ADMIN->DB->insert($this->table,$temp);
 	}
 	
 	function delete_log($log_id)

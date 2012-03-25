@@ -1,12 +1,19 @@
 <?php
-registerAjaxCall("checkemail","checkUserEmail");
-registerAjaxCall("deleteuser","deleteUser");
-registerAjaxCall("checkusername","checkUsername");
+
+if(isset($_POST["admin_action"]))
+{
+	switch($_POST["admin_action"])
+	{
+		case "checkemail": checkUserEmail(); exit;
+		case "deleteuser": deleteUser(); exit;
+		case "checkusername": checkUsername(); exit;
+	}
+}
 
 function checkUserEmail()
 {
-	global $MODEL;
-	if($MODEL->USER->getUserByEmail($_POST["email"]))
+	global $ADMIN;
+	if($ADMIN->USER->getUserByEmail($_POST["email"]))
 		echo json_encode(array("error"=>"true","message"=>"Bu \"E-Posta\" kullanımda! "));
 	else
 		echo json_encode(array("error"=>"false","message"=>"Uygun"));
@@ -14,9 +21,9 @@ function checkUserEmail()
 
 function deleteUser()
 {
-	global $MODEL;
+	global $ADMIN;
 	
-	if($MODEL->USER->deleteUser($_POST["userId"]))
+	if($ADMIN->USER->deleteUser($_POST["userId"]))
 		echo json_encode(array("error"=>false));
 	else
 		echo json_encode(array("error"=>true));
@@ -24,8 +31,8 @@ function deleteUser()
 
 function checkUsername()
 {
-	global $MODEL;
-	if($MODEL->USER->getUserByUsername($_POST["username"]))
+	global $ADMIN;
+	if($ADMIN->USER->getUserByUsername($_POST["username"]))
 		echo json_encode(array("error"=>true,"message"=>"Bu \"Kullanıcı Adı\" kullanımda! "));
 	else
 		echo json_encode(array("error"=>false,"message"=>"Uygun"));

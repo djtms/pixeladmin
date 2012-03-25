@@ -2,14 +2,14 @@
 
 $loginAlert = "";
 
-if($_POST["action"] == "Giriş")
+if($_POST["admin_action"] == "Giriş")
 {
 	login(false);
 }
 
 function login($captcha_used_correctly)
 {
-	global $MODEL;
+	global $ADMIN;
 	global $loginAlert;
 	
 	$username = $_POST["username"];
@@ -21,7 +21,7 @@ function login($captcha_used_correctly)
 	}
 	else
 	{
-		$login_status =  $MODEL->USER->login($username,$password, $captcha_used_correctly);
+		$login_status =  $ADMIN->USER->login($username,$password, $captcha_used_correctly);
 			
 		if($login_status === true)
 		{

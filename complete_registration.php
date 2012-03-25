@@ -6,14 +6,14 @@ $ticket_key = $_GET["key"];
 $ticket_type = $_GET["type"];
 $username = trim($_POST["username"]);
 
-if($_POST["action"] == "checkusername")
+if($_POST["admin_action"] == "checkusername")
 {
 	checkUsername(); // pa-users.php içinde tanımlı, bu sayfada login olmadığım için panelin kendi ajax standardını kullanamıyorum onun için soruyu bu şekilde yapıyoruz
 	exit;
 }
-if($ticket_id = $MODEL->USER->validateTicket($user_id, $ticket_key, $ticket_type))
+if($ticket_id = $ADMIN->USER->validateTicket($user_id, $ticket_key, $ticket_type))
 {	
-	if($_POST["action"] == "complete_registration")
+	if($_POST["admin_action"] == "complete_registration")
 	{
 		$captcha = recaptcha_check_answer($private_key, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
 		
@@ -21,7 +21,7 @@ if($ticket_id = $MODEL->USER->validateTicket($user_id, $ticket_key, $ticket_type
 		{
 			$resultText = '"Kullanıcı Adı" en az 6 karakterden oluşmalı!';
 		}
-		else if($MODEL->USER->getUserByUsername($username))
+		else if($ADMIN->USER->getUserByUsername($username))
 		{
 			$resultText = "Lütfen farklı bir kullanıcı adı girin!";
 		}
@@ -33,10 +33,10 @@ if($ticket_id = $MODEL->USER->validateTicket($user_id, $ticket_key, $ticket_type
 		{
 			$password = $_POST["password"];
 			
-			if($MODEL->USER->completeRegistration($user_id, $username, $password) && $MODEL->USER->closeTicket($ticket_id))
+			if($ADMIN->USER->completeRegistration($user_id, $username, $password) && $ADMIN->USER->closeTicket($ticket_id))
 			{
 				postMessage("Kaydınız Başarıyla Gerçekleşti!");
-				$MODEL->USER->login($username, $password);
+				$ADMIN->USER->login($username, $password);
 				header("Location:admin.php?page=profile");
 				exit;
 			}	

@@ -145,7 +145,7 @@ jQuery.fn.fileeditor = function(properties){
 			editor.append(editorHtml);
 			
 			$.ajax({
-				data:"action=loadFileTree",
+				data:"admin_action=loadFileTree",
 				success:function(response){
 					browserDirectoriesOuter.html(response);
 				}
@@ -234,7 +234,7 @@ jQuery.fn.fileeditor = function(properties){
 				var btnLook = thisObject.parent().find(".btnLook");
 
 				$.ajax({
-					data:"action=selectFileInfo&fileId=" + fileId,
+					data:"admin_action=selectFileInfo&fileId=" + fileId,
 					dataType:"json",
 					success:function(response){
 						thisObject.editfile({
@@ -246,7 +246,7 @@ jQuery.fn.fileeditor = function(properties){
 								fileName.html(file.basename);
 								btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
 								$.ajax({
-									data:"action=getBrowserThumb&fileId=" + file.file_id,
+									data:"admin_action=getBrowserThumb&fileId=" + file.file_id,
 									success:function(response){
 										thumbObject.attr("src",response);
 									}
@@ -447,7 +447,7 @@ jQuery.fn.fileeditor = function(properties){
 			browser_address.val(currentDirectory);
 			browserContentLoaderOuter.css("display","block").animate({"opacity":1},300,function(){
 				$.ajax({
-					data:"action=browseFiles&directory=" + directory,
+					data:"admin_action=browseFiles&directory=" + directory,
 					dataType:"json",
 					success:function(result){
 						
@@ -528,7 +528,7 @@ jQuery.fn.fileeditor = function(properties){
 			var outerObject = fileThumbOuters.eq(fileIndex);
 			var fileId = outerObject.attr("fileId");
 			$.ajax({
-				data:"action=getBrowserThumb&fileId=" + fileId,
+				data:"admin_action=getBrowserThumb&fileId=" + fileId,
 				success:function(response){
 					if(fileIndex <= maxFileLength)
 					{
@@ -560,7 +560,7 @@ jQuery.fn.fileeditor = function(properties){
 		function listFavouritedDirectories()
 		{
 			$.ajax({
-				data:"action=listFavouritedDirectories",
+				data:"admin_action=listFavouritedDirectories",
 				success:function(response){
 					browserFavoritesList.html(response);
 				}
@@ -625,7 +625,7 @@ jQuery.fn.fileeditor = function(properties){
 				{
 					var form = new FormData();
 					var xhr = new XMLHttpRequest();
-					form.append("action","uploadFile");
+					form.append("admin_action","uploadFile");
 					form.append("directory",directory);
 					form.append("uploadFile",filesList[i].file);
 					
@@ -672,7 +672,7 @@ jQuery.fn.fileeditor = function(properties){
 						$(this).replaceWith(fileObject).animate({"opacity":1},500);
 						
 						$.ajax({
-							data:"action=getBrowserThumb&fileId=" + file.file_id,
+							data:"admin_action=getBrowserThumb&fileId=" + file.file_id,
 							success:function(response){
 								fileObject.find(".filethumb").attr("src",response);
 							}
@@ -680,7 +680,7 @@ jQuery.fn.fileeditor = function(properties){
 						bindComponents();
 					});
 					
-					xhr.open("POST", ajaxurl, true);
+					xhr.open("POST", "admin.php?page=dashboard", true);
 					xhr.send(form);
 				}
 			}
@@ -693,7 +693,7 @@ jQuery.fn.fileeditor = function(properties){
 			if(validate.validateFilename(foldername,false))
 			{
 				$.ajax({
-					data:"action=checkDirectoryExists&directory=" + currentDirectory + foldername + "/",
+					data:"admin_action=checkDirectoryExists&directory=" + currentDirectory + foldername + "/",
 					success:function(response){
 						if(response == "exists")
 							alert("varolan bir dosya adı girdiniz, lütfen başka bir dosya adı girin!");
@@ -740,7 +740,7 @@ jQuery.fn.fileeditor = function(properties){
 			}
 			
 			$.ajax({
-				data:"action=setFavouriteStatus&status=" + status + "&dir=" + currentDirectory,
+				data:"admin_action=setFavouriteStatus&status=" + status + "&dir=" + currentDirectory,
 				success:function(response){
 					
 					if(response == "succeed")
@@ -813,7 +813,7 @@ jQuery.fn.fileeditor = function(properties){
 					
 					validateFoldername(filename,function(){
 						$.ajax({
-							data:"action=newDirectory&parent_directory=" + currentDirectory + "&dirname=" + filename,
+							data:"admin_action=newDirectory&parent_directory=" + currentDirectory + "&dirname=" + filename,
 							success:function(response){
 								if(response == "created")
 								{
@@ -867,7 +867,7 @@ jQuery.fn.fileeditor = function(properties){
 			{
 				var element = $(this).parent();
 				$.ajax({
-					data:"action=deleteFile&fileUrl=" + element.attr("url"),
+					data:"admin_action=deleteFile&fileUrl=" + element.attr("url"),
 					success:function(response){
 						if(response == "deleted")
 						{
@@ -1013,7 +1013,7 @@ jQuery.fn.fileeditor = function(properties){
 				});
 				
 				$.ajax({
-					data:"action=deleteFilesAndDirectories&fileurls=" + JSON.encode(deleteFilesList),
+					data:"admin_action=deleteFilesAndDirectories&fileurls=" + JSON.encode(deleteFilesList),
 					success:function(response){
 						if(response == "deleted")
 						{

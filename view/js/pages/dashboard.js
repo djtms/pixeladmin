@@ -4,11 +4,14 @@ function DashboardStart()
 {
 	$("#btnMaintananceMode").click(function(){
 		var mode = null;
-		if($(this).attr("checked") && confirm("Web sayfanızı \"Bakım Modu'na\" almak istediğinize eminmisiniz?"))
+		var checked = !$(this).is(":checked");
+
+		
+		if(!checked && confirm("Web sayfanızı \"Bakım Modu'na\" almak istediğinize eminmisiniz?"))
 		{
 			mode = "maintanance";
 		}
-		else if(!$(this).attr("checked") && confirm("Web sayfanızı \"Bakım Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
+		else if(checked && confirm("Web sayfanızı \"Bakım Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
 		{
 			mode = "public";
 		}
@@ -18,8 +21,7 @@ function DashboardStart()
 		if(mode != null)
 		{
 			$.ajax({
-				url:ajaxurl,
-				data:"action=SetDisplayMode&mode=" + mode,
+				data:"admin_action=SetDisplayMode&mode=" + mode,
 				success:function(response){
 					if((response == "error") && (mode == "maintanance"))
 					{	
@@ -39,11 +41,13 @@ function DashboardStart()
 	
 	$("#btnMultilanguageMode").click(function(){
 		var mode = null;
-		if($(this).attr("checked") && confirm("Web sayfanızı \"Çoklu Dil Modu'na\" almak istediğinize eminmisiniz?"))
+		var checked = !$(this).is(":checked");
+		
+		if(!checked && confirm("Web sayfanızı \"Çoklu Dil Modu'na\" almak istediğinize eminmisiniz?"))
 		{
 			mode = "multilanguage";
 		}
-		else if(!$(this).attr("checked") && confirm("Web sayfanızı \"Çoklu Dil Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
+		else if(checked && confirm("Web sayfanızı \"Çoklu Dil Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
 		{
 			mode = "simplelanguage";
 		}
@@ -53,8 +57,7 @@ function DashboardStart()
 		if(mode != null)
 		{
 			$.ajax({
-				url:ajaxurl,
-				data:"action=SetMultilanguageMode&mode=" + mode,
+				data:"admin_action=SetMultilanguageMode&mode=" + mode,
 				success:function(response){
 					if((response == "error") && (mode == "simplelanguage"))
 					{	
@@ -77,11 +80,13 @@ function DashboardStart()
 	
 	$("#btnDebugMode").click(function(){
 		var mode = null;
-		if($(this).attr("checked") && confirm("Web sayfanızı \"Hata Ayıklama Modu'na\" almak istediğinize eminmisiniz?"))
+		var checked = !$(this).is(":checked");
+		
+		if(!checked && confirm("Web sayfanızı \"Hata Ayıklama Modu'na\" almak istediğinize eminmisiniz?"))
 		{
 			mode = "debugmode";
 		}
-		else if(!$(this).attr("checked") && confirm("Web sayfanızı \"Hata Ayıklama Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
+		else if(checked && confirm("Web sayfanızı \"Hata Ayıklama Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
 		{
 			mode = "securitymode";
 		}
@@ -91,8 +96,7 @@ function DashboardStart()
 		if(mode != null)
 		{
 			$.ajax({
-				url:ajaxurl,
-				data:"action=SetDebugMode&mode=" + mode,
+				data:"admin_action=SetDebugMode&mode=" + mode,
 				success:function(response){
 					if((response == "error") && (mode == "debugmode"))
 					{	

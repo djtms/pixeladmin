@@ -151,9 +151,9 @@ class PA_THUMB
 	
 	private function generateThumbnailImage($existing_file_url,$target_url,$width, $height, $squeeze = false, $proportion = true, $position = "center top" ,$bg_color = "FFFFFF")
 	{
-		global $MODEL;
+		global $ADMIN;
 		
-		return $MODEL->IMAGE_PROCESSOR->createThumb($existing_file_url, $target_url, $width, $height, $squeeze, $proportion, $position, $bg_color);
+		return $ADMIN->IMAGE_PROCESSOR->createThumb($existing_file_url, $target_url, $width, $height, $squeeze, $proportion, $position, $bg_color);
 	}
 	
 	private function fixCropPosition($position)

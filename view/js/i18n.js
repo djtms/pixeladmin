@@ -103,7 +103,7 @@ function selectI18n()
 {
 	updateStyles();
 	$.ajax({
-		data:"action=selectI18n&i18nLanguage=" + requestedLanguage + "&codes=" + JSON.encode(i18nCodesArray),
+		data:"admin_action=selectI18n&i18nLanguage=" + requestedLanguage + "&codes=" + JSON.encode(i18nCodesArray),
 		success:function(response){
 			activeLanguage = requestedLanguage;
 			try
@@ -203,7 +203,7 @@ function ajaxSaveI18n()
 	var i18nForm = new FormData();
 	var i18nText = "";
 	
-	i18nForm.append("action","ajaxSaveI18n");
+	i18nForm.append("admin_action","ajaxSaveI18n");
 	i18nForm.append("i18nLanguage",activeLanguage);
 	
 	$("[i18n]").each(function(){
@@ -228,6 +228,6 @@ function ajaxSaveI18n()
 		selectI18n();
 		postMessage("Başarıyla Güncellendi!");
 	});
-	xhr.open("POST", ajaxurl);
+	xhr.open("POST", "admin.php?page=dashboard");
 	xhr.send(i18nForm);
 }
