@@ -5,23 +5,23 @@ if(isset($_POST["admin_action"]))
 	switch ($_POST["admin_action"])
 	{
 		case "SetDisplayMode": 
-			echo set_option("SiteDisplayMode", $_POST["mode"]) ? "succeed" : "error"; // Değiştirme
+			echo set_option("admin_SiteDisplayMode", $_POST["mode"]) ? "succeed" : "error"; // Değiştirme
 		exit;
 		
 		case "SetMultilanguageMode": 
-			echo set_option("SiteMultilanguageMode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme
+			echo set_option("admin_SiteMultilanguageMode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme
 		exit;
 		
 		case "SetDebugMode": 
-			echo set_option("SiteDebugMode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme	
+			echo set_option("admin_SiteDebugMode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme	
 		exit;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-$maintanenceChecked = (get_option("SiteDisplayMode") == "maintanance") ? ' checked="checked" ' : "";
-$multilanguageChecked = (get_option("SiteMultilanguageMode") == "multilanguage") ? ' checked="checked" ' : "";
-$debugmodeChecked = (get_option("SiteDebugMode") == "debugmode") ? ' checked="checked" ' : "";
+$maintanenceChecked = (get_option("admin_SiteDisplayMode") == "maintanance") ? ' checked="checked" ' : "";
+$multilanguageChecked = (get_option("admin_SiteMultilanguageMode") == "multilanguage") ? ' checked="checked" ' : "";
+$debugmodeChecked = (get_option("admin_SiteDebugMode") == "debugmode") ? ' checked="checked" ' : "";
 ///////////////////////////////////////////////////////////////////////////////////////
 
 global $ADMIN;

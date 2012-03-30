@@ -11,6 +11,8 @@ if($_POST["action"] == "Kaydet")
 ?>
 
 <form method="post">
+	<label>Tarih:</label>
+	<input type="date" name="birth" value="00:00:05" />s
 	<label>Logo</label>
 	<input type="file" name="sampleLogoId" fileid="<?php echo get_option("sampleLogoId"); ?>" />
 	<label>Galeri</label>
@@ -19,6 +21,7 @@ if($_POST["action"] == "Kaydet")
 	<input type="text" i18n="sampleHeaderI18n" />
 	<label>Yazı:</label>
 	<textarea i18n="sampleCommentI18n" type="editor"></textarea>
+	
 	<input type="submit" name="action" value="Kaydet" />
 </form>
 <?php

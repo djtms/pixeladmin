@@ -8,12 +8,26 @@ class GlobalValues
 	protected static $userDefinedGlobals = '';
 	protected static $SCRIPTS;
 	
-	public function setGlobal($name,$value)
+	public function setGlobal($name, $value)
 	{
 		$GLOBALS[$name] = $value;
 		$this->{$name} = $value;
-		$value = (is_array($value) || is_object($value)) ? json_encode($value) : "'$value'";
-		self::$userDefinedGlobals .= "\n var $name = $value;";
+		
+		switch(gettype($value))
+		{
+			default:
+			case "unknown type":
+			case "string":			$temp = "'$value'";							break;
+			case "boolean":			$temp = $value === true ? "true" : "false";	break;
+			case "double":
+			case "integer":			$temp = $value;								break;
+			case "object":			
+			case "array":			$temp = json_encode($value);			break;
+			case "NULL":			$temp = null;									break;
+		};
+
+		//$value = (is_array($value) || is_object($value)) ? json_encode($value) : "'$value'";
+		self::$userDefinedGlobals .= "\n var $name = $temp;";
 		
 		
 	}

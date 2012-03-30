@@ -2,6 +2,11 @@
 
 function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $editDataLinkQuery, $deleteDataLinkQuery, $sortablekey = null, $sortEvent = null)
 {
+	if(($gridId == null) || (strlen($gridId) <= 0))
+	{
+		$gridId = uniqid();
+	}
+	
 	// DataGrid sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
 	if(($sortablekey != null) && ($sortEvent != null))
 	{
@@ -31,7 +36,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 		<button class="dataGridAddButton" page="<?php echo $addDataLink; ?>">Yeni Ekle</button>
 		<?php }?>
 		<div class="itemsList">
-			<ul id="<?php echo $gridId; ?>"  <?php echo ($sortablekey != null ? ' class="sortableList" sort_action="sortDataGrid_' . $gridId . '" ' : '') ?>>
+			<ul id="<?php echo $gridId; ?>"  <?php echo ($sortablekey != null ? ' class="sortableList" sort_event="' . $sortEvent . '" ' : '') ?>>
 				<?php
 				if(is_array($data) && sizeof($data) > 0)
 				{
@@ -39,8 +44,8 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $editDataLinkQuery, $editDataColumnsMatches);
 					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
 					
-					$use_edit_button = true;//(($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
-					$use_cross_button = true; //(($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
+					$use_edit_button = (($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
+					$use_cross_button = (($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
 					
 					$index = 0;
 					foreach($data as $d)
@@ -137,6 +142,5 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 function postMessage($message,$error=false)
 {
 	global $master;
-	set_option("postMessage",'<p ' . ($error ? ' style="color:#fc5900;" ' : '') . ' >' . $message . '</p>');
+	set_option("admin_postMessage",'<p ' . ($error ? ' style="color:#fc5900;" ' : '') . ' >' . $message . '</p>');
 }
-

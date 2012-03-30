@@ -3,8 +3,8 @@ $ADMIN = new PA_ADMIN();
 
 class PA_ADMIN
 {
-	public $ADMIN;
 	public $DB;
+	public $VALIDATE;
 	public $USER;
 	public $I18N;
 	public $LANGUAGE;

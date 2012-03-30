@@ -11,7 +11,6 @@ $admin_version = "BETA 0.6.5";
 $track_wait_limit = 300; // Kullanıcı için açılan track'in kullanıcı browser'ı kapattığında veya internet bağlantısı kesildiğinde ne kadar süre daha açık kalacağını belirtir
 $currenturl = $_SERVER["REQUEST_URI"];
 $currentpage = "admin.php?page=" . $_GET["page"];
-$ajax_functions = array();
 $default_menu_icon = "view/images/icons/default_icon.png";
 $allowed_dirs_in_maintanance_mode = array("mobile"); // "Maintanance Mode" dayken erişime izin verilecek dizinlerin listesi
 

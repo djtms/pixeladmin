@@ -16,17 +16,30 @@ function GuiStart()
 		return false;
 	});
 	
+	setupSortableLists();
+}
+
+function setupSortableLists()
+{
 	$(".sortableList").each(function(){
-		var action = $(this).attr("sort_action");
-		
-		$(this).sortable({
-			update:function(){
-				var order = $(this).sortable("serialize");
-				
-				$.ajax({
-					data:"admin_action=" + action + "&" + order
-				});
-			}
-		});
+		if($(this).hasClass("sort_event_binded"))
+		{
+			return;
+		}
+		else
+		{
+			$(this).addClass("sort_event_binded");
+			var event = $(this).attr("sort_event");
+			
+			$(this).sortable({
+				update:function(){
+					var order = $(this).sortable("serialize");
+					
+					$.ajax({
+						data:"admin_action=sortDataGrid&event=" + event + "&" + order
+					});
+				}
+			});
+		}
 	});
 }

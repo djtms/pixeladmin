@@ -13,7 +13,7 @@
 			display:block;
 		}
 	</style>
-	<title><?php echo get_option("siteTitle"); ?></title>
+	<title><?php echo get_option("admin_siteTitle"); ?></title>
 </head>
 <body>
 	<img id="uc" src="admin/view/images/maintananceBg.png" alt="UNDER CONSTRUCTION">

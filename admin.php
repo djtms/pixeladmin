@@ -44,6 +44,7 @@ if(file_exists($page))
 {
 	ob_start();
 		require_once $page;
+		require_once "system/includes/late_call.php"; // ancak tüm sayfalar yükledikten sonra çalıştırılması gereken kodları bu sayfada bulunduruyoruz.
 		
 		$master->content = $modulesContent . ob_get_contents();
 	ob_end_clean();	
@@ -54,6 +55,6 @@ else
 }
 
 loadMenus($pa_menuId);
-$master->postMessage = get_option("postMessage");
-set_option("postMessage","");
+$master->postMessage = get_option("admin_postMessage");
+set_option("admin_postMessage","");
 $master->render();

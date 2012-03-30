@@ -25,7 +25,7 @@ function executeActivationCode($directory)
 	}
 }
 
-$active_modules = get_option("active_modules");
+$active_modules = get_option("admin_active_modules");
 $active_modules = (substr($active_modules,-1) == ',') ? substr($active_modules,0,-1) : $active_modules;
 
 $modulesArray = explode(',',$active_modules);

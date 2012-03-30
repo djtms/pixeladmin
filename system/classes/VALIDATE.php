@@ -2,7 +2,7 @@
 
 class PA_VALIDATE
 {
-	function customValidate($string,$regExpression)
+	function customValidate($string, $regExpression)
 	{
 		return preg_match($regExpression, $string);
 	}

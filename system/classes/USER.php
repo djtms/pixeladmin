@@ -35,8 +35,8 @@ class PA_USER extends PA_USER_TICKET
 			$user_id = $DB->lastInsertId();
 			$ticket_id = $this->openTicket($user_id, "invitation", $end_date);
 			$ticket = $this->selectTicket($ticket_id);
-			$site_title = get_option("siteTitle");
-			$register_link = get_option("siteAddress") . "/admin/complete_registration.php?type=invitation&user={$user_id}&key={$ticket->ticket_key}";
+			$site_title = get_option("admin_siteTitle");
+			$register_link = get_option("admin_siteAddress") . "/admin/complete_registration.php?type=invitation&user={$user_id}&key={$ticket->ticket_key}";
 			$invitation_sender = $this->loggedInUser;
 			
 			$mesaj  = "Sayın  {$displayname},";
@@ -120,8 +120,8 @@ class PA_USER extends PA_USER_TICKET
 			$ticket_id = $this->openTicket($user->user_id, $ticket_type);
 			if($ticket = $this->selectTicket($ticket_id))
 			{
-				$site_title = get_option("siteTitle");
-				$reset_password_link = get_option("siteAddress") . $reset_password_page . "?type=resetpassword&user={$user->user_id}&key={$ticket->ticket_key}";
+				$site_title = get_option("admin_siteTitle");
+				$reset_password_link = get_option("admin_siteAddress") . $reset_password_page . "?type=resetpassword&user={$user->user_id}&key={$ticket->ticket_key}";
 					
 				$mesaj  = "Sayın  <b>{$user->displayname},</b><br />";
 				$mesaj .= "Talebiniz üzerine parola değiştirme işleminizi gerçekleştirmek için aşağıda bulunan \"Parolamı Değiştir\" ";

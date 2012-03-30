@@ -26,7 +26,7 @@ function MasterStart()
 	});
 	
 	$(window).trigger("resize");
-	$("input[type=date]").datepicker();
+	$("input[type=date], input[type=datetime], input[type=time]").datepicker();
 }
 
 function bindComponents()

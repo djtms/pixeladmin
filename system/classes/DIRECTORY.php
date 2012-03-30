@@ -7,8 +7,8 @@ class PA_DIRECTORY extends PA_FILE
 	function PA_DIRECTORY()
 	{
 		parent::PA_FILE();
-
 		global $DB;
+		
 		$this->table = $DB->tables->directory;
 		$this->table_file = $DB->tables->file;
 	}
@@ -21,7 +21,10 @@ class PA_DIRECTORY extends PA_FILE
 		$full_directory = $uploadurl . $directory;
 		
 		if(!file_exists($full_directory))
-			mkdir($full_directory,"0777");
+		{
+			mkdir($full_directory, "0755");
+			chmod($full_directory, "0755"); // Bazen chmod yanlış atanıyor, onu sağlama almak tekrar chmod değişikliği yaptırıyoruz.
+		}
 		
 		if(!$this->selectDirectoryByDirectory($directory))
 		{
@@ -111,7 +114,7 @@ class PA_DIRECTORY extends PA_FILE
 		global $DB;
 		global $uploadurl;
 		
-		if($this->deleteDirectory($directory))
+		if($this->deleteDirectoryContents($directory))
 		{
 			if(!$DB->execute("DELETE FROM {$this->table_file} WHERE directory LIKE ? '%'",array($directory)) ||
 				!$DB->execute("DELETE FROM {$this->table} WHERE directory LIKE ? '%'",array($directory)))
@@ -128,7 +131,7 @@ class PA_DIRECTORY extends PA_FILE
 		}
 	}
 	
-	private function deleteDirectory($dir)
+	private function deleteDirectoryContents($dir)
 	{
 		global $uploadurl;
 		
@@ -152,7 +155,7 @@ class PA_DIRECTORY extends PA_FILE
 					if(is_dir($fulldir.$file))
 					{
 						if(sizeof(scandir($fulldir.$file)) > 2)
-							$this->deleteDirectory($dir.$file.'/');
+							$this->deleteDirectoryContents($dir.$file.'/');
 						else
 						{
 							rmdir($fulldir.$file);

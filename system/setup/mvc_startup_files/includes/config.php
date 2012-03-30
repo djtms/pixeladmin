@@ -2,7 +2,7 @@
 
 loadView("nofolder");
 
-if(get_option("SiteMultilanguageMode") == "multilanguage")
+if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
 {
 	$language = getLanguage();
 	setLanguage($language);
@@ -10,10 +10,10 @@ if(get_option("SiteMultilanguageMode") == "multilanguage")
 	setGlobal("i18n",$i18n);
 }
 
-$sitetitle = get_option("siteTitle");
-$description = get_option("description");
-$keywords = get_option("keywords");
-$analystic = get_option("analystics");
+$sitetitle = get_option("admin_siteTitle");
+$description = get_option("admin_description");
+$keywords = get_option("admin_keywords");
+$analystic = get_option("admin_analystics");
 
 /******************************************************************************************************/
 /******************************************************************************************************/

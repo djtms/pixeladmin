@@ -1,267 +1,275 @@
 // Author: Mehmet Hazar Artuner
-// Release Date: 20.01.2012 / 11:27
-// Version: 1.5.2
+// Release Date: 30.03.2012 / 23:20
+// Version: 1.0
 // WebPage: www.hazarartuner.com
 
-jQuery.fn.datepicker = function(options){
-	
-	var defaultOptions = {
-		yearCount : 150,
-		dateFormat : "yy:mm:dd"
-	};
-
-	return this.each(function(){
-		
-		var _this = $(this);
-		var firstValue 	= _this.attr("value");
-		var thisNAME 	= _this.attr("name");
-		var thisCLASS 	= _this.attr("class");
-		var thisSTYLE 	= _this.attr("style");
-		var thisID 		= _this.attr("id");
-		
-		options = $.extend(defaultOptions,options);
-		
-		var _year;
-		var _month;
-		var _day;
-		var _valueObject;
-		
-		prepareHtml();
-		bindEvents();
-		
-		function prepareHtml()
+(function($){
+	$.fn.datepicker = function(settings){
+		if(this.length == 0)
 		{
-			var date = new Date();
-			var year = date.getFullYear();
-			var month = date.getMonth() + 1;
-			var day = date.getDate();
+			return;
+		}
+		
+		if(this.length > 1)
+		{
+			this.each(function(){
+				$(this).datepicker(settings);
+			});
 			
-			_this.wrap('<div class="datePickerOuter" class="' + thisCLASS + '" style="' + thisSTYLE + '">');
+			return this;
+		}
+		
+		// Setup Variables
+		var defaultSettings = {
+				type:"date"
+			};
+			
+		var options = $.extend({},defaultSettings, settings);
+		var _this = this;
+		var currentValue = this.val();
+		var year;
+		var month;
+		var day;
+		var hour;
+		var minute;
+		var second;
+		var monthNames = [null, "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+		var yearRange = {"minus":100,"plus":10};
+		var type = _this.attr("type");
+		////////////////////////////////////////////////////////////////////
+		
+		
+		var start = function(){
+			loadGivenDateAndTimeVariables();
+			generateUI();
+			generateDayCount();
+			setInitValues();
+			bindEvents();
+			return _this;
+		};
+		
+		
+		// input içinde tanımlanmış tarih/saat değerini bu object içindeki tarih-saat değişkenlerine yükler
+		var loadGivenDateAndTimeVariables = function(){
+			//currentValue değerini kontrol edip düzenle
+			matchedDate = currentValue.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/);
+			matchedTime = currentValue.match(/[0-9]{2}:[0-9]{2}:[0-9]{2}/);
+			var current = getCurrentDateAndTimeVariables();
+			
+			currentValue = "";
+			
+			if((matchedDate == null) || (matchedDate == "0000-00-00"))
+			{
+				matchedDate  = current.year;
+				matchedDate += "-" + (current.month < 10 ? "0" + current.month : current.month);
+				matchedDate += "-" + (current.day < 10 ? "0" + current.day : current.day);
+			}
+			
+			if((matchedTime == null) || (matchedTime == "00:00:00"))
+			{
+				matchedTime = (current.hour < 10 ? "0" + current.hour : current.hour);
+				matchedTime += ":" + (current.minute < 10 ? "0" + current.minute : current.minute);
+				matchedTime += ":" + (current.second < 10 ? "0" + current.second : current.second);
+			}
+			
+			if(type == "datetime")
+				currentValue = matchedDate + " " + matchedTime;
+			else if(type == "date")
+				currentValue = matchedDate;
+			else if(type == "time")
+				currentValue = matchedTime;
+			////////////////////////////////////////////////////////////////
+			
+			if(type == "datetime")
+			{
+				var splittedDateAndTime = currentValue.split(" ");
+				var date = splittedDateAndTime[0];
+				var time = splittedDateAndTime[1];
+			}
+			else
+			{				
+				var date = currentValue.toString();
+				var time = currentValue.toString();
+			}
+			
+			switch(type)
+			{
+				case "date":
+					var splittedDate = date.split("-");
+
+					year  	= 	parseInt(splittedDate[0], 10);
+					month 	= 	parseInt(splittedDate[1], 10);
+					day 	= 	parseInt(splittedDate[2], 10);
+				break;
+					
+				case "time":
+					var splittedTime = time.split(":");
+					
+					hour  	= 	splittedTime[0];
+					minute 	= 	splittedTime[1];
+					second 	= 	splittedTime[2];
+				break;
+					
+				case "datetime":
+					var splittedDate = date.split("-");
+					var splittedTime = time.split(":");
+					
+					year  	= 	parseInt(splittedDate[0], 10);
+					month 	= 	parseInt(splittedDate[1], 10);
+					day 	= 	parseInt(splittedDate[2], 10);
+					
+					hour  	= 	splittedTime[0];
+					minute 	= 	splittedTime[1];
+					second 	= 	splittedTime[2];
+				break;
+			};
+		};
+		
+		// şu anın tarih ve saat değerini array olarak döndürür. array değişkenleri index sırasına göre; yıl, ay, gün, saat, dakika, saniye değerlerini verir
+		var getCurrentDateAndTimeVariables = function(){
+			var date = new Date();
+			var datetime = {};
+			
+			datetime.year 	= 	date.getFullYear();
+			datetime.month 	= 	date.getMonth() + 1;
+			datetime.day   	=	date.getDate();
+			
+			datetime.hour 	=	date.getHours();
+			datetime.minute =	date.getMinutes();
+			datetime.second =	date.getSeconds();
+			
+			return datetime;
+		};
+		
+		// arayüzü oluşturur
+		var generateUI = function(){
+			var begin_year	= (year - parseInt(yearRange.minus, 10));
+			var end_year	= (year + parseInt(yearRange.plus, 10));
+			var _thisName = _this.attr("name");
+			
+			_this.wrap('<div class="dateTimePickerOuter ' + type + '">');
 			_this = _this.parent();
 			
-			var html = '<input type="hidden" class="hiddenDateInput" name="' + thisNAME + '" />';
-			html += '<ul class="dateInputsList">';
-			html += '<li class="yearLi">';
-			html += '<select class="year">';
-			html += calculateYears(year,options.yearCount);
-			html += '</select>';
-			html += '</li>';
-			html += '<li class="monthLi">';
-			html += '<select class="month">';
-			html += '<option value="01">Ocak</option>';
-			html += '<option value="02">Şubat</option>';
-			html += '<option value="03">Mart</option>';
-			html += '<option value="04">Nisan</option>';
-			html += '<option value="05">Mayıs</option>';
-			html += '<option value="06">Haziran</option>';
-			html += '<option value="07">Temmuz</option>';
-			html += '<option value="08">Ağustos</option>';
-			html += '<option value="09">Eylül</option>';
-			html += '<option value="10">Ekim</option>';
-			html += '<option value="11">Kasım</option>';
-			html += '<option value="12">Aralık</option>';
-			html += '</select>';
-			html += '</li>';
-			html += '<li class="dayLi">';
-			html += '<select class="day">';
-			html += calculateDays(month,year);
-			html += '</select>';
-			html += '</li>';
-			html += '</ul>';
 			
-			_this.html(html);
-			_year = _this.find(".year");
-			_month = _this.find(".month");
-			_day = _this.find(".day");
+			var	UI  = '<div class="dateOuter">';
+				UI += '<input type="hidden" name="' + _thisName + '" value="" />';
+				UI += '<select class="dp_year">';
+				
+				for(var i=begin_year; i<end_year; i++)
+				{
+					UI += '<option value="' + i + '">' + i + '</option>';
+				}
+				
+				UI += '</select>';
+				UI += '<select class="dp_month">';
+				
+				for(var i=1; i<=12; i++)
+				{
+					UI += '<option value="' + i + '">' + monthNames[i] + '</option>';
+				}
+				
+				UI += '</select>';
+				UI += '<select class="dp_day"></select>';
+				UI += '</div>';
+				UI += '<div class="timeOuter">';
+				UI += '<input class="dp_hour" type="text" value="23" /><span>:</span>';
+				UI += '<input class="dp_minute" type="text" value="59" /><span>:</span>';
+				UI += '<input class="dp_second" type="text" value="59" />';
+				UI += '</div>';
+			_this.html(UI);
+		};
+		
+		// arayüzde ilk değer atamasını yapar
+		var setInitValues = function(){
+			_this.find(".dp_year").val(year);
+			_this.find(".dp_month").val(month);
+			_this.find(".dp_day").val(day);
+			_this.find(".dp_hour").val(hour);
+			_this.find(".dp_minute").val(minute);
+			_this.find(".dp_second").val(second);
+			_this.find("input[type='hidden']").val(getCurrentValue());
+		};
+		
+		// arayüzde olması gereken gün sayısını tarihe göre hesaplayıp arayüzde gösterir
+		var generateDayCount = function(e){
 			
-			_valueObject = _this.find(".hiddenDateInput");
+			if(e != undefined)
+			{
+				year = parseInt(_this.find(".dp_year").val(), 10);
+				month = parseInt(_this.find(".dp_month").val(), 10);
+			}
 			
-			
-			_valueObject.attr("name",thisNAME);
-			_this.removeAttr("name");
-			setDate(firstValue);
-		}
-
-		function calculateDays(month,thisYear)
-		{
-			var dayCount = 0;
+			var extendFebruary = (year % 4) == 0 ? 1 : 0;
 			
 			switch(month)
 			{
-				case "02": 
-				case	2:
-					dayCount = (thisYear % 4) == 0 ? 29 : 28; 
-					break; // February
-				
-				case "01": // January
-				case "03": // March
-				case "05": // May
-				case "07": // July
-				case "08": // August
-				case "10": // October
-				case "12": // December
-				case	1:
-				case	3:
-				case	5:
-				case	7:
-				case	8:
-				case   10:
-				case   12:
-					dayCount = 31;
-					break;
-				
-				case "04": // April
-				case "06": // June
-				case "09": // September
-				case "11": // November
-					dayCount = 30; 
-					break;
+				case 2:		dayCount = 28 + extendFebruary; 	break;
+					
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 8:
+				case 10:
+				case 12: 	dayCount = 31;	break;
+				default: 	dayCount = 30;	break;
 			}
 			
-			var daysHtml = '';
-			
+			UI = "";
 			for(var i=1; i<=dayCount; i++)
 			{
-				var currentVal = i;
-				if(i < 10)
-				{
-					currentVal = "0" + i;
-				}
+				UI += '<option value="' + i + '">' + i + '</option>';
+			}
+			
+			_this.find(".dp_day").html(UI);
+		};
+		
+		var getCurrentValue = function(){
+			var value = "";
+			
+			switch(type)
+			{
+				case"date":
+					year = parseInt(_this.find(".dp_year").val(), 10);
+					month = parseInt(_this.find(".dp_month").val(), 10);
+					day = parseInt(_this.find(".dp_day").val(), 10);
 					
-				daysHtml += '<option value="' + currentVal + '">' + currentVal + '</option>';
-			}
+					value = year + "-" + (month<10 ? "0" + month : month) + "-" + (day<10 ? "0" + day : day);
+					break;
+					
+				case"time":
+					hour = parseInt(_this.find(".dp_hour").val(), 10);
+					minute = parseInt(_this.find(".dp_minute").val(), 10);
+					second = parseInt(_this.find(".dp_second").val(), 10);
+					
+					value = (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute) + ":" + (second < 10 ? "0" + second : second);
+					break;
+					
+				case"datetime":
+					year = parseInt(_this.find(".dp_year").val(), 10);
+					month = parseInt(_this.find(".dp_month").val(), 10);
+					day = parseInt(_this.find(".dp_day").val(), 10);
+					
+					hour = parseInt(_this.find(".dp_hour").val(), 10);
+					minute = parseInt(_this.find(".dp_minute").val(), 10);
+					second = parseInt(_this.find(".dp_second").val(), 10);
+					
+					value = year + "-" + (month<10 ? "0" + month : month) + "-" + (day<10 ? "0" + day : day);
+					value += " " + (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute) + ":" + (second < 10 ? "0" + second : second);
+					break;
+			};
 			
-			return daysHtml;
-		}
+			return value;
+		};
 		
-		function calculateYears(thisYear,yearLength)
-		{
-			var yearsHtml = '';
-			
-			for(var i=thisYear; i >=(thisYear - yearLength); i--)
-			{
-				yearsHtml += '<option value="' + i + '">' + i + '</option>';
-			}
-			
-			return yearsHtml;
-		}
-		
-		function bindEvents()
-		{
-			_month.change(function(){
-				var tempMonth = $(this).val();
-				var tempYear = _this.find(".year").val();
-				
-				_day.html(calculateDays(tempMonth,tempYear));
-				setDateToValueObject();
+		var bindEvents = function(){
+			_this.find(".dp_year, .dp_month").change(generateDayCount);
+			_this.find("input[type=text]").click(function(){$(this).select();});
+			_this.find("select, input[type=text]").change(function(){
+				_this.find("input[type='hidden']").val(getCurrentValue());
 			});
-			
-			_year.change(function(){
-				var tempYear = $(this).val();
-				var tempMonth = _month.val();
-				_month.val("01");
-				_month.trigger("change");
-				setDateToValueObject();
-			});
-			
-			_day.change(setDateToValueObject);
-		}
+		};
 		
-		function getDate()
-		{
-			var day = _day.val();
-			var month = _month.val();
-			var year = _year.val();
-			
-			var formatSplit = options.dateFormat.split(':');
-			var outputHtml = '';
-			
-			for(var i=0; i<formatSplit.length; i++)
-			{
-				if(formatSplit[i] == "dd")
-					outputHtml += day + "-";
-				else if(formatSplit[i] == "mm")
-					outputHtml += month + "-";
-				else if(formatSplit[i] == "yy")
-					outputHtml += year + "-";
-			}
-			
-			outputHtml = outputHtml.substring(0,outputHtml.length - 1);
-			
-			return outputHtml;
-		}
-		
-		function setDate(date)
-		{
-			var setCurrentDate = false;
-			var dateArray;
-			
-			if(date == "" || date == null || date == undefined)
-				setCurrentDate = true;
-			else
-				dateArray = date.split('-');
-			
-			var formatSplit = options.dateFormat.split(':');
-			
-			var d = new Date();
-			var day = d.getDate();
-			var month = d.getMonth() + 1;
-			var year = d.getFullYear();
-			
-			month = month.toString().length < 2 ? "0" + month : month;
-			day = day.toString().length < 2 ? "0" + day : day;
-			
-			var valueObjectValueString = "";
-			for(var i=0; i<formatSplit.length; i++)
-			{
-				if(formatSplit[i] == "dd")
-				{
-					day = setCurrentDate ? day : dateArray[i];
-					valueObjectValueString += (day + "-");
-				}
-				else if(formatSplit[i] == "mm")
-				{
-					month = setCurrentDate ? month : dateArray[i];
-					valueObjectValueString += (month + "-");
-				}
-				else if(formatSplit[i] == "yy")
-				{
-					year = setCurrentDate ? year : dateArray[i];
-					valueObjectValueString += (year + "-");
-				}
-			}
-			
-			day = day.length < 2 ? "0" + day : day;
-			month = month.length < 2 ? "0" + month : month;
-			
-			/////////////////////////
-			_day.val(day);
-			_month.val(month);
-			_year.val(year);
-			
-			valueObjectValueString = valueObjectValueString.substring(0,10);
-
-			_valueObject.val(valueObjectValueString);
-		}
-		
-		function setDateToValueObject()
-		{
-			var formatSplit = options.dateFormat.split(':');
-			
-			var valueObjectValueString = "";
-			for(var i=0; i<formatSplit.length; i++)
-			{
-				if(formatSplit[i] == "dd")
-					valueObjectValueString += (_day.val() + "-");
-				else if(formatSplit[i] == "mm")
-					valueObjectValueString += (_month.val() + "-");
-				else if(formatSplit[i] == "yy")
-					valueObjectValueString += (_year.val() + "-");
-			}
-			
-			valueObjectValueString = valueObjectValueString.substring(0,10);
-			
-			_valueObject.val(valueObjectValueString);
-		}
-	});
-}
+		return start();
+	};
+})(jQuery);

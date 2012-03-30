@@ -5,18 +5,21 @@ if($ADMIN->USER->getUserCount() <= 0)
 	$errorMessage = "";
 	
 	if(basename($_SERVER["SCRIPT_FILENAME"],".php") != "user")
+	{
 		header("Location:system/setup/user.php");
+		exit;
+	}
 	
 	if($_POST["admin_action"] == "createSuperUser")
 	{
 		// Setup Default Options ////////////////////////////////////////////////////////////////////////////////////////
-		set_option("siteTitle", $_POST["siteTitle"],"pa_settings");
-		set_option("mailUser", $_POST["email"],"pa_settings");
-		set_option("getMailAddress", $_POST["email"],"pa_settings");
-		set_option("mailPort", "587","pa_settings");
-		set_option("siteAddress", "http://" . $_SERVER["SERVER_NAME"],"pa_settings");
-		set_option("SiteDisplayMode","maintanance");
-		set_option("SiteDebugMode","debugmode");
+		set_option("admin_siteTitle", $_POST["siteTitle"],"pa_settings");
+		set_option("admin_mailUser", $_POST["email"],"pa_settings");
+		set_option("admin_getMailAddress", $_POST["email"],"pa_settings");
+		set_option("admin_mailPort", "587","pa_settings");
+		set_option("admin_siteAddress", "http://" . $_SERVER["SERVER_NAME"],"pa_settings");
+		set_option("admin_SiteDisplayMode","maintanance");
+		set_option("admin_SiteDebugMode","debugmode");
 		/**************************************************************************************************************/
 		
 		// Setup Default Language ////////////////////////////////////////////////////////////////////////////////////////

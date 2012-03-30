@@ -1,67 +1,82 @@
-.datePickerOuter
+.dateTimePickerOuter
 {
-	width:210px !important;
-	height:20px !important;
-	float:left !important;
-	padding:0 !important;
-	margin:0;
+	float:left;
+	height:29px;
 }
 
-.dateInputsList
+.dateTimePickerOuter.date
 {
-	width:100% !important;
-	margin:0 !important;
-	padding:0 !important;
-	float:left !important;
-	list-style:none !important;
+	width:182px;
 }
 
-.dateInputsList li
+.dateTimePickerOuter.time
 {
-	float:left !important;
-	diplay:block !important;
+	width:104px;
+}
+
+.dateTimePickerOuter.datetime
+{
+	width:310px;
+}
+
+
+.dateTimePickerOuter.time .dateOuter, .dateTimePickerOuter.date .timeOuter
+{
+	display:none
+}
+
+.dateTimePickerOuter .dateOuter
+{
+	width:182px;
+	height:29px;
+	float:left;
+}
+
+.dateTimePickerOuter .timeOuter
+{
+	width:104px;
+	height:29px;
+	float:right;
+}
+
+.dateTimePickerOuter span
+{
+	width:10px;
+	height:29px;
+	float:left;
+	font:13px Trebuchet MS;
+	line-height: 29px;
+	text-align: center;
+}
+
+.dateTimePickerOuter select
+{
+	height:29px;
+	float:left;
+	clear:none;
+}
+
+.dateTimePickerOuter .dp_year
+{
+	width:55px;
+}
+
+.dateTimePickerOuter .dp_month
+{
+	width:75px;
+	margin:0 5px;
+}
+
+.dateTimePickerOuter .dp_day
+{
+	width:42px;
+}
+
+.dateTimePickerOuter input[type=text]
+{
+	width:16px !important;
+	float:left;
 	clear:none !important;
-	margin-top: 0 !important;
-	margin-bottom: 0 !important;
-}
-
-.dateInputsList select
-{
-	float:left !important;
-	margin:2px 0 0 0 !important;
-	border:1px #e2e2e2 solid;
-}
-
-.year
-{
-	width:60px !important;
-}
-
-.month
-{
-	width:90px !important;
-}
-
-.day
-{
-	width:40px !important;
-}
-
-.yearLi
-{
-	width:60px !important;
-	float:left !important;
-}
-
-.monthLi
-{
-	width:90px !important;
-	margin:0 5px !important;
-	float:left !important;
-}
-
-.dayLi
-{
-	width:40px !important;
-	float:left !important;
+	margin:0;
+	background: none !important;
 }

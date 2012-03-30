@@ -15,7 +15,7 @@ require_once "system/classes/DB.php";
 
 require_once "system/includes/options.php";
 
-if(get_option("SiteDebugMode") == "debugmode")
+if(get_option("admin_SiteDebugMode") == "debugmode")
 {
 	ini_set("display_startup_errors", true);
 	error_reporting(E_ALL ^ E_NOTICE);

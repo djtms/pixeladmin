@@ -259,7 +259,7 @@ function createDbTables($dbh,$prefix)
 					('ta_IN', 'Tamil', 'ta', 'India', 'IN', -1),
 					('te_IN', 'Telugu', 'te', 'India', 'IN', -1),
 					('th_TH', 'Thai', 'th', 'Thailand', 'TH', -1),
-					('tr_TR', 'Turkish', 'tr', 'Turkey', 'TR', -1),
+					('tr_TR', 'Türkçe', 'tr', 'Turkey', 'TR', -1),
 					('uk_UA', 'Ukrainian', 'uk', 'Ukraine', 'UA', -1),
 					('ur_PK', 'Urdu', 'ur', 'Pakistan', 'PK', -1),
 					('vi_VN', 'Vietnamese', 'vi', 'Viet Nam', 'VN', -1),
@@ -267,10 +267,10 @@ function createDbTables($dbh,$prefix)
 					('zh_HK', 'Chinese', 'zh', 'Hong Kong', 'HK', -1);";
 	
 	$queryOption = "CREATE TABLE IF NOT EXISTS `{$prefix}option` (
-					  `optionName` char(255) NOT NULL,
-					  `groupName` char(255) NOT NULL,
-					  `optionValue` text NOT NULL,
-					  PRIMARY KEY (`optionName`)
+					  `option_name` char(255) NOT NULL,
+					  `group_name` char(255) NOT NULL,
+					  `option_value` text NOT NULL,
+					  PRIMARY KEY (`option_name`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 	
 	$queryUser = "CREATE TABLE IF NOT EXISTS `{$prefix}user` (

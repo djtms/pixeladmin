@@ -5,7 +5,7 @@ $modulesListHtml = "";
 if(isset($_GET["admin_action"]))
 {
 	$moduleFolder = $_GET["moduleFolder"];
-	$activeModules = get_option("active_modules");
+	$activeModules = get_option("admin_active_modules");
 	
 	switch($_GET["admin_action"])
 	{
@@ -21,7 +21,7 @@ if(isset($_GET["admin_action"]))
 					if(call_user_func($register_module_function) !== false)
 					{
 						$activeModules .= $moduleFolder . ',';
-						set_option("active_modules",$activeModules);
+						set_option("admin_active_modules",$activeModules);
 						executeActivationCode(urldecode($moduleFolder));
 					}
 				}
@@ -38,7 +38,7 @@ if(isset($_GET["admin_action"]))
 		
 		case("deactivateModules"):
 			$activeModules = str_replace("{$moduleFolder},","",$activeModules);
-			set_option("active_modules",$activeModules);
+			set_option("admin_active_modules",$activeModules);
 			header("Location:admin.php?page=modules");
 		break;
 	}
@@ -88,7 +88,7 @@ function getModulesInFolder()
 
 if(sizeof($existingModules) > 0)
 {
-	$active_modules = get_option("active_modules");
+	$active_modules = get_option("admin_active_modules");
 	$active_modules = (substr($active_modules,-1) == ',') ? substr($active_modules,0,-1) : $active_modules;
 	
 	$modulesArray = explode(',',$active_modules);
