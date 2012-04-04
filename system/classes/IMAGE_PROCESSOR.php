@@ -1,202 +1,457 @@
 <?php
 /*
  * Author: Mehmet Hazar Artuner
- * Version: Beta 0.2
- * Date: 13.01.2012
- * 
- * 
- * Notes: 
- * rotateImage() fonksiyonu eklendi
+ * Version: 1.0
+ * Date: 03.04.2012
+ * Site: www.hazarartuner.com
  */
-
 
 class PA_IMAGE_PROCESSOR
 {
-	public function getImageResolution($imageurl)
+	public $error = array();
+	
+	public $image;
+	
+	private $ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
+	private $ERROR_TEXT_USE_PNG_FILE;
+	
+	function PA_IMAGE_PROCESSOR()
 	{
-		if(preg_match("/\.jpeg|\.jpg/i",$imageurl))
-			$image = imagecreatefromjpeg($imageurl);
-		else if(preg_match("/\.png/i",$imageurl))
-			$image = imagecreatefrompng($imageurl);
-		else if(preg_match("/\.gif/i",$imageurl))
-			$image = imagecreatefromgif($imageurl);
-		else
-			return false;
-			
-		return (object) array("width"=>imagesx($image),"height"=>imagesy($image));
+		$this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT = "Geçersiz dosya formatı girdiniz! Lütfen jpg,png veya gif formatlarından birini kullanın!";
+		$this->ERROR_TEXT_FILE_MUST_BE_PNG = "png formatında olmalı!";
 	}
 	
-	public function createThumb($sourceUrl, $targetUrl, $width, $height, $squeeze= false ,$proportion=true, $position="center center", $bg_color="fff")
+	/**
+	*
+	* Resim işleme yapılması istenen resmi yükler yani hafızaya alır
+	* @param (string) $path yüklenecek dosya yolu
+	* @return boolean
+	*/
+	function load($path)
 	{
-		$info = pathinfo($sourceUrl);
+		if(preg_match("/\.jpeg$|\.jpg$/i",$path))
+		$this->image = imagecreatefromjpeg($path);
+		else if(preg_match("/\.png$/i",$path))
+		$this->image = imagecreatefrompng($path);
+		else if(preg_match("/\.gif$/i",$path))
+		$this->image = imagecreatefromgif($path);
+		else
+		{
+			$this->error[] = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
+			return false;
+		}
+	
+		return true;
+	}
+	
+	/**
+	 *
+	 * İşlenen resmi dosya olarak kaydeder
+	 * @param (string) $path kaydedilecek dosya yolu
+	 */
+	public function save($path)
+	{
+		if(preg_match("/.jpeg$|.jpg$/i",$path))
+		imagejpeg($this->image, $path);
+		else if(preg_match("/.png$/i",$path))
+		imagepng($this->image, $path);
+		else if(preg_match("/.gif$/i",$path))
+		imagegif($this->image, $path);
+		else
+		{
+			$this->error = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
+			return false;
+		}
+	
+		return true;
+	}
+	
+	/**
+	 * 
+	 * Hafızadaki resmin çözünürlüğünü dündürür
+	 * @return (object) array("width"=>$width,"height"=>$height)
+	 */
+	public function getResolution()
+	{
+		$width = imagesx($this->image);
+		$height = imagesy($this->image);
 		
-		// Kaynak Resmi Yükle
-		if(preg_match("/jpeg|jpg/i",$info["extension"]))
-			$source = imagecreatefromjpeg($sourceUrl);
-		else if(preg_match("/png/i",$info["extension"]))
-			$source = imagecreatefrompng($sourceUrl);
-		else if(preg_match("/gif/i",$info["extension"]))
-			$source = imagecreatefromgif($sourceUrl);
-			
+		return (object) array("width"=>$width,"height"=>$height);
+	}
+	
+	/**
+	 * 
+	 * Resmi tekrar ölçeklendirir
+	 * @param (int) $width: istenen genişlik
+	 * @param (int) $height: istenen yükseklik
+	 * @param (bool) $proportion: orjinal resmi tekrar ölçülendirirken oranı koru
+	 * @param (string) $position: orjinal resmi tekrar ölçülenirirken hangi pozisyondan kesme veya hizalama yapacağını belirler
+	 * @param (string) veya (array) $bg_color: arkaplan rengini belirler. string olarak kullandığında "transparent" kullanırsan resmin ölçülendirilen resmin
+	 * kalan boşluğu olursa oralar transparan oluyor. String olarak ayrıca web tarzında renk ataması yapabilirsin. örnek: #ff0000  veya #f00. Eğer array olarak
+	 * kullanırsan RGBA olarak değer atayabiliyorsun ve transparan veya normal renk atayabiliyorsun.
+	 * $return boolean
+	 */
+	public function resize($width, $height, $proportion=true, $position="center center", $bg_color=array(255, 255, 255, 0))
+	{		
 		// Çıktı olarak alacağımız "hedef resmi" yükle
-		$target = imagecreatetruecolor($width,$height);
+		$target = imagecreatetruecolor($width, $height);
 	
 		// Arkaplan rengini ayarla
-		$color = $this->fixColor($bg_color);
-		$bg = imagecolorallocate($target, $color->red, $color->green, $color->blue);
+		if($bg_color == "transparent")
+		{
+			$bg = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
+		}
+		else if(is_array($bg_color))
+		{
+			$bg = imagecolorallocatealpha($this->image, $bg_color[0], $bg_color[1], $bg_color[2], $bg_color[3]);
+		}
+		else
+		{
+			$color = $this->convertWebColorToRGB($bg_color);
+			$bg = imagecolorallocatealpha($target, $color->red, $color->green, $color->blue, 0);
+		}
+		
+		// Hedef resme arkaplan özelliğini ata
 		imagefill($target, 0, 0, $bg);
 		
 		// Ölçüleri hesapla
-		$source_width = imagesx($source);
-		$source_height = imagesy($source);
+		$source_width = imagesx($this->image);
+		$source_height = imagesy($this->image);
 		$source_ratio = $source_width / $source_height;
 		
-		$target_width = $width;
-		$target_height = $height;
-		$target_ratio = $target_width / $target_height;
+		$target_ratio = $width / $height;
+		///////////////////////////////////////////////////////////////////////////////////////
+		
+		$source_opt = (object) array("width"=>$source_width,"height"=>$source_height);
+		$target_opt = (object) array("width"=>$width,"height"=>$height);
+
+		if($proportion)
+		{
+			if($source_ratio > $target_ratio) // kaynak resim istenen resme göre geniş ise
+			{
+				$target_opt->height = $target_opt->width / $source_ratio;
+				$pos = $this->calculateImagePosition($position, 0, ($height- $target_opt->height));
+			}
+			else if($source_ratio < $target_ratio) // kaynak resim istenen resme göre  dar ise
+			{
+				$target_opt->width = $target_opt->height * $source_ratio;
+				$pos = $this->calculateImagePosition($position, ($width - $target_opt->width), 0 );
+			}
+			else
+			{
+				$pos->left = 0;
+				$pos->top = 0;
+			}
+		}
+		else if(!$proportion)
+		{
+			$pos = (object) array("left"=>0,"top"=>0);
+		}
+		
+		imagecopyresampled($target, $this->image, $pos->left, $pos->top, 0, 0, $target_opt->width, $target_opt->height, $source_opt->width, $source_opt->height);
+		$this->image = $target;
+		imagesavealpha($this->image, true);
+		return true;
+	}
+	
+	/**
+	 * 
+	 * Resmi verilen ölçüleri geçmeyecek şekilde ve verilen ölçülere en yakın büyüklükte, resmin oranını bozmadan ölçeklendirir.
+	 * @param (int) $width genişlik
+	 * @param (int) $height yükseklik
+	 * @return boolean  işlem sonucunu true veya false olarak döndürür
+	 */
+	function scale($width, $height)
+	{		
+		// Ölçüleri hesapla
+		$source_width = imagesx($this->image);
+		$source_height = imagesy($this->image);
+		$source_ratio = $source_width / $source_height;
+		
+		$target_ratio = $width / $height;
+				
+		if($source_ratio > $target_ratio)
+		{
+			$target_width = $width;
+			$target_height = ($source_height * $width) / $source_width;
+		}
+		else if($source_ratio < $target_ratio)
+		{
+			$target_height = $height;
+			$target_width = ($source_width * $height) / $source_height;			
+		}
+		else
+		{
+			$target_width = $width;
+			$target_height = $height;
+		}
+		///////////////////////////////////////////////////////////////////////////////////////
+		
+		// Çıktı olarak alacağımız "hedef resmi" yükle
+		$target = imagecreatetruecolor($target_width, $target_height);
+		
+		// Arkaplan rengini ayarla
+		$bg = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
+		
+		// Hedef resme arkaplan özelliğini ata
+		imagefill($target, 0, 0, $bg);
 		
 		///////////////////////////////////////////////////////////////////////////////////////
 		
-		$source_opt = (object) array("left"=>0,"top"=>0,"width"=>$source_width,"height"=>$source_height);
-		$target_opt = (object) array("left"=>0,"top"=>0,"width"=>$target_width,"height"=>$target_height);
-
-		if($squeeze && $proportion)
-		{
-			if($source_ratio > $target_ratio) // kaynak resim istenen resme göre geniş ise
-			{
-				$target_opt->height = $target_opt->width / $source_ratio;
-			}
-			else if($source_ratio < $target_ratio) // kaynak resim istenen resme göre  dar ise
-			{
-				$target_opt->width = $target_opt->height * $source_ratio;
-			}	
-		}
-		else if($squeeze && !$proportion)
-		{
-			// Bu ihtimalde hiçbirşey yapma zaten varsayılan olarak bu olasılığa göre hesaplama yapıyor
-		}
-		else if(!$squeeze && $proportion)
-		{
-			if($source_ratio > $target_ratio) // kaynak resim istenen resme göre geniş ise
-			{
-				$target_opt->width = $target_opt->height * $source_ratio;
-				
-				if($target_opt->width > $width)
-				{
-					$pos = $this->calculateImagePosition($position, ($target_opt->width - $width), 0);
-					$target_opt->left = $pos->left;
-				}
-			}
-			else if($source_ratio < $target_ratio) // kaynak resim istenen resme göre  dar ise
-			{
-				$target_opt->height = $target_opt->width / $source_ratio;
-				
-				if($target_opt->height > $height)
-				{
-					$pos = $this->calculateImagePosition($position, 0, ($target_opt->height - $height));	
-					$target_opt->top = $pos->top;
-				}
-			}
-		}
-		else if(!$squeeze && !$proportion)
-		{
-			if($source_opt->width > $target_opt->width)
-				$source_opt->width = $target_opt->width;
-			else 
-				$target_opt->width = $source_opt->width;
-			
-			if($source_opt->height > $target_opt->height)
-				$source_opt->height = $target_opt->height;
-			else 
-				$target_opt->height = $source_opt->height;
-		}
 		
-		
-		imagecopyresampled($target,$source,$target_opt->left,$target_opt->top,$source_opt->left,$source_opt->top,$target_opt->width,$target_opt->height,$source_opt->width,$source_opt->height);
-		
-		if(preg_match("/jpeg|jpg/i",$info["extension"]))
-			imagejpeg($target, $targetUrl,100);
-		else if(preg_match("/png/i",$info["extension"]))
-			imagepng($target, $targetUrl);
-		else if(preg_match("/gif/i",$info["extension"]))
-			imagegif($target, $targetUrl);
-			
-		imagedestroy($source);
-		imagedestroy($target);
-		
+		imagecopyresampled($target, $this->image, 0, 0, 0, 0, $target_width, $target_height, $source_width, $source_height);
+		$this->image = $target;
+		imagesavealpha($this->image, true);
 		return true;
 	}
 	
-	
-	function rotateImage($sourceUrl, $targetUrl, $angle, $color = array(255, 255, 255, 127))
+	/**
+	 * 
+	 * Resmi istenen ölçülerde belirtilen noktalardan itibaren kırma işlemi yapar.
+	 * @param (int) $width genişlik
+	 * @param (int) $height yükseklik
+	 * @param (int) $x yataydaki başlangıç noktası
+	 * @param (int) $y dikeydeki başlangıç noktası
+	 */
+	public function crop($width, $height, $x = "left", $y = "top", $bgcolor = array(255, 255, 255, 127) )
 	{
-		$info = pathinfo($sourceUrl);
-		$target_info = pathinfo($targetUrl);
-
-		// Kaynak Resmi Yükle
-		if(preg_match("/jpeg|jpg/i",$info["extension"]))
-			$source = imagecreatefromjpeg($sourceUrl);
-		else if(preg_match("/png/i",$info["extension"]))
-			$source = imagecreatefrompng($sourceUrl);
-		else if(preg_match("/gif/i",$info["extension"]))
-			$source = imagecreatefromgif($sourceUrl);
+		$target = imagecreatetruecolor($width, $height);
+		$bg = imagecolorallocatealpha($target, $bgcolor[0], $bgcolor[1], $bgcolor[2], $bgcolor[3]);
+		// Hedef resme arkaplan özelliğini ata
+		imagefill($target, 0, 0, $bg);
+		imagesavealpha($target, true);
 		
+		$image_res = $this->getResolution();
+		
+		if($x == "left" || $x == "center" || $x=="right")
+		{
+			$pos = $this->calculateImagePosition("{$x} {$y}", ($image_res->width - $width), ($image_res->height - $height) );
+		}
+		else
+		{
+			$pos->left = intval($x);
+			$pos->top = intval($y);
+		}
+		
+		
+		
+		imagecopyresampled($target, $this->image, 0, 0, $pos->left, $pos->top, $width, $height, $width, $height);
+		$this->image = $target;
+	}
+	
+	/**
+	*
+	* Resmi istenen ölçülerde otomatik şekilde croplar.
+	* @param (int) $width genişlik
+	* @param (int) $height yükseklik
+	* @param (int) $position html de kullanılan mantıkta olduğu gibi, resmin croplanacak alanını belirtir. örnek  left center, right top, center center vs... gibi. ilk değer yatak köşeleri (left, top, center), ikinci değer ise dikey köşeleri belirtir (top, bottom, center).
+	*/
+	public function autoCrop($width, $height, $position)
+	{
+		$target = imagecreatetruecolor($width, $height);
+		$bg = imagecolorallocatealpha($target, 255, 255, 255, 127);
+		// Hedef resme arkaplan özelliğini ata
+		imagefill($target, 0, 0, $bg);
+		imagesavealpha($target, true);
+	
+		// Ölçüleri hesapla
+		$source_width = imagesx($this->image);
+		$source_height = imagesy($this->image);
+		$source_ratio = $source_width / $source_height;
+		
+		$target_ratio = $width / $height;
+	
+		if($source_ratio > $target_ratio) // kaynak resim istenen resme göre geniş ise
+		{
+			$target_width = $source_height * ($width / $height);
+			$target_height = $source_height;
+			
+			$pos = $this->calculateImagePosition($position, ($source_width - $target_width), 0);
+		}
+		else if($source_ratio < $target_ratio) // kaynak resim istenen resme göre  dar ise
+		{
+			$target_width = $source_width;
+			$target_height = $source_width / ($width / $height);
+			
+			$pos = $this->calculateImagePosition($position, 0, ($source_height - $target_height));
+		}
+		else
+		{
+			$target_width = $source_width;
+			$target_height = $source_height;
+			$pos->left = 0;
+			$pos->top = 0;
+		}
+	
+		imagecopyresampled($target, $this->image, 0, 0, $pos->left, $pos->top, $width, $height, $target_width, $target_height);
+		$this->image = $target;
+	}
+	
+	/**
+	 * 
+	 * Resmi istenen açıda döndürür
+	 * @param (float) $angle  dönme açısı
+	 * @param (array) $color dönmeden sonra oluacak boşluklara atanacak renk
+	 * @return boolean
+	 */
+	public function rotate($angle, $color = array(255, 255, 255, 127))
+	{	
 		// Resmin background ve alpha değerini oluştur
-		$background_color = imagecolorallocatealpha($source, $color[0], $color[1], $color[2], $color[3]);
+		$background_color = imagecolorallocatealpha($this->image, $color[0], $color[1], $color[2], $color[3]);
 
 		// Resmi Rotate Et
-		$source = imagerotate($source,$angle, $background_color);
-
+		$this->image = imagerotate($this->image, $angle, $background_color);
+		
 		// Resmin Alpha değerini ata
-		imagesavealpha($source, true);
+		imagesavealpha($this->image, true);
 		
-		// Resmi uygun formatta kaydet
-		if(preg_match("/jpeg|jpg/i",$target_info["extension"]))
-			imagejpeg($source, $targetUrl);
-		else if(preg_match("/png/i",$target_info["extension"]))
-			imagepng($source, $targetUrl);
-		else if(preg_match("/gif/i",$target_info["extension"]))
-			imagegif($source, $targetUrl);
-		
-		imagedestroy($source);
 		return true;
 	}
 	
+	/**
+	 * 
+	 * Resmi photoshoptaki gibi, resim kullanarak maskeler
+	 * @param (string) $mask_image_url  maske olarak kullanılacak resim
+	 * @return boolean
+	 */
+	public function mask($mask_image_url)
+	{
+		if(preg_match("/\.jpeg$|\.jpg$/i",$mask_image_url))
+			$mask = imagecreatefromjpeg($mask_image_url);
+		else if(preg_match("/\.png$/i",$mask_image_url))
+			$mask = imagecreatefrompng($mask_image_url);
+		else if(preg_match("/\.gif$/i",$mask_image_url))
+			$mask = imagecreatefromgif($mask_image_url);
+		else
+		{
+			$this->error[] = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
+			return false;
+		}
 	
+		// Get sizes and set up new picture
+		$xSize = imagesx($this->image);
+		$ySize = imagesy($this->image);
+		$newPicture = imagecreatetruecolor( $xSize, $ySize );
+		imagesavealpha( $newPicture, true );
+		// Hedef resme arkaplan özelliğini ata
+		imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
+	
+		// Resize mask if necessary
+		if( $xSize != imagesx( $mask ) || $ySize != imagesy( $mask ) ) {
+			$tempPic = imagecreatetruecolor( $xSize, $ySize );
+			imagecopyresampled( $tempPic, $mask, 0, 0, 0, 0, $xSize, $ySize, imagesx( $mask ), imagesy( $mask ) );
+			imagedestroy( $mask );
+			$mask = $tempPic;
+		}
+	
+		// Perform pixel-based alpha map application
+		for( $x = 0; $x < $xSize; $x++ ) {
+			for( $y = 0; $y < $ySize; $y++ ) {
+				$alpha = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
+				$alpha = 127 - floor( $alpha[ 'red' ] / 2 );
+				$color = imagecolorsforindex( $this->image, imagecolorat( $this->image, $x, $y ) );
+				imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, $color[ 'red' ], $color[ 'green' ], $color[ 'blue' ], $alpha ) );
+			}
+		}
+	
+		// Copy back to original picture
+		imagedestroy($mask);
+		$this->image = $newPicture;	
+		return true;
+	}
+	
+	function setOpacity($opacity = 100)
+	{
+		$alpha = (127 / 100) * $opacity;
+		imagealphablending($this->image, false);
+		imagesavealpha($this->image, true);
+		return imagefilter($this->image, IMG_FILTER_COLORIZE, 0, 0, 0, $alpha);
+	}
+	
+	/***************************************************************************************************
+	** IMAGE FILTERING FUNCTIONS ***********************************************************************
+	***************************************************************************************************/
+	function filter_GreyScale()
+	{
+		return imagefilter($this->image, IMG_FILTER_GRAYSCALE);
+	}
+	
+	function filter_ColorBalance($red = 0, $green = 0, $blue = 0, $alpha = 0)
+	{
+		imagealphablending($this->image, false);
+		imagesavealpha($this->image, true);
+		return imagefilter($this->image, IMG_FILTER_COLORIZE, $red, $green, $blue, $alpha);
+	}
+	
+	function filter_Pixelate($block_size = 9, $advanced_effect = true)
+	{
+		return imagefilter($this->image, IMG_FILTER_PIXELATE, $block_size, $advanced_effect);
+	}
+	
+	function filter_Brightness($brightness = 0)
+	{
+		return imagefilter($this->image, IMG_FILTER_BRIGHTNESS, $brightness);
+	}
+	
+	function filter_Contrast($contrast = 0)
+	{
+		return imagefilter($this->image, IMG_FILTER_CONTRAST, $contrast);
+	}
+	
+	function filter_GaussianBlur()
+	{
+		return imagefilter($this->image, IMG_FILTER_GAUSSIAN_BLUR);
+	}
+	
+	function filter_SelectiveBlur()
+	{
+		return imagefilter($this->image, IMG_FILTER_SELECTIVE_BLUR);
+	}
+	
+	function filter_ReverseColors()
+	{
+		return imagefilter($this->image, IMG_FILTER_NEGATE);
+	}
+	
+	/***************************************************************************************************
+	** PRIVATE FUNCTIONS *******************************************************************************
+	***************************************************************************************************/
 	private function calculateImagePosition($image_position,$overflow_x,$overflow_y)
 	{
+		$image_position = str_ireplace("_", " ", $image_position);
+		
 		switch($image_position)
 		{
 			case("left center"):
-				$calc_position = (object) array("left"=>0,"top"=>-$overflow_y / 2);
+				$calc_position = (object) array("left"=>0,"top"=>round($overflow_y / 2));
 			break;
 			
 			case("left bottom"):
-				$calc_position = (object) array("left"=>0,"top"=>-$overflow_y);
+				$calc_position = (object) array("left"=>0,"top"=>ceil($overflow_y));
 			break;
 			
 			case("right top"):
-				$calc_position = (object) array("left"=>-$overflow_x,"top"=>0);
+				$calc_position = (object) array("left"=>ceil($overflow_x),"top"=>0);
 			break;
 			
 			case("right center"):
-				$calc_position = (object) array("left"=>-$overflow_x,"top"=>-$overflow_y/2);
+				$calc_position = (object) array("left"=>ceil($overflow_x),"top"=>round($overflow_y/2));
 			break;
 			
 			case("right bottom"):
-				$calc_position = (object) array("left"=>-$overflow_x,"top"=>-$overflow_y);
+				$calc_position = (object) array("left"=>ceil($overflow_x),"top"=>ceil($overflow_y));
 			break;
 			
 			case("center top"):
-				$calc_position = (object) array("left"=>-$overflow_x/2,"top"=>0);
+				$calc_position = (object) array("left"=>round($overflow_x/2),"top"=>0);
 			break;
 			
 			case("center center"):
-				$calc_position = (object) array("left"=>-$overflow_x/2,"top"=>-$overflow_y/2);
+				$calc_position = (object) array("left"=>round($overflow_x/2),"top"=>round($overflow_y/2));
 			break;
 			
 			case("center bottom"):
-				$calc_position = (object) array("left"=>-$overflow_x/2,"top"=>-$overflow_y);
+				$calc_position = (object) array("left"=>round($overflow_x/2),"top"=>ceil($overflow_y));
 			break;
 			
 			default:
@@ -207,8 +462,9 @@ class PA_IMAGE_PROCESSOR
 		return $calc_position;
 	}
 	
-	private function fixColor($color)
+	private function convertWebColorToRGB($color)
 	{
+		$color = str_replace("#", "", $color);
 		$colorLength = strlen($color);
 		
 		if($colorLength<3)

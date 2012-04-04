@@ -162,7 +162,9 @@ function getFileDetailThumb()
 {
 	global $ADMIN;
 	
-	echo $ADMIN->DIRECTORY->getThumbUrl($_POST["fileId"], 390, 300, false, true, "center top", "FFFFFF");
+	$thumb = $ADMIN->DIRECTORY->getThumbInfo($_POST["fileId"], 420, 350, false, true, "center top", "FFFFFF");
+	
+	echo json_encode(array("thumb_url"=>$thumb->url, "thumb_file_id"=>$thumb->owner->thumb_file_id));
 }
 
 function deleteFile()

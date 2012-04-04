@@ -59,19 +59,19 @@ function generateThumbBase64($fileUrl,$width=129,$height=-1)
 }
 
 
-function getThumbImage($file_id, $width, $height, $squeeze = false, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
+function getThumbImage($file_id, $width, $height, $squeeze=true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
 {
 	global $ADMIN;
 	
-	if($thumb = $ADMIN->DIRECTORY->getThumbUrl($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
+	if($thumb = $ADMIN->DIRECTORY->getThumbUrl($file_id, $width, $height, $squeeze=true, $proportion, $position, $bg_color))
 		return $thumb;
 	else
 		return false;
 }
 
-function getThumbInfo($file_id, $width, $height, $squeeze = false, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
+function getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
 {
 	global $ADMIN;
 	
-	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
+	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion, $position, $bg_color);
 }

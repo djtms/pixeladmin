@@ -19,17 +19,35 @@ jQuery.fn.editfile = function(properties){
 		editHtml += '<div class="fileThumbArea">';
 		editHtml += '<div class="fileThumbOuter">';
 		editHtml += '<img class="fileThumb" src="" />';
-		editHtml += '<a class="lookAtFile fancybox" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '"></a>';
-		editHtml += '</div>';
+		editHtml += '<div class="thumbLoaderOuter"><img class="thumbloader" src="' + VIEW_URL + 'images/fileeditor/thumbloader.gif" /></div>';
+		editHtml += '<div class="fileThumbButtonsOuter">';
 		
-		if(file.type != "image")
+		
+		if(file.type == "image")
+		{
+			editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '">Görüntüle</a>';
+			//editHtml += '<button class="btnCrop button">Crop\'la</a>';
+		}
+		else if(file.type == "movie")
+		{
+			editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '">İzle</a>';
+			editHtml += '<div class="changeLogoOuter">';
+			editHtml += '<button>Logo\'yu Değiştir</button>';
+			editHtml += '<input id="thumbfile" type="file" name="thumbfile" />';
+			editHtml += '</div>';
+		}
+		else
+		{
 			editHtml += '<input type="button" class="btnChangeLogo" value="Değiştir" />';
-		
+		}
+		editHtml += '</div>';
+		editHtml += '</div>';
 		editHtml += '</div>';
 		editHtml += '<div class="fileInfosOuter">';
 		editHtml += '<form class="infoForm" onsubmit="return false;">';
 		editHtml += '<input class="fileId" type="hidden" name="file_id" value="' + file.file_id + '" />';
 		editHtml += '<input class="extension" type="hidden" name="extension" value="' + file.extension + '" />';
+		editHtml += '<input class="directory" type="hidden" name="directory" value="' + file.directory + '" />';
 		editHtml += '<input class="basename" type="hidden" name="basename" value="' + file.basename + '" />';
 		editHtml += '<input class="thumbFileId" type="hidden" name="thumb_file_id" value="' + file.thumb_file_id + '" />';
 		editHtml += '<label style="margin-top:0;">Dosya Adı:</label>';
@@ -73,16 +91,18 @@ jQuery.fn.editfile = function(properties){
 		var basename = editFileEditor.find(".basename");
 		var url = editFileEditor.find(".url");
 		var resultText = editFileEditor.find(".resultText");
+		var thumbLoaderOuter = editFileEditor.find(".thumbLoaderOuter");
 		
 		var filenameLastValue = filename.val();
 		
-		btnLookAtFile.fancybox();
+		editFileEditor.find(".fancybox").fancybox();
 		btnSave.click(saveFile);
 		btnCancel.click(closeDetailsEditor);
-		btnChangeLogo.click(changeLogo);
+		//btnChangeLogo.click(changeLogo);
 		filename.keyup(fixUrl);
 		
 		openDetailsEditor();
+		prepareForChangeLogo();
 		
 		function fixUrl()
 		{
@@ -101,8 +121,9 @@ jQuery.fn.editfile = function(properties){
 		{
 			$.ajax({
 				data:"admin_action=getFileDetailThumb&fileId=" + fileId.val(),
+				dataType:"json",
 				success:function(response){
-					fileThumb.attr("src",response);
+					fileThumb.attr("src",response.thumb_url);
 				}
 			});
 			
@@ -111,35 +132,44 @@ jQuery.fn.editfile = function(properties){
 			});
 		}
 		
-		function changeLogo()
+		function prepareForChangeLogo()
 		{
-			$(this).fileeditor({
-				z_index:10000,
-				multiSelection:false,
-				listFileTypes:"image",
-				containorId:"file_editor_editfile_container",
-				uploaderId:"file_editfile_uploader",
-				queueId:"browserEditFilesQueue"
+			var uploader = document.getElementById("thumbfile");
+			uploader.onchange = function(e){
+				thumbLoaderOuter.css("display","block");
+				var reader = new FileReader();
+				reader.onloadend = changeLogo;
+				reader.readAsDataURL(uploader.files[0]);
+			};
+		}
+		
+		function changeLogo(e)
+		{
+			var file_id = $("[name='file_id']").val();
+			var form = new FormData();
+			var thumbfile = document.getElementById("thumbfile").files[0];
+			var xhr = new XMLHttpRequest();
+			form.append("admin_action","changeThumbnailExceptFileTypeIsImage");
+			form.append("file_id",file_id);
+			form.append("directory",$("[name='directory']").val());
+			form.append("thumbfile",thumbfile);
+			
+			xhr.addEventListener("load", function(e){
+				$.ajax({
+					data:"admin_action=getFileDetailThumb&fileId=" + file_id,
+					dataType:"json",
+					success:function(response){
+						fileThumb.attr("src",response.thumb_url);
+						thumbFileId.val(response.thumb_file_id);
+					},
+					complete:function(){
+						thumbLoaderOuter.css("display","none");
+					}
+				});
 			});
 			
-			$(this).openFileEditor({
-				containorId:"file_editor_editfile_container",
-				z_index:10000,
-				filesEditable:false,
-				multiSelection:false,
-				uploaderId:"file_editfile_uploader",
-				queueId:"browserEditFilesQueue",
-				onSelect:function(files){
-					var fileId = files[0].file_id;
-					thumbFileId.val(fileId);
-					
-					$.ajax({
-						data:"admin_action=getFileDetailThumb&fileId=" + fileId,
-						success:function(response){
-							fileThumb.attr("src",response);
-						}
-					});
-				}});
+			xhr.open("POST", "admin.php?page=dashboard", true);
+			xhr.send(form);
 		}
 		
 		function saveFile()

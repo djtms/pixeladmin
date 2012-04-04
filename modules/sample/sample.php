@@ -12,7 +12,7 @@ if($_POST["action"] == "Kaydet")
 
 <form method="post">
 	<label>Tarih:</label>
-	<input type="date" name="birth" value="00:00:05" />s
+	<input type="date" name="birth" value="00:00:05" />
 	<label>Logo</label>
 	<input type="file" name="sampleLogoId" fileid="<?php echo get_option("sampleLogoId"); ?>" />
 	<label>Galeri</label>

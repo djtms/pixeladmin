@@ -125,8 +125,19 @@ class PA_THUMB
 	
 	public function deleteFileThumbs($file_id)
 	{
+		global $ADMIN;
 		global $DB;
 		global $thumbsurl;
+		
+		// Delete Thumbnail File  -> Resim haricindeki dosyaların kendine ait gizli thumbnail dosyaları olabiliyor. O dosyaları silme işlemini burada yapıyoruz.
+		$file = $ADMIN->FILE->selectFileById($file_id);
+		$thumbnailFile = $ADMIN->FILE->selectFileById($file->thumb_file_id);
+		
+		if($thumbnailFile->access_type == "thumbnail")
+		{
+			$ADMIN->FILE->deleteFileById($thumbnailFile->file_id);
+		}
+		/////////////////////////////////////////////////////////////////////////
 		
 		$query  = "SELECT * FROM {$this->link_table} AS lt ";
 		$query .= "LEFT JOIN {$this->table} AS t ON lt.thumb_id=t.thumb_id ";
@@ -153,7 +164,17 @@ class PA_THUMB
 	{
 		global $ADMIN;
 		
-		return $ADMIN->IMAGE_PROCESSOR->createThumb($existing_file_url, $target_url, $width, $height, $squeeze, $proportion, $position, $bg_color);
+		$ADMIN->IMAGE_PROCESSOR->load($existing_file_url);
+		if($squeeze)
+		{
+			$ADMIN->IMAGE_PROCESSOR->resize($width, $height, $proportion, $position, $bg_color);
+		}
+		else
+		{
+			$ADMIN->IMAGE_PROCESSOR->autoCrop($width, $height, $position);
+		}
+		
+		return $ADMIN->IMAGE_PROCESSOR->save($target_url);
 	}
 	
 	private function fixCropPosition($position)

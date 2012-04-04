@@ -119,7 +119,7 @@ class PA_LANGUAGE
 	function getDefaultLanguage()
 	{
 		global $DB;
-		return $DB->get_value("SELECT locale FROM {$this->tableLang} WHERE status=10");
+		return $DB->get_value("SELECT locale FROM {$this->tableLang} WHERE status=10 LIMIT 0,1");
 	}
 	
 	function listActiveLanguages()

@@ -99,7 +99,10 @@ function getLanguage()
 {
 	global $ADMIN;
 	
-	return isset($_SESSION["language"]) ? $_SESSION["language"] : $ADMIN->LANGUAGE->getDefaultLanguage();
+	$language = isset($_SESSION["language"]) ? $_SESSION["language"] : $ADMIN->LANGUAGE->getDefaultLanguage();
+	// Sebebini henüz bilmiyorum ama bazen $language değeri object olarak dönüyor, onu 
+	// kontrol edip hatayı önlemek için bu işlemi yapıyoruz
+	return is_object($language) ? $language->locale : $language;
 }
 
 function getDefaultLanguage()
@@ -120,7 +123,7 @@ function generateLanguageLinks($targetPage = null)
 	
 	foreach($languages as $l)
 	{
-		$languageLinks .= '<a href="index.php?language=' . $l->locale . '&back=' . $targetPage . '" ' . ($currentLanguage == $l->locale ? ' class="selected" ' : "") . '>' . $l->name . '</a>';
+		$languageLinks .= '<a href="index.php?language=' . $l->locale . '&back=' . $targetPage . '" ' . ($currentLanguage == $l->locale ? ' class="selected" ' : "") . '>' . $l->language_name . '</a>';
 	}
 	
 	return $languageLinks;

@@ -45,7 +45,7 @@
 {
 	width:100%;
 	height:100%;
-	position:fixed;
+	position:absolute;
 	left:0;
 	top:0;
 	z-index:1000;
@@ -68,51 +68,118 @@
 	background: #fff;
 	position:absolute;
 	padding:20px;
-	left:200px;
+	left:50%;
 	top:100px;
+	margin:0 0 0 -380px;
 	opacity:0;
 }
 
 .fileThumbArea
 {
-	width:390px;
-	height:100%;
+	width:420px;
+	height:390px;
 	float:left;
 }
 
 .fileThumbOuter
 {
-	width:390px;
-	height:300px;
+	width:420px;
+	height:390px;
 	float:left;
 	position:relative;
 	overflow: hidden;
-	border:solid 1px #dcdcdc;
+	border:solid 1px #aaa;
 	background: #f8f8f8;
 }
 
-.lookAtFile
+.thumbLoaderOuter
 {
-	width:67px;
-	height:71px;
-	display:block;
+	width:420px;
+	height:390px;
 	position:absolute;
-	left:165px;
-	top:100px;
+	left:0;
+	top:0;
+	background: #eee;
+	z-index:10;
+	display:none;
+}
+
+.thumbloader
+{
+	width:54px;
+	height:55px;
+	position:absolute;
+	z-index:15;
+	left:183px;
+	top:167px;	
+}
+
+.fileThumbButtonsOuter
+{
+	width:100%;
+	height:40px;
+	position:absolute;
+	left:0;
+	bottom:0;
+	background: #888;
+	z-index:10;
+	text-align: center;
+	line-height: 40px;
+	border-top:solid 1px #aaa;
+}
+
+.fileThumbButtonsOuter .button, .fileThumbButtonsOuter button, .fileThumbButtonsOuter input[type=submit]
+{
+	position: static !important;
+	display: inline-block !important;
+	float: none !important;	
+	margin: 0 5px !important;
+	min-width: 40px !important;
+}
+
+.changeLogoOuter
+{
+	display:inline-block;
+	position:relative;
+	width:150px;
+	height:20px;
+}
+
+.changeLogoOuter button, .changeLogoOuter input[type=file]
+{
+	position:absolute !important;
+	left:0;
+	top:0;
+	float: none !important;	
+	margin: 0 5px !important;
+	min-width: 40px !important;
+}
+
+.changeLogoOuter input[type=file]
+{
+	width:130px !important;
+	height:27px !important;
+	z-index:10 !important;
 	cursor:pointer;
-	background: url(../images/fileeditor/magnifyingGlass.jpg) no-repeat left top;
+	opacity:0;
 }
 
-.btnChangeLogo
+.changeLogoOuter:hover button
 {
-	margin: 20px 0 0 150px !important;
-}
-
-.btnCancelLogo
-{
-	float:left; 
-	clear:left;
-	margin:10px 160px !important;
+	color:#FFF;
+	background-image: linear-gradient(bottom, rgb(90,90,90) 50%, rgb(112,112,112) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(90,90,90) 50%, rgb(112,112,112) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(90,90,90) 50%, rgb(112,112,112) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(90,90,90) 50%, rgb(112,112,112) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(90,90,90) 50%, rgb(112,112,112) 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.5, rgb(90,90,90)),
+		color-stop(1, rgb(112,112,112))
+	);
 }
 
 .fileInfosOuter

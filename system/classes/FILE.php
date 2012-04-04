@@ -102,4 +102,12 @@ class PA_FILE extends PA_THUMB
 		else if(!is_dir($fullpath))
 			return $DB->execute("DELETE FROM {$this->table} WHERE url=?",array($fileurl));
 	}
+	
+	public function deleteFileById($file_id)
+	{
+		global $ADMIN;
+		
+		$file = $this->selectFileById($file_id);
+		return $this->deleteFileByUrl($file->url);
+	}
 }

@@ -12,7 +12,7 @@ class PA_UPLOADER
 		$this->table = $DB->tables->file;
 	}
 	
-	function uploadFile($directory,$file=null)
+	function uploadFile($directory,$file=null, $access_type = "public")
 	{
 		global $ADMIN;
 		global $uploadurl;
@@ -36,7 +36,8 @@ class PA_UPLOADER
 		
 		if($properties->type == "image")
 		{
-			$resolution = $ADMIN->IMAGE_PROCESSOR->getImageResolution($uploadurl . $properties->url);
+			$ADMIN->IMAGE_PROCESSOR->load($uploadurl . $properties->url);
+			$resolution = $ADMIN->IMAGE_PROCESSOR->getResolution();
 		}
 		
 		if(!$ADMIN->DB->insert($this->table,array("basename"=>$properties->basename,
@@ -52,7 +53,7 @@ class PA_UPLOADER
 												"height"=>$resolution->height,
 												"thumb_file_id"=>$thumb_file_id,
 												"copied_file_id"=>$properties->copied_file_id,
-												"access_type"=>"public")))
+												"access_type"=>$access_type)))
 		{
 			$this->error = "Database e kaydedilemedi!";
 			return false;
