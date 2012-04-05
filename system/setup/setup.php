@@ -394,21 +394,22 @@ function createDbTables($dbh,$prefix)
 				  PRIMARY KEY (`directory_id`)
 				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
 	
-	$queryThumb = "CREATE TABLE IF NOT EXISTS `{$prefix}thumb` (
-				  `thumb_id` int(11) NOT NULL AUTO_INCREMENT,
-				  `basename` char(255) NOT NULL,
-				  `filename` char(255) NOT NULL,
-				  `extension` char(20) NOT NULL,
-				  `directory` char(255) NOT NULL,
-				  `url` char(255) NOT NULL,
-				  `width` int(6) NOT NULL,
-				  `height` int(6) NOT NULL,
-				  `squeeze` tinyint(1) NOT NULL DEFAULT '-1',
-				  `proportion` tinyint(1) NOT NULL DEFAULT '1',
-				  `crop_position` char(20) NOT NULL DEFAULT 'center top',
-				  `bg_color` char(6) NOT NULL DEFAULT 'FFFFFF',
-				  PRIMARY KEY (`thumb_id`)
-				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+	$queryThumb = "CREATE TABLE IF NOT EXISTS `{$prefix}pa_thumb` (
+			  `thumb_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `basename` char(255) NOT NULL,
+			  `filename` char(255) NOT NULL,
+			  `extension` char(20) NOT NULL,
+			  `directory` char(255) NOT NULL,
+			  `url` char(255) NOT NULL,
+			  `width` int(6) NOT NULL,
+			  `height` int(6) NOT NULL,
+			  `squeeze` tinyint(1) NOT NULL DEFAULT '-1',
+			  `proportion` tinyint(1) NOT NULL DEFAULT '1',
+			  `crop_position` char(20) NOT NULL DEFAULT 'center top',
+			  `bg_color` char(6) NOT NULL DEFAULT 'FFFFFF',
+			  `crop_type` char(25) NOT NULL DEFAULT 'auto_crop',
+			  PRIMARY KEY (`thumb_id`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 	
 	$queryFileThumb = "CREATE TABLE IF NOT EXISTS `{$prefix}file_thumb` (
 				  `file_id` int(11) NOT NULL,
