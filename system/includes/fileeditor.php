@@ -6,6 +6,7 @@ $exclamation_image = $ADMIN->DIRECTORY->selectSystemFileByFilename("exclamation"
 
 setGlobal("folder_image", $folder_image);
 setGlobal("exclamation_image", $exclamation_image);
+setGlobal("predefinedCropResoluions", get_option("admin_predefinedCropResoluions"));
 
 function loadFileTree()
 {
@@ -222,6 +223,31 @@ function updateFileInfo()
 		echo json_encode(array("error"=>false,"message"=>"başarıyla kaydedildi!"));
 }
 
+function cropImage()
+{
+	global $ADMIN;
+	
+	extract($_POST, EXTR_SKIP);
+	
+	if($ADMIN->THUMB->cropImage($file_id, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height))
+		echo json_encode(array("error"=>false));
+	else
+		echo json_encode(array("error"=>true));
+}
+
+function listCustomCroppedImages()
+{
+	global $ADMIN;
+	
+	if($thumbs = $ADMIN->THUMB->listCustomCroppedImages($_POST["file_id"]))
+	{
+		$list_thumb_url = getThumbImage($_POST["file_id"], 98, 78, false);
+		echo json_encode(array("error"=>false, "data"=>$thumbs, "list_thumb_url"=>$list_thumb_url));
+	}
+	else
+		echo json_encode(array("error"=>true, "data"=>"error happened!"));
+}
+
 switch($_POST["admin_action"])
 {
 	case("listDirectoryTree")			:	listDirectoryTree();			exit;
@@ -238,6 +264,8 @@ switch($_POST["admin_action"])
 	case("deleteFile")					:	deleteFile();					exit;
 	case("selectFileInfo")				:	selectFileInfo();				exit;
 	case("updateFileInfo")				:	updateFileInfo();				exit;
+	case("cropImage")					:	cropImage();					exit;
+	case("listCustomCroppedImages")		:	listCustomCroppedImages();		exit;
 }
 
 endif;

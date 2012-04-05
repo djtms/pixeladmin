@@ -30,18 +30,39 @@ class PA_THUMB
 	
 	public function getThumbInfo($file_id, $width, $height, $squeeze = false, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
 	{
-		global $DB;
+		global $ADMIN;
 		global $thumbsurl;
 		global $uploadurl;
 		global $systemurl;
-		
 		$temp_thumbs_url = $this->baseDir . $thumbsurl;
 		$temp_files_url = $this->baseDir . $uploadurl;
 		
 		// Thumbnail üretmek için kullanacağın dosyayı belirle.
-		if(!$file = $DB->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file_id)))
+		if(!$file = $ADMIN->DB->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file_id)))
 			return false; // Dosya bulunamadığı zaman geri dön.
-		$thumb_file = ($file->thumb_file_id <= 0) ? $file : $DB->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file->thumb_file_id));
+		$thumb_file = ($file->thumb_file_id <= 0) ? $file : $ADMIN->DB->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file->thumb_file_id));
+		
+		//---------------------------------------------------------------------------------------------------------------
+		// Önce Custom Crop yapılmış dosyayı ara, yok ise auto crop yap.
+		//---------------------------------------------------------------------------------------------------------------
+		$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
+		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
+		
+		if(!$squeeze)
+		{
+			$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
+			$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
+			//echo $thumb_basename;
+			if($thumb = $ADMIN->DB->get_row("SELECT *, CONCAT('{$temp_thumbs_url}',url) AS url FROM {$this->table} WHERE basename=? AND crop_type='custom_crop'",array($thumb_basename)))
+			{
+				return $thumb;
+			}
+		}
+		
+		//---------------------------------------------------------------------------------------------------------------
+		// Crop edilmemişse Thumnail'i Oluştur
+		//---------------------------------------------------------------------------------------------------------------
+		
 		
 		// Thumbnail'in özelliklerini belirle;
 		$width = intval($width);
@@ -63,7 +84,7 @@ class PA_THUMB
 		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
 		
 		// Thumbnail in daha önce üretilmiş olup olmadığını kontrol et
-		if($thumb = $DB->get_row("SELECT *,CONCAT('{$temp_thumbs_url}',url) AS url FROM {$this->table} WHERE basename=?",array($thumb_basename)))
+		if($thumb = $ADMIN->DB->get_row("SELECT *,CONCAT('{$temp_thumbs_url}',url) AS url FROM {$this->table} WHERE basename=?",array($thumb_basename)))
 		{
 			$file->url = $temp_files_url . $file->url; // orjinal dosyanın path'ini düzeltiyoruz. Not: thumbnail'de olduğu gibi database'den çekerken CONCAT ile bağlama hata oluşuyor
 			$thumb->owner = $file; 	// Thumbnail'i kullanan dosyanın bilgileri. Bu bilgileri "thumbs" tablosunda tutmadığım için bi önceki
@@ -96,13 +117,13 @@ class PA_THUMB
 			{
 				$thumbData = array( "basename"=>$thumb_basename,"filename"=>$thumb_filename,"extension"=>$thumb_file->extension,
 											"directory"=>"","url"=>$thumb_basename,	"width"=>$width,"height"=>$height,"squeeze"=>($squeeze ? 1 : -1),	
-											"proportion"=>($proportion ? 1 : -1),"crop_position"=>$position,"bg_color"=>$bg_color);
+											"proportion"=>($proportion ? 1 : -1),"crop_position"=>$position,"bg_color"=>$bg_color, "crop_type"=>"auto_crop");
 					
-				$DB->insert($this->table,$thumbData);
-				$thumb_id = $DB->lastInsertId();
+				$ADMIN->DB->insert($this->table,$thumbData);
+				$thumb_id = $ADMIN->DB->lastInsertId();
 				$thumbData["thumb_id"] = $thumb_id;
 				
-				$DB->insert($this->link_table,array("file_id"=>$file_id,"thumb_id"=>$thumb_id));
+				$ADMIN->DB->insert($this->link_table,array("file_id"=>$file_id,"thumb_id"=>$thumb_id));
 				$thumbData["url"] = $thumbsurl . $thumbData["url"]; // buradaki değişkeni database den çekmeyip kendim ürettiğim için '$thumbsurl' değişkenini başa eklemem gerekiyor
 				$thumbData["owner"] = $file; // Thumbnail'i kullanan dosyanın bilgileri. Bu bilgileri "thumbs" tablosunda tutmadığım için bi önceki
 											 // satırdaki insert işleminden sonra diziye eklemem gerekiyor.
@@ -160,6 +181,99 @@ class PA_THUMB
 		return true;
 	}
 	
+	function cropImage($file_id, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height)
+	{
+		global $ADMIN;
+		global $DB;
+		global $thumbsurl;
+		global $uploadurl;
+		global $systemurl;
+		
+		$temp_thumbs_url = $this->baseDir . $thumbsurl;
+		$temp_files_url = $this->baseDir . $uploadurl;
+		
+		// Thumbnail üretmek için kullanacağın dosyayı belirle.
+		if(!$file = $ADMIN->DB->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file_id)))
+			return false; // Dosya bulunamadığı zaman geri dön.
+		$thumb_file = ($file->thumb_file_id <= 0) ? $file : $ADMIN->DB->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file->thumb_file_id));
+		
+		// Thumbnail'in özelliklerini belirle;
+		$width = intval($resize_width);
+		$height = intval($resize_height);
+			
+		// Thumbnail üretmek için kullanılacak kaynak dosyanın tam adresini belirle
+		$source_file_full_url = $uploadurl . $thumb_file->url;
+		
+		// Thumbnail'in daha önce üretilmiş olma ihtimaline karşılık arama yaparken kullanacağın, 
+		// eğer üretilmemişse üretirken kullanacağın dosya adını belirle
+		$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
+		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
+		
+		// Thumbnail in daha önce üretilmiş olup olmadığını kontrol et
+		if($thumb = $ADMIN->DB->get_row("SELECT *, CONCAT('{$temp_thumbs_url}',url) AS url FROM {$this->table} WHERE basename=? AND crop_type='custom_crop'",array($thumb_basename)))
+		{
+			$file->url = $temp_files_url . $file->url; // orjinal dosyanın path'ini düzeltiyoruz. Not: thumbnail'de olduğu gibi database'den çekerken CONCAT ile bağlama hata oluşuyor
+			$thumb->owner = $file; 	// Thumbnail'i kullanan dosyanın bilgileri. Bu bilgileri "thumbs" tablosunda tutmadığım için bi önceki
+									// satırdaki seçim işleminden sonra diziye eklemem gerekiyor.
+			
+			if($this->baseDir != "") // Eğer dosyayı başka bir hostta arıyorsak fonksiyonu burada sonlandırıyoruz çünkü başka
+				return $thumb;		 // hosttaki bir dosyaya müdahale etme şansımız yok.
+			
+			if($this->generateCropImage($source_file_full_url, $thumb->url, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height))
+			{
+				return $thumb;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if($this->baseDir != "") // Eğer dosyayı başka bir hostta arıyorsak fonksiyonu burada sonlandırıyoruz çünkü başka
+				return false;		 // hosttaki bir dosyaya müdahale etme şansımız yok.
+
+			$file->url = $temp_files_url . $file->url; // orjinal dosyanın path'ini düzeltiyoruz. Not: thumbnail'de olduğu gibi database'den çekerken CONCAT ile bağlama hata oluşuyor
+			$thumb_full_url = $thumbsurl . $thumb_basename;
+			if($this->generateCropImage($source_file_full_url, $thumb_full_url, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height))
+			{
+				$thumbData = array( "basename"=>$thumb_basename,"filename"=>$thumb_filename,"extension"=>$thumb_file->extension,
+											"directory"=>"","url"=>$thumb_basename,	"width"=>$width,"height"=>$height,"crop_type"=>"custom_crop");
+				
+				$thumb_id = $ADMIN->DB->insert($this->table,$thumbData);
+				$thumbData["thumb_id"] = $thumb_id;
+				
+				$DB->insert($this->link_table,array("file_id"=>$file_id,"thumb_id"=>$thumb_id));
+				$thumbData["url"] = $thumbsurl . $thumbData["url"]; // buradaki değişkeni database den çekmeyip kendim ürettiğim için '$thumbsurl' değişkenini başa eklemem gerekiyor
+				$thumbData["owner"] = $file; // Thumbnail'i kullanan dosyanın bilgileri. Bu bilgileri "thumbs" tablosunda tutmadığım için bi önceki
+											 // satırdaki insert işleminden sonra diziye eklemem gerekiyor.
+				
+				return (object)$thumbData;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	
+	function listCustomCroppedImages($file_id)
+	{
+		global $ADMIN;
+		
+		global $thumbsurl;
+		$temp_thumbs_url = $this->baseDir . $thumbsurl;
+		
+		$query  = "SELECT t.*,CONCAT('{$temp_thumbs_url}',t.url) AS url FROM {$this->link_table} AS l ";
+		$query .= "LEFT JOIN {$this->table} AS t ON l.thumb_id=t.thumb_id ";
+		$query .= "WHERE t.crop_type='custom_crop' AND l.file_id=?";
+		
+		return $ADMIN->DB->get_rows($query,array($file_id));
+	}
+	
+	//--------------------------------------------------------------------------------------------------------------------------------------------------
+	// PRIVATE FUNCTIONS
+	//--------------------------------------------------------------------------------------------------------------------------------------------------
 	private function generateThumbnailImage($existing_file_url,$target_url,$width, $height, $squeeze = false, $proportion = true, $position = "center top" ,$bg_color = "FFFFFF")
 	{
 		global $ADMIN;
@@ -175,6 +289,15 @@ class PA_THUMB
 		}
 		
 		return $ADMIN->IMAGE_PROCESSOR->save($target_url);
+	}
+	
+	private function generateCropImage($source_url, $target_url, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height)
+	{
+		global $ADMIN;
+		return $ADMIN->IMAGE_PROCESSOR->load($source_url) &&
+		$ADMIN->IMAGE_PROCESSOR->crop($crop_width, $crop_height, $left, $top) &&
+		$ADMIN->IMAGE_PROCESSOR->resize($resize_width, $resize_height, true) &&
+		$ADMIN->IMAGE_PROCESSOR->save($target_url);
 	}
 	
 	private function fixCropPosition($position)

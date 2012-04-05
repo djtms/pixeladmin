@@ -64,8 +64,9 @@
 
 .editFileContentsOuter
 {
-	width:760px;
-	background: #fff;
+	width:670px;
+	height:460px;
+	background: #fff url(../images/editfileBg.jpg) left bottom repeat-x;
 	position:absolute;
 	padding:20px;
 	left:50%;
@@ -89,7 +90,12 @@
 	position:relative;
 	overflow: hidden;
 	border:solid 1px #aaa;
-	background: #f8f8f8;
+	background: #fff url(../images/cropAreaBg.png);
+}
+
+.jcrop-holder
+{
+	background: transparent !important;
 }
 
 .thumbLoaderOuter
@@ -182,11 +188,40 @@
 	);
 }
 
+.infoForm label, .infoForm input[type=text]
+{
+	width:218px !important;
+}
+
 .fileInfosOuter
 {
-	width:317px;
+	width:228px;
 	float:right;
 	position:relative;
+}
+
+.saveSubmitButtonsOuter
+{
+	position:absolute;
+	right:20px;
+	bottom:18px;
+}
+
+.formButtons
+{
+	float:right;
+}
+
+.formButtons input
+{
+	float:left;
+	clear: none !important;
+	margin: 0 0 0 10px !important;
+}
+
+.cropFormButtons
+{
+	display:none;
 }
 
 .btnSave, .btnCancel
@@ -196,12 +231,12 @@
 	margin:30px 0 0 10px !important;
 }
 
-.loader
+.editfileloader
 {
-	width:29px !important;
-	height:29px !important;
+	width:27px !important;
+	height:27px !important;
 	float:right !important;
-	margin:30px 0 0 10px !important;
+	margin:31px 0 0 10px !important;
 	display:none;
 }
 
@@ -217,4 +252,161 @@
 	color:#f00;
 	text-align:right;
 	line-height: 29px;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- 
+ CROP STYLES
+------------------------------------------------------------------------------------------------------------*/
+
+.cropInfoPanel
+{
+	width:230px;
+	height:400px;
+	background:#fff;
+	position:absolute;
+	left:0;
+	top:0;
+	display:none;
+}
+
+.cropInfoPanel select
+{
+	width: 229px !important;
+}
+
+.cropInfoPanel label
+{
+	width:200px !important;
+	clear:none !important;
+	margin:0 !important;
+}
+
+.cropInfoPanel input[type=checkbox]
+{
+	margin:10px 5px 0 0;
+}
+
+.relative
+{
+	position:relative;
+}
+
+.predefinedResOuter
+{
+	width:100%;
+	float:left;
+	margin:0 ;
+}
+
+.custom_res_info
+{
+	float:left;
+	clear:left;
+	margin:20px 0;
+	padding:5px 16px 15px 16px;
+	border: dashed 1px #e2e2e2;
+	opacity: 0.5;
+}
+
+
+
+.custom_res_info label
+{
+	width:80px !important;
+	clear:none;
+	text-align: center;
+}
+
+.custom_res_info .space
+{
+	width:35px !important;
+	text-align: center;
+	font-size:14px;
+	line-height:29px;
+}
+
+.custom_res_info input[type=text]
+{
+	width:68px;
+	margin:0;
+	clear:none;
+}
+
+.existingResolutionsOuter
+{
+	width:218px;
+	height:104px;
+	float:left;
+	clear:left;
+	position:relative;
+	border:solid 1px #aaa;
+	padding:8px 0 0 8px;
+	overflow-x: scroll;
+	overflow-y: hidden; 
+}
+
+.existingResolutionsOuter .loader
+{
+	width:226px;
+	height:112px;
+	background: #eee;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:10;
+	display:none;
+}
+
+.existingResolutionsOuter .loader img
+{
+	width:31px;
+	height:31px;
+	position:absolute;
+	left:97px;
+	top:30px;
+}
+
+.existingResolutionsOuter ul
+{
+	height:80px;
+	float:left;
+	list-style: none;
+}
+
+.existingResolutionsOuter li
+{
+	width:98px;
+	height:78px;
+	position:relative;
+	float:left;
+	margin:0 9px 0 0;
+	border: solid 1px #aaa !important;
+}
+
+.existingResolutionsOuter li img
+{
+	width: 98px;
+	height: 78px;
+	display:block;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:1;
+	border:none !important;
+}
+
+.existingResolutionsOuter li span
+{
+	width:98px;
+	height:15px;
+	position:absolute;
+	z-index:5;
+	display:block;
+	left:0;
+	bottom:0;
+	font: 12px Trebuchet MS;
+	color:#fff;
+	text-align: center;
+	line-height: 15px;
+	background: #aaa;
 }

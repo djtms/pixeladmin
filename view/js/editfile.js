@@ -12,6 +12,8 @@ jQuery.fn.editfile = function(properties){
 		options.onInit();
 		var uniqueId = $(this).index();
 		var file = options.file;
+		var resizeWidth;
+		var resizeHeight;
 		
 		var editHtml = '<div id="' + "editFile_" + uniqueId + '" class="editFileOuter">';
 		editHtml += '<div class="editFileBackHider"></div>';
@@ -26,7 +28,7 @@ jQuery.fn.editfile = function(properties){
 		if(file.type == "image")
 		{
 			editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '">Görüntüle</a>';
-			//editHtml += '<button class="btnCrop button">Crop\'la</a>';
+			editHtml += '<button class="btnOpenCrop button">Resmi Kırp</a>';
 		}
 		else if(file.type == "movie")
 		{
@@ -62,27 +64,87 @@ jQuery.fn.editfile = function(properties){
 		editHtml += '<input type="text" readonly="readonly" value="' + file.creation_time + '" />';
 		editHtml += '<label>Son Güncelleme Tarihi:</label>';
 		editHtml += '<input type="text" readonly="readonly" value="' + file.last_update_time + '" />';
+		editHtml += '</form>';
+		// FILE CROP INFO PANEL -------------------------------------------------------------------------------------------
+		editHtml += '<div class="cropInfoPanel">';
+		editHtml += '<div class="relative">';
+		editHtml += '<form class="cropInfoForm">';
+		editHtml += '<div class="predefinedResOuter">';
+		editHtml += '<label>Çözünürlükler</label>';
+		editHtml += '<select class="predefined_res" name="predefined_res">';
+		
+		for(var i=0; i<predefinedCropResoluions.length; i++)
+		{
+			editHtml += '<option value="' + i + '">' + predefinedCropResoluions[i][0] + " x " + predefinedCropResoluions[i][1] + '</option>';
+		}
+		
+		editHtml += '<option value="-1">Diğer</option>';
+		editHtml += '</select>';
+		editHtml += '</div>';		
+		editHtml += '<div class="custom_res_info">';
+		editHtml += '<label>Genişlik</label>';
+		editHtml += '<label class="space"></label>';
+		editHtml += '<label>Yükseklik</label>';
+		editHtml += '<br clear="all" />';
+		editHtml += '<input type="text" name="width" value="0" />';
+		editHtml += '<label class="space">X</label>';
+		editHtml += '<input type="text" name="height" value="0" />';
+		editHtml += '</div>';
+		editHtml += '';
+		editHtml += '';
+		editHtml += '</form>';
+		
+		editHtml += '<label>Varolan Çözünürlükler</label>';
+		editHtml += '<div class="existingResolutionsOuter">';
+		editHtml += '<ul>';
+		editHtml += '</ul>';
+		editHtml += '<div class="loader"><img src="' + VIEW_URL + 'images/fileeditor/thumblistloader.gif" /></div>';
+		editHtml += '</div>';
+		editHtml += '<div>';
+		editHtml += '</div>';
+		
+		//------------------------------------------------------------------------------------------------------------------
+		
+		
+		
+		editHtml += '</div>';
+		editHtml += '</div>';
+		editHtml += '</div>';
+		editHtml += '<div class="saveSubmitButtonsOuter">';
+		editHtml += '<div class="relative">';
+		
+		editHtml += '<div class="infoFormButtons formButtons">';
 		editHtml += '<input type="button" class="btnSave" value="Kaydet" />';
 		editHtml += '<input type="button" class="btnCancel" value="İptal" />';
-		editHtml += '<img class="loader" src="' + VIEW_URL + 'images/fileeditor/editfileloader.gif" />';
+		editHtml += '</div>';
+		
+		editHtml += '<div class="cropFormButtons formButtons">';
+		editHtml += '<input type="button" class="btnCloseCrop" value="Bitir" />';
+		editHtml += '<input type="button" class="btnCrop" value="Kırp" />';
+		editHtml += '</div>';
+		
+		editHtml += '</div>';
+		editHtml += '<img class="editfileloader" src="' + VIEW_URL + 'images/fileeditor/editfileloader.gif" />';
 		editHtml += '<span class="resultText"></span>';
-		editHtml += '</form>';
-		editHtml += '</div>';
-		editHtml += '</div>';
 		editHtml += '</div>';
 		
 		$("body").append(editHtml);
 		
+		var JCROP; 
+		var bigThumbUrl;
 		var editFileEditor = $("#editFile_" + uniqueId);
 		var editFileBackHider = editFileEditor.find(".editFileBackHider");
 		var editFileEditorContents = editFileEditor.find(".editFileContentsOuter");
 		var fileThumb = editFileEditor.find(".fileThumb");
 		var btnLookAtFile = editFileEditor.find(".lookAtFile");
 		var btnChangeLogo = editFileEditor.find(".btnChangeLogo");
+		var btnOpenCrop = editFileEditor.find(".btnOpenCrop");
+		var btnCloseCrop = editFileEditor.find(".btnCloseCrop");
 		var fileId = editFileEditor.find(".fileId");
 		var thumbFileId = editFileEditor.find(".thumbFileId");
 		var btnSave = editFileEditor.find(".btnSave");
 		var btnCancel = editFileEditor.find(".btnCancel");
+		var btnCrop = editFileEditor.find(".btnCrop");
 		var infoForm = editFileEditor.find(".infoForm");
 		var thumbFileId = editFileEditor.find(".thumbFileId");
 		var loader = editFileEditor.find(".loader");
@@ -92,17 +154,147 @@ jQuery.fn.editfile = function(properties){
 		var url = editFileEditor.find(".url");
 		var resultText = editFileEditor.find(".resultText");
 		var thumbLoaderOuter = editFileEditor.find(".thumbLoaderOuter");
+		var fileThumbButtonsOuter = editFileEditor.find(".fileThumbButtonsOuter");
+		var cropInfoPanel = editFileEditor.find(".cropInfoPanel");
+		var fileThumbOuter = editFileEditor.find(".fileThumbOuter");
+		var cropFormButtons = editFileEditor.find(".cropFormButtons");
+		var infoFormButtons = editFileEditor.find(".infoFormButtons");
+		var thumbListLoader = editFileEditor.find(".existingResolutionsOuter .loader");
 		
 		var filenameLastValue = filename.val();
 		
 		editFileEditor.find(".fancybox").fancybox();
-		btnSave.click(saveFile);
-		btnCancel.click(closeDetailsEditor);
-		//btnChangeLogo.click(changeLogo);
-		filename.keyup(fixUrl);
-		
+		bindEvents();
 		openDetailsEditor();
 		prepareForChangeLogo();
+		
+		
+		function initializeCrop()
+		{
+			fileThumbButtonsOuter.css("display","none");
+			thumbLoaderOuter.css("display", "block");
+			fileThumb.attr("src",file.url).bind("load",function(){
+				$(this).Jcrop({
+					boxWidth: 420,
+			        boxHeight: 390
+				},function(){
+					JCROP = this;
+					$(".fileThumb").each(function(){
+						if($(this).css("display") != "none")
+						{
+							var left = (420 - parseInt($(this).width())) / 2;
+							var top = (390 - parseInt($(this).height())) / 2;
+							
+							$(this).parent().css({"left":left, "top":top});
+							thumbLoaderOuter.css("display", "none");
+							cropInfoPanel.css("display","block");
+							infoFormButtons.css("display", "none");
+							cropFormButtons.css("display", "block");
+							
+							var width = parseInt(file.width) / 2;
+							var height = parseInt(file.height) / 2;
+							JCROP.setSelect([0,0,width,height]);
+							$(".predefined_res").change();
+							listCustomThumbs();
+						}
+					});
+				});
+			});
+		}
+		
+		function bindEvents()
+		{
+			btnSave.click(saveFile);
+			btnCancel.click(closeDetailsEditor);
+			btnOpenCrop.click(initializeCrop);
+			filename.keyup(fixUrl);
+			btnCloseCrop.click(function(){
+				fileThumb.unbind("load").attr("src",bigThumbUrl);
+				JCROP.destroy();
+				fileThumbButtonsOuter.css("display","block");
+				cropInfoPanel.css("display","none");
+				infoFormButtons.css("display", "block");
+				cropFormButtons.css("display", "none");
+			});
+			
+			$(".predefined_res").change(function(){
+				if($(this).val() == -1)
+				{
+					$(".custom_res_info").css("opacity", 1);
+					$(".custom_res_info input").attr("disabled",false);
+				}
+				else
+				{
+					$(".custom_res_info").css("opacity", 0.5);
+					$(".custom_res_info input").val(0).attr("disabled",true);
+					var index = $(this).val();
+					var width = predefinedCropResoluions[index][0];
+					var height = predefinedCropResoluions[index][1];
+					JCROP.setOptions({"aspectRatio": (width / height)});
+					resizeWidth = width;
+					resizeHeight = height;
+				}
+			});
+			
+			$(".custom_res_info input").click(function(){$(this).select();})
+			.keyup(function(){
+				width = $(".custom_res_info [name='width']").val();
+				height = $(".custom_res_info [name='height']").val();
+				resizeWidth = width;
+				resizeHeight = height;
+				JCROP.setOptions({"aspectRatio": (width / height)});
+			});
+			
+			btnCrop.click(function(){
+				var values = JCROP.tellSelect();
+				thumbLoaderOuter.css("display", "block");
+				$.ajax({
+					type:"post",
+					data:"admin_action=cropImage&file_id=" + file.file_id + "&left=" + values.x + "&top=" + values.y + "&crop_width=" + values.w + "&crop_height=" + values.h + "&resize_width=" + resizeWidth + "&resize_height=" + resizeHeight,
+					success: function(response){
+						listCustomThumbs();
+					},
+					complete:function(){
+						thumbLoaderOuter.css("display", "none");
+					}
+				});
+				
+				JCROP.release();
+			});
+		}
+		
+		function listCustomThumbs()
+		{
+			thumbListLoader.css("display","block");
+			$.ajax({
+				type:"post",
+				data:"admin_action=listCustomCroppedImages&file_id=" + file.file_id,
+				dataType:"json",
+				success:function(response){
+					if(response.error === false)
+					{
+						var data = response.data;
+						var list_thumb_url = response.list_thumb_url;
+						var width = data.length * 109;
+						var listHtml = "";
+						for(var i=0; i<data.length; i++)
+						{
+							listHtml += '<li>';
+							listHtml += '<img src="' + list_thumb_url + '" />';
+							listHtml += '<span>' + data[i].width + " x " + data[i].height + '</span>';
+							listHtml += '</li>';
+						}
+						
+						$(".existingResolutionsOuter ul").html(listHtml).css("width", width);
+					}
+					
+					thumbListLoader.css("display","none");
+				},
+				error:function(){
+					thumbListLoader.css("display","none");
+				}
+			});
+		}
 		
 		function fixUrl()
 		{
@@ -124,6 +316,7 @@ jQuery.fn.editfile = function(properties){
 				dataType:"json",
 				success:function(response){
 					fileThumb.attr("src",response.thumb_url);
+					bigThumbUrl = response.thumb_url;
 				}
 			});
 			
@@ -135,12 +328,15 @@ jQuery.fn.editfile = function(properties){
 		function prepareForChangeLogo()
 		{
 			var uploader = document.getElementById("thumbfile");
-			uploader.onchange = function(e){
-				thumbLoaderOuter.css("display","block");
-				var reader = new FileReader();
-				reader.onloadend = changeLogo;
-				reader.readAsDataURL(uploader.files[0]);
-			};
+			if($("#thumbfile").length > 0)
+			{
+				uploader.onchange = function(e){
+					thumbLoaderOuter.css("display","block");
+					var reader = new FileReader();
+					reader.onloadend = changeLogo;
+					reader.readAsDataURL(uploader.files[0]);
+				};
+			}
 		}
 		
 		function changeLogo(e)
@@ -159,7 +355,8 @@ jQuery.fn.editfile = function(properties){
 					data:"admin_action=getFileDetailThumb&fileId=" + file_id,
 					dataType:"json",
 					success:function(response){
-						fileThumb.attr("src",response.thumb_url);
+						bigThumbUrl = response.thumb_url;
+						fileThumb.attr("src",bigThumbUrl);
 						thumbFileId.val(response.thumb_file_id);
 					},
 					complete:function(){

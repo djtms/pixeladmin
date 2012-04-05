@@ -237,6 +237,7 @@ class PA_IMAGE_PROCESSOR
 		
 		imagecopyresampled($target, $this->image, 0, 0, $pos->left, $pos->top, $width, $height, $width, $height);
 		$this->image = $target;
+		return true;
 	}
 	
 	/**
@@ -285,6 +286,7 @@ class PA_IMAGE_PROCESSOR
 	
 		imagecopyresampled($target, $this->image, 0, 0, $pos->left, $pos->top, $width, $height, $target_width, $target_height);
 		$this->image = $target;
+		return true;
 	}
 	
 	/**
