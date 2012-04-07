@@ -20,6 +20,7 @@ if($ADMIN->USER->getUserCount() <= 0)
 		set_option("admin_siteAddress", "http://" . $_SERVER["SERVER_NAME"],"pa_settings");
 		set_option("admin_SiteDisplayMode","maintanance");
 		set_option("admin_SiteDebugMode","debugmode");
+		set_option("admin_predefinedCropResoluions", array(array(1024,768),array(800,600),array(640,480)));
 		/**************************************************************************************************************/
 		
 		// Setup Default Language ////////////////////////////////////////////////////////////////////////////////////////

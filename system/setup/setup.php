@@ -98,7 +98,7 @@ function randomString($length = 6)
 
 function createDirectoriesAndFiles()
 {
-	$defaultDirectories = array();
+	$defaultDirectories   = array();
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/";	
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/system/";
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files/";
@@ -268,8 +268,9 @@ function createDbTables($dbh,$prefix)
 	
 	$queryOption = "CREATE TABLE IF NOT EXISTS `{$prefix}option` (
 					  `option_name` char(255) NOT NULL,
-					  `group_name` char(255) NOT NULL,
 					  `option_value` text NOT NULL,
+					  `group_name` char(255) NOT NULL,
+					  `data_type` char(20) NOT NULL,
 					  PRIMARY KEY (`option_name`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 	

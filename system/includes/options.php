@@ -4,22 +4,28 @@ function get_option($option_name)
 {
 	global $DB;
 	
-	$o = $DB->get_row("SELECT * FROM {$DB->tables->option} WHERE option_name=?",array($option_name));
-	
-	switch($o->data_type)
+	if($o = $DB->get_row("SELECT * FROM {$DB->tables->option} WHERE option_name=?",array($option_name)))
 	{
-		default:
-		case "unknown type":
-		case "string":			$o->option_value = (string)$o->option_value;				break;
-		case "boolean":			$o->option_value = (boolean)$o->option_value;				break;
-		case "integer":			$o->option_value = (integer)$o->option_value;				break;
-		case "double":			$o->option_value = (double)$o->option_value;				break;
-		case "object":			$o->option_value = json_decode($o->option_value);			break;
-		case "array":			$o->option_value = json_decode($o->option_value, true);		break;
-		case "NULL":			$o->option_value = null;									break;
-	};
-	
-	return $o->option_value;
+		if((trim($o->option_value) != "") && ($o->option_value != null))
+		{
+			switch($o->data_type)
+			{
+				default:
+				case "unknown type":
+				case "string":			$o->option_value = (string)$o->option_value;				break;
+				case "boolean":			$o->option_value = (boolean)$o->option_value;				break;
+				case "integer":			$o->option_value = (integer)$o->option_value;				break;
+				case "double":			$o->option_value = (double)$o->option_value;				break;
+				case "object":			$o->option_value = json_decode($o->option_value);			break;
+				case "array":			$o->option_value = json_decode($o->option_value, true);		break;
+				case "NULL":			$o->option_value = null;									break;
+			};
+		}
+		
+		return $o->option_value;	
+	}
+	else
+		return false;
 }
 	
 function set_option($option_name, $option_value, $group_name="")
@@ -55,17 +61,20 @@ function get_optiongroup($group_name)
 	{
 		foreach($options as &$o)
 		{
-			switch($o->data_type)
+			if((trim($o->option_value) != "") && ($o->option_value != null))
 			{
-				case "boolean":			$o->option_value = (boolean)$o->option_value;				break;
-				case "integer":			$o->option_value = (integer)$o->option_value;				break;
-				case "double":			$o->option_value = (double)$o->option_value;				break;
-				case "string":			$o->option_value = (string)$o->option_value;				break;
-				case "object":			$o->option_value = json_decode($o->option_value);			break;
-				case "array":			$o->option_value = json_decode($o->option_value, true);		break;
-				case "NULL":			$o->option_value = null;									break;
-				case "unknown type":	$o->option_value = (string)$o->option_value;				break;
-			};
+				switch($o->data_type)
+				{
+					case "boolean":			$o->option_value = (boolean)$o->option_value;				break;
+					case "integer":			$o->option_value = (integer)$o->option_value;				break;
+					case "double":			$o->option_value = (double)$o->option_value;				break;
+					case "string":			$o->option_value = (string)$o->option_value;				break;
+					case "object":			$o->option_value = json_decode($o->option_value);			break;
+					case "array":			$o->option_value = json_decode($o->option_value, true);		break;
+					case "NULL":			$o->option_value = null;									break;
+					case "unknown type":	$o->option_value = (string)$o->option_value;				break;
+				};
+			}
 		}
 		
 		return $options;
