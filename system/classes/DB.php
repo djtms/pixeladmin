@@ -5,40 +5,79 @@ define("FETCH_NUM",PDO::FETCH_NUM);
 define("FETCH_OBJ",PDO::FETCH_OBJ);
 define("FETCH_KEY_PAIR",PDO::FETCH_KEY_PAIR);
 
-global $dbname;
-global $dbhost;
-global $dbuser;
-global $dbpass;
-global $dbcharset;
-global $timezone;
-
-$DB = new DB($dbname,$dbhost,$dbuser,$dbpass,$dbcharset,$timezone);
+$DB = new DB();
 
 class DB
 {
 	private $dbh;
 	public $tables;
+	public static $dbcon; // Database connection
 	
-	function DB($dbname,$dbhost,$dbuser,$dbpass,$dbcharset,$timezone)
+	/**
+	 * 
+	 * Database ile bağlantı kurup hızlı işlem yapmaya yarayan bir class
+	 * @param string $dbname
+	 * @param string $dbhost
+	 * @param string $dbuser
+	 * @param string $dbpass
+	 * @param string $dbcharset
+	 * @param string $timezone
+	 */
+	function DB($dbname = null, $dbhost = null, $dbuser = null, $dbpass=null, $dbcharset="utf8", $timezone="+02:00")
 	{
-		$DB_DSN = "mysql:host={$dbhost};dbname={$dbname}";
-		$DB_USER = $dbuser;
-		$DB_PASSWORD = $dbpass;
+		$arguments = func_get_args();
 		
-		$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$dbcharset}, time_zone='{$timezone}'");
-		
-		try
+		if(sizeof($arguments) < 4) // eğer database bilgileri atanmamışsa config'deki bilgileri kullanarak database'e bağlan
 		{
-			$this->dbh = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD, $options);
-			global $dbh;
-			$dbh = $this->dbh;
+			global $dbname;
+			global $dbhost;
+			global $dbuser;
+			global $dbpass;
+			global $dbcharset;
+			global $timezone;
 			
-			$this->tables = new DB_TABLES();
+			// Eğer daha önce kurulu bir bağlantı yok ise yeni bağlantı kur
+			if(!isset(self::$dbcon) || self::$dbcon == null)
+			{
+				$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$dbcharset}, time_zone='{$timezone}'");
+					
+				try
+				{
+					self::$dbcon = new PDO("mysql:host={$dbhost};dbname={$dbname}", $dbuser, $dbpass, $options);
+					global $dbh;
+					$dbh = self::$dbcon;
+					$this->dbh = self::$dbcon;
+						
+					$this->tables = new DB_TABLES();
+				}
+				catch(PDOException $e)
+				{
+					echo "Veritabanı Bağlantı Hatası: " . $e->getMessage();
+					exit;
+				}
+			}
+			else // Eğer daha önce kurulu bir bağlantı var ise onu kullan
+			{
+				$this->dbh = self::$dbcon;
+			}
 		}
-		catch(PDOException $e)
+		else  // argüman olarak tanımlanmış bilgileri kullanarak database'e bağlan
 		{
-			echo "Veritabanı Bağlantı Hatası: " . $e->getMessage();
-			exit;	
+			$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$dbcharset}, time_zone='{$timezone}'");
+			
+			try
+			{
+				$this->dbh = new PDO("mysql:host={$arguments[1]};dbname={$arguments[0]}", $arguments[2], $arguments[3], $options);
+				global $dbh;
+				$dbh = $this->dbh;
+				
+				$this->tables = new DB_TABLES();
+			}
+			catch(PDOException $e)
+			{
+				echo "Veritabanı Bağlantı Hatası: " . $e->getMessage();
+				exit;
+			}
 		}
 	}
 	
