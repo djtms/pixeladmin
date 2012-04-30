@@ -74,6 +74,10 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 											$columnData = getI18n($d->{$columnParts[1]});
 										}
 									}
+									else if($column === "_index_")
+									{
+										$columnData = $index;
+									}
 									else
 										$columnData = $d->{$column};
 									

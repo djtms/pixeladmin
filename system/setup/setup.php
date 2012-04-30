@@ -395,7 +395,7 @@ function createDbTables($dbh,$prefix)
 				  PRIMARY KEY (`directory_id`)
 				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
 	
-	$queryThumb = "CREATE TABLE IF NOT EXISTS `{$prefix}pa_thumb` (
+	$queryThumb = "CREATE TABLE IF NOT EXISTS `{$prefix}thumb` (
 			  `thumb_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `basename` char(255) NOT NULL,
 			  `filename` char(255) NOT NULL,

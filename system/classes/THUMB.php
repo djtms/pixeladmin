@@ -278,17 +278,22 @@ class PA_THUMB
 	{
 		global $ADMIN;
 		
-		$ADMIN->IMAGE_PROCESSOR->load($existing_file_url);
-		if($squeeze)
+		if(!file_exists($target_url))
 		{
-			$ADMIN->IMAGE_PROCESSOR->resize($width, $height, $proportion, $position, $bg_color);
+			$ADMIN->IMAGE_PROCESSOR->load($existing_file_url);
+			if($squeeze)
+			{
+				$ADMIN->IMAGE_PROCESSOR->resize($width, $height, $proportion, $position, $bg_color);
+			}
+			else
+			{
+				$ADMIN->IMAGE_PROCESSOR->autoCrop($width, $height, $position);
+			}
+			
+			return $ADMIN->IMAGE_PROCESSOR->save($target_url);
 		}
 		else
-		{
-			$ADMIN->IMAGE_PROCESSOR->autoCrop($width, $height, $position);
-		}
-		
-		return $ADMIN->IMAGE_PROCESSOR->save($target_url);
+			return true;
 	}
 	
 	private function generateCropImage($source_url, $target_url, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height)

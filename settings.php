@@ -23,7 +23,6 @@ if(isset($_POST["admin_action"]) == "Kaydet")
 	postMessage($message,!$succes);
 }
 
-
-$master->addScript("js/pages/settings.js");
-$settings->stg = get_optiongroup("pa_settings");
+addScript("js/pages/settings.js");
+$stg = get_optiongroup("pa_settings");
 $settings->render();
