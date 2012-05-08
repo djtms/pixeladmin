@@ -4,29 +4,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 {
 	if(($gridId == null) || (strlen($gridId) <= 0))
 	{
-		$gridId = uniqid();
-	}
-	
-	// DataGrid sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
-	if(($sortablekey != null) && ($sortEvent != null))
-	{
-		if($_POST["admin_action"] == "sortDataGrid_$gridId")
-		{
-			$fixed_array = array();
-			$orderList = $_POST["order"];
-			
-			foreach ($orderList as $val=>$key)
-			{
-				$fixed_array[] = (object) array("key"=>$key,"order"=>$val);
-			}
-			
-			if($sortEvent($fixed_array) === false)
-				echo json_encode(array("error"=>true));
-			else
-				echo json_encode(array("error"=>false));
-			
-			exit;
-		}
+		$gridId = "datagrid_" . uniqid();
 	}
 	
 	?>

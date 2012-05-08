@@ -24,5 +24,12 @@ if($add_modules_menu)
 	
 global $master;
 $master->user = $ADMIN->USER->loggedInUser;
-$master->siteTitle = get_option("admin_siteTitle");
+if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
+{
+	$master->siteTitle = getI18n("admin_siteTitleI18N");
+}
+else
+{
+	$master->siteTitle = get_option("admin_siteTitle");
+}
 $master->siteLink = dirname($_SERVER["SCRIPT_NAME"]) . "/../";

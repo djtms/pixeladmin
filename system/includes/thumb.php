@@ -75,3 +75,22 @@ function getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion = tr
 	
 	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion, $position, $bg_color);
 }
+
+function getRetinaImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
+{
+	global $ADMIN;
+	
+	// Önce normal thumbnail dosyasını kontrol et ve yok ise yenisini oluştur
+	if($ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
+	{
+		// Thumbnail'i ürettikten sonra onun retina resmini oluştur
+		if($retina = $ADMIN->THUMB->getRetinaImageInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
+		{
+			return $retina->url;
+		}
+		else
+			return false;
+	}
+	else
+		return false;
+}

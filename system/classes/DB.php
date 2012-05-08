@@ -1,5 +1,4 @@
 <?php
-
 define("FETCH_ASSOC",PDO::FETCH_ASSOC); // databaseden dönen değerlerin tipleri
 define("FETCH_NUM",PDO::FETCH_NUM);
 define("FETCH_OBJ",PDO::FETCH_OBJ);

@@ -25,9 +25,9 @@ if(in_admin && ($_POST["admin_action"] == "sortDataGrid"))
 	}
 
 	if($sortEvent($fixed_array) === false)
-	echo json_encode(array("error"=>true));
+		echo json_encode(array("error"=>true));
 	else
-	echo json_encode(array("error"=>false));
+		echo json_encode(array("error"=>false));
 
 	exit;
 }

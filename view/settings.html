@@ -4,11 +4,11 @@
 	<label>Site Adresi</label>
 	<input name="siteAddress" type="text"  value="<%stg.admin_siteAddress%>"/>
 	<label>Site Başlığı</label>
-	<input name="siteTitle" type="text"  value="<%stg.admin_siteTitle%>"/>
+	<input type="text" name="siteTitle" <%siteTitleValue%>/>
 	<label>Description</label>
-	<textarea name="description" style="height:100px;"><%stg.admin_description%></textarea>
+	<textarea name="description" style="height:100px;" <%siteDescriptionI18N%> ><%siteDescriptionValue%></textarea>
 	<label>Keywords</label>
-	<textarea name="keywords" style="height:100px;"><%stg.admin_keywords%></textarea>
+	<textarea name="keywords" style="height:100px;" <%siteKeywordsI18N%>><%siteKeywordsValue%></textarea>
 	<label>Google Analytics Code</label>
 	<textarea name="analystics"  style="height:100px;"><%stg.admin_analystics%></textarea>
 	
