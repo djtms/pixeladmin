@@ -18,12 +18,14 @@ require_once "system/includes/options.php";
 
 if(get_option("admin_SiteDebugMode") == "debugmode")
 {
+	define("debug_mode", true);
 	ini_set("display_startup_errors", true);
 	error_reporting(E_ALL ^ E_NOTICE);
 	$add_modules_menu = true; // Menüye modules sayfasının eklenip eklenmemesini belirler
 }
 else
 {
+	define("debug_mode", false);
 	ini_set("display_startup_errors", false);
 	error_reporting(0);
 	$add_modules_menu = false; // Menüye modules sayfasının eklenip eklenmemesini belirler

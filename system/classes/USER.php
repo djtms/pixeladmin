@@ -33,22 +33,37 @@ class PA_USER extends PA_USER_TICKET
 		if($user_id = $DB->insert($this->table, array("displayname"=>$displayname, "email"=>$email, "user_type"=>$user_type, "status"=>"invited")))
 		{
 			$user_id = $DB->lastInsertId();
-			$ticket_id = $this->openTicket($user_id, "invitation", $end_date);
-			$ticket = $this->selectTicket($ticket_id);
-			$site_title = get_option("admin_siteTitle");
-			$register_link = get_option("admin_siteAddress") . "/admin/complete_registration.php?type=invitation&user={$user_id}&key={$ticket->ticket_key}";
-			$invitation_sender = $this->loggedInUser;
-			
-			$mesaj  = "Sayın  {$displayname},";
-			$mesaj .= "{$invitation_sender->displayname} kullanıcısı ";
-			$mesaj .= "{$site_title} sitesine üye olmanız için size bir davetiye gönderdi.";
-			$mesaj .= "Daveti kabul edip üyelik işleminizi gerçekleştirmek için aşağıdaki linki kullanın.";
-			$mesaj .= '<a href="' . $register_link . '" target="_blank" style="margin-top:22px;  background: #c4eef5; width:113px; ';
-			$mesaj .= 'height:23px; text-align: center; font:bold 13px Segoe UI; color:#227eac; display:block; ';
-			$mesaj .= 'border:solid 1px #95c1d7; text-decoration: none; line-height: 23px;">Üye Ol</a>';
-			
-			return sendMail($site_title, "Üyelik Davetiyesi", $mesaj, $email);
+			return $this->sendInvitationMail($user_id);
 		}
+		else
+			return false;
+	}
+	
+	function sendInvitationMail($user_id, $end_date = "0000-00-00 00:00:00")
+	{
+		$user = $this->getUserById($user_id);
+		$this->closeTicketsByTicketType($user_id, "invitation");
+		$ticket_id = $this->openTicket($user_id, "invitation", $end_date);
+		$ticket = $this->selectTicket($ticket_id);
+		$site_title = get_option("admin_siteTitle");
+		$register_link = get_option("admin_siteAddress") . "/admin/complete_registration.php?type=invitation&user={$user_id}&key={$ticket->ticket_key}";
+		$invitation_sender = $this->loggedInUser; // Davetiyeyi gönderen kullanıcı
+			
+		$mesaj  = "Sayın  <b>{$user->displayname}</b>, <br /> ";
+		$mesaj .= "<b>{$invitation_sender->displayname}</b> kullanıcısı ";
+		$mesaj .= "<b>{$site_title}</b> sitesine üye olmanız için size bir davetiye gönderdi.";
+		$mesaj .= "Daveti kabul edip üyelik işleminizi gerçekleştirmek için aşağıdaki linki kullanın.";
+		$mesaj .= '<a href="' . $register_link . '" target="_blank" style="margin-top:22px;  background: #c4eef5; width:113px; ';
+		$mesaj .= 'height:23px; text-align: center; font:bold 13px Segoe UI; color:#227eac; display:block; ';
+		$mesaj .= 'border:solid 1px #95c1d7; text-decoration: none; line-height: 23px;">Üye Ol</a>';
+		
+		return sendMail($site_title, "Üyelik Davetiyesi", $mesaj, $user->email);
+	}
+	
+	function reSendInvitationMail($email)
+	{
+		$user = $this->getUserByEmail($email);
+		return $this->sendInvitationMail($user->user_id);
 	}
 	
 	function login($username, $password, $captcha_used_correctly = false)
@@ -108,15 +123,10 @@ class PA_USER extends PA_USER_TICKET
 		if($user = $this->getUserByEmail_OR_Username($email_or_username))
 		{
 			$ticket_type = "resetpassword";
-			// Close old tickets if opened before
-			$old_tickets = $this->selectUserTicketsByTicketType($user->user_id, $ticket_type);
-			foreach($old_tickets as $ot)
-			{
-				$this->closeTicket($ot->ticket_id);
-			}
+			// Daha önce açık olan ticket ları kapat
+			$this->closeTicketsByTicketType($user->user_id, $ticket_type);
 			
-			
-			// Open new ticket and send mail
+			// Yeni bir ticket aç ve mail gönder
 			$ticket_id = $this->openTicket($user->user_id, $ticket_type);
 			if($ticket = $this->selectTicket($ticket_id))
 			{
@@ -209,7 +219,8 @@ class PA_USER extends PA_USER_TICKET
 		if($delete_tracks && !$this->deleteTracksByUserId($user_id))
 			return false;
 		
-		return $DB->execute("DELETE FROM {$this->table} WHERE user_id=?", array($user_id));
+		return $this->deleteUsersAllTickets($user_id) &&
+				$DB->execute("DELETE FROM {$this->table} WHERE user_id=?", array($user_id));
 	}
 	
 	function deleteUserItself($user_id, $delete_tracks = true)

@@ -36,11 +36,49 @@ abstract class PA_USER_TICKET extends PA_USER_TRACK
 		return $DB->execute("UPDATE {$this->table} SET status='closed', end_time=? WHERE ticket_id=?", array($end_time, $ticket_id));
 	}
 	
+	function deleteTicket($ticket_id)
+	{
+		global $DB;
+		
+		return $DB->execute("DELETE FROM {$this->table} WHERE ticket_id=?", array($ticket_id));
+	}
+	
+	function deleteUsersAllTickets($user_id)
+	{
+		$tickets = $this->listUsersAllTickets($user_id);
+		$length = sizeof($tickets);
+		
+		for($i=0; $i<$length; $i++)
+		{
+			$this->deleteTicket($tickets[$i]->ticket_id);
+		}
+		
+		return true;
+	}
+	
+	function listUsersAllTickets($user_id)
+	{
+		global $DB;
+		
+		return $DB->get_rows("SELECT * FROM {$this->table} WHERE user_id=?", array($user_id));
+	}
+	
 	function selectUserTicketsByTicketType($user_id, $ticket_type)
 	{
 		global $DB;
 		
 		return $DB->get_rows("SELECT * FROM {$this->table} WHERE user_id=? AND ticket_type=?", array($user_id, $ticket_type));
+	}
+	
+	function closeTicketsByTicketType($user_id, $ticket_type)
+	{
+		$old_tickets = $this->selectUserTicketsByTicketType($user_id, $ticket_type);
+		foreach($old_tickets as $ot)
+		{
+			$this->closeTicket($ot->ticket_id);
+		}
+		
+		return true;
 	}
 	
 	function selectTicket($ticket_id)

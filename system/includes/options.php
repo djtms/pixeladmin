@@ -29,7 +29,11 @@ function set_option($option_name, $option_value, $group_name="")
 	
 	$data_type = gettype($option_value);
 	
-	if(($data_type == "object") || ($data_type == "array"))
+	if($data_type == "object")
+	{
+		$option_value = json_encode($option_value, JSON_FORCE_OBJECT);
+	}
+	else if($data_type == "array")
 	{
 		$option_value = json_encode($option_value);
 	}

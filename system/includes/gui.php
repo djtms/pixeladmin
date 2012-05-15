@@ -4,7 +4,29 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 {
 	if(($gridId == null) || (strlen($gridId) <= 0))
 	{
-		$gridId = "datagrid_" . uniqid();
+		$gridId = uniqid();
+	}
+	
+	// DataGrid sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
+	if(($sortablekey != null) && ($sortEvent != null))
+	{
+		if($_POST["admin_action"] == "sortDataGrid_$gridId")
+		{
+			$fixed_array = array();
+			$orderList = $_POST["order"];
+			
+			foreach ($orderList as $val=>$key)
+			{
+				$fixed_array[] = (object) array("key"=>$key,"order"=>$val);
+			}
+			
+			if($sortEvent($fixed_array) === false)
+				echo json_encode(array("error"=>true));
+			else
+				echo json_encode(array("error"=>false));
+			
+			exit;
+		}
 	}
 	
 	?>
@@ -28,12 +50,13 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 					$index = 0;
 					foreach($data as $d)
 					{
+						$dataType = gettype($d);
 						$index++;
 						?>
 						<li class="item" <?php 
 						if($sortablekey != null)
 						{
-							echo 'id="order_' . $d->{$sortablekey} . '"';
+							echo 'id="order_' . (($dataType == "object") ? $d->{$sortablekey} : $d[$sortablekey]) . '"';
 						}
 						?>><label class="text"><?php
 								$rowTitle = $rowTitleQuery;
@@ -49,15 +72,13 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 										
 										if($columnParts[0] == "i18n")
 										{
-											$columnData = getI18n($d->{$columnParts[1]});
+											$columnData = ($dataType == "object") ? getI18n($d->{$columnParts[1]}) : getI18n($d[$columnParts[1]]);
 										}
 									}
-									else if($column === "_index_")
-									{
-										$columnData = $index;
-									}
 									else
-										$columnData = $d->{$column};
+									{
+										$columnData = ($dataType == "object") ? $d->{$column} : $d[$column];									
+									}
 									
 									$rowTitle = preg_replace("/" . preg_quote($search) . "/", $columnData, $rowTitle);
 								}
@@ -74,7 +95,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 											{
 												$search = $deleteDataColumnsMatches[0][$i];
 												$column = $deleteDataColumnsMatches[1][$i];
-												$value = $search == "<%_index_%>" ? $index : $d->{$column};
+												$value  = $search == "<%_index_%>" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
 												
 												$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
 											}
@@ -92,7 +113,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 											{
 												$search = $editDataColumnsMatches[0][$i];
 												$column = $editDataColumnsMatches[1][$i];
-												$value = $search == "<%_index_%>" ? $index : $d->{$column};
+												$value = $search == "<%_index_%>" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
 												
 												$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
 											}

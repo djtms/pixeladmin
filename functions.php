@@ -5,7 +5,8 @@ addMenu("Kontrol Paneli","$VIEW_URL/images/icons/dashboard_icon.png","Kontrol Pa
 addMenu("Mesajlar","$VIEW_URL/images/icons/messages_icon.png","Mesajlar","messages","messages.php",17,USER_SUPER);
 addPage("Mesaj İçeriği","messages" ,"readmessage", "readmessage.php",USER_SUPER);
 addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraaccounts","useraccounts.php",18,USER_SUPER);
-addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraaccounts", "invite_user", dirname(__FILE__) . "/invite_user.php",2, USER_SUPER);
+addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraaccounts", "invite_user", "invite_user.php",2, USER_SUPER);
+addPage("Kullanıcı Bilgileri", "useraaccounts", "edit_useraccount", "edit_useraccount.php");
 addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings","settings.php",19,USER_SUPER);
 
 if(get_option("admin_SiteMultilanguageMode") == "multilanguage")

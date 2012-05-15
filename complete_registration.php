@@ -37,7 +37,7 @@ if($ticket_id = $ADMIN->USER->validateTicket($user_id, $ticket_key, $ticket_type
 			{
 				postMessage("Kaydınız Başarıyla Gerçekleşti!");
 				$ADMIN->USER->login($username, $password);
-				header("Location:admin.php?page=profile");
+				header("Location:admin.php?page=dashboard");
 				exit;
 			}	
 		}

@@ -95,7 +95,9 @@ function messageBox(messageTitle,messageText,messageType,buttons)
 	}
 	
 	$("#messageBoxOuter").css("display","block");
-	$("#messageBox #messageBoxButtonsOuter button").click(function(){
-		$("#messageBoxOuter").css("display","none");
-	});
+}
+
+function closeMessageBox()
+{
+	$("#messageBoxOuter").css("display","none");
 }

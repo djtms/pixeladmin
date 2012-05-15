@@ -144,6 +144,7 @@ function selectI18n()
 	});
 	
 	isI18nSencronised = true;
+	closeMessageBox();
 }
 
 function setI18nValuesToHiddenInput()
@@ -230,4 +231,5 @@ function ajaxSaveI18n()
 	});
 	xhr.open("POST", "admin.php?page=dashboard");
 	xhr.send(i18nForm);
+	closeMessageBox();
 }

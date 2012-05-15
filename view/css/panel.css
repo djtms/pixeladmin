@@ -7,7 +7,7 @@
 	text-decoration:none;
 	list-style:none;
 	outline: none !important;
-	font:13px Segoe Ui;
+	font:13px Segoe UI, Arial;
 	color:#828282;
 }
 
@@ -62,13 +62,13 @@ body {
 	display:block;
 	margin:0 10px 3px 0;
 	margin-top:10px;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	line-height:25px;
 	color:#828282;
 }
 
 #content h2{
-	font:24px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:24px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 	width:100%;
 	float:left;
@@ -85,7 +85,7 @@ body {
 	border:1px #e2e2e2 solid;
 	outline:none;
 	padding:5px;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;
 }
 
@@ -99,7 +99,7 @@ input[type=file]
 	width:315px;
 	border:1px #e2e2e2 solid;
 	outline:none;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;
 }
 
@@ -121,7 +121,7 @@ input[type=submit],input[type=button],button,.button
 	float:left;
 	clear:left;
 	text-align:center;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#707070;
 	margin:20px 0;
 	padding:5px 17px;
@@ -182,7 +182,7 @@ textarea {
 	padding:5px;
 	width:690px;
 	height:207px;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;
 	width:690px;
 }
@@ -199,7 +199,7 @@ select{
 	background:#FFF url(../images/inputBg_normal.png) repeat-x top;
 	border:1px #e2e2e2 solid;
 	outline:none;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;
 	width:315px;
 	height:29px;
@@ -236,7 +236,7 @@ select{
 	float:left;
 	margin:0;
 	padding:0;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#0bdde0;
 	line-height: 27px;
 }
@@ -323,7 +323,7 @@ header {
 #postMessage p
 {
 	padding:5px 20px;
-	font:bold 13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:bold 13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#fff;
 	text-align: center;
 	margin:0 auto;
@@ -374,36 +374,36 @@ header {
 
 /* ---------------------texts--------------------- */
 .text15px {
-	font:15px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:15px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#c5c5c5;
 }
 .text27px {
-	font:27px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:27px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 }
 .link1 {
-	font:27px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:27px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 }
 .link1:hover {
-	font:27px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:27px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#c5c5c5;
 }
 .link1visited {
-	font:27px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:27px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#c5c5c5;
 }
 .text12px {
-	font:12px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:12px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#c5c5c5;
 	text-align:right;
 }
 .text24px {
-	font:24px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:24px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 }
 .text14px {
-	font:14px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:14px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 	font-weight:bold;
 }
@@ -465,7 +465,7 @@ header {
 	height:47px !important;
 	display:block;
 	padding:0;
-	font:18px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:18px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	line-height:45px;
 	color:#CCC;
 	cursor: pointer;
@@ -479,7 +479,7 @@ header {
 	clear:left;
 	height:15px;
 	width:205px;
-	font:13px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	padding-bottom:10px !important;
 	margin-left:20px !important;
 }
@@ -588,7 +588,7 @@ header {
 	border-bottom:1px #c6c6c6 solid;
 }
 ul.cell14 li a {
-	font:14px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:14px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 	font-weight:bold;
 	list-style:none;
@@ -660,7 +660,7 @@ ul.cs3 li {
 	overflow:hidden !important;
 	margin:0 !important;
 	float:left;
-	font:bold 14px Segoe Ui, Arial, Helvetica, sans-serif !important;
+	font:bold 14px Segoe UI, Arial, Arial, Helvetica, sans-serif !important;
 	color:#666666 !important;
 }
 
@@ -671,7 +671,7 @@ ul.cs3 li {
 
 .itemsList .item a 
 {
-	font:12px Segoe Ui, Arial, Helvetica, sans-serif;
+	font:12px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#666666;
 	font-weight:bold;
 	list-style:none;
@@ -754,7 +754,11 @@ ul.cs3 li {
 }
 #login{
 	width:405px;
-	margin:200px auto;
+	position:absolute;
+	top:100px;
+	left:50%;
+	margin-left: -202px;
+	padding:0 0 50px 0;
 }
 #loginTop {
 	margin-left:-38px;
@@ -762,13 +766,6 @@ ul.cs3 li {
 }
 #loginOuter ul{
 	margin:40px;
-}
-#loginBg {
-	background:#333;
-	width:100%;
-	height:100%;
-	position:absolute;
-	background: url(../images/menu_bg.png)  top;
 }
 
 .checkListOuter
@@ -884,7 +881,7 @@ ul.cs3 li {
 	float:left;
 	margin:1px 0 0 3px;
 	padding:0;
-	font:13px Segoe UI;
+	font:13px Segoe UI, Arial;
 	color:#f0f1f3;
 	line-height: 24px;
 	text-align: left;
@@ -905,7 +902,7 @@ ul.cs3 li {
 	height:59px;
 	float:left;
 	margin:24px 0 0 10px;
-	font:13px Segoe UI;
+	font:13px Segoe UI, Arial;
 	color:#4d4d4d;	
 }
 
@@ -920,7 +917,7 @@ ul.cs3 li {
 	float:left;
 	clear:none;
 	margin:0 0 0 5px;
-	padding:5px 0;
+	padding:5px 17px;
 }
 	
 /* FILE INPUT THUMB */
@@ -983,7 +980,7 @@ ul.cs3 li {
 .i18nLanguage
 {
 	display:inline-block;
-	font:12px Segoe UI;
+	font:12px Segoe UI, Arial;
 	color:#fff;
 	padding:5px;
 	background: #a6a6a6;
