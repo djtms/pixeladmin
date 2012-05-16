@@ -17,6 +17,7 @@
 	width:123px;
 	height:87px;
 	float:left;
+	cursor:pointer;
 	margin:0 0 6px 0;
 	border:solid 1px #ccc;
 	background: #888 !important;
@@ -34,9 +35,9 @@
 	overflow:hidden;
 }
 
-.fileOuter .browseFile
+.fileOuter .deleteFile
 {
-	min-width: 10px !important;
+	min-width: 20px !important;
 	display:block;
 	opacity:0;
 	position:absolute !important;
@@ -44,4 +45,5 @@
 	top:40px !important;
 	margin:0 !important;
 	cursor:pointer;
+	display:none;
 }

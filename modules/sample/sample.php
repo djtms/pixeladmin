@@ -9,7 +9,6 @@ if($_POST["action"] == "Kaydet")
 }
 
 ?>
-
 <form method="post">
 	<label>Tarih:</label>
 	<input type="date" name="birth" value="00:00:05" />

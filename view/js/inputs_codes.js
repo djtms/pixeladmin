@@ -10,7 +10,7 @@ function ModuleCodesStart()
 			containorId:"file_editor_main_container"
 		});
 		var file;
-		var btnBrowse;
+		var btnDelete;
 		var fileImage;
 		var fileName;
 		
@@ -25,12 +25,12 @@ function ModuleCodesStart()
 		
 		var html  = '<img class="filethumb" src="" />';
 			html += '<span class="fileName"></span>';
-			html += '<span class="browseFile button">Gözat</span>';
+			html += '<span class="deleteFile button">Kaldır</span>';
 			html += '<input class="fileInput" type="hidden" name="' + keyName + '" value="' + fileId + '" />';
 			
 		file.html(html);
 		
-		btnBrowse = file.find(".browseFile");
+		btnDelete = file.find(".deleteFile");
 		fileImage = file.find(".filethumb");
 		fileName  = file.find(".fileName");
 		fileInput = file.find(".fileInput");
@@ -38,9 +38,9 @@ function ModuleCodesStart()
 		/** EVENTS */
 		
 		file.mouseenter(function(){
-			btnBrowse.animate({"opacity":"1"},250);
+			btnDelete.animate({"opacity":"1"},250);
 		}).mouseleave(function(){
-			btnBrowse.animate({"opacity":"0"},250);
+			btnDelete.animate({"opacity":"0"},250);
 		});
 		
 		
@@ -51,6 +51,7 @@ function ModuleCodesStart()
 		}
 		else
 		{
+			btnDelete.css("display","block");
 			$.ajax({
 				data:"admin_action=getBrowserThumbInfo&fileId=" + fileId,
 				dataType:"json",
@@ -69,7 +70,7 @@ function ModuleCodesStart()
 			});
 		}
 		
-		btnBrowse.click(function(){
+		fileImage.click(function(){
 			$(this).openFileEditor({
 				containorId:"file_editor_main_container",
 				multiSelection:false,
@@ -77,8 +78,16 @@ function ModuleCodesStart()
 					fileInput.val(data[0].file_id);
 					fileImage.attr("src",data[0].url);
 					fileName.html(data[0].name);
+					btnDelete.css("display","block");
 				}
 			});
+		});
+		
+		btnDelete.click(function(){
+			fileImage.attr("src",exclamation_image);
+			fileName.html("Dosya Bulunamadı!");
+			fileInput.val("-1");
+			$(this).css("display","none");
 		});
 		
 		/****************************************************************/

@@ -110,10 +110,12 @@ class PA_LANGUAGE
 	
 	function setDefaultLanguage($locale)
 	{
-		global $DB;
+		global $ADMIN;
+		
+		$ADMIN->I18N->language = $locale;
 	
-		return  $DB->execute("UPDATE {$this->tableLang} SET status=1 WHERE status>0") &&
-				$DB->execute("UPDATE {$this->tableLang} SET status=10 WHERE locale=?",array($locale));
+		return  $ADMIN->DB->execute("UPDATE {$this->tableLang} SET status=1 WHERE status>0") &&
+				$ADMIN->DB->execute("UPDATE {$this->tableLang} SET status=10 WHERE locale=?",array($locale));
 	}
 	
 	function getDefaultLanguage()

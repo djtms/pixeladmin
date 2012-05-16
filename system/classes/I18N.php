@@ -55,7 +55,6 @@ class PA_I18N
 	}
 	
 	/* PRIVATE FUNCTIONS */
-	
 	private function checkIfI18nExists($i18nCode)
 	{
 		global $DB;

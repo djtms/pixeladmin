@@ -66,6 +66,35 @@ function MHA()
 		
 		return randomString;
 	};
+	
+	this.cropString = function(text, limit){
+		var textArray = text.split(" ");
+		var arrayCount = textArray.length;
+		var croppedText = "";
+		var bufferText = "";
+		
+		for(var i=0; i<arrayCount; i++)
+		{
+			bufferText = croppedText + textArray[i];
+			if(bufferText.length <= limit)
+			{
+				croppedText += textArray[i] + " ";
+			}
+			else
+			{
+				var charCount = croppedText.length;
+				if(croppedText.substr(charCount - 1, charCount) == " ")
+				{
+					croppedText = croppedText.substr(0, charCount - 1);
+				}
+				croppedText += "...";
+				break;
+			}
+		}
+		
+		return croppedText;
+		
+	};
 }
 
 

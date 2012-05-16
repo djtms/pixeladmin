@@ -74,6 +74,11 @@ body {
 	float:left;
 }
 
+input[type=gallery]
+{
+	display:none;
+}
+
 #content input[type=text],#content input[type=password],#login input[type=text],#login input[type=password]
 {
 	float:left;
@@ -651,6 +656,12 @@ ul.cs3 li {
 	border:1px #c6c6c6 solid;
 	height:20px;
 	padding:10px;
+}
+
+.itemsList .item input[type=radio]
+{
+	position:relative;
+	top:-5px;
 }
 
 .itemsList .item .text
