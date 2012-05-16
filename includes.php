@@ -59,12 +59,13 @@ if(in_admin)
 {
 	require_once 'functions.php';
 	
-	//require_once 'gallery.php';
+	// Normalde bu işlemi dil atama esnasında seçilen dile göre yapıyoruz ama panelde kullanılan dil sabit ve Türkçe olduğu için ve de
+	// sitede seçilen dil paneli etkilemesin diye burada tekrardan database'e locale ataması yapıyoruz. 
 	$DB->execute("SET LC_TIME_NAMES=tr_TR");
 }
 else
 {
-	if(get_option("admin_SiteDisplayMode") == "maintanance" && !$USERS->loggedInUser)
+	if(get_option("admin_SiteDisplayMode") == "maintanance" && !$ADMIN->USER->loggedInUser)
 	{
 		global $allowed_dirs_in_maintanance_mode;
 		$allow = false;
@@ -80,7 +81,10 @@ else
 		}
 		
 		if(!$allow)
-			require_once dirname(__FILE__) . '/maintanance.php';
+		{
+			header("Location:custom_pages/maintanance.html");
+			exit;
+		}
 	}
 }
 

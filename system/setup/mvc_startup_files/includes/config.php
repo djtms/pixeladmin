@@ -2,7 +2,7 @@
 
 loadView("nofolder");
 
-if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
+if(multilanguage_mode)
 {
 	$language = getLanguage();
 	setLanguage($language);

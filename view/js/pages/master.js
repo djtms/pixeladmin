@@ -27,6 +27,11 @@ function MasterStart()
 	
 	$(window).trigger("resize");
 	$("input[type=date], input[type=datetime], input[type=time]").datepicker();
+	
+	$(".dataGridOuter .item").live("dblclick", function(e){
+		var href = $(this).find(".editBtn").attr("href");
+		window.location.href = href;
+	}).live("mousedown",function(e){return false;});
 }
 
 function bindComponents()

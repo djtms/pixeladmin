@@ -31,7 +31,11 @@ else
 	$add_modules_menu = false; // Menüye modules sayfasının eklenip eklenmemesini belirler
 }
 
+define("multilanguage_mode", get_option("admin_SiteMultilanguageMode") == "multilanguage" ? true : false);
+define("maintanance_mode", get_option("admin_SiteDisplayMode") == "maintanance" ? true : false);
+
 require_once dirname(__FILE__) . "/system/view_engine/View.php";
+
 if(in_admin)
 	loadView("nofolder");
 
