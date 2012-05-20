@@ -107,7 +107,12 @@ class PA_FILE extends PA_THUMB
 	{
 		global $ADMIN;
 		
-		$file = $this->selectFileById($file_id);
-		return $this->deleteFileByUrl($file->url);
+		if($file_id > 0)
+		{
+			$file = $this->selectFileById($file_id);
+			return $this->deleteFileByUrl($file->url);
+		}
+		else
+			return true;
 	}
 }

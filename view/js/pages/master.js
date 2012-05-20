@@ -30,7 +30,11 @@ function MasterStart()
 	
 	$(".dataGridOuter .item").live("dblclick", function(e){
 		var href = $(this).find(".editBtn").attr("href");
-		window.location.href = href;
+		
+		if(!((href == null) || (href == undefined) || (href == "")))
+		{
+			window.location.href = href;
+		}
 	}).live("mousedown",function(e){return false;});
 }
 

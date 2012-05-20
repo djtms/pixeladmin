@@ -33,7 +33,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 	<div class="dataGridOuter">
 		<h2 class="dataGridTitle"><?php echo $gridTitle; ?></h2>
 		<?php if($addDataLink != null){ ?>
-		<button class="dataGridAddButton" page="<?php echo $addDataLink; ?>">Yeni Ekle</button>
+		<button class="dataGridAddButton" page="<?php echo (preg_match("/\.php\?/", $addDataLink) ? $addDataLink : "admin.php?" . $addDataLink ); ?>">Yeni Ekle</button>
 		<?php }?>
 		<div class="itemsList">
 			<ul id="<?php echo $gridId; ?>"  <?php echo ($sortablekey != null ? ' class="sortableList" sort_event="' . $sortEvent . '" ' : '') ?>>
@@ -46,6 +46,9 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 					
 					$use_edit_button = (($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
 					$use_cross_button = (($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
+					
+					$edit_button_cleared_link = preg_match("/\.php\?/", $editDataLinkQuery) ? false : true;
+					$cross_button_cleared_link = preg_match("/\.php\?/", $deleteDataLinkQuery) ? false : true;
 					
 					$index = 0;
 					foreach($data as $d)
@@ -100,7 +103,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 												$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
 											}
 											
-											echo $deleteLink;
+											echo ($cross_button_cleared_link ? "admin.php?" . $deleteLink : $deleteLink);
 											
 										?>" onclick="return false;"></a>
 									<?php }
@@ -118,7 +121,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 												$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
 											}
 											
-											echo $editLink;
+											echo ($edit_button_cleared_link ? "admin.php?" . $editLink : $editLink);
 										
 										?>" class="editBtn"></a>
 									<?php } ?>

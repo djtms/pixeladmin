@@ -37,7 +37,12 @@ define("maintanance_mode", get_option("admin_SiteDisplayMode") == "maintanance" 
 require_once dirname(__FILE__) . "/system/view_engine/View.php";
 
 if(in_admin)
+{
 	loadView("nofolder");
+	setGlobal("debug_mode", debug_mode);
+	setGlobal("multilanguage_mode", multilanguage_mode);
+	setGlobal("maintanance_mode", maintanance_mode);
+}
 
 /* SECURITY */
 $secureKey = '<%securekey%>';

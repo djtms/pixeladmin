@@ -14,9 +14,19 @@ function I18nStart()
 	});
 	
 	$("[i18n]").each(function(){
-		if($.trim($(this).attr("i18n")).length <= 0)
+		var i18nObject = $(this);
+		
+		// multilanguage_mode  açık olup olmadığını kontrol edip ona göre farklı işlem yapıyoruz.
+		if(multilanguage_mode === false)
 		{
-			var i18nObject = $(this);
+			i18nObject.attr("disabled","disabled");
+			i18nObject.attr("title", "Lütfen \"Çoklu Dil\" modunu aktif edin!");
+			return true;
+		}
+		////////////////////////////////////////////////////////////////////////////////////////
+		
+		if($.trim(i18nObject.attr("i18n")).length <= 0)
+		{
 			var formObject = $(this).parents("form");
 			var uniqueI18nCode = uniqid();
 			var name = i18nObject.attr("name");
@@ -38,51 +48,54 @@ function I18nStart()
 		}
 	});
 	
-	
-	if($("[i18n]").length > 0)
+	// Setup Language Tabs
+	if(multilanguage_mode)
 	{
-		languageCount = availableLanguages.length;
-
-		var languageTabs = '<div id="i18nLanguageOuter">';
-		
-		languageTabs += '<div id="i18nButtonsOuter">';
-		
-		for(var i=0; i<languageCount; i++)
+		if($("[i18n]").length > 0)
 		{
-			var isCurrentLanguage = availableLanguages[i].locale == activeLanguage ? true : false;
-			var _attrClass = ' class="' +(isCurrentLanguage ? 'activeLanguage' : "") + ' i18nLanguage"';
-			var _attrLocale = ' locale="' + availableLanguages[i].locale + '" ';
-			var _attrLanguageAbbr = ' language_abbr="' + availableLanguages[i].language_abbr + '" ';
-			var _attrTitle = ' title="' + availableLanguages[i].language_name + '" ';
-			var _attrCountryAbbr = ' country_abbr="' + availableLanguages[i].country_abbr + '" ';
-			var _attrCountryName = ' country_name="' + availableLanguages[i].country_name + '" ';
-			var text = (isCurrentLanguage ? availableLanguages[i].language_name : availableLanguages[i].language_abbr);
-			languageTabs += "<span " + _attrClass + _attrLocale + _attrLanguageAbbr +  _attrTitle + _attrCountryAbbr + _attrCountryName + " >" + text + "</span>";
+			languageCount = availableLanguages.length;
+	
+			var languageTabs = '<div id="i18nLanguageOuter">';
+			
+			languageTabs += '<div id="i18nButtonsOuter">';
+			
+			for(var i=0; i<languageCount; i++)
+			{
+				var isCurrentLanguage = availableLanguages[i].locale == activeLanguage ? true : false;
+				var _attrClass = ' class="' +(isCurrentLanguage ? 'activeLanguage' : "") + ' i18nLanguage"';
+				var _attrLocale = ' locale="' + availableLanguages[i].locale + '" ';
+				var _attrLanguageAbbr = ' language_abbr="' + availableLanguages[i].language_abbr + '" ';
+				var _attrTitle = ' title="' + availableLanguages[i].language_name + '" ';
+				var _attrCountryAbbr = ' country_abbr="' + availableLanguages[i].country_abbr + '" ';
+				var _attrCountryName = ' country_name="' + availableLanguages[i].country_name + '" ';
+				var text = (isCurrentLanguage ? availableLanguages[i].language_name : availableLanguages[i].language_abbr);
+				languageTabs += "<span " + _attrClass + _attrLocale + _attrLanguageAbbr +  _attrTitle + _attrCountryAbbr + _attrCountryName + " >" + text + "</span>";
+			}
+			languageTabs += '</div>';
+			languageTabs += '<img id="i18nLoader" src="' + VIEW_URL + '/images/loader.gif" />';
+			languageTabs += '</div>';
+			
+			
+			$("#postMessage").after(languageTabs);
+			var temp = $(".activeLanguage");
+			$(".activeLanguage").remove();
+			$("#i18nButtonsOuter").prepend(temp);
 		}
-		languageTabs += '</div>';
-		languageTabs += '<img id="i18nLoader" src="' + VIEW_URL + '/images/loader.gif" />';
-		languageTabs += '</div>';
 		
-		
-		$("#postMessage").after(languageTabs);
-		var temp = $(".activeLanguage");
-		$(".activeLanguage").remove();
-		$("#i18nButtonsOuter").prepend(temp);
+		$(".i18nLanguage").click(function(){
+			
+			requestedLanguage = $(this).attr("locale");
+			activeLanguage = $(".activeLanguage").attr("locale");
+			
+			if((requestedLanguage != activeLanguage) && !isI18nSencronised)
+			{
+				messageBox("Kaydedilmeyen Veriler!", "\"" + $("span[locale=" + activeLanguage + "]").html() + "\" içerik henüz kaydedilmedi, bu sayfadan ayrılmadan önce bilgilerinizin kaybolmaması için Lütfen Kaydedin.",messageType.WARNING,[{"name":"Kaydet","click":ajaxSaveI18n},{"name":"Atla","click":selectI18n}]);
+			}
+			else
+				selectI18n();
+		});
 	}
-	
-	$(".i18nLanguage").click(function(){
-		
-		requestedLanguage = $(this).attr("locale");
-		activeLanguage = $(".activeLanguage").attr("locale");
-		
-		if((requestedLanguage != activeLanguage) && !isI18nSencronised)
-		{
-			messageBox("Kaydedilmeyen Veriler!", "\"" + $("span[locale=" + activeLanguage + "]").html() + "\" içerik henüz kaydedilmedi, bu sayfadan ayrılmadan önce bilgilerinizin kaybolmaması için Lütfen Kaydedin.",messageType.WARNING,[{"name":"Kaydet","click":ajaxSaveI18n},{"name":"Atla","click":selectI18n}]);
-		}
-		else
-			selectI18n();
-	});
-	
+	////////////////////////////////////////////////////////////////////////
 	
 	$("form").each(function(){
 		if($(this).find("[i18n]").length > 0)

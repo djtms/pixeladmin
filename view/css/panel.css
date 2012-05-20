@@ -113,6 +113,13 @@ input[type=file]
 	border:1px #CCC solid;
 	background:#FFF url(../images/inputBg_hover.png) repeat-x;
 }
+
+[disabled=disabled], [disabled=true]
+{
+	background:#888 !important;
+	border:1px #e2e2e2 solid !important;
+}
+
 #content input[type=text]:focus, #content textarea:focus, #content input[type=password]:focus 
 {
 	border:1px #999 solid;
