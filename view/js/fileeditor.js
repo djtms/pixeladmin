@@ -10,6 +10,7 @@ jQuery.fn.fileeditor = function(properties){
 	var browserBtn_Fav;
 	var browserBtn_Prev;
 	var browserBtn_NewDir;
+	var browserBtn_UploadFile;
 	var browser_address;
 	var browserFilesListOuter;
 	var browserFavoritesList;
@@ -23,8 +24,6 @@ jQuery.fn.fileeditor = function(properties){
 	var currentDirectory;
 	
 	return $(this).each(function(){	
-		
-		
 		var options = $.extend({
 					z_index:1000,
 					onSelect:function(){}, // seçim işlemi yapıldıktan sonra
@@ -67,13 +66,13 @@ jQuery.fn.fileeditor = function(properties){
 		btnClosefileEditor = editor.find(".btnClosefileEditor");
 		browserBtnUseFiles = editor.find(".browserBtnUseFiles");
 		browserFilesList = editor.find(".browserFilesList");
-		//browserFileItems = browserFilesList.find("li");
 		fileEditorBackHider = editor.find(".fileEditorBackHider");
 		fileEditorOuter = editor.find(".fileEditorOuter");
 		browserBtn_Home = editor.find(".browserBtn_Home");
 		browserBtn_Fav = editor.find(".browserBtn_Fav");
 		browserBtn_Prev = editor.find(".browserBtn_Prev");
 		browserBtn_NewDir = editor.find(".browserBtn_NewDir");
+		browserBtn_UploadFile = editor.find(".browserBtn_UploadFile");
 		browser_address = editor.find(".browser_address");
 		browserFilesListOuter = editor.find(".browserFilesListOuter");
 		browserFavoritesList = editor.find(".browserFavoritesList");
@@ -82,7 +81,6 @@ jQuery.fn.fileeditor = function(properties){
 		browserDirectoriesOuter = editor.find(".browserDirectoriesOuter");
 		collisionDetector = editor.find(".collisionDetector");
 		
-		//loadFileTree();
 		bindEvents();
 		
 		function createEditorHtmlAndEvents()
@@ -92,7 +90,7 @@ jQuery.fn.fileeditor = function(properties){
 			editor = $("#" + options.containorId);
 			editor.css("z-index",options.z_index);
 			
-			  var editorHtml = '<div class="fileEditorBackHider"></div>';
+			var editorHtml = '<div class="fileEditorBackHider"></div>';
 				editorHtml += '<div class="fileEditorOuter">';
 				editorHtml += '<div class="fileEditorOuter_InnerShell">';
 				editorHtml += '<div class="fileEditorNavigationBar">';
@@ -114,6 +112,11 @@ jQuery.fn.fileeditor = function(properties){
 				editorHtml += '<a class="browserBtn_Fav" href="" title="Sık Kullanılanlara Ekle"></a>';
 				editorHtml += '<a class="browserBtn_Prev" href="" title="Geri Dön"></a>';
 				editorHtml += '<a class="browserBtn_NewDir" href="" title="Yeni Klasör"></a>';
+				editorHtml += '<a class="browserBtn_UploadFile" onclick="javascript:void(0);" title="Dosya Yükle">';
+				editorHtml += '<input id="' + options.uploaderId + '" class="uploadFile" type="file" multiple="multiple" />';
+				editorHtml += '</a>';
+				
+				
 				editorHtml += '</div>';
 				editorHtml += '<div class="browserSearchOuter">';
 				editorHtml += '<label class="browserBigTitle">Arama:</label>';
@@ -228,6 +231,7 @@ jQuery.fn.fileeditor = function(properties){
 			editor.undelegate(".browserFilesListOuter","click").delegate(".browserFilesListOuter","click",fileSelectionEvent);
 			editor.undelegate(".btnEdit","click").delegate(".btnEdit","click",function(){
 				var thisObject = $(this);
+				var thisParentObject =  $(this).closest(".file");
 				var fileId = thisObject.attr("fileId");
 				var thumbObject = thisObject.parent().find(".filethumb");
 				var fileName = thisObject.parent().find(".fileName");
@@ -243,8 +247,10 @@ jQuery.fn.fileeditor = function(properties){
 								browserFilesList.find("li").removeClass("selected");
 							},
 							onSaved:function(file){
+								var url = MHA.encodeUTF8(file.url);
 								fileName.html(file.basename);
-								btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
+								btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + url);
+								thisParentObject.attr("url", url);
 								$.ajax({
 									data:"admin_action=getBrowserThumb&fileId=" + file.file_id,
 									success:function(response){
@@ -258,11 +264,9 @@ jQuery.fn.fileeditor = function(properties){
 			});
 			
 			browserFilesListOuter.unbind("mousedown").bind("mousedown",function(e){
-				if(!$(e.target).parent().hasClass("addNewFileOuter"))
-				{
-					e.preventDefault();
-				}
+				e.preventDefault();
 			});
+			
 			editor.undelegate(".btnDelete","click").delegate(".btnDelete","click",deleteFileEvent);
 			editor.undelegate(".fileTree a","click").delegate(".fileTree a","click",listSubDirectories);
 			btnClosefileEditor.die("click").live("click",closeFileEditor);
@@ -370,7 +374,6 @@ jQuery.fn.fileeditor = function(properties){
 			btnClosefileEditor = editor.find(".btnClosefileEditor");
 			browserBtnUseFiles = editor.find(".browserBtnUseFiles");
 			browserFilesList = editor.find(".browserFilesList");
-			//browserFileItems = browserFilesList.find("li");
 			fileEditorBackHider = editor.find(".fileEditorBackHider");
 			fileEditorOuter = editor.find(".fileEditorOuter");
 			browserBtn_Home = editor.find(".browserBtn_Home");
@@ -392,6 +395,7 @@ jQuery.fn.fileeditor = function(properties){
 				browserFilesListOuter.animate({scrollTop: 0}, 300); // scroller'ı en yukarı al
 				fileEditorOuter.css("display","block").animate({opacity:1},500,function(){
 					browserBtn_Home.click();
+					prepareForUpload();
 					listFavouritedDirectories();
 				});
 			});
@@ -403,7 +407,6 @@ jQuery.fn.fileeditor = function(properties){
 				$(this).css("display","none");
 				editor.css("display","block").animate({opacity:0},500,function(){
 					$(this).css("display","none");
-					//editor.remove();
 				});
 			});
 		}
@@ -421,10 +424,13 @@ jQuery.fn.fileeditor = function(properties){
 			{
 				var selectedFile = selectedFiles.eq(i);
 				var fileId = selectedFile.attr("fileId");
-				var url = selectedFile.find(".filethumb").attr("src");
+				var url = selectedFile.attr("url");
+				var thumb_url = selectedFile.find(".filethumb").attr("src");
 				var name = selectedFile.find(".fileName").html();
+				var type = selectedFile.attr("filetype");
+				selectedFile.removeClass("selected");
 				
-				fileInfos.push({"file_id":fileId,"url":url,"name":name});
+				fileInfos.push({"file_id":fileId, "thumb_url":thumb_url, "url":url, "name":name, "type":type});
 			}
 			
 			options.onSelect(fileInfos);
@@ -455,9 +461,6 @@ jQuery.fn.fileeditor = function(properties){
 						var files = result.files;				
 						var directoriesHtml = "";
 						var filesHtml = "";
-						var addFileHtml = '<li class="addNewFileOuter">';
-						addFileHtml += '<input id="' + options.uploaderId + '" class="uploadFile" type="file" multiple="multiple" /><img src="' + VIEW_URL + 'images/fileeditor/addFileIcon.jpg" /><span>Dosya Ekle</span>';
-						addFileHtml += '</li>';
 						
 						for(var i=0; i<directories.length; i++)
 						{
@@ -469,10 +472,10 @@ jQuery.fn.fileeditor = function(properties){
 						for(var i=0; i<files.length; i++)
 						{
 							var addFile = true;
+							var fileId = files[i].file_id;
 							
 							if((options.hideFileIds.length > 0))
 							{
-								var fileId = files[i].file_id;
 								for(var j=0; j<options.hideFileIds.length; j++)
 								{
 									if(fileId == options.hideFileIds[j].id)
@@ -488,28 +491,36 @@ jQuery.fn.fileeditor = function(properties){
 							
 							if(options.listFileTypes == "all" || (options.listFileTypes == files[i].type ) )
 							{
-								filesHtml += '<li class="file" title="Dosya Adı: ' + files[i].basename + '" url="' + files[i].url + '" fileId="' + files[i].file_id + '">';
-								filesHtml += '<span class="filethumbOuter" fileId="' + files[i].file_id + '">';
+								filesHtml += '<li class="file" filetype="' + files[i].type + '" title="Dosya Adı: ' + files[i].basename + '" url="' + files[i].url + '" fileId="' + files[i].file_id + '">';
+								filesHtml += '<span class="filethumbOuter" fileId="' + fileId + '">';
 								filesHtml += '<img class="filethumb" src="' + files[i].browser_thumb  + '" />';
 								filesHtml += '</span>';
+								filesHtml += '<span class="fileEditButtonsOuter">';
+								
 								if(options.filesEditable)
-									filesHtml += '<span title="Düzenle" class="btnEdit" fileId="' + files[i].file_id + '"></span>';
+								{
+									filesHtml += '<span title="Düzenle" class="btnEdit fBtn" fileId="' + files[i].file_id + '"></span>';
+								}
 								
 								if(files[i].type != "other")
 								{
-									filesHtml += '<a title="İncele" class="btnLook fancybox" href="lookfile.php?type=' + files[i].type + '&url=' + MHA.encodeUTF8(files[i].url) + '"></a>';
+									filesHtml += '<a title="' + (files[i].type == "movie" ? "Oynat" : "İncele") + '" class="' + (files[i].type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + files[i].type + '&url=' + MHA.encodeUTF8(files[i].url) + '"></a>';
 								}
-								filesHtml += '<span title="Sil" class="btnDelete"></span>';
+								
+								filesHtml += '<span title="Sil" class="btnDelete fBtn"></span>';
+								filesHtml += '</span>';
 								filesHtml += '<span class="fileName">' + files[i].basename + '</span>';
 								filesHtml += '</li>';
 							}
 						}
 						
-						browserFilesList.html( '<div class="collisionDetector"><div class="collisionDetectorBg"></div></div>' + addFileHtml + directoriesHtml + filesHtml);
+						browserFilesList.html( '<div class="collisionDetector"><div class="collisionDetectorBg"></div></div>' + directoriesHtml + filesHtml);
 						browserFileItems = browserFilesList.find("li");
 						
-						bindComponents();
-						prepareForUpload();
+						$(".file .fancybox").fancybox({
+							"titleShow":false,
+							"scrolling":"no"
+						});
 						
 						setTimeout(function(){
 							browserContentLoaderOuter.animate({"opacity":0},500,function(){
@@ -653,14 +664,20 @@ jQuery.fn.fileeditor = function(properties){
 						filesHtml += '<img class="filethumb" src="' + VIEW_URL + 'images/fileeditor/fileloader.gif" />';
 						filesHtml += '</span>';
 						
+						filesHtml += '<span class="fileEditButtonsOuter">';
+						
 						if(options.filesEditable)
-							filesHtml += '<span title="Düzenle" class="btnEdit" fileId="' + file.file_id + '"></span>';
+						{
+							filesHtml += '<span title="Düzenle" class="btnEdit fBtn" fileId="' + file.file_id + '"></span>';
+						}
 						
 						if(file.type != "other")
 						{
-							filesHtml += '<a title="İncele" class="btnLook fancybox" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '"></a>';
+							filesHtml += '<a title="İncele" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '"></a>';
 						}
-						filesHtml += '<span title="Sil" class="btnDelete"></span>';
+						
+						filesHtml += '<span title="Sil" class="btnDelete fBtn"></span>';
+						filesHtml += '</span>';
 						filesHtml += '<span class="fileName">' + file.basename + '</span>';
 						filesHtml += '</li>';
 						
@@ -677,7 +694,9 @@ jQuery.fn.fileeditor = function(properties){
 								fileObject.find(".filethumb").attr("src",response);
 							}
 						});
-						bindComponents();
+						$(".fancybox").fancybox({
+							"titleShow":false
+						});
 					});
 					
 					xhr.open("POST", "admin.php?page=dashboard", true);
@@ -788,14 +807,10 @@ jQuery.fn.fileeditor = function(properties){
 			newDirectoryHtml += '<img src="' + folder_image + '" />';
 			newDirectoryHtml += '<input id="newFolderName" value="" /></li>';
 			
-			var newDirectoryTarget;
-			
 			if(browserFilesList.find(".folder").length > 0)
-				newDirectoryTarget = browserFilesList.find(".folder:last");
+				browserFilesList.find(".folder:last").after(newDirectoryHtml);
 			else
-				newDirectoryTarget = browserFilesList.find(".addNewFileOuter"); 
-			
-			newDirectoryTarget.after(newDirectoryHtml);
+				browserFilesList.prepend(newDirectoryHtml); 
 			
 			newDirectory = editor.find("#newDirectory");
 			newFolderName = newDirectory.find("#newFolderName");
@@ -817,7 +832,7 @@ jQuery.fn.fileeditor = function(properties){
 							success:function(response){
 								if(response == "created")
 								{
-									editor.find("#newDirectory").remove();
+									//editor.find("#newDirectory").remove();
 									var createdDirectory = currentDirectory + filename + "/";
 									
 									var directoryHtml = '<li class="folder" url="' + createdDirectory + '">\
@@ -850,7 +865,7 @@ jQuery.fn.fileeditor = function(properties){
 											browserDirectoriesOuter.html('<ul class="fileTree" style="">' + fileTreeHtml + '</ul>');
 									}
 									
-									newDirectoryTarget.after(directoryHtml);
+									newDirectory.replaceWith(directoryHtml);
 								}
 							}
 						});
@@ -865,7 +880,7 @@ jQuery.fn.fileeditor = function(properties){
 		{
 			if(confirm("Silmek istediğinizden eminmisiniz?"))
 			{
-				var element = $(this).parent();
+				var element = $(this).closest(".file");
 				$.ajax({
 					data:"admin_action=deleteFile&fileUrl=" + element.attr("url"),
 					success:function(response){

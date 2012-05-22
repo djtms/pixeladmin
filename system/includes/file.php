@@ -15,3 +15,9 @@ function getFileInfo($file_id)
 	
 	return $ADMIN->DIRECTORY->selectFileById($file_id);
 }
+
+if($_POST["admin_action"] == "getFileInfoById")
+{
+	echo json_encode($ADMIN->FILE->selectFileById($_POST["file"]));
+	exit;
+}

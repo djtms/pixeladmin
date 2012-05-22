@@ -19,7 +19,7 @@
 	float:left;
 	clear:left;
 	display:block;
-	background:#fff url(../images/fileeditor/inputBg_normal.png) repeat-x top;
+	background:#fff url(images/inputBg_normal.png) repeat-x top;
 	height:17px;
 	width:305px;
 	border:1px #e2e2e2 solid;
@@ -32,13 +32,13 @@
 .editFileOuter input[type=text]:hover, .editFileOuter textarea:hover, .editFileOuter input[type=password]:hover
 {
 	border:1px #CCC solid;
-	background:#FFF url(../images/fileeditor/inputBg_hover.png) repeat-x;
+	background:#FFF url(images/inputBg_hover.png) repeat-x;
 }
 
 .editFileOuter input[type=text]:focus, .editFileOuter textarea:focus, .editFileOuter input[type=password]:focus 
 {
 	border:1px #999 solid;
-	background:#FFF url(../images/fileeditor/inputBg_hover.png) repeat-x;
+	background:#FFF url(images/inputBg_hover.png) repeat-x;
 }
 
 .editFileOuter
@@ -66,7 +66,7 @@
 {
 	width:670px;
 	height:460px;
-	background: #fff url(../images/editfileBg.jpg) left bottom repeat-x;
+	background: #fff url(images/editfileBg.jpg) left bottom repeat-x;
 	position:absolute;
 	padding:20px;
 	left:50%;
@@ -90,7 +90,7 @@
 	position:relative;
 	overflow: hidden;
 	border:solid 1px #aaa;
-	background: #fff url(../images/cropAreaBg.png);
+	background: #fff url(images/cropAreaBg.png);
 }
 
 .jcrop-holder

@@ -89,13 +89,14 @@ function browseFiles()
 	
 	$return->directories = $ADMIN->DIRECTORY->listDirectoriesByParentId($parent_id);
 	$return->files = $ADMIN->DIRECTORY->listFilesByDirectory($directory);
+	$length = sizeof($return->files);
 	
-	foreach($return->files as &$f)
+	for($i=0; $i<$length; $i++)
 	{
-		if(!$f->browser_thumb = $ADMIN->DIRECTORY->getThumbUrl($f->file_id, 123, 87, false, true, "center top", "FFFFFF"))
-			$f->browser_thumb = "../upload/system/exclamation.jpg";
+		if(!$return->files[$i]->browser_thumb = $ADMIN->DIRECTORY->getThumbUrl($return->files[$i]->file_id, 123, 87, false, true, "center top", "FFFFFF"))
+			$return->files[$i]->browser_thumb = "../upload/system/exclamation.jpg";
 	}
-	
+
 	echo json_encode($return);
 }
 
@@ -172,7 +173,7 @@ function deleteFile()
 {
 	global $ADMIN;
 	
-	if($ADMIN->DIRECTORY->deleteFileByUrl($_POST["fileUrl"]))
+	if($ADMIN->FILE->deleteFileByUrl($_POST["fileUrl"]))
 		echo "deleted";
 	else
 		echo "error";	

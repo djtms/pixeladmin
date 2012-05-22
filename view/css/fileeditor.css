@@ -275,6 +275,30 @@
 	background-position: 0 -18px !important;
 }
 
+.browserBtn_UploadFile
+{
+	width:18px;
+	cursor:pointer !important;
+	overflow:hidden;
+	background-position: -55px 0px !important;
+}
+
+.browserBtn_UploadFile:hover
+{
+	background-position: -55px -18px !important;
+}
+
+.browserBtn_UploadFile input[type=file]
+{
+	float:none !important;
+	margin: 0 !important;
+	background: transparent !important;
+	opacity: 0 !important;
+	width:18px !important;
+	height:18px !important;
+	cursor:pointer !important;
+}
+
 .browserSearchOuter
 {
 	float:left;
@@ -370,50 +394,13 @@
 {
 	color:#999 !important;
 }
-	
-.addNewFileOuter
-{
-	cursor: pointer;
-}
-
-.addNewFileOuter img
-{
-	width:53px;
-	height:52px;
-	float:left;
-	margin: 20px 0 13px 36px;
-}
-
-.addNewFileOuter span
-{
-	width:100%;
-	height:25px;
-	float:left;
-	clear:both;
-	font: 13px Arial;
-	color:#ccc;
-	text-align: center;
-}
-
-.addNewFileOuter input[type=file]
-{
-	float:none !important;
-	margin: 0 !important;
-	position:absolute !important;
-	background: transparent !important;
-	opacity: 0 !important;
-	width:125px !important;
-	height:110px !important;
-	cursor: pointer;
-	z-index: 10 !important;
-}
 
 .browserFilesList .filethumbOuter
 {
 	width:123px;
 	height:87px;
 	float:left;
-	margin:0 0 9px 0;
+	margin:0 0 5px 0;
 	border:solid 1px #ccc;
 	background: #fff url(../images/fileeditor/fileloader.gif);
 }
@@ -425,15 +412,37 @@
 	float:left;
 }
 
+.browserFilesList .fileEditButtonsOuter
+{
+	position:relative;
+	z-index:10;
+	width:100%;
+	height:20px;
+	background: #fff;
+	float:left;
+	text-align: center;
+	-webkit-transition:opacity 0.2s linear;
+	opacity:0;
+}
+
+.file:hover .fileEditButtonsOuter
+{
+	visibility: visible;
+	opacity:1;
+}
+
+.browserFilesList .fBtn
+{
+	display:inline-block;
+	width:20px;
+	height:20px;
+	cursor:pointer;
+	margin:0 3px;
+}
+
 .browserFilesList .btnEdit
 {
-	display:block;
-	width:12px;
-	height:12px;
-	float:left;
-	margin: 0 4px 0 0;
-	cursor:pointer;
-	background: url(../images/fileeditor/fileButtonIcons.png) no-repeat left top;
+	background: url(../images/fileeditor/btnEdit.png) no-repeat left top;
 }
 
 .browserFilesList .btnEdit:hover
@@ -443,35 +452,58 @@
 
 .browserFilesList .btnLook
 {
-	width:13px;
-	height:12px;
-	float:left;
-	margin: 0 4px 0 0;
-	cursor:pointer;
-	background: url(../images/fileeditor/fileButtonIcons.png) no-repeat -12px top;
+	background: url(../images/fileeditor/btnView.png) no-repeat left top;
 }
 
 .browserFilesList .btnLook:hover
 {
-	background-position: -12px bottom;
+	background-position: left bottom;
+}
+
+.browserFilesList .btnPlay
+{
+	background: url(../images/fileeditor/btnPlay.png) no-repeat left top;
+}
+
+.browserFilesList .btnPlay:hover
+{
+	background-position: left bottom;
 }
 
 .browserFilesList .btnDelete
 {
-	width:12px;
-	height:12px;
-	float:left;
-	margin: 0 4px 0 0;
-	cursor:pointer;
-	background: url(../images/fileeditor/fileButtonIcons.png) no-repeat -25px top;
+	background: url(../images/fileeditor/btnDelete.png) no-repeat left top;
 }
 
 .browserFilesList .btnDelete:hover
 {
-	background-position: -25px bottom;
+	background-position: left bottom;
+}
+
+.browserFilesList .fileName
+{
+	position:absolute;
+	z-index:5;
+	left:10px;
+	bottom:6px;
+	width:125px;
+	height:20px;
+	font:11px Arial;
+	line-height:20px;
+	color:#cccccc;
+	float:right;
+	text-align: center;
+	cursor: default;
+	overflow:hidden;
+	
 }
 
 /* IF SELECTED **************************************************************************************/
+
+.browserFilesList .selected .fileEditButtonsOuter
+{
+	background: #ddd;
+}
 
 .browserFilesList .selected .btnEdit
 {
@@ -485,37 +517,35 @@
 
 .browserFilesList .selected .btnLook
 {
-	background-position: -12px bottom;
+	background-position: left bottom;
 }
 
 .browserFilesList .selected .btnLook:hover
 {
-	background-position: -12px top;
+	background-position: left top;
+}
+
+.browserFilesList .selected .btnPlay
+{
+	background-position: left bottom;
+}
+
+.browserFilesList .selected .btnPlay:hover
+{
+	background-position: left top;
 }
 
 .browserFilesList .selected .btnDelete
 {
-	background-position: -25px bottom;
+	background-position: left bottom;
 }
 
 .browserFilesList .selected .btnDelete:hover
 {
-	background-position: -25px top;
+	background-position: left top;
 }
 
 /******************************************************************************************************/
-
-.browserFilesList .fileName
-{
-	width:76px;
-	height:14px;
-	font:10px Arial;
-	color:#cccccc;
-	float:right;
-	text-align: right;
-	cursor: default;
-	overflow:hidden;
-}
 
 .browserFilesList .uploadingText
 {

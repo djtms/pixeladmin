@@ -3,7 +3,7 @@
 .fileOuter
 {
 	width:125px;
-	height:105px;
+	height:110px;
 	border:solid 1px #cccccc;
 	float:left;
 	clear:left;
@@ -26,8 +26,9 @@
 .fileOuter .fileName
 {
 	width:100%;
-	height:14px;
-	font:10px Arial;
+	height:20px;
+	font:11px Arial;
+	line-height:20px;
 	color:#cccccc;
 	float:right;
 	text-align: center;
@@ -35,15 +36,55 @@
 	overflow:hidden;
 }
 
+.fileOuter .fileButtonsOuter
+{
+	width:125px;
+	height:20px;
+	position:absolute;
+	left:10px;
+	bottom:5px;
+	background: #fff;
+	text-align: center;
+	visibility: hidden;
+	-webkit-transition: opacity 0.2s linear;
+	opacity:0;
+}
+
+.fileOuter:hover .fileButtonsOuter
+{
+	opacity:1;
+}
+
+.fileOuter .fileButtonsOuter .fBtn
+{
+	width: 20px;
+	height: 20px;
+	display:inline-block;
+	margin:0 3px;
+	background-position: left top;
+}
+
+.fileOuter .fileButtonsOuter .fBtn:hover
+{
+	background-position: left bottom;
+}
+
+.fileOuter .editButton
+{
+	background-image: url(../images/fileeditor/btnEdit.png);
+}
+
+.fileOuter .lookatButton
+{
+	background-image: url(../images/fileeditor/btnView.png);
+}
+
+.fileOuter .playButton
+{
+	background-image: url(../images/fileeditor/btnPlay.png);
+}
+
 .fileOuter .deleteFile
 {
-	min-width: 20px !important;
-	display:block;
-	opacity:0;
-	position:absolute !important;
-	left:37px !important;
-	top:40px !important;
-	margin:0 !important;
-	cursor:pointer;
-	display:none;
+	background-image: url(../images/fileeditor/btnDelete.png);
 }

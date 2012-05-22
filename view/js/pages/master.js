@@ -11,12 +11,11 @@ function MasterStart()
 		type:"post"
 	});
 	
-	bindComponents();
+	$(".fancybox").fancybox({
+		"titleShow":false
+	});
 	
-	if($.trim($("#postMessage").html()) != "")
-	{
-		setupPostMessageCountdown();
-	}
+	postMessage();
 	
 	$(window).resize(function(){
 		var left = ($(window).width() - 460) / 2;
@@ -38,75 +37,28 @@ function MasterStart()
 	}).live("mousedown",function(e){return false;});
 }
 
-function bindComponents()
-{
-	$(".fancybox").fancybox({
-		"titleShow":false
-	});
-}
-
 function postMessage(message,error)
 {
-	message = '<p ' + (error ? ' style="color:#fc5900;" ' : '') + ' >' + message + '</p>';
-	$("#postMessage").html(message);
-	setupPostMessageCountdown();
-}
-
-function setupPostMessageCountdown()
-{
-	$("#postMessage").stop().css("opacity","1");
-	setTimeout(function(){ $("#postMessage").animate({"opacity":"0"},700,function(){
-		$(this).html("").css("opacity","1");
-	});},5000);
-}
-
-var messageType = {"INFO":1,"WARNING":2,"ERROR":3};
-
-function messageBox(messageTitle,messageText,messageType,buttons)
-{
-	var headerIconClass = "";
-	var contentIconClass = "";
-	switch(messageType)
+	var openPostMessage = false;
+	
+	if((message == undefined) || (message == null) || (message == ""))
 	{
-		case(messageType.INFO):
-			headerIconClass = "headerIconInfo";
-			contentIconClass = "contentIconInfo";
-		break;
+		if($.trim($("#postMessage").html()) != "")
+			openPostMessage = true;
+	}
+	else if(message.length > 0)
+	{
+		openPostMessage = true;
 		
-		case(messageType.WARNING):
-			headerIconClass = "headerIconWarning";
-			contentIconClass = "contentIconWarning";
-		break;
-		
-		case(messageType.ERROR):
-			headerIconClass = "headerIconError";
-			contentIconClass = "contentIconError";
-		break;
+		message = '<p ' + (error ? ' style="color:#fc5900;" ' : '') + ' >' + message + '</p>';
+		$("#postMessage").html(message);
 	}
 	
-	$("#messageBoxHeader #headerIcon").addClass(headerIconClass);
-	$("#messageBoxHeader #contentIcon").addClass(contentIconClass);
-	
-	var buttonCount = buttons.length;
-	var buttonsHtml = "";
-	
-	for(var i=0; i<buttonCount; i++)
+	if(openPostMessage)
 	{
-		buttonsHtml += '<button>' + buttons[i].name + '</button>';
+		$("#postMessage").stop().css("opacity","1");
+		setTimeout(function(){ $("#postMessage").animate({"opacity":"0"},700,function(){
+			$(this).html("").css("opacity","1");
+		});},5000);
 	}
-	$("#messageBox #messageBoxButtonsOuter").html(buttonsHtml);
-	$("#messageBox #headerText").html(messageTitle);
-	$("#messageBox #messageText").html(messageText);
-	
-	for(var i=0; i<buttonCount; i++)
-	{
-		$("#messageBox #messageBoxButtonsOuter button").eq(i).click(buttons[i].click);
-	}
-	
-	$("#messageBoxOuter").css("display","block");
-}
-
-function closeMessageBox()
-{
-	$("#messageBoxOuter").css("display","none");
 }
