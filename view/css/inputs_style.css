@@ -23,6 +23,24 @@
 	background: #888 !important;
 }
 
+.fileOuter .button
+{
+	position:absolute;
+	padding-left:0;
+	padding-right:0;
+	width:83px;
+	left:30px;
+	top:20px;
+	z-index:15;
+	opacity:0;
+}
+
+.fileOuter:hover .button
+{
+	-webkit-transition:opacity 0.2s;
+	opacity:1;
+}
+
 .fileOuter .fileName
 {
 	width:100%;

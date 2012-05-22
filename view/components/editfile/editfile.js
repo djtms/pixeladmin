@@ -1,3 +1,7 @@
+/*
+ * Author: Mehmet Hazar Artuner
+ */
+
 (function($){
 	$.fn.editfile = function(properties){
 		

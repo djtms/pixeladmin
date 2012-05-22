@@ -28,7 +28,7 @@ function ModuleCodesStart()
 		temp.wrap('<div class="fileOuter">');
 		file = temp.parent();
 		
-		var html  = '<img class="filethumb" src="" />';
+		var html  = '<img class="filethumb" src="" /><span class="button">Değiştir</span>';
 			html += '<span class="fileName"></span>';
 			html += '<span class="fileButtonsOuter">';
 			html += '<span class="editButton fBtn" title="Düzenle" file="' + fileId + '"></span>';
@@ -123,7 +123,7 @@ function ModuleCodesStart()
 			});
 		}
 		
-		fileImage.click(function(){
+		$(".filethumb, .button",file).click(function(){
 			$(this).openFileEditor({
 				containorId:"file_editor_main_container",
 				multiSelection:false,
@@ -148,6 +148,7 @@ function ModuleCodesStart()
 				}
 			});
 		});
+		
 		
 		btnDelete.click(function(){
 			fileImage.attr("src",exclamation_image);
