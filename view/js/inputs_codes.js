@@ -98,6 +98,10 @@ function ModuleCodesStart()
 									
 									if(fileType != "movie")
 									{
+										if(file.thumb != null)
+										{
+											fileImage.attr("src", file.thumb);
+										}
 										btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
 									}
 									else

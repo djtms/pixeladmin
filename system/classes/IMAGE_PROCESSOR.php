@@ -30,11 +30,11 @@ class PA_IMAGE_PROCESSOR
 	function load($path)
 	{
 		if(preg_match("/\.jpeg$|\.jpg$/i",$path))
-		$this->image = imagecreatefromjpeg($path);
+			$this->image = imagecreatefromjpeg($path);
 		else if(preg_match("/\.png$/i",$path))
-		$this->image = imagecreatefrompng($path);
+			$this->image = imagecreatefrompng($path);
 		else if(preg_match("/\.gif$/i",$path))
-		$this->image = imagecreatefromgif($path);
+			$this->image = imagecreatefromgif($path);
 		else
 		{
 			$this->error[] = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
@@ -52,11 +52,11 @@ class PA_IMAGE_PROCESSOR
 	public function save($path)
 	{
 		if(preg_match("/.jpeg$|.jpg$/i",$path))
-		imagejpeg($this->image, $path);
+			imagejpeg($this->image, $path);
 		else if(preg_match("/.png$/i",$path))
-		imagepng($this->image, $path);
+			imagepng($this->image, $path);
 		else if(preg_match("/.gif$/i",$path))
-		imagegif($this->image, $path);
+			imagegif($this->image, $path);
 		else
 		{
 			$this->error = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;

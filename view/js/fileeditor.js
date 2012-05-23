@@ -233,7 +233,7 @@ jQuery.fn.fileeditor = function(properties){
 				var thisObject = $(this);
 				var thisParentObject =  $(this).closest(".file");
 				var fileId = thisObject.attr("fileId");
-				var thumbObject = thisObject.parent().find(".filethumb");
+				var thumbObject = thisParentObject.find(".filethumb");
 				var fileName = thisObject.parent().find(".fileName");
 				var btnLook = thisObject.parent().find(".btnLook");
 
@@ -251,12 +251,20 @@ jQuery.fn.fileeditor = function(properties){
 								fileName.html(file.basename);
 								btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + url);
 								thisParentObject.attr("url", url);
-								$.ajax({
-									data:"admin_action=getBrowserThumb&fileId=" + file.file_id,
-									success:function(response){
-										thumbObject.attr("src",response);
-									}
-								});
+								
+								if(file.thumb != null)
+								{	
+									thumbObject.attr("src",file.thumb);
+								}
+								else
+								{
+									$.ajax({
+										data:"admin_action=getBrowserThumb&fileId=" + file.file_id,
+										success:function(response){
+											thumbObject.attr("src",response);
+										}
+									});
+								}
 							}
 						});
 					}

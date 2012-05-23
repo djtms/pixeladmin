@@ -1,0 +1,121 @@
+@CHARSET "UTF-8";
+
+.fileGridOuter
+{
+	width:805px;
+	height:305px;
+	float:left;
+	clear:left;
+	border:solid 1px #ccc;
+	position:relative;
+}
+
+.fileGridOuter .overflowFixer
+{
+	width:805px;
+	height:305px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	float:left;
+	border:solid 1px #ccc;
+	position:relative;
+	left:-1px;
+	top:-1px;
+	background: #eee;
+}
+
+.fileGridOuter .fileGridList
+{
+	list-style: none;
+	padding:0 0 9px 0;
+	margin:0;
+	width:784px;
+	float:left;
+}
+
+.fileGridOuter .gridFile
+{
+	width:125px;
+	border:solid 1px #ccc;
+	float:left;
+	margin:9px 0 0 9px;
+	padding:10px;
+	font:12px Trebuchet MS, Arial;
+	text-align: center;
+	background: #fff;
+}
+
+.fileGridOuter .gridFile .thumbImage
+{
+	width:123px;
+	height:87px;
+	border:solid 1px #ccc;
+	float:left;
+}
+
+.fileGridOuter .buttonsOuter
+{
+	width:125px;
+	height:20px;
+	float:left;
+	margin:8px 0 0 0;
+	background: #fff;
+	text-align:center;
+	display:block;
+}
+
+.fileGridOuter .fBtn
+{
+	width:20px;
+	height:20px;
+	display:inline-block;
+	margin:0 3px;
+	background-position: left top;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.fileGridOuter .btnEdit
+{
+	background-image: url(../images/btnEdit.png);
+}
+
+.fileGridOuter .btnEdit:hover
+{
+	background-position: left bottom;
+}
+
+.fileGridOuter .btnView
+{
+	background-image: url(../images/btnView.png);
+}
+
+.fileGridOuter .btnPlay
+{
+	background-image: url(../images/btnPlay.png);
+}
+
+.fileGridOuter .btnDelete
+{
+	background-image: url(../images/btnDelete.png);
+}
+
+.fileGridOuter .fBtn:hover
+{
+	background-position: left bottom;
+}
+
+/***********************************************************************/
+.gridFile input[type=text], .gridFile input[type=password]
+{
+	margin:0;
+	display: inline-block;
+	float:none;
+}
+
+.gridFile input[type=submit], .gridFile button
+{
+	margin:5px 0 0 0;
+	display: inline-block;
+	float:none;
+}

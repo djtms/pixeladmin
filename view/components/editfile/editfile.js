@@ -40,7 +40,16 @@
 			if(file.type == "image")
 			{
 				editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '">Görüntüle</a>';
-				editHtml += '<button class="btnOpenCrop button">Resmi Kırp</a>';
+				editHtml += '<button class="btnEditPicture">Resmi Düzenle</button>';
+				editHtml += '<ul class="editfilePopupMenu">';
+				editHtml += '<li class="btnRotateImage">Resmi Döndür &nbsp; &rsaquo;';
+				editHtml += '<ul>';
+				editHtml += '<li class="btnRotateRight">Sağa Döndür</li>';
+				editHtml += '<li class="btnRotateLeft">Sola Döndür</li>';
+				editHtml += '</ul>';
+				editHtml += '</li>';
+				editHtml += '<li class="btnOpenCrop">Resmi Kırp</li>';
+				editHtml += '</ul>';
 			}
 			else if(file.type == "movie")
 			{
@@ -144,6 +153,7 @@
 			
 			var JCROP; 
 			var bigThumbUrl;
+			var smallThumbUrl = null;
 			var editFileEditor = $("#editFile_" + uniqueId);
 			var editFileBackHider = editFileEditor.find(".editFileBackHider");
 			var editFileEditorContents = editFileEditor.find(".editFileContentsOuter");
@@ -159,7 +169,7 @@
 			var btnCrop = editFileEditor.find(".btnCrop");
 			var infoForm = editFileEditor.find(".infoForm");
 			var thumbFileId = editFileEditor.find(".thumbFileId");
-			var loader = editFileEditor.find(".loader");
+			var loader = editFileEditor.find(".editfileloader");
 			var filename = editFileEditor.find(".filename");
 			var extension = editFileEditor.find(".extension");
 			var basename = editFileEditor.find(".basename");
@@ -214,16 +224,49 @@
 				});
 			}
 			
-			this.test = function(){
-				alert("Test Working");
-			};
-			
-			this.testP = function(){
-				alert("Private Works");
-			};
-			
 			function bindEvents()
 			{
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				var tempTimerId;
+				$(".btnEditPicture").click(function(){$(".editfilePopupMenu").css({"display":"block", "opacity":"1"});}); 
+				
+				$(".editfilePopupMenu, .editfilePopupMenu ul").mouseenter(function(){
+					$(".editfilePopupMenu").stop().css("display","block").animate({"opacity":1},200);
+				}).mouseleave(function(){
+					$(".editfilePopupMenu").stop().animate({"opacity":0},200,function(){ $(".editfilePopupMenu").css("display","none"); });
+				});
+				
+				
+				$(".btnRotateRight").click({"file_id":file.file_id, "degree":-90}, rotateImage);
+				$(".btnRotateLeft").click({"file_id":file.file_id, "degree":90}, rotateImage);
+				
+				function rotateImage(e)
+				{
+					$(".editfilePopupMenu").css("display","none");
+					thumbLoaderOuter.css("display","block");
+					$.ajax({
+						type:"post",
+						data:"admin_action=rotateImage&file_id=" + e.data.file_id + "&degree=" + e.data.degree,
+						dataType:"json",
+						success:function(response){
+							if(response.success === true)
+							{
+								fileThumb.attr("src",response.big_thumb);
+								bigThumbUrl = response.big_thumb;
+								smallThumbUrl = response.small_thumb;
+							}
+						},
+						error: function(){
+							alert("Hata Oluştu!");
+						},
+						complete:function(){
+							thumbLoaderOuter.css("display","none");
+						}
+					});
+				}
+				
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 				btnSave.click(saveFile);
 				btnCancel.click(closeDetailsEditor);
 				btnOpenCrop.click(initializeCrop);
@@ -421,6 +464,7 @@
 								file.thumb_file_id = thumbFileId.val();
 								file.basename = basename.val();
 								file.url = url.val();
+								file.thumb = smallThumbUrl;
 								options.onSaved(file);
 								closeDetailsEditor();
 							}

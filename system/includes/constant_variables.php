@@ -41,7 +41,8 @@ if(in_admin)
 	{
 		$allowedFileExtensionsString .= "*.{$format};";
 	}
-
+	define("GUI_TEMPLATES_DIR", dirname(__FILE__) . "/../../view/gui_templates/");
+	
 	$master->setGlobal("allowedFileExtensionsString",$allowedFileExtensionsString);
 	$master->setGlobal("currentpage",$currentpage);
 	$master->setGlobal("uploadurl",$uploadurl);

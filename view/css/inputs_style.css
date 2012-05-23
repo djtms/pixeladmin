@@ -54,6 +54,11 @@
 	overflow:hidden;
 }
 
+.fileOuter:hover .fileName
+{
+	display:none;
+}
+
 .fileOuter .fileButtonsOuter
 {
 	width:125px;

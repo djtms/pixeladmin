@@ -43,13 +43,13 @@ body {
 
 #content {
 	position:relative;
-	width:705px;
+	width:807px;
 	height:100%;
 	min-height:350px;
 	float:left;
 	background:#FFF url(../images/content_bg.png) repeat-x bottom;
 	border:1px #bbbbbb solid;
-	padding:50px;
+	padding:50px 30px;
 	margin:20px 0 0 265px;
 }
 
@@ -192,11 +192,10 @@ textarea {
 	border:1px #e2e2e2 solid;
 	outline:none;
 	padding:5px;
-	width:690px;
-	height:207px;
 	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;
-	width:690px;
+	width:771px; /*690px*/
+	height:207px;
 }
 
 textarea.medium
@@ -297,7 +296,7 @@ header {
 }
 
 #headerInner {
-	width:805px;
+	width:886px;
 	height:88px;
 	padding:47px 0 0 20px;
 	position:relative;
@@ -324,7 +323,7 @@ header {
 
 #postMessage
 {
-	width:805px;
+	width:886px;
 	position:absolute;
 	left:0;
 	top:0px;
@@ -587,14 +586,14 @@ header {
 
 .editFormOuter {
 	margin-top:10px;
-	width:705px;
+	width:705px; /*786px*/
 	min-height:20px;
 	float:left;
 }
 
 .categorie_cell {
 	margin-top:20px;
-	width:705px;
+	width:786px;
 	min-height:20px;
 	background:#FFF;
 	border-bottom:1px #c6c6c6 solid;
@@ -630,7 +629,7 @@ ul.cs2 li {
 
 
 .htmlCell {
-	width:705px;
+	width:786px;
 	min-height:20px;
 	margin-top:20px;
 	overflow:hidden;
@@ -644,7 +643,7 @@ ul.cs3 li {
 /** HAZAR **/
 .itemsList
 {
-	width:705px;
+	width:781px;
 	min-height:20px;
 	float:left;
 	background:#FFF;
@@ -1020,39 +1019,39 @@ ul.cs3 li {
 
 #dashboardContentsLeft
 {
-	width:345px;
+	width:385px;
 	float:left;
 }
 
 #dashboardContentsRight
 {
-	width:345px;
+	width:385px;
 	float:right;
 }
 
-.container_345_Outer
+.container_385_Outer
 {
-	width:345px;
+	width:385px;
 	min-height: 95px;
 	float:left;
 	margin-bottom:20px;
 }
 
-.container_345_Header
+.container_385_Header
 {
-	width:325px;
+	width:365px;
 	height:27px;
 	float:left;
 	font:13px Arial;
 	color:#f0f1f3;
 	line-height: 27px;
 	padding:0 10px;
-	background: url(../images/container_345_headerBg.jpg) no-repeat left top;
+	background: url(../images/container_385_headerBg.jpg) no-repeat left top;
 }
 
-.container_345_Contents
+.container_385_Contents
 {
-	width:323px;
+	width:363px;
 	padding:7px 10px;
 	margin:0;
 	float:left;
@@ -1060,21 +1059,21 @@ ul.cs3 li {
 	
 }
 
-.container_345_Contents li
+.container_385_Contents li
 {
-	width:323px;
+	width:363px;
 	float:left;
 	margin:0;
 	padding:8px 0;
 	border-bottom: dashed 1px #fc5900;
 }
 
-.container_345_Contents li:last-child
+.container_385_Contents li:last-child
 {
 	border:none;
 }
 
-.container_345_Contents .title
+.container_385_Contents .title
 {
 	width:100%;
 	float:left;
@@ -1082,7 +1081,7 @@ ul.cs3 li {
 	color:#525252;
 }
 
-.container_345_Contents .content
+.container_385_Contents .content
 {
 	width:100%;
 	float:left;

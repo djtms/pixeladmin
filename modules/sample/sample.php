@@ -9,8 +9,19 @@ if($_POST["action"] == "Kaydet")
 }
 
 ?>
-
+<br clear="all"/><br />
 <form method="post">
+	<?php 
+	$files = $ADMIN->GALLERY->listGalleryFiles(1);
+	
+	$appendHtml  = "<button class='validate' file='<%file_id%>' >Onay Ver</button>";
+	$appendHtml .= "<button class='discard' file='<%file_id%>'>Reddet</button>";
+	$appendHtml .= "<button class='wait' file='<%file_id%>'>Bekle</button>";
+	
+	echo fileGrid($files, "", "edit,play,view", 2, 1, $appendHtml);
+	
+	?>
+
 	<label>Logo</label>
 	<input type="file" name="sampleLogoId" fileid="<?php echo get_option("sampleLogoId"); ?>" />
 	

@@ -236,7 +236,8 @@
 	width:27px !important;
 	height:27px !important;
 	float:right !important;
-	margin:31px 0 0 10px !important;
+	clear:none !important;
+	margin:1px 0 0 10px !important;
 	display:none;
 }
 
@@ -244,7 +245,7 @@
 {
 	position:absolute;
 	right:184px;
-	top:422px;
+	top:0px;
 	display:block;
 	width:450px;
 	height:29px;
@@ -289,6 +290,12 @@
 .relative
 {
 	position:relative;
+}
+
+.saveSubmitButtonsOuter .relative
+{
+	float:right;
+	clear:none;
 }
 
 .predefinedResOuter
@@ -409,4 +416,62 @@
 	text-align: center;
 	line-height: 15px;
 	background: #aaa;
+}
+
+/*****************************************************************************/
+
+
+
+.editfilePopupMenu, .editfilePopupMenu ul
+{
+	width:120px;
+	min-height:25px;
+	display:block;
+	background: #eee;
+	border:solid 1px #ccc;
+	position:absolute;
+	z-index:100;
+	left:200px;
+	top: -47px;
+}
+
+.editfilePopupMenu
+{
+	display:none;
+}
+
+.editfilePopupMenu ul
+{
+	left:auto;
+	right:-123px;
+	top:auto;
+	bottom:0;
+	margin:0;
+	-webkit-transition: opacity 0.2s linear;
+	opacity:0;
+}
+
+.editfilePopupMenu li
+{
+	width:100px;
+	height:25px;
+	float:left;
+	font:13px Trebuchet MS, Arial;
+	line-height:25px;
+	color:#585858;
+	cursor:pointer;
+	position:relative;
+	text-align: left;
+	padding:0 10px;
+}
+
+.editfilePopupMenu li:hover ul
+{
+	opacity:1;
+}
+
+.editfilePopupMenu li:hover
+{
+	background: #585858;
+	color:#eee;
 }

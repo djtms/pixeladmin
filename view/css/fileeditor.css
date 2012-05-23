@@ -431,6 +431,11 @@
 	opacity:1;
 }
 
+.file:hover .fileName
+{
+	display:none;
+}
+
 .browserFilesList .fBtn
 {
 	display:inline-block;
