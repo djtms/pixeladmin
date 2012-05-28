@@ -66,8 +66,8 @@ function currentDateTime($type = "datetime")
 function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisibleButtonsCount = 5)
 {
 	$pageCount = ceil($totalItemCount / $eachPageItemCount);
-	$itemHtml = '<a href="<%link%>"><%page%></a>';
-	$selectedItemHtml = '<span><%page%></span>';
+	$itemHtml = '<a href="{%link%}">{%page%}</a>';
+	$selectedItemHtml = '<span>{%page%}</span>';
 	$pagerHtml = '';
 	
 	if($pageCount > 1)
@@ -99,13 +99,13 @@ function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisi
 		{
 			if($i == $page)
 			{
-				$pagerHtml .= preg_replace('/\<\%page\%\>/',$i,$selectedItemHtml); 
+				$pagerHtml .= preg_replace('/\{\%page\%\}/',$i,$selectedItemHtml); 
 			}
 			else
 			{
-				$item = preg_replace('/\<\%page\%\>/',$i,$link);
-				$item = preg_replace('/\<\%link\%\>/', $item, $itemHtml);
-				$pagerHtml .= preg_replace('/\<\%page\%\>/',$i,$item);
+				$item = preg_replace('/\{\%page\%\}/',$i,$link);
+				$item = preg_replace('/\{\%link\%\}/', $item, $itemHtml);
+				$pagerHtml .= preg_replace('/\{\%page\%\}/',$i,$item);
 			}
 		}
 	}

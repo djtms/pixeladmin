@@ -40,9 +40,9 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 				<?php
 				if(is_array($data) && sizeof($data) > 0)
 				{
-					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-\=]+)\%\>/", $rowTitleQuery, $rowTitleColumnsMatches);
-					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $editDataLinkQuery, $editDataColumnsMatches);
-					preg_match_all("/\<\%([a-zA-Z0-9\.\_\-]+)\%\>/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
+					preg_match_all("/\{\%([a-zA-Z0-9\.\_\-\=]+)\%\}/", $rowTitleQuery, $rowTitleColumnsMatches);
+					preg_match_all("/\{\%([a-zA-Z0-9\.\_\-]+)\%\}/", $editDataLinkQuery, $editDataColumnsMatches);
+					preg_match_all("/\{\%([a-zA-Z0-9\.\_\-]+)\%\}/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
 					
 					$use_edit_button = (($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
 					$use_cross_button = (($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
@@ -98,7 +98,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 											{
 												$search = $deleteDataColumnsMatches[0][$i];
 												$column = $deleteDataColumnsMatches[1][$i];
-												$value  = $search == "<%_index_%>" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
+												$value  = $search == "{%_index_%}" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
 												
 												$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
 											}
@@ -116,7 +116,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 											{
 												$search = $editDataColumnsMatches[0][$i];
 												$column = $editDataColumnsMatches[1][$i];
-												$value = $search == "<%_index_%>" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
+												$value = $search == "{%_index_%}" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
 												
 												$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
 											}
@@ -198,7 +198,7 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 			$appendExtraHtml = true;
 			
 			// column adı eklenip eklenmediğini kontrol et
-			preg_match_all("/\<\%([\w\_\-]+)\%\>/i", $appendExtraHtmlData, $matches);
+			preg_match_all("/\{\%([\w\_\-]+)\%\}/i", $appendExtraHtmlData, $matches);
 			
 			// eğer column adı eklenmişse
 			if(is_array($matches[1])) //
@@ -254,14 +254,14 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 		{
 			if($requestedColumnsCount > 0)
 			{
+				$tempTemplate = $appendExtraHtmlData;
+				
 				for($j=0; $j<$requestedColumnsCount; $j++)
-				{
-					
+				{	
 					$requestedName = $requestedColumnNames[$j];
 					$value = $files[$i]->{$requestedName};
 					
-					$pattern = "/\<\%" . $requestedName . "\%\>/i";
-					$tempTemplate = $appendExtraHtmlData;
+					$pattern = "/\{\%" . $requestedName . "\%\}/i";
 					$tempTemplate = preg_replace($pattern, $value, $tempTemplate);
 				}
 				
@@ -283,10 +283,10 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 
 	
 	// Edit Template
-	$template = preg_replace("/\<\%itemsList\%\>/", $itemsList, $template);
-	$template = preg_replace("/\<\%gridId\%\>/", $gridId, $template);
-	$template = preg_replace("/\<\%rowCount\%\>/", $rowCount, $template);
-	$template = preg_replace("/\<\%columnCount\%\>/", $columnCount, $template);
+	$template = preg_replace("/\{\%itemsList\%\}/", $itemsList, $template);
+	$template = preg_replace("/\{\%gridId\%\}/", $gridId, $template);
+	$template = preg_replace("/\{\%rowCount\%\}/", $rowCount, $template);
+	$template = preg_replace("/\{\%columnCount\%\}/", $columnCount, $template);
 	
 	return $template;
 }

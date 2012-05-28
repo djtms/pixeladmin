@@ -75,14 +75,14 @@ class GlobalValues
 			
 		// HTML'imizi aşağıda yazan Regular Expression ifadesine uyan her iki % karakteri arasındaki text bir index olacak şekilde
 		// diziye atıyoruz
-		preg_match_all("/\<\%[a-zA-Z0-9\.\_]+\%\>/",(string)$htmlString,$matches);
+		preg_match_all("/\{\%[\w\.\_]+\%\}/",(string)$htmlString,$matches);
 		
 		// Yukarıdaki ifadede oluşan dizideki her indexi sırayla kontrol ediyoruz
 		foreach($matches[0] as $match)
 		{
 			// ilk önce aşağıdaki işlemleri yapabilmek için dönen string deki % karakterlerini  siliyoruz
-			$match = str_replace("<%","",$match);
-			$match = str_replace("%>","",$match);
+			$match = str_replace("{%","",$match);
+			$match = str_replace("%}","",$match);
 			
 			// şimdi ise html de yazan değişkeninkenin bir objeyi mi ifade ettiğini yada tek başına bir değişkenmi olduğunu anlamak için "." karakteri ile parçalıyoruz
 			$valuesArray = explode(".",$match);
@@ -104,12 +104,12 @@ class GlobalValues
 				}
 				
 				// html den okuduğumuz değişkenimizin değerini hesapladıktan sonra sonucu htmlde okuduğumuz ifadenin yerine yazma işlemini yapıyoruz
-				$htmlString = preg_replace("/<%$match%>/",$value,$htmlString);
+				$htmlString = preg_replace("/{%$match%}/",$value,$htmlString);
 			}
 			else
 			{
 				// html den okuduğumuz değişkenin obje yada array olmayıp kendi başına bir değişken olduğu durumlarda html deki değişken ismi yerine değişken değerini atama işlemini yapıyoruz
-				$htmlString = preg_replace("/<%$match%>/",$this->{$match},$htmlString);
+				$htmlString = preg_replace("/{%$match%}/",$this->{$match},$htmlString);
 			}
 		}
 	}

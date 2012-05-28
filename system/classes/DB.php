@@ -46,8 +46,6 @@ class DB
 					global $dbh;
 					$dbh = self::$dbcon;
 					$this->dbh = self::$dbcon;
-						
-					$this->tables = new DB_TABLES();
 				}
 				catch(PDOException $e)
 				{
@@ -69,8 +67,6 @@ class DB
 				$this->dbh = new PDO("mysql:host={$arguments[1]};dbname={$arguments[0]}", $arguments[2], $arguments[3], $options);
 				global $dbh;
 				$dbh = $this->dbh;
-				
-				$this->tables = new DB_TABLES();
 			}
 			catch(PDOException $e)
 			{
@@ -78,6 +74,8 @@ class DB
 				exit;
 			}
 		}
+		
+		$this->tables = new DB_TABLES();
 	}
 	
 	function get_value($query,$values=null)

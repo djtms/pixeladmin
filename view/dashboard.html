@@ -4,7 +4,7 @@
 		<ul class="container_385_Contents">
 			<li>
 				<span class="title">
-					<input id="btnMaintananceMode" type="checkbox" style="height:20px;" <%maintanenceChecked%> value="maintanance" />
+					<input id="btnMaintananceMode" type="checkbox" style="height:20px;" {%maintanenceChecked%} value="maintanance" />
 					<span style="color:#fc5900;">Bakım Modu</span>
 				</span>
 				<p class="content">
@@ -13,7 +13,7 @@
 			</li>
 			<li>
 				<span class="title">
-					<input id="btnMultilanguageMode" type="checkbox" value="multilanguage" style="height:20px;" <%multilanguageChecked%> />
+					<input id="btnMultilanguageMode" type="checkbox" value="multilanguage" style="height:20px;" {%multilanguageChecked%} />
 					<span style="color:#fc5900;">Çoklu Dil</span>
 				</span>
 				<p class="content">
@@ -22,7 +22,7 @@
 			</li>
 			<li>
 				<span class="title">
-					<input id="btnDebugMode" type="checkbox" value="debugmode" style="height:20px;" <%debugmodeChecked%> />
+					<input id="btnDebugMode" type="checkbox" value="debugmode" style="height:20px;" {%debugmodeChecked%} />
 					<span style="color:#fc5900;">Hata Ayıklama Modu</span>
 				</span>
 				<p class="content">
@@ -34,7 +34,7 @@
 	<div class="container_385_Outer">
 		<div class="container_385_Header">Mesajlar </div>
 		<ul class="container_385_Contents">
-			<%messagesHtml%>
+			{%messagesHtml%}
 		</ul>
 	</div>
 </div><!-- #dashboardContentsLeft -->
@@ -42,7 +42,7 @@
 	<div class="container_385_Outer" style="float:right;">
 		<div class="container_385_Header">Aktiviteler</div>
 		<ul class="container_385_Contents">
-			<%logsHtml%>
+			{%logsHtml%}
 		</ul>
 	</div>
 </div><!-- #dashboardContentsRight -->

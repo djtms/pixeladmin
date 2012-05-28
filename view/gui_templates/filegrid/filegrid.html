@@ -1,7 +1,10 @@
-<div id="<%gridId%>" class="fileGridOuter" rows="<%rowCount%>", cols="<%columnCount%>">
+<div id="{%gridId%}" class="fileGridOuter" rows="{%rowCount%}", cols="{%columnCount%}">
 	<div class="overflowFixer">
 		<ul class="fileGridList">
-			<%itemsList%>
+			{%itemsList%}
 		</ul>
+	</div>
+	<div class="fileGridLoader">
+		<img src="view/gui_templates/filegrid/images/loader.gif" />
 	</div>
 </div>

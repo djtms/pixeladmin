@@ -1,25 +1,25 @@
 <form method="post" onsubmit="return checkUserInfo();">
-	<input type="hidden" name="user_id" value="<%user.user_id%>" />
+	<input type="hidden" name="user_id" value="{%user.user_id%}" />
 	<input type="hidden" name="password" value="" />
 	
 	<label style="color:#fc5900;">Profil Bilgileri:</label>
 	<label>Profil Resmi:</label>
-	<input type="file" name="image_id" fileid="<%user.image_id%>" />
+	<input type="file" name="image_id" fileid="{%user.image_id%}" />
 	
 	<label>Görünen Ad:</label>
-	<input type="text" name="displayname" value="<%user.displayname%>"/>
+	<input type="text" name="displayname" value="{%user.displayname%}"/>
 	
 	<label>Doğum Tarihi:</label>
-	<input type="date" name="birthday" value="<%user.birthday%>" />
+	<input type="date" name="birthday" value="{%user.birthday%}" />
 	
 	<label>Kullanıcı Adı:</label>
-	<input type="text" name="username" value="<%user.username%>" readonly="readonly"/>
+	<input type="text" name="username" value="{%user.username%}" readonly="readonly"/>
 	
 	<label>E-Posta:</label>
-	<input id="email" type="text" name="email" value="<%user.email%>"/><div id="emailCheckLoader" class="portableALBOuter"><img src="<%VIEW_URL%>images/loader.gif" /><p></p></div>
+	<input id="email" type="text" name="email" value="{%user.email%}"/><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
 	
 	<label>Üyelik Tarihi:</label>
-	<input type="text" name="register_date" value="<%user.register_date%>" readonly="readonly"/>
+	<input type="text" name="register_date" value="{%user.register_date%}" readonly="readonly"/>
 	
 	<!-- <label>Kullanıcı Tipi:</label>
 	<input type="text" value="" /> -->

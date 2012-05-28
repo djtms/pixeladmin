@@ -24,7 +24,7 @@ if($_POST["admin_action"]=="checkForDB")
 }
 
 $html = file_get_contents(dirname(__FILE__) . "/database.html");
-$html = str_ireplace('<%errorText%>', $errorMessage, $html);
+$html = str_ireplace('{%errorText%}', $errorMessage, $html);
 echo $html;
 
 exit;
@@ -64,13 +64,13 @@ function generateAdminConfigurationFile($dbh)
 	global $errorMessage;
 	$configfile = file_get_contents(dirname(__FILE__) . "/config-sample.php");
 		
-	$configfile = str_ireplace('<%dbname%>', $_POST["dbname"], $configfile);
-	$configfile = str_ireplace('<%dbuser%>', $_POST["dbuser"], $configfile);
-	$configfile = str_ireplace('<%dbpass%>', $_POST["dbpass"], $configfile);
-	$configfile = str_ireplace('<%dbhost%>', $_POST["dbhost"], $configfile);
-	$configfile = str_ireplace('<%prefix%>', $_POST["prefix"], $configfile);
-	$configfile = str_ireplace('<%securekey%>', randomString(32), $configfile);
-	$configfile = str_ireplace('<%sessionKeysPrefix%>', uniqid("SES") . "_", $configfile);
+	$configfile = str_ireplace('{%dbname%}', $_POST["dbname"], $configfile);
+	$configfile = str_ireplace('{%dbuser%}', $_POST["dbuser"], $configfile);
+	$configfile = str_ireplace('{%dbpass%}', $_POST["dbpass"], $configfile);
+	$configfile = str_ireplace('{%dbhost%}', $_POST["dbhost"], $configfile);
+	$configfile = str_ireplace('{%prefix%}', $_POST["prefix"], $configfile);
+	$configfile = str_ireplace('{%securekey%}', randomString(32), $configfile);
+	$configfile = str_ireplace('{%sessionKeysPrefix%}', uniqid("SES") . "_", $configfile);
 	
 	if(!file_put_contents(dirname(__FILE__) . "/../../config.php", $configfile))
 		echo "config dosyası oluşturulamadı!";

@@ -58,14 +58,14 @@ class Template extends GlobalValues{
 			
 		// HTML'imizi aşağıda yazan Regular Expression ifadesine uyan her iki % karakteri arasındaki text bir index olacak şekilde
 		// diziye atıyoruz
-		preg_match_all("/\<\%[a-zA-Z0-9\.\_]+\%\>/",(string)$this->_rendered,$matches);
+		preg_match_all("/\{\%[a-zA-Z0-9\.\_]+\%\}/",(string)$this->_rendered,$matches);
 		
 		// Yukarıdaki ifadede oluşan dizideki her indexi sırayla kontrol ediyoruz
 		foreach($matches[0] as $match)
 		{
 			// ilk önce aşağıdaki işlemleri yapabilmek için dönen string deki % karakterlerini  siliyoruz
-			$match = str_replace("<%","",$match);
-			$match = str_replace("%>","",$match);
+			$match = str_replace("{%","",$match);
+			$match = str_replace("%}","",$match);
 			
 			// şimdi ise html de yazan değişkeninkenin bir objeyi mi ifade ettiğini yada tek başına bir değişkenmi olduğunu anlamak için "." karakteri ile parçalıyoruz
 			$valuesArray = explode(".",$match);
@@ -94,7 +94,7 @@ class Template extends GlobalValues{
 				}
 				
 				// html den okuduğumuz değişkenimizin değerini hesapladıktan sonra sonucu htmlde okuduğumuz ifadenin yerine yazma işlemini yapıyoruz
-				$this->_rendered = preg_replace("/<%$match%>/",$value,$this->_rendered);
+				$this->_rendered = preg_replace("/{%$match%}/",$value,$this->_rendered);
 				
 			}
 			else
@@ -107,7 +107,7 @@ class Template extends GlobalValues{
 					$value = get_class($value) == "Template" ? $value->html() : "OBJECT"; 	
 				}
 				
-				$this->_rendered = preg_replace("/<%$match%>/",$value,$this->_rendered);
+				$this->_rendered = preg_replace("/{%$match%}/",$value,$this->_rendered);
 			}
 		}
 		

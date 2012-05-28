@@ -46,7 +46,7 @@ if($ADMIN->USER->getUserCount() <= 0)
 	}
 	
 	$html = file_get_contents(dirname(__FILE__) . "/user.html");
-	$html = str_ireplace('<%errorText%>', $errorMessage, $html);
+	$html = str_ireplace('{%errorText%}', $errorMessage, $html);
 	echo $html;
 }
 

@@ -20,6 +20,7 @@ function ModuleCodesStart()
 		var fileName;
 		
 		var temp = $(this);
+		var readonly = temp.attr("readonly") ? true : false;
 		var keyName = temp.attr("name");
 		var fileValue = temp.attr("fileid");
 		var fileId = parseInt(fileValue) > 0 ? parseInt(fileValue) : -1;
@@ -28,13 +29,14 @@ function ModuleCodesStart()
 		temp.wrap('<div class="fileOuter">');
 		file = temp.parent();
 		
-		var html  = '<img class="filethumb" src="" /><span class="button">Değiştir</span>';
+		var html  = '<img class="filethumb" src="" />';
+			html += (readonly ? "" : '<span class="button">Değiştir</span>');
 			html += '<span class="fileName"></span>';
 			html += '<span class="fileButtonsOuter">';
-			html += '<span class="editButton fBtn" title="Düzenle" file="' + fileId + '"></span>';
+			html += (readonly ? "" : '<span class="editButton fBtn" title="Düzenle" file="' + fileId + '"></span>');
 			html += '<a class="lookatButton fancybox fBtn" href="" title="İncele"></a>';
 			html += '<a class="playButton fancybox fBtn" href="" title="Oynat"></a>';
-			html += '<span class="deleteFile fBtn" title="Kaldır"></span>';
+			html += (readonly ? "" : '<span class="deleteFile fBtn" title="Kaldır"></span>');
 			html += '</span>';
 			html += '<input class="fileInput" type="hidden" name="' + keyName + '" value="' + fileId + '" />';
 			
@@ -128,6 +130,12 @@ function ModuleCodesStart()
 		}
 		
 		$(".filethumb, .button",file).click(function(){
+			// Eğer dosya readonly olarak tanımlanmışsa edit eventini kullanma
+			if(readonly)
+			{
+				return false;
+			}
+			
 			$(this).openFileEditor({
 				containorId:"file_editor_main_container",
 				multiSelection:false,

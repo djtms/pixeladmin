@@ -19,10 +19,10 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 	
 			$mailer = file_get_contents(dirname(__FILE__) . "/../../view/mailer.html");
 			
-			$mailer = str_replace('<%publicDataUrl%>', $publicDataUrl, $mailer);
-			$mailer = str_replace('<%siteTitle%>', get_option("admin_siteTitle"), $mailer);
-			$mailer = str_replace('<%subject%>', $konu, $mailer);
-			$mailer = str_replace('<%message%>', $mesaj, $mailer);
+			$mailer = str_replace('{%publicDataUrl%}', $publicDataUrl, $mailer);
+			$mailer = str_replace('{%siteTitle%}', get_option("admin_siteTitle"), $mailer);
+			$mailer = str_replace('{%subject%}', $konu, $mailer);
+			$mailer = str_replace('{%message%}', $mesaj, $mailer);
 			$mesaj = $mailer;
 		}
 		

@@ -3,10 +3,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Giriş Yap</title>
-    <link rel="stylesheet" href="<%VIEW_URL%>css/panel.css" />
-    <script type="text/javascript" src="<%VIEW_URL%>js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="<%VIEW_URL%>js/SHA1.js"></script>
-	<script type="text/javascript" src="<%VIEW_URL%>js/pages/login.js"></script>
+    <link rel="stylesheet" href="{%VIEW_URL%}css/panel.css" />
+    <script type="text/javascript" src="{%VIEW_URL%}js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="{%VIEW_URL%}js/SHA1.js"></script>
+	<script type="text/javascript" src="{%VIEW_URL%}js/pages/login.js"></script>
 	
 	<script type="text/javascript">
 	 var RecaptchaOptions = {
@@ -16,7 +16,7 @@
 	</script>
 	
 </head>
-<body style="background:url(<%VIEW_URL%>images/menu_bg.png);">
+<body style="background:url({%VIEW_URL%}images/menu_bg.png);">
 	<div id="loginB">
 	    <div id="login">
 	        <div id="loginTop">
@@ -26,18 +26,18 @@
 		        <div id="loginOuter">
 		        	<form method="post" onsubmit="encryptPassword();">
 						<input type="hidden" name="password"/>
-						<input type="hidden" name="VPK" value="<%validatePageKey%>" />
+						<input type="hidden" name="VPK" value="{%validatePageKey%}" />
 						<label>Kullanıcı Adı:</label>
-			            <input type="text" name="username" value="<%username%>" />
+			            <input type="text" name="username" value="{%username%}" />
 			                
 			            <label>Parola:</label>
 			            <input id="password" type="password" />
 			            
-			            <%capcha_html%>
+			            {%capcha_html%}
 	
 			            <input type="submit" name="admin_action" value="Giriş" style="margin:20px 44px 2px 10px; float:right;" />
 			            <a href="resetpassword.php" style="margin:20px 0 2px 0; clear:none; float:right;" class="button button_117x86">Parolamı Unuttum</a>
-			            <label style="margin:0 44px 0 0; height:auto !important; float:right; text-align:right; width:215px; color: #fc5900;"><%loginAlert%></label> 
+			            <label style="margin:0 44px 0 0; height:auto !important; float:right; text-align:right; width:215px; color: #fc5900;">{%loginAlert%}</label> 
 		            </form>
 		        </div><!--loginOuter-->
 	        </div>

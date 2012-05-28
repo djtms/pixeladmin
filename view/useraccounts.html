@@ -1,6 +1,6 @@
 <div id="userAccountsList" class="itemsList">
 	<ul>
-		<%usersListHtml%>
+		{%usersListHtml%}
 	</ul>
 </div><!-- itemsList -->
 <button style="float:right;" onclick="openAddUserForm()">Kişi Ekle</button>
@@ -9,7 +9,7 @@
 	<form method="post" onsubmit="return checkUserInfo();">
 		<input type="hidden" name="password" />
 		<label>Kullanıcı Adı:</label>
-		<input id="username" type="text" name="username" /><div id="usernameLoader" class="portableALBOuter"><img src="<%VIEW_URL%>images/loader.gif" /><p></p></div>
+		<input id="username" type="text" name="username" /><div id="usernameLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
 		<label>Görünen Ad:</label>
 		<input id="displayname" type="text" name="displayname" />
 		<label>Parola:</label>
@@ -17,10 +17,10 @@
 		<label>Parola (tekrar):</label>
 		<input id="password_again" type="password" />
 		<label>E-Posta:</label>
-		<input id="email" type="text" name="email" /><div id="emailCheckLoader" class="portableALBOuter"><img src="<%VIEW_URL%>images/loader.gif" /><p></p></div>
+		<input id="email" type="text" name="email" /><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
 		<label>Kulanıcı Tipi:</label>
 		<select name="user_type">
-			<%user_typesHtml%>
+			{%user_typesHtml%}
 		</select>
 		<input type="submit" name="admin_action" value="Ekle" />
 	</form>

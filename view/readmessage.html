@@ -1,12 +1,12 @@
 <div id="messageDetailsOuter">
 	<label>Ad:</label>
-	<input type="text" readonly="readonly" value="<%msg.fromName%>" />
+	<input type="text" readonly="readonly" value="{%msg.fromName%}" />
 	<label>Konu:</label>
-	<input type="text" readonly="readonly" value="<%msg.subject%>" />
+	<input type="text" readonly="readonly" value="{%msg.subject%}" />
 	<label>Tarih:</label>
-	<input type="text" readonly="readonly" value="<%msg.submitTime%>" />
+	<input type="text" readonly="readonly" value="{%msg.submitTime%}" />
 	<div id="readMessageContentsOuter">
-		<%msg.message%>
+		{%msg.message%}
 	</div>
-	<button id="deleteMessage" messageId="<%msg.messageId%>" >Sil</button>
+	<button id="deleteMessage" messageId="{%msg.messageId%}" >Sil</button>
 </div>

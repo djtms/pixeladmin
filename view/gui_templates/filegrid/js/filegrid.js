@@ -2,7 +2,7 @@ $(FileGridStart);
 
 function FileGridStart()
 {
-	$(".fileGridOuter .btnEdit").click(function(){
+	$(".fileGridOuter .btnEdit").live("click",function(){
 		var btnEdit = $(this);
 		var parent  = btnEdit.parent();
 		var file_id = btnEdit.attr("file");
@@ -30,7 +30,7 @@ function FileGridStart()
 		});
 	});
 	
-	$(".fileGridOuter .btnDelete").click(function(){
+	$(".fileGridOuter .btnDelete").live("click", function(){
 		if(confirm("Dosyayı bu listeden kaldırmak istediğinizden emin misiniz?"))
 		{
 			$(this).closest(".gridFile").animate({"opacity":0},300, function(){
@@ -39,12 +39,32 @@ function FileGridStart()
 		}
 	});
 	
+	fixFileGridStyles();
+}
+
+function fixFileGridStyles()
+{
 	$(".fileGridOuter").each(function(){
 		var rowCount = $(this).is("[rows]") ? parseInt($(this).attr("rows")) : 1;
 		var oneItemHeight = parseInt($(this).find(".gridFile").eq(0).outerHeight(true));
 		
 		var totalHeight = (rowCount * oneItemHeight) + 9;
-		$(this).height(totalHeight);
+		$(this).height(totalHeight + 40);
 		$(this).find(".overflowFixer").height(totalHeight);
 	});
+	
+	$(".fileGridOuter .fancybox").fancybox({
+		"titleShow":false,
+		"scrolling":"no"
+	});
+}
+
+function openFileGridLoader(gridId)
+{
+	$("#" + gridId + " .fileGridLoader").css("display", "block");
+}
+
+function closeFileGridLoader(gridId)
+{
+	$("#" + gridId + " .fileGridLoader").css("display", "none");
 }

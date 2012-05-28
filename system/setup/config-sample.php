@@ -3,13 +3,13 @@ session_start();
 error_reporting(E_ALL ^ E_NOTICE); // Setup esnasındaki "Notice" hatalarını gizle.
 
 /* DATABASE *****************************************/
-$dbname = '<%dbname%>';
-$dbuser = '<%dbuser%>';
-$dbpass = '<%dbpass%>';
-$dbhost = '<%dbhost%>';
+$dbname = '{%dbname%}';
+$dbuser = '{%dbuser%}';
+$dbpass = '{%dbpass%}';
+$dbhost = '{%dbhost%}';
 $dbcharset = 'utf8';
 $timezone = '+02:00';
-$prefix = "<%prefix%>";
+$prefix = "{%prefix%}";
 
 require_once "system/classes/DB.php";
 /****************************************************/
@@ -45,6 +45,6 @@ if(in_admin)
 }
 
 /* SECURITY */
-$secureKey = '<%securekey%>';
-$sessionKeysPrefix = "<%sessionKeysPrefix%>";
+$secureKey = '{%securekey%}';
+$sessionKeysPrefix = "{%sessionKeysPrefix%}";
 /***************************************************/

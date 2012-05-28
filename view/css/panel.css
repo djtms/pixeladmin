@@ -296,7 +296,7 @@ header {
 }
 
 #headerInner {
-	width:886px;
+	width:866px;
 	height:88px;
 	padding:47px 0 0 20px;
 	position:relative;
@@ -310,13 +310,19 @@ header {
 
 #siteTitle
 {
-	float:left;		
+	font-size:15px;
+	float:left;
+	height:20px;
+	width:100%;
+	margin:0 !important;
 }
 
 #pageTitle
 {
 	float:left;
 	clear:left;
+	height:30px;
+	margin:0 !important;
 }
 
 /* ---------------------header--------------------- */
