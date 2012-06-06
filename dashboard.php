@@ -19,9 +19,9 @@ if(isset($_POST["admin_action"]))
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-$maintanenceChecked = (get_option("admin_SiteDisplayMode") == "maintanance") ? ' checked="checked" ' : "";
-$multilanguageChecked = (get_option("admin_SiteMultilanguageMode") == "multilanguage") ? ' checked="checked" ' : "";
-$debugmodeChecked = (get_option("admin_SiteDebugMode") == "debugmode") ? ' checked="checked" ' : "";
+$maintanenceChecked = maintanance_mode ? ' checked="checked" ' : "";
+$multilanguageChecked = multilanguage_mode ? ' checked="checked" ' : "";
+$debugmodeChecked = debug_mode ? ' checked="checked" ' : "";
 ///////////////////////////////////////////////////////////////////////////////////////
 
 global $ADMIN;

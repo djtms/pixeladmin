@@ -65,7 +65,7 @@ if(in_admin)
 }
 else
 {
-	if(get_option("admin_SiteDisplayMode") == "maintanance" && !$ADMIN->USER->loggedInUser)
+	if(maintanance_mode && !$ADMIN->USER->loggedInUser)
 	{
 		global $allowed_dirs_in_maintanance_mode;
 		$allow = false;

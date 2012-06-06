@@ -49,7 +49,7 @@ function fixFileGridStyles()
 		var oneItemHeight = parseInt($(this).find(".gridFile").eq(0).outerHeight(true));
 		
 		var totalHeight = (rowCount * oneItemHeight) + 9;
-		$(this).height(totalHeight + 40);
+		$(this).height(totalHeight);
 		$(this).find(".overflowFixer").height(totalHeight);
 	});
 	

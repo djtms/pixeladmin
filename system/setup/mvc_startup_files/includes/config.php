@@ -14,6 +14,9 @@ if(multilanguage_mode)
 }
 else
 {
+	// Site multilanguge_mode'da değilken tarih isimlerini default olarak türkçe ayarlaması için kullanıyoruz.
+	$DB->execute("SET LC_TIME_NAMES=tr_TR");
+	
 	$sitetitle = get_option("admin_siteTitle");
 	$description = get_option("admin_description");
 	$keywords = get_option("admin_keywords");

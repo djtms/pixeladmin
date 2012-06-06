@@ -14,6 +14,7 @@ if($_POST["action"] == "Kaydet")
 	<?php 
 	$files = $ADMIN->GALLERY->listGalleryFiles(18);
 	
+	$appendHtml .= "{%user_name%} - {%age%}";
 	$appendHtml .= "<button class='validate' file='{%file_id%}' >Onay Ver</button>";
 	$appendHtml .= "<button class='discard' file='{%file_id%}'>Reddet</button>";
 	

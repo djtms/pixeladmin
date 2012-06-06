@@ -149,3 +149,37 @@ function fixStringForWeb($string)
 	
 	return preg_replace($look, $replace, $string);
 }
+
+/**
+*
+* mysql desenine uygun stringlerin kullanarak şimdiki zamana göre yaş hesabı yapar
+* @param string $birthday
+* @return number
+*/
+function calculateAge($birthday)
+{
+	return floor((time() - strtotime($birthday)) / 31536000);
+}
+
+/**
+ *
+ * Html stringi içindeki {%keyword%} şeklindeki desene uygun stringleri  $values array'i içindeki eşleşen değişkenlerle değiştirir.
+ * @param string $html_string
+ * @param array $values
+ */
+
+function renderHtml($html_string, $values = array())
+{
+	preg_match_all("/\{\%([a-z\_\-]+)\%\}/", $html_string, $matches);
+	$match_count = sizeof($matches);
+
+	for($i=0; $i<$match_count; $i++)
+	{
+		$pattern = "/" . preg_quote($matches[0][$i]) . "/";
+		$replacement = $values[$matches[1][$i]];
+
+		$html_string = preg_replace($pattern, $replacement, $html_string);
+	}
+
+	return $html_string;
+}
