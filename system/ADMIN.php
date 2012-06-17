@@ -16,6 +16,14 @@ class PA_ADMIN
 	public $THUMB;
 	public $UPLOADER;
 	public $GALLERY;
+	public $ROLE_PERMISSION;
+	public $GROUP_PERMISSION;
+	public $USER_ROLE;
+	public $USER_GROUP;
+	public $GROUP;
+	public $ROLE;
+	public $PERMISSION;
+	
 	
 	function PA_ADMIN()
 	{
@@ -34,5 +42,12 @@ class PA_ADMIN
 		$this->THUMB = new PA_THUMB();
 		$this->UPLOADER = new PA_UPLOADER();
 		$this->GALLERY = new PA_GALLERY();
+		$this->ROLE_PERMISSION = new PA_ROLE_PERMISSION();
+		$this->GROUP_PERMISSION = new PA_GROUP_PERMISSION();
+		$this->USER_ROLE = new PA_USER_ROLE();
+		$this->USER_GROUP = new PA_USER_GROUP();
+		$this->GROUP = new PA_GROUP();
+		$this->ROLE = new PA_ROLE();
+		$this->PERMISSION = new PA_PERMISSION();
 	}
 }

@@ -3,27 +3,28 @@
 if($_POST["admin_action"] == "Kaydet")
 {
 	global $ADMIN;
+	extract($_POST, EXTR_OVERWRITE);
 	$error = false;
 	
-	$password = isset($_POST["password"]) ? $_POST["password"] : null;
+	$password = isset($password) ? $password : null;
 	$user = $ADMIN->USER->loggedInUser;
-	$postedEmail = $_POST["email"];
+	$postedEmail = $email;
 	$userEmail = $user->email;
 	
 	
-	if(!$ADMIN->VALIDATE->validateEmail($_POST["email"]))
+	if(!$ADMIN->VALIDATE->validateEmail($email))
 	{
 		$error = true;
 		$message = 'Geçerli bir "E-Posta" girin!';
 	}
-	else if($postedEmail != $userEmail)
+	else if($postedEmail != $userEmail) // e-mail adresini değiştirip güncelle
 	{
 		if($ADMIN->USER->getUserByEmail($postedEmail))
 		{
 			$error = true;
 			$message = 'Girdiğiniz "E-Posta" kullanımda!';
 		}
-		else if(!$ADMIN->USER->updateUser($_POST["user_id"], $_POST["image_id"], $_POST["displayname"], $_POST["birthday"], $_POST["email"], $password))
+		else if(!$ADMIN->USER->updateUser($user_id, $image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone, $password))
 		{
 			$error = true;
 			$message = "Hata oluştu.";
@@ -33,7 +34,7 @@ if($_POST["admin_action"] == "Kaydet")
 			$message = "Profil Bilgileriniz Güncellendi.";
 		}
 	}	
-	else if(!$ADMIN->USER->updateUser($_POST["user_id"], $_POST["image_id"], $_POST["displayname"], $_POST["birthday"], $_POST["email"], $password))
+	else if(!$ADMIN->USER->updateUser($user_id, $image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone, $password))
 	{
 		$error = true;
 		$message = "Hata oluştu.";

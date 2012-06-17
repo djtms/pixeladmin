@@ -78,7 +78,7 @@ class DB
 		$this->tables = new DB_TABLES();
 	}
 	
-	function get_value($query,$values=null)
+	function get_value($query, $values=null)
 	{
 		$sth = $this->dbh->prepare($query);
 		if(is_array($values))
@@ -97,7 +97,7 @@ class DB
 		}
 	}
 	
-	function get_row($query,$values=null,$fetchType = FETCH_OBJ)
+	function get_row($query, $values=null, $fetchType = FETCH_OBJ)
 	{
 		$sth = $this->dbh->prepare($query);
 		if(is_array($values))
@@ -112,7 +112,7 @@ class DB
 			return $sth->fetch($fetchType);
 	}
 
-	function get_rows($query,$values=null,$fetchType = FETCH_OBJ)
+	function get_rows($query, $values=null, $fetchType = FETCH_OBJ)
 	{
 		$sth = $this->dbh->prepare($query);
 		if(is_array($values))
@@ -127,7 +127,7 @@ class DB
 			return $sth->fetchAll($fetchType);
 	}
 	
-	function insert($tableName,$variables)
+	function insert($table, $variables)
 	{
 		$columns = "";
 		$values = "";
@@ -136,22 +136,33 @@ class DB
 		{
 			foreach($variables as $col=>$val)
 			{
-				$columns .= "$col,";
-				$values  .= is_numeric($col) ? "?," : ":$col,";
+				if(trim($val) != "NOW()")
+				{
+					$columns .= "$col,";
+					$values  .= is_numeric($col) ? "?," : ":$col,";
+				}
+				else
+				{
+					$columns .= "$col,";
+					$values  .= "NOW(),";
+				}
 			}
 			
 			$columns = substr($columns,0,-1);
 			$values = substr($values,0,-1);
 			
-			$query = sprintf("INSERT INTO %s (%s) VALUES (%s)",$tableName,$columns,$values);
+			$query = sprintf("INSERT INTO %s (%s) VALUES (%s)",$table,$columns,$values);
 			$sth = $this->dbh->prepare($query);
 			
 			if(is_array($variables))
 			{
 				foreach($variables as $col=>$val)
 				{
-					$col = is_numeric($col) ? ($col + 1) : ":$col";
-					$sth->bindValue($col,$val);	
+					if(trim($val) != "NOW()")
+					{
+						$col = is_numeric($col) ? ($col + 1) : ":$col";
+						$sth->bindValue($col,$val);	
+					}
 				}
 			}
 			
@@ -169,7 +180,71 @@ class DB
 			return false;
 	}
 	
-	function execute($query,$values = null)
+	function update($table, $variables, $where=null)
+	{
+		$query = "UPDATE {$table} SET";
+		foreach($variables as $col=>$val)
+		{
+			if(trim($val) != "NOW()")
+			{
+				$query .= " $col=";
+				$query  .= is_numeric($col) ? "?," : ":$col,";
+				
+			}
+			else
+			{
+				$query .= " {$col}=NOW(),";
+			}
+		}
+		
+		$query  = substr($query, 0, -1);
+		
+		if($where != null)
+		{
+			if(is_array($where))
+			{
+				$query .= " WHERE ";
+				
+				foreach($where as $col=>$val)
+				{
+					$query .= "$col=";
+					$query  .= is_numeric($col) ? "? " : ":$col ";
+					$query .= "AND ";
+				}
+				
+				$query = substr($query, 0, -4);
+			}
+			else if(is_string($where))
+			{
+				if(!preg_match("/^\b+WHERE\b/i", $where))
+				{
+					$query .= " WHERE ";
+				}
+				
+				$query .= $where;
+			}
+		}
+		
+		
+		$sth = $this->dbh->prepare($query);
+		if(is_array($where))
+		{
+			$variables = array_merge($variables, $where);
+		}
+		
+		foreach($variables as $col=>$val)
+		{
+			if(trim($val) != "NOW()")
+			{
+				$col = is_numeric($col) ? ($col + 1) : ":$col";
+				$sth->bindValue($col,$val);
+			}
+		}
+		
+		return $sth->execute();
+	}
+	
+	function execute($query, $values = null)
 	{
 		$sth = $this->dbh->prepare($query);
 		if(is_array($values))
@@ -183,9 +258,9 @@ class DB
 		return $sth->execute();
 	}
 	
-	function checkIfColumnExists($tableName,$columnName)
+	function checkIfColumnExists($table, $column)
 	{
-		$query = "SHOW COLUMNS FROM $tableName";
+		$query = "SHOW COLUMNS FROM $table";
 		
 		$sth = $this->dbh->prepare($query);
 		$sth->execute();
@@ -193,7 +268,7 @@ class DB
 		
 		foreach($columns as $c)
 		{
-			if($c["Field"] == $columnName)
+			if($c["Field"] == $column)
 				return true;
 		}
 		
@@ -203,6 +278,21 @@ class DB
 	function lastInsertId()
 	{
 		return $this->dbh->lastInsertId();
+	}
+	
+	function beginTransaction()
+	{
+		return $this->dbh->beginTransaction();
+	}
+	
+	function commit()
+	{
+		return $this->dbh->commit();
+	}
+	
+	function rollBack()
+	{
+		return $this->dbh->rollBack();
 	}
 }
 
@@ -222,6 +312,13 @@ class DB_TABLES
 	public $file_thumb = "file_thumb";
 	public $gallery = "gallery";
 	public $gallery_file = "gallery_file";
+	public $role = "role";
+	public $permission = "permission";
+	public $group = "group";
+	public $user_role = "user_role";
+	public $user_group = "user_group";
+	public $group_permission = "group_permission";
+	public $role_permission = "role_permission";
 	
 	function DB_TABLES()
 	{
@@ -246,5 +343,12 @@ class DB_TABLES
 		$this->file_thumb = $prefix . $this->file_thumb;
 		$this->gallery = $prefix . $this->gallery;
 		$this->gallery_file = $prefix . $this->gallery_file;
+		$this->role = $prefix . $this->role;
+		$this->permission = $prefix . $this->permission;
+		$this->group = $prefix . $this->group;
+		$this->user_role = $prefix . $this->user_role;
+		$this->user_group = $prefix . $this->user_group;
+		$this->group_permission = $prefix . $this->group_permission;
+		$this->role_permission = $prefix . $this->role_permission;
 	}
 }

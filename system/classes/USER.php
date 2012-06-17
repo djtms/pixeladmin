@@ -170,12 +170,8 @@ class PA_USER extends PA_USER_TICKET
 			
 			$pass_key = randomString(20);
 			$encryptedPassword = sha1($secureKey . $password . $pass_key);
-			$register_date = currentDateTime();
 			
-			if($DB->insert($this->table, array("username"=>$username, "displayname"=>$displayname, "password"=>$encryptedPassword, "pass_key"=>$pass_key, "email"=>$email, "user_type"=>100, "register_date"=>$register_date)))
-				return $DB->lastInsertId();
-			else
-				return false;
+			return $DB->insert($this->table, array("username"=>$username, "displayname"=>$displayname, "password"=>$encryptedPassword, "pass_key"=>$pass_key, "email"=>$email, "user_type"=>100, "register_time"=>"NOW()"));
 		}
 		else
 		{
@@ -184,11 +180,12 @@ class PA_USER extends PA_USER_TICKET
 		}
 	}
 	
-	function updateUser($user_id, $image_id, $displayname, $birthday, $email, $password)
+	// TODO: username değerini değiştirme özelliği ekle
+	function updateUser($user_id, $image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone, $password)
 	{
 		global $DB;
-		$variables = array($image_id, $displayname, $birthday, $email);
-		$query = "UPDATE {$this->table} SET image_id=?, displayname=?, birthday=?, email=?";
+		$variables = array($image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone);
+		$query = "UPDATE {$this->table} SET image_id=?, displayname=?, birthday=?, first_name=?, last_name=?, email=?, phone=?";
 		if(($password != null) && ($password != false) && (strlen($password) >= 6))
 		{
 			$query .= ", password=? ";

@@ -1,0 +1,15 @@
+<form method="post">
+	<label>Ebeveyn</label>
+	<select name=permission_parent>
+		<option value="-1">Yok</option>
+		{%otherPermissionsHtml%}
+	</select>
+	
+	<label>Yetki Adı:</label>
+	<input type="text" name="permission_name" value="{%permission.permission_name%}" />
+	
+	<label>Yetki Adresi: (Url Adresi)</label>
+	<input type="text" name="permission_url" value="{%permission.permission_url%}" />
+	
+	<input type="submit" name="admin_action" value="Kaydet" />
+</form>

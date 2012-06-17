@@ -12,14 +12,23 @@
 	<label>Doğum Tarihi:</label>
 	<input type="date" name="birthday" value="{%user.birthday%}" />
 	
+	<label>Adı:</label>
+	<input type="text" name="first_name" value="{%user.first_name%}" />
+	
+	<label>Soyadı:</label>
+	<input type="text" name="last_name" value="{%user.last_name%}" />
+	
 	<label>Kullanıcı Adı:</label>
 	<input type="text" name="username" value="{%user.username%}" readonly="readonly"/>
 	
 	<label>E-Posta:</label>
 	<input id="email" type="text" name="email" value="{%user.email%}"/><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
 	
+	<label>Telefon:</label>
+	<input type="text" name="phone" value="{%user.phone%}" />
+	
 	<label>Üyelik Tarihi:</label>
-	<input type="text" name="register_date" value="{%user.register_date%}" readonly="readonly"/>
+	<input type="datetime" name="register_time" value="{%user.register_time%}" readonly="readonly"/>
 	
 	<!-- <label>Kullanıcı Tipi:</label>
 	<input type="text" value="" /> -->
