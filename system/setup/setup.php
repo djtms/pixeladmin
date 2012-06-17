@@ -280,14 +280,18 @@ function createDbTables($dbh,$prefix)
 					  `username` varchar(100) NOT NULL,
 					  `displayname` varchar(100) NOT NULL,
 					  `birthday` date NOT NULL,
+					  `first_name` varchar(100) DEFAULT NULL,
+					  `last_name` varchar(100) DEFAULT NULL,
+					  `email` varchar(100) NOT NULL,
+					  `phone` varchar(30) DEFAULT NULL,
 					  `password` varchar(100) NOT NULL,
 					  `pass_key` varchar(30) NOT NULL,
-					  `email` varchar(100) NOT NULL,
+					  `register_time` datetime NOT NULL,
 					  `user_type` varchar(20) NOT NULL,
-					  `register_date` datetime NOT NULL,
 					  `captcha_limit` tinyint(1) NOT NULL DEFAULT '3',
 					  `status` varchar(50) NOT NULL DEFAULT 'active',
-					  PRIMARY KEY (`user_id`)
+					  PRIMARY KEY (`user_id`),
+					  UNIQUE KEY `username, email` (`username`,`email`)
 					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 	
 	$queryUserTrack = "CREATE TABLE IF NOT EXISTS `{$prefix}user_track` (
@@ -431,6 +435,55 @@ function createDbTables($dbh,$prefix)
 				  PRIMARY KEY (`gallery_id`,`file_id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 	
+	$queryGroup = "CREATE TABLE IF NOT EXISTS `{$prefix}group` (
+				  `group_id` int(11) NOT NULL AUTO_INCREMENT,
+				  `group_name` varchar(100) COLLATE utf8_bin NOT NULL,
+				  `order_num` int(11) NOT NULL,
+				  PRIMARY KEY (`group_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;";
+	
+	$queryGroupPermission = "CREATE TABLE IF NOT EXISTS `{$prefix}group_permission` (
+				  `group_id` int(11) NOT NULL,
+				  `permission_id` int(11) NOT NULL,
+				  PRIMARY KEY (`group_id`,`permission_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+	
+	$queryPermission = "CREATE TABLE IF NOT EXISTS `{$prefix}permission` (
+				  `permission_id` int(11) NOT NULL AUTO_INCREMENT,
+				  `permission_parent` int(11) NOT NULL,
+				  `permission_name` varchar(100) COLLATE utf8_bin NOT NULL,
+				  `permission_url` varchar(255) COLLATE utf8_bin NOT NULL,
+				  `order_num` int(11) NOT NULL,
+				  PRIMARY KEY (`permission_id`)
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
+	
+	$queryRole = "CREATE TABLE IF NOT EXISTS `{$prefix}role` (
+				  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+				  `role_name` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+				  `order_num` int(11) NOT NULL,
+				  PRIMARY KEY (`role_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;";
+	
+	$queryRolePermission = "CREATE TABLE IF NOT EXISTS `{$prefix}role_permission` (
+				  `role_id` int(11) NOT NULL,
+				  `permission_id` int(11) NOT NULL,
+				  PRIMARY KEY (`role_id`,`permission_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+	
+	
+	$queryUserGroup = "CREATE TABLE IF NOT EXISTS `{$prefix}user_group` (
+				  `user_id` int(11) NOT NULL,
+				  `group_id` int(11) NOT NULL,
+				  PRIMARY KEY (`user_id`,`group_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+	
+	$queryUserRole = "CREATE TABLE IF NOT EXISTS `{$prefix}user_role` (
+				  `user_id` int(11) NOT NULL,
+				  `role_id` int(11) NOT NULL,
+				  PRIMARY KEY (`user_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+	
+	
 	
 	return  $dbh->query($queryI18n) &&
 			$dbh->query($queryLanguage) &&
@@ -445,6 +498,13 @@ function createDbTables($dbh,$prefix)
 			$dbh->query($queryFileThumb) &&
 			$dbh->query($queryThumb) && 
 			$dbh->query($queryGallery) && 
-			$dbh->query($queryGalleryFile);
+			$dbh->query($queryGalleryFile) &&
+			$dbh->query($queryGroup) &&
+			$dbh->query($queryGroupPermission) &&
+			$dbh->query($queryPermission) &&
+			$dbh->query($queryRole) &&
+			$dbh->query($queryRolePermission) &&
+			$dbh->query($queryUserGroup) && 
+			$dbh->query($queryUserRole);
 }
 
