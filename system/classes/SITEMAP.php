@@ -27,8 +27,6 @@ class PA_SITEMAP extends DB
 	
 	function selectSiteMap($page_id)
 	{
-		global $ADMIN;
-		
 		return $this->get_row("SELECT * FROM {$this->table} WHERE page_id=?", array($page_id));
 	}
 	

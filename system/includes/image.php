@@ -94,3 +94,18 @@ function getRetinaImage($file_id, $width, $height, $squeeze = true, $proportion 
 	else
 		return false;
 }
+
+function getMaskedImage($mask_image_path, $file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
+{
+	global $ADMIN;
+	
+	$masked_image = $ADMIN->THUMB->getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
+	return $masked_image->url;
+}
+
+function getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
+{
+	global $ADMIN;
+
+	return $ADMIN->THUMB->getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
+}

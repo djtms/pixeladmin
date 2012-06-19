@@ -58,7 +58,7 @@ require_once "system/includes/authentication.php";
 require_once "system/includes/users.php";
 require_once "system/includes/gui.php";
 require_once "system/includes/file.php";
-require_once "system/includes/thumb.php";
+require_once "system/includes/image.php";
 require_once "system/includes/gallery.php";
 require_once "system/includes/upload.php";
 require_once 'system/includes/fileeditor.php';

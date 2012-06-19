@@ -28,16 +28,15 @@ class DB
 		
 		if(sizeof($arguments) < 4) // eğer database bilgileri atanmamışsa config'deki bilgileri kullanarak database'e bağlan
 		{
-			global $dbname;
-			global $dbhost;
-			global $dbuser;
-			global $dbpass;
-			global $dbcharset;
-			global $timezone;
-			
 			// Eğer daha önce kurulu bir bağlantı yok ise yeni bağlantı kur
 			if(!isset(self::$dbcon) || self::$dbcon == null)
 			{
+				global $dbname;
+				global $dbhost;
+				global $dbuser;
+				global $dbpass;
+				global $dbcharset;
+				global $timezone;
 				$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$dbcharset}, time_zone='{$timezone}'");
 					
 				try
