@@ -44,7 +44,9 @@ require_once "system/classes/DIRECTORY.php";
 require_once "system/classes/UPLOADER.php";
 require_once "system/classes/GALLERY_FILE.php";
 require_once "system/classes/GALLERY.php";
+require_once "system/classes/SITEMAP.php";
 require_once "system/ADMIN.php";
+require_once "system/includes/uncategorized.php";
 require_once "system/includes/validate.php";
 require_once "system/setup/user.php";
 require_once "system/includes/menu.php";
@@ -60,6 +62,7 @@ require_once "system/includes/thumb.php";
 require_once "system/includes/gallery.php";
 require_once "system/includes/upload.php";
 require_once 'system/includes/fileeditor.php';
+require_once 'system/includes/sitemap.php';
 
 
 if(in_admin)

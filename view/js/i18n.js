@@ -19,9 +19,12 @@ function I18nStart()
 		// multilanguage_mode  açık olup olmadığını kontrol edip ona göre farklı işlem yapıyoruz.
 		if(multilanguage_mode === false)
 		{
-			i18nObject.attr("disabled","disabled");
-			i18nObject.attr("title", "Lütfen \"Çoklu Dil\" modunu aktif edin!");
-			return true;
+			if(!i18nObject.is("[forcei18n]"))
+			{
+				i18nObject.attr("disabled","disabled");
+				i18nObject.attr("title", "Lütfen \"Çoklu Dil\" modunu aktif edin!");
+				return true;
+			}
 		}
 		////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -48,14 +51,14 @@ function I18nStart()
 		}
 	});
 	
-	// Setup Language Tabs
-	if(multilanguage_mode)
+	// Dil tablarını oluştur
+	if(multilanguage_mode || ($("[i18n][forcei18n]").length > 0))
 	{
 		if($("[i18n]").length > 0)
 		{
 			languageCount = availableLanguages.length;
 	
-			var languageTabs = '<div id="i18nLanguageOuter">';
+			var languageTabs = '<div id="i18nLanguageOuter" ' + (!multilanguage_mode ? " style='display:none;' " : "") + ' >';
 			
 			languageTabs += '<div id="i18nButtonsOuter">';
 			
@@ -104,6 +107,11 @@ function I18nStart()
 			i18nHiddenInputs += "<input type='hidden' name='i18nLanguage' value='' />";
 			
 			$(this).append(i18nHiddenInputs);
+			if($(this).attr("method").toLowerCase() == "get")
+			{
+				// FIXME: messageBox burada çalışmıyor
+				messageBox("Uyarı!", "Formunuzda \"Çoklu Dil\" özelliği kullandığınız için form elemanınızın veri gönderme şekli \"post\" olarak ayarlandı!", messageType.WARNING, [{name:"Tamam", click:closeMessageBox}]);
+			}
 			$(this).attr("method","post");
 			$(this).submit(setI18nValuesToHiddenInput);
 		}
@@ -117,42 +125,35 @@ function selectI18n()
 	updateStyles();
 	$.ajax({
 		data:"admin_action=selectI18n&i18nLanguage=" + requestedLanguage + "&codes=" + JSON.encode(i18nCodesArray),
+		dataType:"json",
 		success:function(response){
 			activeLanguage = requestedLanguage;
-			try
+			
+			var count = response.length;
+			for(var i=0; i<count; i++)
 			{
-				var result = eval("(" + response + ")");
-				var count = result.length;
-				for(var i=0; i<count; i++)
+				var selector = "[i18n=" + response[i].i18nCode + "]";
+				if(multilanguage_mode || ($(selector + "[forcei18n]").length > 0))
 				{
-					var selector = "[i18n=" + result[i].i18nCode + "]";
-					
 					if($(selector).attr("type") == "editor")
 					{
 						var editorName = $(selector).attr("id");
-						EDITORS[editorName].setData(result[i].text,function(){
+						EDITORS[editorName].setData(response[i].text,function(){
 							this.resetDirty();
 						});
+						$("#" + editorName).css("opacity","1");
 					}
 					else
-						$(selector).val(result[i].text);
+					{
+						$(selector).val(response[i].text).attr("disabled",false).css("opacity","1");
+					}
 				}
-			}
-			catch(e)
-			{
-				postMessage(e,true);
 			}
 			
 			$("#i18nLoader").css("display","none");
-			$("[i18n]").each(function(){
-				if($(this).attr("type") == "editor")
-				{
-					var id = $(this).attr("id");
-					$("#" + id).css("opacity","1");
-				}
-				else
-					$(this).attr("disabled",false).css("opacity","1");
-			});
+		},
+		error: function(){
+			postMessage("\"Çoklu Dil\" içeriği yüklenirken hata oluştu!", true);
 		}
 	});
 	

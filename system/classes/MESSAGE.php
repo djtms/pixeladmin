@@ -1,19 +1,16 @@
 <?php
-class PA_MESSAGE
+class PA_MESSAGE extends DB
 {
 	private $table;
 	
 	function PA_MESSAGE()
 	{
-		global $DB;
+		parent::DB();
 		
-		$this->table = $DB->tables->message;
+		$this->table = $this->tables->message;
 	}
 	function listMessages($status = "all", $limit=-1)
 	{
-		global $DB;
-
-		
 		if($status == "all")
 			$status = " readStatus='read' || readStatus='unread' || readStatus='saved' ";
 		else if($status == "read")
@@ -28,12 +25,10 @@ class PA_MESSAGE
 		$query = "SELECT *,DATE_FORMAT(submitTime,'%d.%b.%y - %H:%i:%s') AS submitTime FROM {$this->table} ";
 		$query .= " WHERE {$status} ORDER BY submitTime DESC " . ($limit > 0 ? " LIMIT 0,$limit" : "");
 		
-		return $DB->get_rows($query,null);
+		return $this->get_rows($query,null);
 	}
 	function getMessageCount($status = "all")
 	{
-		global $DB;
-		
 		if($status == "all")
 			$status = " WHERE readStatus='read' || readStatus='unread' || readStatus='saved' ";
 		else if($status == "read")
@@ -44,12 +39,11 @@ class PA_MESSAGE
 			$status = " WHERE readStatus='saved' ";
 		else
 			return "0";
-		return $DB->get_value("SELECT COUNT(messageId) FROM {$this->table} {$status}");
+		return $this->get_value("SELECT COUNT(messageId) FROM {$this->table} {$status}");
 	}
 	function selectMessage($messageId)
 	{
-		global $DB;
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE messageId=?",array($messageId));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE messageId=?",array($messageId));
 	}
 	/**
 	 * 
@@ -60,21 +54,15 @@ class PA_MESSAGE
 	 */
 	function sendMessage($fromName,$subject,$message)
 	{
-		global $DB;		
 		$submitTime = date("Y-m-d H:i:s",time());
-		if($DB->insert($this->table,array("fromName"=>$fromName,"subject"=>$subject,"message"=>$message,"submitTime"=>$submitTime)))
-			return $DB->lastInsertId();
-		else
-			return false;
+		return $this->insert($this->table,array("fromName"=>$fromName,"subject"=>$subject,"message"=>$message,"submitTime"=>$submitTime));
 	}
 	function setReadStatus($messageId,$status)
 	{
-		global $DB;
-		return $DB->execute("UPDATE {$this->table} SET readStatus=? WHERE messageId=?",array($status,$messageId));
+		return $this->execute("UPDATE {$this->table} SET readStatus=? WHERE messageId=?",array($status,$messageId));
 	}
 	function deleteMessage($messageId)
 	{
-		global $DB;	
-		return $DB->execute("DELETE FROM {$this->table} WHERE messageId=?",array($messageId));
+		return $this->execute("DELETE FROM {$this->table} WHERE messageId=?",array($messageId));
 	}
 }

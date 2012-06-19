@@ -18,3 +18,4 @@ function activationSampleModule()
 }
 
 addMenu("Örnek Modül","","Örnek Modül","sample-module",dirname(__FILE__) . "/sample.php",5,USER_GUEST);
+addSubMenu("Sitemap Örneği", "Sitemap Örneği", "sample-module", "samplesitemap", dirname(__FILE__). "/sitemap.php");

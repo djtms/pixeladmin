@@ -314,7 +314,7 @@ function createDbTables($dbh,$prefix)
 					  `end_time` datetime NOT NULL,
 					  `status` varchar(20) NOT NULL DEFAULT 'active',
 					  PRIMARY KEY (`ticket_id`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;";
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
 	
 	$queryMessage = "CREATE TABLE IF NOT EXISTS `{$prefix}message` (
 					  `messageId` int(11) NOT NULL AUTO_INCREMENT,
@@ -483,6 +483,15 @@ function createDbTables($dbh,$prefix)
 				  PRIMARY KEY (`user_id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 	
+	$querySitemap = "CREATE TABLE IF NOT EXISTS `{$prefix}sitemap` (
+				  `page_id` varchar(25) COLLATE utf8_bin NOT NULL,
+				  `page_parent` varchar(25) COLLATE utf8_bin NOT NULL DEFAULT '-1',
+				  `page_url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+				  `page_title` varchar(25) COLLATE utf8_bin DEFAULT NULL,
+				  `page_description` varchar(25) COLLATE utf8_bin DEFAULT NULL,
+				  PRIMARY KEY (`page_id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+	
 	
 	
 	return  $dbh->query($queryI18n) &&
@@ -505,6 +514,7 @@ function createDbTables($dbh,$prefix)
 			$dbh->query($queryRole) &&
 			$dbh->query($queryRolePermission) &&
 			$dbh->query($queryUserGroup) && 
-			$dbh->query($queryUserRole);
+			$dbh->query($queryUserRole) &&
+			$dbh->query($querySitemap);
 }
 

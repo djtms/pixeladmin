@@ -23,6 +23,7 @@ class PA_ADMIN
 	public $GROUP;
 	public $ROLE;
 	public $PERMISSION;
+	public $SITEMAP;
 	
 	
 	function PA_ADMIN()
@@ -49,5 +50,6 @@ class PA_ADMIN
 		$this->GROUP = new PA_GROUP();
 		$this->ROLE = new PA_ROLE();
 		$this->PERMISSION = new PA_PERMISSION();
+		$this->SITEMAP = new PA_SITEMAP();
 	}
 }

@@ -319,6 +319,7 @@ class DB_TABLES
 	public $user_group = "user_group";
 	public $group_permission = "group_permission";
 	public $role_permission = "role_permission";
+	public $sitemap = "sitemap";
 	
 	function DB_TABLES()
 	{
@@ -350,5 +351,6 @@ class DB_TABLES
 		$this->user_group = $prefix . $this->user_group;
 		$this->group_permission = $prefix . $this->group_permission;
 		$this->role_permission = $prefix . $this->role_permission;
+		$this->sitemap = $prefix . $this->sitemap;
 	}
 }

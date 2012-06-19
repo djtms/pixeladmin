@@ -7,32 +7,25 @@ class PA_USER extends PA_USER_TICKET
 	
 	function PA_USER()
 	{
-		global $DB;
-		
-		$this->table = $DB->tables->user;
 		parent::PA_USER_TICKET();
-		
+		$this->table = $this->tables->user;
 		$this->loggedInUser = $this->getLoggedInUser();
 	}
 	
 	function completeRegistration($user_id, $username, $password)
 	{
-		global $DB;
 		global $secureKey;
 		
 		$pass_key = randomString(20);
 		$encryptedPassword = sha1($secureKey . $password . $pass_key);
 		
-		return $DB->execute("UPDATE {$this->table} SET username=?, password=?, pass_key=?, status='active' WHERE user_id=?", array($username, $encryptedPassword, $pass_key, $user_id));
+		return $this->execute("UPDATE {$this->table} SET username=?, password=?, pass_key=?, status='active' WHERE user_id=?", array($username, $encryptedPassword, $pass_key, $user_id));
 	}
 	
 	function inviteAdminUser($displayname, $email, $user_type, $end_date = "0000-00-00 00:00:00")
 	{
-		global $DB;
-		
-		if($user_id = $DB->insert($this->table, array("displayname"=>$displayname, "email"=>$email, "user_type"=>$user_type, "status"=>"invited")))
+		if($user_id = $this->insert($this->table, array("displayname"=>$displayname, "email"=>$email, "user_type"=>$user_type, "status"=>"invited")))
 		{
-			$user_id = $DB->lastInsertId();
 			return $this->sendInvitationMail($user_id);
 		}
 		else
@@ -109,13 +102,12 @@ class PA_USER extends PA_USER_TICKET
 	
 	function changePassword($user_id, $password)
 	{
-		global $DB;
 		global $secureKey;
 		
 		$pass_key = randomString(20);
 		$encryptedPassword = sha1($secureKey . $password . $pass_key);
 		
-		return $DB->execute("UPDATE {$this->table} SET password=?, pass_key=? WHERE user_id=?", array($encryptedPassword, $pass_key, $user_id));
+		return $this->execute("UPDATE {$this->table} SET password=?, pass_key=? WHERE user_id=?", array($encryptedPassword, $pass_key, $user_id));
 	}
 	
 	function openResetPasswordTicket($email_or_username, $reset_password_page = "/admin/newpassword.php")
@@ -165,13 +157,13 @@ class PA_USER extends PA_USER_TICKET
 	{
 		if($this->getUserCount() <= 0)
 		{
-			global $DB;
+			
 			global $secureKey;
 			
 			$pass_key = randomString(20);
 			$encryptedPassword = sha1($secureKey . $password . $pass_key);
 			
-			return $DB->insert($this->table, array("username"=>$username, "displayname"=>$displayname, "password"=>$encryptedPassword, "pass_key"=>$pass_key, "email"=>$email, "user_type"=>100, "register_time"=>"NOW()"));
+			return $this->insert($this->table, array("username"=>$username, "displayname"=>$displayname, "password"=>$encryptedPassword, "pass_key"=>$pass_key, "email"=>$email, "user_type"=>100, "register_time"=>"NOW()"));
 		}
 		else
 		{
@@ -182,8 +174,7 @@ class PA_USER extends PA_USER_TICKET
 	
 	// TODO: username değerini değiştirme özelliği ekle
 	function updateUser($user_id, $image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone, $password)
-	{
-		global $DB;
+	{	
 		$variables = array($image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone);
 		$query = "UPDATE {$this->table} SET image_id=?, displayname=?, birthday=?, first_name=?, last_name=?, email=?, phone=?";
 		if(($password != null) && ($password != false) && (strlen($password) >= 6))
@@ -200,7 +191,7 @@ class PA_USER extends PA_USER_TICKET
 		
 		$variables[] = $user_id;
 		
-		if($DB->execute($query, $variables))
+		if($this->execute($query, $variables))
 		{
 			$this->loggedInUser = $this->getLoggedInUser();
 			return true;
@@ -211,13 +202,11 @@ class PA_USER extends PA_USER_TICKET
 	
 	function deleteUser($user_id, $delete_tracks = true)
 	{
-		global $DB;
-		
 		if($delete_tracks && !$this->deleteTracksByUserId($user_id))
 			return false;
 		
 		return $this->deleteUsersAllTickets($user_id) &&
-				$DB->execute("DELETE FROM {$this->table} WHERE user_id=?", array($user_id));
+				$this->execute("DELETE FROM {$this->table} WHERE user_id=?", array($user_id));
 	}
 	
 	function deleteUserItself($user_id, $delete_tracks = true)
@@ -230,16 +219,15 @@ class PA_USER extends PA_USER_TICKET
 			return false;
 	}
 	
+	// TODO: burdaki işlemi tek sql sorgusu ile yapabilirsin.
 	function decreaseUserCaptchaLimit($user_id)
 	{
-		global $DB;
-		
-		$captcha_limit = $DB->get_value("SELECT captcha_limit FROM {$this->table} WHERE user_id=?", array($user_id));
+		$captcha_limit = $this->get_value("SELECT captcha_limit FROM {$this->table} WHERE user_id=?", array($user_id));
 		$captcha_limit = intval($captcha_limit);
 
 		if($captcha_limit > 0)
 		{
-			return $DB->execute("UPDATE {$this->table} SET captcha_limit=? WHERE user_id=?", array(($captcha_limit - 1), $user_id));
+			return $this->execute("UPDATE {$this->table} SET captcha_limit=? WHERE user_id=?", array(($captcha_limit - 1), $user_id));
 		}
 		
 		return true;
@@ -247,15 +235,11 @@ class PA_USER extends PA_USER_TICKET
 	
 	function resetUserCaptchaLimit($user_id)
 	{
-		global $DB;
-		
-		return $DB->execute("UPDATE {$this->table} SET captcha_limit=? WHERE user_id=?", array(3, $user_id));
+		return $this->execute("UPDATE {$this->table} SET captcha_limit=? WHERE user_id=?", array(3, $user_id));
 	}
 	
 	function getUserCount($status = "all")
 	{
-		global $DB;
-		
 		$variables = array();
 		$query = "SELECT COUNT(*) FROM {$this->table} ";
 		if($status != "all")
@@ -264,41 +248,31 @@ class PA_USER extends PA_USER_TICKET
 			$variables[] = $status;
 		}
 		
-		return $DB->get_value($query, $variables);
+		return $this->get_value($query, $variables);
 	}
 	
 	function getUserById($user_id)
 	{
-		global $DB;
-		
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE user_id=?", array($user_id));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE user_id=?", array($user_id));
 	}
 	
 	function getUserByUsername($username)
 	{
-		global $DB;
-		
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE username=?", array($username));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE username=?", array($username));
 	}
 	
 	function getUserByEmail($email)
 	{
-		global $DB;
-		
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE email=?", array($email));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE email=?", array($email));
 	}
 	
 	function getUserByEmail_OR_Username($email_or_username)
 	{
-		global $DB;
-		
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE email=? OR username=?", array($email_or_username, $email_or_username));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE email=? OR username=?", array($email_or_username, $email_or_username));
 	}
 	
 	function listUsers($status = "all")
 	{
-		global $DB;
-		
 		$variables = array();
 		$query = "SELECT * FROM {$this->table} ";
 		if($status != "all")
@@ -307,7 +281,7 @@ class PA_USER extends PA_USER_TICKET
 			$variables[] = $status;
 		}
 		
-		return $DB->get_rows($query, $variables);
+		return $this->get_rows($query, $variables);
 	}
 	
 	private function getLoggedInUser()
@@ -315,8 +289,8 @@ class PA_USER extends PA_USER_TICKET
 		$tracking_key = $_SESSION[$this->trackKeyName];
 		$track = $this->selectTrackByTrackingKey($tracking_key);
 		if($track->status == "active")
-		return $this->getUserById($track->user_id);
+			return $this->getUserById($track->user_id);
 		else
-		return false;
+			return false;
 	}
 }

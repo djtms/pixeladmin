@@ -1,0 +1,21 @@
+<form method="post">
+	<label>Sayfa Id'si: (readonly)</label>
+	<input type="text" readonly="readonly" name="page_id" value="{%smpage.page_id%}" />
+	
+	<label>Ebeveyn</label>
+	<select name=page_parent>
+		<option value="-1">Yok</option>
+		{%otherSMPagesHtml%}
+	</select>
+	
+	<label>Sayfa Adresi: (url adresi)</label>
+	<input type="text" name="page_url" value="{%smpage.page_url%}" maxlength="255" />
+	
+	<label>Sayfa Başlığı: (title)</label>
+	<input type="text" name="page_title" i18n="{%smpage.page_title%}" forcei18n maxlength="10" />
+	
+	<label>Sayfa Açıklaması: (description)</label>
+	<textarea name="page_description" i18n="{%smpage.page_description%}" forcei18n style="height:100px;" maxlength="250"></textarea>
+	
+	<input type="submit" name="admin_action" value="Kaydet" />
+</form>

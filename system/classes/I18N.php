@@ -2,22 +2,22 @@
 /*
  * Last Update: 18.06.2011
  * */
-class PA_I18N
+class PA_I18N extends DB
 {
 	public $language;
 	public $table;
 	
+	// TODO: burada kendi atadığın dili kullanmak yerine default dili kullanmayı sağla.
 	function PA_I18N($language = "tr_TR")
 	{
-		global $DB;
+		parent::DB();
+		
 		$this->language = $language;
-		$this->table = $DB->tables->i18n;		
+		$this->table = $this->tables->i18n;		
 	}
 	
 	function listI18nByScope($scope="global")
 	{
-		global $DB;
-		
 		$dataArray = null;
 		$query = "SELECT i18nCode,{$this->language} FROM {$this->table}";
 		
@@ -27,20 +27,16 @@ class PA_I18N
 			$dataArray = array($scope);
 		}
 		
-		return (object)$DB->get_rows($query,$dataArray,FETCH_KEY_PAIR);
+		return (object)$this->get_rows($query,$dataArray,FETCH_KEY_PAIR);
 	}
 	
 	function getI18n($i18nCode)
 	{
-		global $DB;
-		
-		return $DB->get_value("SELECT {$this->language} FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
+		return $this->get_value("SELECT {$this->language} FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
 	}
 	
 	function setI18n($i18nCode,$text,$scope="")
 	{
-		global $DB;
-		
 		if($this->checkIfI18nExists($i18nCode))
 			return $this->updateI18n($i18nCode, $text, $scope);
 		else 
@@ -49,17 +45,13 @@ class PA_I18N
 	
 	function deleteI18n($i18nCode)
 	{
-		global $DB;
-		
-		return $DB->execute("DELETE FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
+		return $this->execute("DELETE FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
 	}
 	
 	/* PRIVATE FUNCTIONS */
 	private function checkIfI18nExists($i18nCode)
 	{
-		global $DB;
-		
-		if($DB->get_value("SELECT COUNT(i18nCode) FROM {$this->table} WHERE i18nCode=?",array($i18nCode)) > 0)
+		if($this->get_value("SELECT COUNT(i18nCode) FROM {$this->table} WHERE i18nCode=?",array($i18nCode)) > 0)
 			return true;
 		else
 			return false;
@@ -73,15 +65,11 @@ class PA_I18N
 	 */
 	private function createI18n($i18nCode,$text,$scope="")
 	{
-		global $DB;
-		
-		return $DB->insert($this->table,array("i18nCode"=>$i18nCode,"scope"=>$scope,$this->language=>$text));
+		return $this->insert($this->table,array("i18nCode"=>$i18nCode,"scope"=>$scope,$this->language=>$text));
 	}
 	
 	private function updateI18n($i18nCode,$text,$scope="")
 	{
-		global $DB;
-		
-		return $DB->execute("UPDATE {$this->table} SET {$this->language}=?,scope=? WHERE i18nCode=?",array($text,$scope,$i18nCode));
+		return $this->execute("UPDATE {$this->table} SET {$this->language}=?,scope=? WHERE i18nCode=?",array($text,$scope,$i18nCode));
 	}
 }

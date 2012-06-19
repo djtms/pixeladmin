@@ -1,5 +1,5 @@
 <?php
-class PA_UPLOADER
+class PA_UPLOADER extends DB
 {
 	public $table;
 	public $error = "";
@@ -7,9 +7,9 @@ class PA_UPLOADER
 	
 	function PA_UPLOADER()
 	{
-		global $DB;
+		parent::DB();
 		
-		$this->table = $DB->tables->file;
+		$this->table = $this->tables->file;
 	}
 	
 	function uploadFile($directory,$file=null, $access_type = "public")
@@ -40,7 +40,7 @@ class PA_UPLOADER
 			$resolution = $ADMIN->IMAGE_PROCESSOR->getResolution();
 		}
 		
-		if(!$ADMIN->DB->insert($this->table,array("basename"=>$properties->basename,
+		if(!$this->insert($this->table,array("basename"=>$properties->basename,
 												"filename"=>$properties->filename,
 												"directory"=>$properties->directory,
 												"url"=>$properties->url,
@@ -60,7 +60,7 @@ class PA_UPLOADER
 		}
 		else
 		{ 
-			return $ADMIN->DB->lastInsertId();
+			return $this->lastInsertId();
 		}
 	}
 	
@@ -70,14 +70,12 @@ class PA_UPLOADER
 			return -1;
 		else
 		{
-			global $DB;
-			
-			if($fileId = $DB->get_value("SELECT file_id FROM {$this->table} WHERE filename=? AND access_type='system'",array($extension)))
+			if($fileId = $this->get_value("SELECT file_id FROM {$this->table} WHERE filename=? AND access_type='system'",array($extension)))
 			{
 				return $fileId;
 			}
 			else
-				return $DB->get_value("SELECT file_id FROM {$this->table} WHERE filename='generic' AND access_type='system'");
+				return $this->get_value("SELECT file_id FROM {$this->table} WHERE filename='generic' AND access_type='system'");
 		}
 	}
 	
@@ -118,11 +116,9 @@ class PA_UPLOADER
 	/* PRIVATE */
 	private function getCopiedFileId($directory,$basename)
 	{
-		global $DB;
-		
 		$query = "SELECT file_id FROM {$this->table} WHERE url=?";
 		$url = $directory . $basename;
-		$fileId = $DB->get_value($query,array($url));
+		$fileId = $this->get_value($query,array($url));
 		
 		return $fileId > 0 ? $fileId : -1;
 	}
@@ -146,10 +142,8 @@ class PA_UPLOADER
 	 */
 	private function generateDuplicatedName($copied_file_id)
 	{
-		global $DB;
-		
 		/* Kopyalanan tüm dosyaların bilgilerini al */
-		$duplicatedFiles = $DB->get_rows("SELECT filename FROM {$this->table} WHERE copied_file_id=?",array($copied_file_id));
+		$duplicatedFiles = $this->get_rows("SELECT filename FROM {$this->table} WHERE copied_file_id=?",array($copied_file_id));
 		$newDuplicateFileNumber = 1;
 		
 		/* Kopyalanan dosyaların isimlerini kontrol et ve ona göre yeni kopya numarası üret */
@@ -173,7 +167,7 @@ class PA_UPLOADER
 		}
 		
 		/* Kopyası alınan dosyanın adını al*/
-		$copiedFile = $DB->get_row("SELECT filename,extension FROM {$this->table} WHERE file_id=?",array($copied_file_id));
+		$copiedFile = $this->get_row("SELECT filename,extension FROM {$this->table} WHERE file_id=?",array($copied_file_id));
 		
 		/* Yeni kopya ismini üret ve döndür */
 		return "$copiedFile->filename $this->copyNameTag ($newDuplicateFileNumber).$copiedFile->extension";

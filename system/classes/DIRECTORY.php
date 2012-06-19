@@ -7,15 +7,13 @@ class PA_DIRECTORY extends PA_FILE
 	function PA_DIRECTORY()
 	{
 		parent::PA_FILE();
-		global $DB;
 		
-		$this->table = $DB->tables->directory;
-		$this->table_file = $DB->tables->file;
+		$this->table = $this->tables->directory;
+		$this->table_file = $this->tables->file;
 	}
 	
 	function createDirectory($directory,$parent_directory_id=null)
 	{
-		global $DB;
 		global $uploadurl;
 		
 		$full_directory = $uploadurl . $directory;
@@ -30,7 +28,7 @@ class PA_DIRECTORY extends PA_FILE
 		{
 			$parent_directory_id = $parent_directory_id == null ? -1 : $parent_directory_id;
 			
-			if(!$DB->insert($this->table,array("parent_id"=>$parent_directory_id,"name"=>basename($directory),"directory"=>$directory)))
+			if(!$this->insert($this->table,array("parent_id"=>$parent_directory_id,"name"=>basename($directory),"directory"=>$directory)))
 				return false;
 			else
 				return true;
@@ -41,52 +39,41 @@ class PA_DIRECTORY extends PA_FILE
 	
 	function selectDirectoryById($directory_id)
 	{
-		global $DB;
-		
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE directory_id=?",array($directory_id));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE directory_id=?",array($directory_id));
 	}
 	
 	function listDirectoriesByParentId($parent_id)
 	{
-		global $DB;
-	
-		return $DB->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($parent_id));
+		return $this->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($parent_id));
 	}
 	
 	function selectDirectoryByDirectory($directory)
 	{
-		global $DB;
-		
-		return $DB->get_row("SELECT * FROM {$this->table} WHERE directory=?",array($directory));
+		return $this->get_row("SELECT * FROM {$this->table} WHERE directory=?",array($directory));
 	}
 	
 	function listFavouritedDirectories()
 	{
-		global $DB;
-		
-		return $DB->get_rows("SELECT * FROM {$this->table} WHERE is_favourite>0",null);
+		return $this->get_rows("SELECT * FROM {$this->table} WHERE is_favourite>0",null);
 	}
 	
 	function setDirectoryFavouriteStatus($directory,$status = 1)
 	{
-		global $DB;
-		
-		return $DB->execute("UPDATE {$this->table} SET is_favourite=? WHERE directory=?",array($status,$directory));
+		return $this->execute("UPDATE {$this->table} SET is_favourite=? WHERE directory=?",array($status,$directory));
 	}
 	
 	function generateFileTreeHtmlByParentId($parent_id)
 	{
-		global $DB;
 		global $uploadurl;
 		
-		$dirs = $DB->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($parent_id));
+		$dirs = $this->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($parent_id));
 		
 		$dirHtml = '<ul class="fileTree">';
 		foreach($dirs as $d)
 		{
 			$dirHtml .= '<li class="directory collapsed %s">';
 			$dirHtml .= '<a href="' . $d->directory . '" ' . ($d->is_favourite > 0 ? 'class="favourite"' : "") . '>' . $d->name . '</a>';
-			if($subdirs = $DB->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($d->directory_id)))
+			if($subdirs = $this->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($d->directory_id)))
 			{
 				$single = "";
 				$dirHtml .= $this->generateFileTreeHtmlByParentId($d->directory_id);
@@ -111,13 +98,12 @@ class PA_DIRECTORY extends PA_FILE
 	 * */
 	function deleteDirectoryByDirectory($directory)
 	{
-		global $DB;
 		global $uploadurl;
 		
 		if($this->deleteDirectoryContents($directory))
 		{
-			if(!$DB->execute("DELETE FROM {$this->table_file} WHERE directory LIKE ? '%'",array($directory)) ||
-				!$DB->execute("DELETE FROM {$this->table} WHERE directory LIKE ? '%'",array($directory)))
+			if(!$this->execute("DELETE FROM {$this->table_file} WHERE directory LIKE ? '%'",array($directory)) ||
+				!$this->execute("DELETE FROM {$this->table} WHERE directory LIKE ? '%'",array($directory)))
 			{
 				echo "Database den silinemedi!";
 				return false;
