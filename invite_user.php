@@ -13,7 +13,7 @@ if($admin_action == "inviteUser")
 		if($ADMIN->USER->inviteAdminUser($displayname, $email, $user_type))
 		{
 			postMessage("Davetiyeniz başarıyla gönderildi!");
-			header("Location:admin.php?page=useraaccounts");
+			header("Location:admin.php?page=useraccounts");
 			exit;
 		}
 		else

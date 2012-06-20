@@ -4,12 +4,15 @@
 addMenu("Kontrol Paneli","$VIEW_URL/images/icons/dashboard_icon.png","Kontrol Paneli","dashboard","dashboard.php",1,USER_GUEST);
 addMenu("Mesajlar","$VIEW_URL/images/icons/messages_icon.png","Mesajlar","messages","messages.php",101,USER_SUPER);
 addPage("Mesaj İçeriği","messages" ,"readmessage", "readmessage.php",USER_SUPER);
-addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraaccounts","useraccounts.php",108,USER_SUPER);
-addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraaccounts", "invite_user", "invite_user.php",2, USER_SUPER);
-//addSubMenu("Kullanıcı Yetkileri", "Kullanıcı Yetkileri", "useraaccounts", "user_permissions", "permissions.php");
-addPage("Kullanıcı Bilgileri", "useraaccounts", "edit_useraccount", "edit_useraccount.php");
-addPage("Yetki Ekle", "useraaccounts", "add_permission", "edit_permission.php");
-addPage("Yetki Detayı", "useraaccounts", "edit_permission", "edit_permission.php");
+addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraccounts","useraccounts.php",108,USER_SUPER);
+addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraccounts", "invite_user", "invite_user.php",2, USER_SUPER);
+//addSubMenu("Yetkiler", "Yetkiler", "useraccounts", "permissions", "permissions.php");
+//addSubMenu("Roller", "Roller", "useraccounts", "roles", dirname(__FILE__) . "/roles.php");
+addPage("Kullanıcı Bilgileri", "useraccounts", "edit_useraccount", "edit_useraccount.php");
+addPage("Yetki Ekle", "useraccounts", "add_permission", "edit_permission.php");
+addPage("Yetki Detayı", "useraccounts", "edit_permission", "edit_permission.php");
+addPage("Rol Ekle", "useraccounts", "add_role", "edit_role.php");
+addPage("Rol Detayı", "useraccounts", "edit_role", "edit_role.php");
 addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings","settings.php",109,USER_SUPER);
 
 if(get_option("admin_SiteMultilanguageMode") == "multilanguage")

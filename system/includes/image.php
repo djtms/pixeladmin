@@ -58,7 +58,6 @@ function generateThumbBase64($fileUrl,$width=129,$height=-1)
 	return 'data:image/' . $info["extension"] . ';base64,' . $attachment;
 }
 
-
 function getThumbImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
 {
 	global $ADMIN;

@@ -13,7 +13,7 @@ class PA_ROLE extends DB
 	
 	function listRoles()
 	{
-		return $this->get_row("SELECT * FROM {$this->table} ORDER BY order_num");
+		return $this->get_rows("SELECT * FROM {$this->table} ORDER BY order_num");
 	}
 	
 	function addRole($role_name)

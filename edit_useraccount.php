@@ -10,7 +10,7 @@ if($_GET["user"] > 0)
 else
 {
 	postMessage("Kullanıcı bulunamadı!", true);
-	header("Location:admin.php?page=useraaccounts");
+	header("Location:admin.php?page=useraccounts");
 	exit;
 }
 

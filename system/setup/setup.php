@@ -493,7 +493,6 @@ function createDbTables($dbh,$prefix)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 	
 	
-	
 	return  $dbh->query($queryI18n) &&
 			$dbh->query($queryLanguage) &&
 			$dbh->query($queryOption) &&
