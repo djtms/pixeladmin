@@ -9,32 +9,33 @@
 	margin:10px 0 0 0;
 	float:left;
 	border:1px #CCC solid;
-	width:675px;
-	min-height:126px;
-	background:#FFF;
-	padding:0 10px 0 0;
-	overflow:scroll;
-	overflow-y:hidden;
+	width:805px;
+	height:126px;
+	background: #eee;
+	padding:0;
+	overflow-y:scroll;
+	overflow-x:hidden;
 }
 
 .galleryList {
 	float:left;
 	display:block;
-	margin:10px 0 0 0;
+	margin:0 0 10px 0;
 	padding:0;
 	list-style: none;
 }
 
 .galleryItem {
-	width:123px;
+	width:125px;
 	height:87px;
 	float:left;
-	margin: 0 0 10px 10px;
+	padding: 10px;
 	overflow:hidden;
 	position:relative;
 	border:solid 1px #cccccc;
-	background: #e4e4e4;
+	background: #fff;
 	cursor: move;
+	margin:9px 0 0 9px;
 }
 
 .galleryItem .shadow
@@ -43,8 +44,8 @@
 	height:87px;
 	background:url(../images/shadowBg_123x87.png) no-repeat left top;
 	position:absolute;
-	left:0;
-	top:0;
+	left:11px;
+	top:11px;
 	z-index: 5;
 }
 
@@ -54,14 +55,17 @@
 	position:relative;
 	z-index: 1;
 	display:block;
+	width:123px;
+	height:87px;
+	border:solid 1px #cccccc;
 }
 
 .galleryItem .delButton
 {
 	min-width: 10px !important;
 	position:absolute;
-	left:36px;
-	top:30px;
+	left:44px;
+	top:40px;
 	z-index: 5;
 	display:none;
 	opacity:0;

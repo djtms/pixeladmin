@@ -30,6 +30,11 @@ class PA_SITEMAP extends DB
 		return $this->get_row("SELECT * FROM {$this->table} WHERE page_id=?", array($page_id));
 	}
 	
+	function selectSiteMapByUrl($page_url)
+	{
+		return $this->get_row("SELECT * FROM {$this->table} WHERE page_url=?", array($page_url));
+	}
+	
 	function listSitemaps($return_empty_urls = false)
 	{
 		global $ADMIN;
@@ -38,7 +43,7 @@ class PA_SITEMAP extends DB
 		$query  = "SELECT sm.*, pt.{$language} AS page_title, pd.{$language} AS page_description FROM {$this->table} AS sm ";
 		$query .= "LEFT JOIN {$this->table_i18n} AS pt ON sm.page_title=pt.i18nCode ";
 		$query .= "LEFT JOIN {$this->table_i18n} AS pd ON sm.page_description=pd.i18nCode ";
-		$query .= $return_empty_urls ? "WHERE sm.page_url != '' AND sm.page_url IS NOT NULL" : "";
+		$query .= $return_empty_urls ? "" : "WHERE sm.page_url != '' AND sm.page_url IS NOT NULL";
 		
 		return $this->get_rows($query);
 	}
@@ -107,25 +112,8 @@ class PA_SITEMAP extends DB
 	function deleteSitemap($page_id)
 	{
 		$page = $this->selectSiteMap($page_id);
-		if($this->beginTransaction())
-		{
-			if(deleteI18n($page->page_title) && deleteI18n($page->page_description) &&
-				$this->execute("DELETE FROM {$this->table} WHERE page_id=?", array($page_id)))
-			{
-				$this->commit();
-				return true;
-			}
-			else
-			{
-				$this->error[] = "Hata: Transaction içindeki sql işlemlerinden en az birinde bir hata gerçekleşti! Dosya: " . __FILE__ . " Satır: " . __LINE__;
-				$this->rollBack();
-				return false;
-			}
-		}
-		else
-		{
-			$this->error[] = "Hata: Transanction başlatılamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
-			return false;	
-		}
+		
+		return deleteI18n($page->page_title) && deleteI18n($page->page_description) && 
+			$this->execute("DELETE FROM {$this->table} WHERE page_id=?", array($page_id));		
 	}
 }

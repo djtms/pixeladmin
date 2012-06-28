@@ -30,4 +30,4 @@ if($_GET["delete"] > 0)
 	}
 }
 
-dataGrid($data, "Kullanıcı Hesapları", "user_accounts", "{%displayname%}", "admin.php?page=invite_user", "admin.php?page=edit_useraccount&user={%user_id%}", "admin.php?page=useraccounts&delete={%user_id%}");
+echo dataGrid($data, "Kullanıcı Hesapları", "user_accounts", "{%displayname%}", "admin.php?page=invite_user", "admin.php?page=edit_useraccount&user={%user_id%}", "admin.php?page=useraccounts&delete={%user_id%}");

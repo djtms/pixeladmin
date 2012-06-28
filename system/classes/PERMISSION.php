@@ -27,7 +27,7 @@ class PA_PERMISSION extends DB
 				$array_length = sizeof($permission_array);
 				for($i = 0; $i<$array_length; $i++)
 				{
-				$permission_array[$i]->sub_permissions = $this->listPermissionsByParentAsArrayTree($permission_array[$i]->permission_id, true);
+				$permission_array[$i]->sub = $this->listPermissionsByParentAsArrayTree($permission_array[$i]->permission_id, true);
 				}
 	
 				return $permission_array;
@@ -43,7 +43,7 @@ class PA_PERMISSION extends DB
 		}
 	}
 
-	function listPermissionsByParentAsHtmlTree($permission_parent, $list_sub_permissions = true)
+	function listPermissionsByParentAsHtmlTree($permission_parent = "-1", $list_sub_permissions = true)
 	{
 		if($permission_array = $this->get_rows("SELECT * FROM {$this->table} WHERE permission_parent=?", array($permission_parent)))
 		{
@@ -53,7 +53,7 @@ class PA_PERMISSION extends DB
 			for($i=0; $i<$array_length; $i++)
 			{
 				$permission_html .= "<li permission_id='" . $permission_array[$i]->permission_id . "'>";
-				$permission_html .= $permission_array[$i]->permission_name;
+				$permission_html .= "<span>" . $permission_array[$i]->permission_name . "</span>";
 	
 				if($list_sub_permissions)
 				{
@@ -70,6 +70,15 @@ class PA_PERMISSION extends DB
 		{
 			return "";
 		}
+	}
+	
+	function listPermissionsByParentAsTreeGrid($permission_parent = "-1", $list_sub_permissions = true)
+	{
+		$listHtml  = '<div class="treeGridOuter">';
+		$listHtml .= $this->listAsTreeHtmlList($permission_parent, $list_sub_permissions);
+		$listHtml .= '</div>';
+		
+		return $listHtml;
 	}
 	
 	function selectPermission($permission_id)
@@ -118,5 +127,34 @@ class PA_PERMISSION extends DB
 	function setPermissionOrderNum($permission_id, $order_num)
 	{
 		return $this->execute("UPDATE {$this->table} SET order_num=? WHERE permission_id=?", array($order_num, $permission_id));
+	}
+	
+	private function listAsTreeHtmlList($permission_parent, $list_sub_permissions)
+	{
+		if($permission_array = $this->get_rows("SELECT * FROM {$this->table} WHERE permission_parent=?", array($permission_parent)))
+		{
+			$permission_html = '<ul class="itemsList">';
+			$array_length = sizeof($permission_array);
+		
+			for($i=0; $i<$array_length; $i++)
+			{
+				$permission_html .= "<li id='order_" . $permission_array[$i]->permission_id . "' permission_id='" . $permission_array[$i]->permission_id . "'>";
+				$permission_html .= "<div class='item'><label class='text'>" . $permission_array[$i]->permission_name . "</label></div>";
+				
+				if($list_sub_permissions)
+				{
+					$permission_html .= $this->listAsTreeHtmlList($permission_array[$i]->permission_id, true);
+				}
+		
+				$permission_html .= "</li>";
+			}
+		
+			$permission_html .= "</ul>";
+			return $permission_html;
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

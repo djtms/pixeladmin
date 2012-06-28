@@ -30,10 +30,10 @@ if($_POST["action"] == "Kaydet")
 	
 	<label>Galeri</label>
 	<input type="gallery" name="sampleGalleryId" value="<?php echo get_option("sampleGalleryId"); ?>" />
-	<!-- <label>Başlık:</label>
+	<label>Başlık:</label>
 	<input type="text" i18n="sampleHeaderI18n" />
 	<label>Yazı:</label>
-	<textarea i18n="sampleCommentI18n" type="editor"></textarea> -->
+	<textarea i18n="sampleCommentI18n" type="editor"></textarea>
 	
 	<input type="submit" name="action" value="Kaydet" />
 </form>

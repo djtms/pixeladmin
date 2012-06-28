@@ -28,120 +28,70 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 			exit;
 		}
 	}
+
+	$addDataLink = $addDataLink != null ? '<button class="dataGridAddButton" page="' . (preg_match("/\.php\?/", $addDataLink) ? $addDataLink : "admin.php?" . $addDataLink) . '">Yeni Ekle</button>' : "";
+	if($sortablekey != null)
+	{
+		$sortableClass = "sortableList";
+		$sortableEvent = "sort_event='{$sortEvent}'";
+	}
 	
-	?>
-	<div class="dataGridOuter">
-		<h2 class="dataGridTitle"><?php echo $gridTitle; ?></h2>
-		<?php if($addDataLink != null){ ?>
-		<button class="dataGridAddButton" page="<?php echo (preg_match("/\.php\?/", $addDataLink) ? $addDataLink : "admin.php?" . $addDataLink ); ?>">Yeni Ekle</button>
-		<?php }?>
-		<div class="itemsList">
-			<ul id="<?php echo $gridId; ?>"  <?php echo ($sortablekey != null ? ' class="sortableList" sort_event="' . $sortEvent . '" ' : '') ?>>
-				<?php
-				if(is_array($data) && sizeof($data) > 0)
-				{
-					preg_match_all("/\{\%([a-zA-Z0-9\.\_\-\=]+)\%\}/", $rowTitleQuery, $rowTitleColumnsMatches);
-					preg_match_all("/\{\%([a-zA-Z0-9\.\_\-]+)\%\}/", $editDataLinkQuery, $editDataColumnsMatches);
-					preg_match_all("/\{\%([a-zA-Z0-9\.\_\-]+)\%\}/", $deleteDataLinkQuery, $deleteDataColumnsMatches);
-					
-					$use_edit_button = (($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
-					$use_cross_button = (($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
-					
-					$edit_button_cleared_link = preg_match("/\.php\?/", $editDataLinkQuery) ? false : true;
-					$cross_button_cleared_link = preg_match("/\.php\?/", $deleteDataLinkQuery) ? false : true;
-					
-					$index = 0;
-					foreach($data as $d)
-					{
-						$dataType = gettype($d);
-						$index++;
-						?>
-						<li class="item" <?php 
-						if($sortablekey != null)
-						{
-							echo 'id="order_' . (($dataType == "object") ? $d->{$sortablekey} : $d[$sortablekey]) . '"';
-						}
-						?>><label class="text"><?php
-								$rowTitle = $rowTitleQuery;
-								
-								for($i=0; $i<sizeof($rowTitleColumnsMatches[0]); $i++)
-								{
-									$search = $rowTitleColumnsMatches[0][$i];
-									$column = $rowTitleColumnsMatches[1][$i];
-									
-									if(preg_match("/=/", $column))
-									{
-										$columnParts = explode("=", $column);
-										
-										if($columnParts[0] == "i18n")
-										{
-											$columnData = ($dataType == "object") ? getI18n($d->{$columnParts[1]}) : getI18n($d[$columnParts[1]]);
-										}
-									}
-									else
-									{
-										$columnData = ($dataType == "object") ? $d->{$column} : $d[$column];									
-									}
-									
-									$rowTitle = preg_replace("/" . preg_quote($search) . "/", $columnData, $rowTitle);
-								}
-								
-								echo $rowTitle;
-							?></label>
-							<?php if($use_edit_button || $use_cross_button){ ?>
-								<div class="rowEditButtonsOuter">
-									<?php if($use_cross_button){ ?>
-										<a class="crossBtn" href="<?php 
-											$deleteLink = $deleteDataLinkQuery;
+	$dataCount = sizeof($data);
+	$gridItemsHtml = "";
+		
+	if(is_array($data) && $dataCount > 0)
+	{
+		$use_edit_button = (($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
+		$use_cross_button = (($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
+		
+		$edit_button_cleared_link = preg_match("/\.php\?/", $editDataLinkQuery) ? false : true;
+		$cross_button_cleared_link = preg_match("/\.php\?/", $deleteDataLinkQuery) ? false : true;
+		
+		for($i=0; $i<$dataCount;  $i++)
+		{
+			$data[$i] = (object) $data[$i];
+			$gridItemsHtml .= "<li " . ($sortablekey != null ? " id='order_" . $data[$i]->{$sortablekey} . "'>"  : ">");
+			$gridItemsHtml .= "<div class='item'>";
+			$gridItemsHtml .= "<p class='text'>" . renderHtml($rowTitleQuery, $data[$i]) . '</p>';
 			
-											for($i=0; $i<sizeof($deleteDataColumnsMatches[0]); $i++)
-											{
-												$search = $deleteDataColumnsMatches[0][$i];
-												$column = $deleteDataColumnsMatches[1][$i];
-												$value  = $search == "{%_index_%}" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
-												
-												$deleteLink = preg_replace("/" . preg_quote($search) . "/", $value, $deleteLink);
-											}
-											
-											echo ($cross_button_cleared_link ? "admin.php?" . $deleteLink : $deleteLink);
-											
-										?>" onclick="return false;"></a>
-									<?php }
-									
-									if($use_edit_button){ ?>
-										<a href="<?php 
-											$editLink = $editDataLinkQuery;
-									
-											for($i=0; $i<sizeof($editDataColumnsMatches[0]); $i++)
-											{
-												$search = $editDataColumnsMatches[0][$i];
-												$column = $editDataColumnsMatches[1][$i];
-												$value = $search == "{%_index_%}" ? $index : ($dataType == "object" ? $d->{$column} : $d[$column]);
-												
-												$editLink = preg_replace("/" . preg_quote($search) . "/", $value, $editLink);	
-											}
-											
-											echo ($edit_button_cleared_link ? "admin.php?" . $editLink : $editLink);
-										
-										?>" class="editBtn"></a>
-									<?php } ?>
-								</div>
-							<?php } ?>
-						</li>
-						<?php 
-					}
-				}
-				else
+			if($use_edit_button || $use_cross_button)
+			{
+				$gridItemsHtml .= "<div class='rowEditButtonsOuter'>";
+				if($use_cross_button)
 				{
-					?>
-					<li class="item"><label class="text" style="color:#e00 !important;">Kayıt Bulunamadı!</label></li>
-					<?php 
+					$deleteLink = renderHtml($deleteDataLinkQuery, $data[$i]);
+					
+					$gridItemsHtml .=  "<a class='crossBtn' href='";	
+					$gridItemsHtml .= ($cross_button_cleared_link ? "admin.php?" . $deleteLink : $deleteLink);			
+					$gridItemsHtml .= "' onclick='return false;'></a>";
 				}
-				?>
-			</ul>
-		</div><!--itemsList-->
-	</div>
-	<?php 
+
+				if($use_edit_button)
+				{
+					$editLink = renderHtml($editDataLinkQuery, $data[$i]);
+					
+					$gridItemsHtml .="<a href='";
+					$gridItemsHtml .= ($edit_button_cleared_link ? "admin.php?" . $editLink : $editLink);
+					$gridItemsHtml .= "' class='editBtn'></a>";
+				}
+				
+				$gridItemsHtml .= "</div>";
+			}
+			
+			$gridItemsHtml .= "</div></li>";
+			
+			// Alt elemanların olup olmadığını kontrol et
+			
+			//---------------------------------------------
+		}
+	}
+	else
+	{
+		$gridItemsHtml .= "<li><div class='item'><p class='text' style='color:#e00 !important;'>Kayıt Bulunamadı!</p></div></li>";
+	}
+	
+	$template = file_get_contents(GUI_TEMPLATES_DIR . "datagrid/datagrid.html");
+	return renderHtml($template, array("gridId"=>$gridId, "gridTitle"=>$gridTitle, "addDataLink"=>$addDataLink, "sortableClass"=>$sortableClass, "sortableEvent"=>$sortableEvent, "gridItemsHtml"=>$gridItemsHtml));
 }
 
 
@@ -222,6 +172,7 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 		$file_type = $files[$i]->type;
 		
 		$itemsList .= "<li class='gridFile' file='{$file_id}'>";
+		$itemsList .= "<span class='shadow'></span>";
 		$itemsList .= "<input type='hidden' name='{$filesNameKey}' />";
 		$itemsList .= "<img class='thumbImage' src='$thumb_url' />";
 		

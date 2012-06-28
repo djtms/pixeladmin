@@ -528,29 +528,7 @@ header {
 	margin:40px 0 -107px 0;
 	background: url(../images/panel_logo.png) no-repeat;
 }
-.rowEditButtonsOuter {
-	width:60px;
-	height:20px !important;
-	display:block;
-	float:right;
-	padding:0;
-	margin:0;
-	position:relative;
-	top:0px;
-}
 
-.editBtn{
-	width:14px;
-	height:14px;
-	margin-top:3px;
-	float:right;
-	cursor:pointer;
-	background: url(../images/edit_btn.png) no-repeat left top;
-}
-
-.editBtn:hover{
-	background-position: left bottom;
-}
 
 .upArrow, .downArrow {
 	width:14px;
@@ -570,25 +548,7 @@ header {
 .downArrow:hover {
 	background: url(../images/arrow_down.png) no-repeat 0 -10px;
 }
-.crossBtn {
-	width:20px;
-	height:20px;
-	margin-top:0;
-	background: url(../images/close_btn.png) no-repeat center top;
-	float:right;
-	cursor: pointer;
-}
 
-.crossBtn:hover {
-	background: url(../images/close_btn.png) no-repeat center -20px;
-}
-
-.crossBtn img
-{
-	width:100%; 
-	height:100%; 
-	float:left;
-}
 
 .editFormOuter {
 	margin-top:10px;
@@ -647,97 +607,7 @@ ul.cs3 li {
 
 
 /** HAZAR **/
-.itemsList
-{
-	width:805px;
-	min-height:20px;
-	float:left;
-	background:#FFF;
-	border:solid 1px #c6c6c6;
-	margin: 10px 0 30px 0;
-}
 
-.ui-sortable .item, .ui-sortable label
-{
-	cursor: move;
-}
-
-.itemsList .item 
-{
-	background:#FFF url(../images/cell_bg.png) repeat-x bottom;
-	border:1px #c6c6c6 solid;
-	height:20px;
-	padding:10px;
-}
-
-.itemsList .item input[type=radio]
-{
-	position:relative;
-	top:-5px;
-}
-
-.itemsList .item .text
-{
-	width:550px !important;
-	height:24px !important;
-	overflow:hidden !important;
-	margin:0 !important;
-	float:left;
-	font:bold 14px Segoe UI, Arial, Arial, Helvetica, sans-serif !important;
-	color:#666666 !important;
-}
-
-.itemsList .item:hover 
-{
-	background:#ECF5FF;
-}
-
-.itemsList .item a 
-{
-	font:12px Segoe UI, Arial, Arial, Helvetica, sans-serif;
-	color:#666666;
-	font-weight:bold;
-	list-style:none;
-	margin-left:5px;
-	text-decoration:none;
-	float:right;
-	line-height: 20px;
-}
-
-.dataGridAddButton
-{
-	float:right;
-	clear:none; 
-	margin:0;
-}
-
-.dataGridOuter
-{
-	width: 100%;
-	float:left;
-	clear:both;
-}
-
-.dataGridTitle
-{
-	width:75% !important;
-	float:left;
-}
-
-.activation
-{
-	color:#fc5900 !important;
-}
-
-.deactivation
-{
-	color:#0e0 !important;
-}
-
-.remove
-{
-	color:#fc5900 !important;
-}
 
 #logoutButton
 {
@@ -1135,3 +1005,12 @@ ul.cs3 li {
 
 
 /**************************************************************/
+
+/* TREE GRID */
+
+.treeGridOuter
+{
+	width:500px;
+	float:left;
+}
+/************************************************************************************************************/

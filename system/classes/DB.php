@@ -11,6 +11,7 @@ class DB
 	private $dbh;
 	public $tables;
 	public static $dbcon; // Database connection
+	private static $inTransaction = false;
 	
 	/**
 	 * 
@@ -179,7 +180,7 @@ class DB
 			return false;
 	}
 	
-	function update($table, $variables, $where=null)
+	function update($table, $variables, $where)
 	{
 		$query = "UPDATE {$table} SET";
 		foreach($variables as $col=>$val)
@@ -198,7 +199,7 @@ class DB
 		
 		$query  = substr($query, 0, -1);
 		
-		if($where != null)
+		if(is_array($where))
 		{
 			if(is_array($where))
 			{
@@ -281,17 +282,52 @@ class DB
 	
 	function beginTransaction()
 	{
-		return $this->dbh->beginTransaction();
+		if(self::$inTransaction == false)
+		{
+			if($this->dbh->beginTransaction())
+			{
+				self::$inTransaction = true;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	function inTransaction()
+	{
+		return self::$inTransaction;
 	}
 	
 	function commit()
 	{
-		return $this->dbh->commit();
+		if($this->dbh->commit())
+		{
+			self::$inTransaction = false;
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	function rollBack()
 	{
-		return $this->dbh->rollBack();
+		
+		if($this->dbh->rollBack())
+		{
+			self::$inTransaction = false;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 

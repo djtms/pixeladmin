@@ -15,7 +15,7 @@ if($_POST["admin_action"] == "selectSitemap")
 }
 
 // TODO: sitemap değerlerini kaydetme işlemini saveI18n() den ayır.
-function saveSitemap($url_params)
+function saveSitemap($url_params = array())
 {
 	global $ADMIN;
 	$page_url = renderHtml($_REQUEST["sm_page_url"], $url_params);

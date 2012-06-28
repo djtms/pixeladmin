@@ -7,4 +7,4 @@ if($_GET["admin_action"] == "deleteMessage")
 	else
 		postMessage("\"Mesaj\" silinemedi!",true);
 }
-$msgList = $ADMIN->MESSAGE->listMessages();dataGrid($msgList, "Mesajlar", "messagesList", "{%fromName%}  - {%subject%}", null, "admin.php?page=readmessage&messageId={%messageId%}", "$currentpage&admin_action=deleteMessage&messageId={%messageId%}");
+$msgList = $ADMIN->MESSAGE->listMessages();echo dataGrid($msgList, "Mesajlar", "messagesList", "{%fromName%}  - {%subject%}", null, "admin.php?page=readmessage&messageId={%messageId%}", "$currentpage&admin_action=deleteMessage&messageId={%messageId%}");

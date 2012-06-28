@@ -46,7 +46,7 @@ function randomString($length = 6,$charset = null)
 	
 	for($i = 0; $i<$length; $i++)
 	{
-		$rnd = rand(0,strlen($charset));
+		$rnd = rand(0,(strlen($charset) - 1));
 		$randomString .= substr($charset,$rnd,1);
 	}
 	
@@ -170,15 +170,34 @@ function calculateAge($birthday)
 
 function renderHtml($html_string, $values = array())
 {
-	preg_match_all("/\{\%([a-z\_\-]+)\%\}/", $html_string, $matches);
-	$match_count = sizeof($matches);
-
+	preg_match_all("/\{\%([a-z\_\-]+)\%\}/i", $html_string, $matches);
+	$match_count = sizeof($matches[0]);
+	$isValuesTypeArray = is_array($values) ? true : false;
+	
 	for($i=0; $i<$match_count; $i++)
 	{
 		$pattern = "/" . preg_quote($matches[0][$i]) . "/";
-		$replacement = $values[$matches[1][$i]];
-
-		$html_string = preg_replace($pattern, $replacement, $html_string);
+		$key = $matches[1][$i];
+		$value = "";
+		
+		if(preg_match("/=/", $key))
+		{
+			$explodedKey = explode("=", $key);
+			if($explodedKey[0] == "i18n")
+			{
+				$value = getI18n($explodedKey[1]);
+			}
+		}
+		else if($isValuesTypeArray)
+		{
+			$value = $values[$key];
+		}
+		else
+		{
+			$value = $values->{$key};
+		}
+		
+		$html_string = preg_replace($pattern, $value, $html_string);
 	}
 
 	return $html_string;

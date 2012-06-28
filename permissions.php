@@ -14,6 +14,5 @@ if($_GET["delete"] > 0)
 	}
 }
 
-$permissions = $ADMIN->PERMISSION->listPermissions();
 
-dataGrid($permissions, "Kullanıcı Yetkileri", "permissionsList", "{%permission_name%}", "admin.php?page=add_permission", "admin.php?page=edit_permission&id={%permission_id%}", "admin.php?page=user_permissions&delete={%permission_id%}");
+echo dataGrid($ADMIN->PERMISSION->listPermissions(), "Kullanıcı Yetkileri", "permissionsList", "{%permission_name%}", "admin.php?page=add_permission", "admin.php?page=edit_permission&id={%permission_id%}", "admin.php?page=user_permissions&delete={%permission_id%}");

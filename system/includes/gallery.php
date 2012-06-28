@@ -112,6 +112,6 @@ if(in_admin)
 			return true;
 		}
 		else
-		return false;
+			return false;
 	}
 }

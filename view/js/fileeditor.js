@@ -634,18 +634,18 @@ jQuery.fn.fileeditor = function(properties){
 				if(loaded_files_count != total_files_count)
 					return;
 				
-				// Scroll to uploading files queues
+				// Upload ediliyor olan dosyaya doğru scroll yapıp odaklan.
 				var uploadingFileIndex = editor.find(".fileUploadingOuter:first").index();
 				var uploadingFileRowIndex = ((uploadingFileIndex % 4) != 0) ? Math.floor(uploadingFileIndex / 4) : Math.floor(uploadingFileIndex / 4) -1;
 				browserFilesListOuter.animate({scrollTop: (uploadingFileRowIndex * 152)}, 400);
 				
-				// Upload each files
+				// Her dosyayı yükle
 				for(var i=0, j=filesList.length; i<j; i++)
 				{
 					var form = new FormData();
 					var xhr = new XMLHttpRequest();
 					form.append("admin_action","uploadFile");
-					form.append("directory",directory);
+					form.append("directory",currentDirectory);
 					form.append("uploadFile",filesList[i].file);
 					
 					xhr.upload.currentIndex = i;

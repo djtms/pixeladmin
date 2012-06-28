@@ -49,6 +49,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 	var thisId    = gallery.attr("id");
 	var thisClass = gallery.attr("class");
 	var thisStyle = gallery.attr("style");
+	var eachItemWidth = 156;
 	
 	var btnAddFile;
 	var galleryObject;
@@ -79,21 +80,21 @@ function loadGallery(gallery,columnsCount,rowsCount)
 	btnAddFile.fileeditor();
 	galleryObject = _this.find(".galleryList");
 	galleryListOuter = _this.find(".galleryListOuter");
-	
+	/*
 	if(rowsCount == 1)
-		galleryObject.css("width",(galleryObject.find(".galleryItem").length * 135));
+		galleryObject.css("width",(galleryObject.find(".galleryItem").length * eachItemWidth));
 	else
-	{
-		galleryObject.css("width",(columnsCount * 135));
-		var width = (columnsCount * 135) + 15;
+	{*/
+		galleryObject.css("width",(columnsCount * eachItemWidth));
+		var width = (columnsCount * eachItemWidth) + 25;
 		galleryListOuter.css({
 			"width"		:	width,
-			"height"	:	(rowsCount * 99) + 10,
+			"height"	:	(rowsCount * 117) + 10,
 			"overflow-x":	"hidden",
 			"overflow-y":	"scroll"
 		});
 		_this.css({"width":width + 12});
-	}
+	/*}*/
 	
 	// Galeri ve Galerideki dosyaların özelliklerinin hesaplandığı event
 	galleryObject.bind("calculateGalleryAndFilesInfo",function(){
@@ -179,7 +180,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 				//galleryObject.sortable();
 				
 				if(rowsCount == 1)
-					galleryObject.css("width",(galleryObject.find(".galleryItem").length * 135) + 10);
+					galleryObject.css("width",(galleryObject.find(".galleryItem").length * eachItemWidth) + 10);
 				
 				galleryObject.find(".lastAdded").each(function(){
 					var imageObject = $(this).find("img");
@@ -235,21 +236,21 @@ function loadGallery(gallery,columnsCount,rowsCount)
 			}
 			
 			galleryObject.html(filesHtml);
-			
+			/*
 			if(rowsCount == 1)
-				galleryObject.css("width",(response.length * 135) + 10);
+				galleryObject.css("width",(response.length * eachItemWidth) + 10);
 			else
-			{
-				galleryObject.css("width",(columnsCount * 135));
-				var width = (columnsCount * 135) + 15;
+			{*/
+				galleryObject.css("width",(columnsCount * eachItemWidth));
+				var width = (columnsCount * eachItemWidth) + 25;
 				galleryListOuter.css({
 					"width"		:	width,
-					"height"	:	(rowsCount * 99) + 10,
+					"height"	:	(rowsCount * 117) + 10,
 					"overflow-x":	"hidden",
 					"overflow-y":	"scroll"
 				});
 				_this.css({"width":width + 12});
-			}
+			/*}*/
 			
 			
 			galleryObject.find(".galleryItem").each(function(){
@@ -295,7 +296,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 			$(this).parents(".galleryItem").animate({opacity:"0"},300,function(){
 				$(this).remove();
 				if(rowsCount == 0)
-					galleryObject.css("width",(galleryObject.find(".galleryItem").length * 135));
+					galleryObject.css("width",(galleryObject.find(".galleryItem").length * eachItemWidth));
 			});
 		}
 	});

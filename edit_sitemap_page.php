@@ -1,6 +1,6 @@
 <?php
 
-$page_id = $_GET["id"] > 0 ? $_GET["id"] : uniqid();
+$page_id = strlen($_GET["id"]) > 0 ? $_GET["id"] : uniqid();
 
 if($_POST["admin_action"] == "Kaydet")
 {

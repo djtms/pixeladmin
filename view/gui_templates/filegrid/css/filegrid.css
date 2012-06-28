@@ -44,6 +44,18 @@
 	font:12px Trebuchet MS, Arial;
 	text-align: center;
 	background: #fff;
+	position:relative;
+}
+
+.fileGridOuter .gridFile .shadow
+{
+	width: 123px;
+	height:87px;
+	position:absolute;
+	left:11px;
+	top: 11px;
+	display:block;
+	background: url(../images/shadowBg_123x87.png) no-repeat left top;
 }
 
 .fileGridOuter .gridFile .thumbImage

@@ -22,9 +22,9 @@ function SitemapStart()
 					{
 						var page = response.page;
 						page_url = page.page_url;
-						page_parent = page.page_parent;
-						page_title = page.page_title;
-						page_description = page.page_description;
+						page_parent = page_parent == -1 ? page.page_parent : page_parent;
+						page_title = page_title == "" ? page.page_title : page_title;
+						page_description = page_description == "" ? page.page_description : page_description;
 					}
 					else
 					{
@@ -42,7 +42,7 @@ function SitemapStart()
 		}
 			
 		var sitemapOuter = $("<div id='sitemapOuter'></div>");
-		var sitemapHtml  = "<h2>Sitemap Bilgileri</h2>";
+		var sitemapHtml  = "<h2>Site Haritası & Seo Bilgileri</h2>";
 			sitemapHtml += "<input type='hidden' name='" + input_name + "' value='" + page_id + "' />";
 			sitemapHtml += "<input type='hidden' name='sm_page_id' value='" + page_id + "' />";
 			sitemapHtml += "<input type='hidden' name='sm_page_url' value='" + page_url + "' maxlength='255' />";
