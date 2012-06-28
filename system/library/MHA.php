@@ -170,7 +170,7 @@ function calculateAge($birthday)
 
 function renderHtml($html_string, $values = array())
 {
-	preg_match_all("/\{\%([a-z\_\-]+)\%\}/i", $html_string, $matches);
+	preg_match_all("/\{\%([a-z0-9_=\-]+)\%\}/i", $html_string, $matches);
 	$match_count = sizeof($matches[0]);
 	$isValuesTypeArray = is_array($values) ? true : false;
 	
@@ -178,23 +178,17 @@ function renderHtml($html_string, $values = array())
 	{
 		$pattern = "/" . preg_quote($matches[0][$i]) . "/";
 		$key = $matches[1][$i];
-		$value = "";
+		$value = $isValuesTypeArray ? $values[$key] : $values->{$key};
 		
 		if(preg_match("/=/", $key))
 		{
 			$explodedKey = explode("=", $key);
+			
 			if($explodedKey[0] == "i18n")
 			{
-				$value = getI18n($explodedKey[1]);
+				$i18nCode = $isValuesTypeArray ? $values[$explodedKey[1]] : $values->{$explodedKey[1]};
+				$value = getI18n($i18nCode);	
 			}
-		}
-		else if($isValuesTypeArray)
-		{
-			$value = $values[$key];
-		}
-		else
-		{
-			$value = $values->{$key};
 		}
 		
 		$html_string = preg_replace($pattern, $value, $html_string);

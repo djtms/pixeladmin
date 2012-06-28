@@ -102,14 +102,13 @@ if(sizeof($existingModules) > 0)
 		$className = $isActive ? "deactivation" : "activation";
 		$moduleFolder = urlencode($em["moduleFolder"]);
 		
-		$modulesListHtml .= sprintf('<li class="item"><label class="text">%s</label><div class="rowEditButtonsOuter">
+		$modulesListHtml .= sprintf('<li><div class="item"><p class="text">%s</p><div class="rowEditButtonsOuter">
 											<a href="admin.php?page=modules&admin_action=%s&moduleFolder=%s" class="%s">%s</a>
-											<!--<a href="admin.php?page=modules&admin_action=deactivateModules&moduleFolder=%s" class="remove">Sil</a>-->
-										</div><!--up_down_close--></li>',$em["moduleName"],$activeAction,$moduleFolder,$className,$activateTitle,$moduleFolder);
+										</div></div></li>',$em["moduleName"],$activeAction,$moduleFolder,$className,$activateTitle,$moduleFolder);
 	}
 }
 else
-	$modulesListHtml = '<li class="item"><label class="text" style="color:#fc5900 !important;">Hiçbir Modül Bulunamadı!</label></li>';
+	$modulesListHtml = '<li><div class="item"><p class="text" style="color:#fc5900 !important;">Hiçbir Modül Bulunamadı!</p></li>';
 	
 
 

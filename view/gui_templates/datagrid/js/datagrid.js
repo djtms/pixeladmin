@@ -28,7 +28,7 @@ function DataGridStart()
 	$(".dataGridOuter").each(function(){
 		var firstItem = $(this).find(".item:first");
 		var maxWidth = firstItem.width();
-		var editButtonsWidth = firstItem.find(".rowEditButtonsOuter").outerWidth(true);
+		var editButtonsWidth = firstItem.find(".rowEditButtonsOuter").outerWidth(true) + 5;
 		var textWidth = maxWidth - editButtonsWidth;
 		$(this).find(".text").css("width", textWidth);
 	});
