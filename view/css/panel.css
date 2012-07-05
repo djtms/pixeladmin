@@ -285,6 +285,12 @@ select{
 	background:#3e3e3e url(../images/panel_bg.png) no-repeat;
 }
 
+#leftPanel *
+{
+	text-shadow: 1px 1px 1px #000000;
+    filter: dropshadow(color=#000000, offx=1, offy=1);
+}
+
 /* ---------------------header--------------------- */
 header {
 	width:100%;
@@ -293,6 +299,12 @@ header {
 	z-index:1;
 	position:relative;
 	float:left;
+}
+
+header *
+{
+	text-shadow: 1px 1px 1px #000000;
+    filter: dropshadow(color=#000000, offx=1, offy=1);
 }
 
 #headerInner {
@@ -449,15 +461,23 @@ header {
 	float:left;
 	padding:0;
 	overflow:hidden;
+	margin-top: 0;
 }
 
 #menu .menu:hover {
-	background: #222 url(../images/menu_bg.png);
+	background: url(../images/menu_bg.png);
 	color:#fff;
+	box-shadow: inset 1px 2px 3px 1px #111;
+}
+
+#menu .menu:hover .pageLink, #menu .menu.selected .pageLink
+{
+	color: #fff;
 }
 
 #menu .menu.selected {
 	background: url(../images/selectedMenuBg_center.png) repeat-y left 8px;
+	box-shadow: inset 1px 2px 3px 1px #252525;
 }
 
 #menu .menu a{
@@ -879,6 +899,8 @@ ul.cs3 li {
 	background: #a6a6a6;
 	text-transform: capitalize;
 	cursor: pointer;
+	text-shadow: 1px 1px 1px #000000;
+    filter: dropshadow(color=#000000, offx=1, offy=1);
 }
 
 .activeLanguage
@@ -922,6 +944,8 @@ ul.cs3 li {
 	color:#f0f1f3;
 	line-height: 27px;
 	padding:0 10px;
+	text-shadow: 1px 1px 1px #000000;
+    filter: dropshadow(color=#000000, offx=1, offy=1);
 	background: url(../images/container_385_headerBg.jpg) no-repeat left top;
 }
 
@@ -1014,3 +1038,165 @@ ul.cs3 li {
 	float:left;
 }
 /************************************************************************************************************/
+
+/* SpreadSheet Grid */
+
+.spreadsheetOuter
+{
+	height: 486px;
+	display:block;
+	overflow:hidden;
+	border:solid 1px #bbb;
+	position:relative;
+}
+
+.spreadsheetContentScroller
+{
+	width:100%;
+	height:356px;
+	float:left;
+	overflow:scroll;
+}
+
+.spreadsheetHeader, .spreadsheetContent
+{
+	width:100%;
+	float:left;
+	clear:left;
+}
+
+.spreadsheetHeader
+{
+	min-width: 805px;
+	background: #5b5b5b; /* Old browsers */
+	background: -moz-linear-gradient(top,  #5b5b5b 0%, #424242 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5b5b5b), color-stop(100%,#424242)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #5b5b5b 0%,#424242 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b5b5b', endColorstr='#424242',GradientType=0 ); /* IE6-9 */
+}
+
+.spreadsheetOuter .header
+{
+	width: 135px;
+	height:30px;
+	float:left;
+	border-bottom: solid 1px #555;
+	border: solid 1px #777;
+	padding: 0 10px;
+	margin: -1px 0 0 -1px;
+	line-height: 30px;
+	text-align: center;
+	font-size: 13px;
+	color: #fff;
+	text-shadow: 1px 1px 1px #000000;
+    filter: dropshadow(color=#000000, offx=1, offy=1);
+	
+	background: #5b5b5b; /* Old browsers */
+	background: -moz-linear-gradient(top,  #5b5b5b 0%, #424242 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5b5b5b), color-stop(100%,#424242)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #5b5b5b 0%,#424242 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b5b5b', endColorstr='#424242',GradientType=0 ); /* IE6-9 */
+
+
+}
+
+.spreadsheetOuter .column
+{
+	float:left;
+	width:155px;
+}
+
+.spreadsheetOuter .column.rowIndex
+{
+	width:15px;
+}
+
+
+.spreadsheetOuter .column.rowIndex .cell
+{
+	height:30px;
+	float:left;
+	border-bottom: solid 1px #555;
+	border: solid 1px #777;
+	padding: 0 10px;
+	margin: -1px 0 0 -1px;
+	line-height: 30px;
+	text-align: left;
+	font-size: 13px;
+	color: #fff;
+	
+	background: #5b5b5b; /* Old browsers */
+	background: -moz-linear-gradient(top,  #5b5b5b 0%, #424242 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5b5b5b), color-stop(100%,#424242)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #5b5b5b 0%,#424242 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #5b5b5b 0%,#424242 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b5b5b', endColorstr='#424242',GradientType=0 ); /* IE6-9 */
+}
+
+.spreadsheetOuter input.cell
+{
+	width: 145px !important;
+	height: 20px !important;
+	float:none !important;
+	display:block;
+	padding: 5px !important;
+	margin: -1px 0 0 -1px !important;
+}
+
+.spreadsheetFooter
+{
+	width:100%;
+	height:100px;
+	float:left;
+	clear:left;
+	overflow: hidden;
+}
+
+.spreadsheetContentDisplay
+{
+	height: 88px;
+	resize:none;
+	overflow-y:scroll;
+	color: #222;
+	background: #efefef !important;
+}
+
+/************************************************************************************************************/
+
+.pagerOuter
+{
+	width: 100%;
+	height:21px;
+	float:left;
+	font-size: 13px;
+	text-align: center;
+	margin:10px 0;
+}
+
+.pagerOuter a, .pagerOuter span
+{
+	font-size: 13px;
+	text-decoration: none;
+	height:15px;
+	display:inline-block;
+	line-height: 15px;
+	padding: 2px 4px;
+	margin:0 3px;
+	background: #fff;
+	color: #999;
+	border: solid 1px #e2e2e2; 
+}
+
+.pagerOuter span, .pagerOuter a:hover
+{
+	background: #999;
+	color: #fff;
+}

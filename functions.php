@@ -18,6 +18,7 @@ addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings"
 if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
 {
 	addSettingsMenu("Dil Seçenekleri", "Dil Seçenekleri", "languageoptions", "languages.php",10,USER_SUPER);
+	addSettingsMenu("Sabit Dil Değişkenleri", "Sabit Dil Değişkenleri", "global_i18n_variables", "global_i18n_variables.php",10,USER_SUPER);
 	addPage("Dil Ekle", "settings", "edit_language", "edit_language.php");
 }
 

@@ -196,3 +196,56 @@ function renderHtml($html_string, $values = array())
 
 	return $html_string;
 }
+
+/**
+ * 
+ * Html tipindeki string içinden istediğimiz elementlerin istediğimiz attribute'unu kaldırmamıza yarar.
+ * Varsayılan olarak tüm elementlerin tüm attribute larını kaldırır, ama bunu kendimiz belirlemek istersek gerekli isimleri eğer birden çoksa virgül (,)
+ * ile ayırarak kulllanmalıyız. Mesela elementleri belirtirken "p,span,ul" şeklinde olabilir, aynı şekilde attribute belirtirkende "style,type,readonly"
+ * şeklinde kullanılabilir.
+ * @param string $html_content
+ * @param string $attribute
+ * @param string $html_filter
+ * @return string
+ */
+
+function removeHtmlAttribute($html_content, $attribute_fiter = "all", $html_filter = "all")
+{
+	if($html_filter == "all")
+	{
+		$tagname_pattern = "[a-z0-9]";
+	}
+	else
+	{
+		$filter_array = preg_split("/,/", $html_filter);
+		$filter_count = sizeof($filter_array);
+		$tagname_pattern  = "(";
+		for($i=0; $i<$filter_count; $i++)
+		{
+			$tagname_pattern .= trim($filter_array[$i]) . "|";
+		}
+		$tagname_pattern  = substr($tagname_pattern, 0, -1);
+		$tagname_pattern .= ")";
+	}
+	
+	if($attribute_fiter == "all")
+	{
+		$attribute_pattern = "[a-z0-9_-]";
+	}
+	else
+	{
+		$attribute_array = preg_split("/,/", $attribute_fiter);
+		$attribute_count = sizeof($attribute_array);
+		$attribute_pattern  = "(";
+		for($i=0; $i<$attribute_count; $i++)
+		{
+			$attribute_pattern .= trim($attribute_array[$i]) . "|";
+		}
+		$attribute_pattern  = substr($attribute_pattern, 0, -1);
+		$attribute_pattern .= ")";
+	}
+	
+	$pattern = "/<{$tagname_pattern}+ *({$attribute_pattern}+ *= *(\"|\') *[\w :;.,()-]+ *(\"|\')) *(>|\/>)/i";
+	
+	return preg_replace($pattern, "", $html_content);
+}

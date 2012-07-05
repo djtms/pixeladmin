@@ -36,7 +36,7 @@ class GlobalValues
 	{
 		$this->VIEW_URL = str_replace(basename($directory),"",$directory);
 		$this->HOST = $_SERVER["HTTP_HOST"];
-		$this->CWD = "http://" . $this->HOST . "/" . str_replace(dirname(getcwd()),"",getcwd()) . "/";
+		$this->CWD = "http://" . $this->HOST . "/" . basename(dirname($_SERVER["SCRIPT_FILENAME"])) . "/";
 		
 		
 		$GLOBALS["VIEW_URL"] = $this->VIEW_URL;

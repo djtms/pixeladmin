@@ -50,6 +50,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 		for($i=0; $i<$dataCount;  $i++)
 		{
 			$data[$i] = (object) $data[$i];
+			$data[$i]->__index__ = $i;
 			$gridItemsHtml .= "<li " . ($sortablekey != null ? " id='order_" . $data[$i]->{$sortablekey} . "'>"  : ">");
 			$gridItemsHtml .= "<div class='item'>";
 			$gridItemsHtml .= "<p class='text'>" . renderHtml($rowTitleQuery, $data[$i]) . '</p>';

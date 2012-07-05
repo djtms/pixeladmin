@@ -72,7 +72,7 @@ function getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion = tr
 {
 	global $ADMIN;
 	
-	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion, $position, $bg_color);
+	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
 }
 
 function getRetinaImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
