@@ -1169,6 +1169,13 @@ ul.cs3 li {
 	background: #efefef !important;
 }
 
+.spreadsheetOuter .cellSelected
+{
+	background: #fc5900 !important;
+	color: #fff !important;
+	text-shadow: 1px 1px 1px #222;
+}
+
 /************************************************************************************************************/
 
 .pagerOuter

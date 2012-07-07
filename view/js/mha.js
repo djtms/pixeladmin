@@ -39,7 +39,7 @@ function MHA()
 									str = str.replace(/\ş/g,"s");
 									str = str.replace(/\Ç/g,"C");
 									str = str.replace(/\ç/g,"c");
-									return str.replace(/\s/g,"-");
+									return str.replace(/\s/g,"_");
 								};
 								
 	this.randomString = function(length, type)

@@ -17,7 +17,11 @@ if($_POST["admin_action"] == "updateI18nData")
 	// Eğer bu adıma kadar herhangi bir hata yok ise
 	if($error === false)
 	{
-		if(($column == "") || $DB->execute("UPDATE {$DB->tables->i18n} SET {$column}=?, scope='global' WHERE i18nCode=?", array($value, $i18n_code)))
+		if(($column == "i18nCode") && ($i18n_code == "") && $DB->insert($DB->tables->i18n, array("i18nCode"=>$value, "scope"=>"global")))
+		{
+			echo json_encode(array("success"=>true, "msg"=>""));
+		}
+		else if(($column == "") || ($i18n_code == "") || $DB->execute("UPDATE {$DB->tables->i18n} SET {$column}=?, scope='global' WHERE i18nCode=?", array($value, $i18n_code)))
 		{
 			echo json_encode(array("success"=>true, "msg"=>""));
 		}
@@ -30,6 +34,22 @@ if($_POST["admin_action"] == "updateI18nData")
 	{
 		echo json_encode(array("success"=>false, "msg"=>$error));
 	}
+	
+	exit;
+}
+else if($_POST["admin_action"] == "deleteI18nDatas")
+{
+	$i18nCodes = json_decode($_POST["i18nCodesList"]);
+	$code_count = sizeof($i18nCodes);
+	$error = false;
+	
+	for($i=0; $i<$code_count; $i++)
+	{
+		if(!deleteI18n($i18nCodes[$i]))
+			$error = true;
+	}
+	
+	echo json_encode(array("success"=>!$error, "msg"=>""));
 	
 	exit;
 }
@@ -61,7 +81,7 @@ for($c=0; $c<$column_count; $c++)
 			}
 			else
 			{
-				$spreadSheetContent .= "<span class='cell'></span>";
+				$spreadSheetContent .= "<span row_index='{$r}' class='cell rowCorner'></span>";
 			}
 		}
 		
@@ -93,7 +113,9 @@ for($c=0; $c<$column_count; $c++)
 				$column_name = $i18n_columns[$c -1]->Field;
 				$i18n_code = $i18n_data[$r - 1][0];
 				$tab_index = ($r * $column_count) + $c;
-				$spreadSheetContent .= "<input tabindex='{$tab_index}' id='{$i18n_code}_{$column_name}' class='cell' type='text' column_name='{$column_name}' i18n_code='{$i18n_code}' value='" . $i18n_data[$r - 1][$column_index] . "' />";
+				$maxLengthAttr = $c == 1 ? " maxlength='255' " : "";
+				
+				$spreadSheetContent .= "<input {$maxLengthAttr} tabindex='{$tab_index}' row_index='{$r}' id='{$i18n_code}_{$column_name}' class='cell' type='text' column_name='{$column_name}' i18n_code='{$i18n_code}' value='" . $i18n_data[$r - 1][$column_index] . "' />";
 			}
 		}
 		
