@@ -26,7 +26,8 @@ if(isset($admin_action))
 			}
 			else
 			{
-				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}"))
+				$status = ($status == "active" ? null : 0);
+				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}", $status))
 				{
 					postMessage("Başarıyla Kaydedildi!");
 					header("Location:admin.php?page=languageoptions");
@@ -52,6 +53,9 @@ setGlobal("selected_country_abbr", isset($selected_language->country_abbr) ? $se
 
 <form method="post">
 	<input type="hidden" name="locale" value="<?php echo $locale; ?>" />
+	<input type="checkbox" name="status" value="active" <?php echo ($selected_language->status > 0 ? " checked='true' " : ""); ?> />
+	<label style="clear:none; margin:2px 0 0 0;"> Aktif</label>
+	
 	<label>Dil:</label>
 	<select name="language">
 		<option value="null">Seçiniz</option>

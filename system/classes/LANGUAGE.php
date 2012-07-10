@@ -44,13 +44,24 @@ class PA_LANGUAGE extends DB
 		return $this->setLanguageStatus($locale, 1);
 	}
 	
-	function updateLanguage($old_locale, $new_locale)
+	function updateLanguage($old_locale, $new_locale, $new_status=null)
 	{
-		if($this->getLanguageStatus($new_locale) < 0)
+		// Eğer dil değişikliği yapmıyorsa belki sadece "status" değerini değiştiriyorsa 
+		// veya şu anda aktif olan bir dili seçmiyorsa
+		if(($old_locale == $new_locale) || $this->getLanguageStatus($new_locale) < 0)
 		{
 			if($this->execute("ALTER TABLE {$this->tableI18n} CHANGE {$old_locale} {$new_locale} TEXT DEFAULT NULL"))
 			{
-				$old_language_status = $this->getLanguageStatus($old_locale); // Yeni dile eski dilin status değerini atamak için eski dilin status değerini alıyoruz
+				// Yeni dile eski dilin status değerini atamak için eski dilin status değerini alıyoruz
+				$old_language_status = $this->getLanguageStatus($old_locale);
+				
+				// Eğer aynı dilin status değerini önceden pasif iken aktif yapmışsak
+				// $old_languages_status değerini bu dilin önceki değerinden aldığı için burada
+				// kontrol yapıp duruma göre $old_language_status değerini minimum aktif dil değeri olan 1 yapıyoruz
+				if(($old_language_status == 0) && ($new_status === null))
+					$old_language_status = 1;
+				else 
+					$old_language_status = $new_status;
 				
 				return $this->setLanguageStatus($old_locale, -1) &&
 						$this->setLanguageStatus($new_locale, $old_language_status);
@@ -66,7 +77,7 @@ class PA_LANGUAGE extends DB
 	
 	function deleteLanguage($locale)
 	{
-		if(sizeof($this->listActiveLanguages()) > 1)
+		if(sizeof($this->listUserSelectedLanguages()) > 1)
 		{
 			if($this->execute("ALTER TABLE {$this->tableI18n} DROP $locale") && $this->setLanguageStatus($locale, -1))
 			{
@@ -105,9 +116,24 @@ class PA_LANGUAGE extends DB
 		return $this->get_value("SELECT locale FROM {$this->tableLang} WHERE status=10 LIMIT 0,1");
 	}
 	
+	/**
+	 * 
+	 * Kullanıcının sitesine eklediği ve durumu aktif olan dilleri listeler
+	 * @return array
+	 */
 	function listActiveLanguages()
 	{
 		return $this->get_rows("SELECT * FROM {$this->tableLang} WHERE status>0",null);
+	}
+	
+	/**
+	 * 
+	 * Kullanıcının sitesine eklediği dilleri listeler, durumu pasif veya aktif olması farketmez
+	 * @return array
+	 */
+	function listUserSelectedLanguages()
+	{
+		return $this->get_rows("SELECT * FROM {$this->tableLang} WHERE status>=0",null);
 	}
 	
 	function selectLanguage($locale)

@@ -92,10 +92,12 @@ for($c=0; $c<$column_count; $c++)
 		
 		$spreadSheetContent .= "<div class='column'>";
 		
+		
 		for($r=0; $r<$row_count; $r++)
 		{
 			$locale = $i18n_columns[$c - 1]->Field;
-			
+			$column_name = $i18n_columns[$c -1]->Field;
+				
 			// eğer birinci satırda ise başlıkları ayarla
 			if($r == 0)
 			{
@@ -103,14 +105,13 @@ for($c=0; $c<$column_count; $c++)
 				$headerText = $c == 1 ? "I18nCode" : $language->language_name . " - " . $language->country_abbr;
 				
 				$spreadSheetHeader .= "<div class='column'>";
-				$spreadSheetHeader .= "<span class='cell header'>" . $headerText . "</span>";
+				$spreadSheetHeader .= "<span class='cell header' column_name='" . $column_name . "'>" . $headerText . "</span>";
 				$spreadSheetHeader .= "</div>";
 			}
 			else
 			{
 				// TODO: ilerde database'den column sırasını değiştirdiğinde sorun çıkabilir, o yüzden index numarası yerine column adı kullanarak data listelemeye çalış
 				$column_index = $c == 1 ? $c-1 : $c;
-				$column_name = $i18n_columns[$c -1]->Field;
 				$i18n_code = $i18n_data[$r - 1][0];
 				$tab_index = ($r * $column_count) + $c;
 				$maxLengthAttr = $c == 1 ? " maxlength='255' " : "";
@@ -118,6 +119,8 @@ for($c=0; $c<$column_count; $c++)
 				$spreadSheetContent .= "<input {$maxLengthAttr} tabindex='{$tab_index}' row_index='{$r}' id='{$i18n_code}_{$column_name}' class='cell' type='text' column_name='{$column_name}' i18n_code='{$i18n_code}' value='" . $i18n_data[$r - 1][$column_index] . "' />";
 			}
 		}
+		
+		
 		
 		$spreadSheetContent .= "</div>";
 	}

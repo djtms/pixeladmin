@@ -27,6 +27,14 @@ function GlobalI18nVariablesStart()
 		});
 		//------------------------------------------------------------------
 		
+		$(window).bind("beforeunload", function(){
+			// Eğer kaydedilmemiş hücre varsa onu kaydet.
+			if(spreadsheetCellChanged)
+			{
+				$(document.activeElement).trigger("blur");
+			}
+		});
+		
 		// Input ların eventini bağla
 		$(this).find(".spreadsheetContent input[type='text']").live("blur",function(){
 			spreadsheetOuter.find(".cellSelected").removeClass("cellSelected rowSelected");
@@ -54,7 +62,11 @@ function GlobalI18nVariablesStart()
 						{
 							$("input[i18n_code='" + i18n_code + "']", spreadsheetOuter).each(function(){
 								$(this).attr("i18n_code", value);
-								$(this).attr("id", value + "_" + column_name);
+								
+								// Eğer yeni eklediğimiz satırın tüm kolonlarındaki inputların blur eventini
+								// kullanıyorsak burdaki id değeri aşağıdaki şekilde hesaplanmalı.
+								var id = value + "_" + ((i18n_code == "") ? $(this).attr("column_name") : column_name);
+								$(this).attr("id", id);
 							});
 						}
 						
@@ -107,8 +119,8 @@ function GlobalI18nVariablesStart()
 			spreadsheetCellChanged = true;
 		})
 		.live("keyup",function(e){
-			var row_index = parseInt($(this).attr("row_index"), "10");
-			//console.log(e.keyCode);
+			//var row_index = parseInt($(this).attr("row_index"), "10");
+			
 			if(e.keyCode == 38) // Kullanıcı yukarı ok tuşuna basıyorsa
 			{
 				$(this).prev().focus().addClass("cellSelected");
@@ -122,7 +134,12 @@ function GlobalI18nVariablesStart()
 			}
 			else if(e.keyCode == 27)
 			{
-				spreadsheetOuter.trigger("removeEmptyRow");
+				// Eğer en az 2 satır varsa
+				if(spreadsheetContent.find(".cell.rowCorner").length > 1)
+				{
+					// boş satırı sil
+					spreadsheetOuter.trigger("removeEmptyRow");
+				}
 			}
 		});
 		//------------------------------------------------------------------
@@ -154,16 +171,26 @@ function GlobalI18nVariablesStart()
 		// Yeni satır ekleme ve silme eventleri
 		spreadsheetOuter.bind("addRow",{action:"add"},addRemoveEmptyRowEvent);
 		spreadsheetOuter.bind("removeEmptyRow", {action:"remove"},addRemoveEmptyRowEvent);
-		spreadsheetOuter.bind("removeExistingRow", deleteRowEvent);
+		spreadsheetOuter.bind("removeExistingRow", removeExistingRowEvent);
 		
 		$(document).keydown(function(e){ 
-			if((e.keyCode == 46) && confirm("Silmek istediğinizden eminmisiniz?"))
+			// Eğer delete tuşuna basılmışsa ve seçili bir satır varsa
+			if((e.keyCode == 46) && (spreadsheetOuter.find(".rowSelected").length > 0))
 			{
-				spreadsheetOuter.trigger("removeExistingRow");
+				if(confirm("Silmek istediğinizden eminmisiniz?"))
+				{
+					spreadsheetOuter.trigger("removeExistingRow");
+				}
 			}
 		});
 		
-		function deleteRowEvent()
+		// Eğer hiç satır yok ise
+		if(spreadsheetContent.find(".column input[type='text']").length <= 0)
+		{
+			spreadsheetOuter.trigger("addRow");
+		}
+		
+		function removeExistingRowEvent()
 		{
 			var i18nCodes = new Array();
 			$(".rowSelected[column_name='i18nCode']").each(function(){
@@ -180,9 +207,14 @@ function GlobalI18nVariablesStart()
 					{
 						spreadsheetOuter.trigger("removeEmptyRow");
 						spreadsheetContent.find(".rowSelected").remove();
+						
+						// Eğer hiç satır yok ise boş satır ekle
+						if(spreadsheetContent.find(".column input[type='text']").length <= 0)
+						{
+							spreadsheetOuter.trigger("addRow");
+						}
 					}
 				}
-				
 			});
 		}
 		
@@ -195,21 +227,27 @@ function GlobalI18nVariablesStart()
 			{
 				// Daha önce yeni satır eklenmemişse tablodaki son satırın tamamen boş olup olmadığını kontrol et
 				var last_row_index = spreadsheetContent.find(".rowCorner:last").attr("row_index");
+				var selectedRow = spreadsheetContent.find("[row_index='" + last_row_index + "']");
 				
-				spreadsheetContent.find("[row_index='" + last_row_index + "']").each(function(){
-					if($(this).val() != "")
-					{
-						has_empty_row = false;
-					}
-				});
+				if(selectedRow.length > 0)
+				{
+					selectedRow.each(function(){
+						if($(this).val() != "")
+						{
+							has_empty_row = false;
+						}
+					});
+				}
 				//-----------------------------------------------
 			}
 			
 			
 			spreadsheetContent.find(".column").each(function(){
-				var last_cell = $(this).find(".cell:last");
 				var column_index = $(this).index();
+				
+				var last_cell = $(this).find(".cell:last");
 				var row_index = last_cell.attr("row_index");
+				row_index = row_index > 0 ? row_index : 0;
 				
 				// Eğer son satırın  en az bir hücresi dolu ise yeni satır oluştur
 				if((action == "add") && !has_empty_row)
@@ -220,9 +258,16 @@ function GlobalI18nVariablesStart()
 					}
 					else
 					{
-						
-						var tabindex = parseInt(last_cell.attr("tabindex")) + total_column_count;
-						var column_name = last_cell.attr("column_name");
+						if(last_cell.length > 0)
+						{
+							var tabindex = parseInt(last_cell.attr("tabindex")) + total_column_count;
+							var column_name = last_cell.attr("column_name");
+						}
+						else
+						{
+							var tabindex = (row_index * total_column_count) + column_index;
+							var column_name = spreadsheetHeader.find(".header").eq(column_index).attr("column_name");
+						}
 						var maxlength_attr = column_name == "i18nCode" ? " maxlength='255' " : "";
 						
 						$(this).append("<input " + maxlength_attr + " tabindex='" + tabindex + "' row_index='" + (row_index + 1) + "' id='_" + column_name + "' column_name='" + column_name + "' i18n_code=''  type='text' class='cell' value='' />");
