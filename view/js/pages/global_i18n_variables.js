@@ -111,7 +111,8 @@ function GlobalI18nVariablesStart()
 			spreadsheetContentDisplay.val(text);
 			
 			// Stil ataması yap
-			spreadsheetOuter.find(".cellSelected").removeClass("cellSelected rowSelected");
+			spreadsheetOuter.find(".cellSelected").removeClass("cellSelected");
+			spreadsheetOuter.find(".rowSelected").removeClass("rowSelected");
 			$(this).addClass("cellSelected");
 		})
 		.live("input",function(){ // Inputlar değiştiğinde trigger olacak event

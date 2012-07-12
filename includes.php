@@ -46,6 +46,7 @@ require_once "system/classes/GALLERY_FILE.php";
 require_once "system/classes/GALLERY.php";
 require_once "system/classes/SITEMAP.php";
 require_once "system/ADMIN.php";
+require_once "system/includes/permission_check.php";
 require_once "system/includes/uncategorized.php";
 require_once "system/includes/validate.php";
 require_once "system/setup/user.php";

@@ -26,7 +26,8 @@ if(isset($admin_action))
 			}
 			else
 			{
-				$status = ($status == "active" ? null : 0);
+				$status = ($_POST["status"] == "active" ? null : 0);
+				
 				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}", $status))
 				{
 					postMessage("Başarıyla Kaydedildi!");

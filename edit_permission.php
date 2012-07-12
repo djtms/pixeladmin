@@ -18,7 +18,7 @@ if($_POST["admin_action"] == "Kaydet")
 		if($ADMIN->PERMISSION->updatePermission($permission_id, $permission_name, $permission_url, $permission_parent))
 		{
 			postMessage("Başarıyla Kaydedildi!");
-			header("Location:admin.php?page=user_permissions");
+			header("Location:admin.php?page=permissions");
 			exit;
 		}
 		else
@@ -31,7 +31,7 @@ if($_POST["admin_action"] == "Kaydet")
 		if($ADMIN->PERMISSION->addPermission($permission_name, $permission_url, $permission_parent))
 		{
 			postMessage("Başarıyla Kaydedildi!");
-			header("Location:admin.php?page=user_permissions");
+			header("Location:admin.php?page=permissions");
 			exit;
 		}
 		else

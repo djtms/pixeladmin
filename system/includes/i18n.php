@@ -112,18 +112,26 @@ function getDefaultLanguage()
 	return $ADMIN->LANGUAGE->getDefaultLanguage();
 }
 
-function generateLanguageLinks($targetPage = null)
+function generateLanguageLinks($targetPage = null, $as_array = false)
 {
 	global $ADMIN;
 	
 	$currentLanguage = getLanguage();
 	$languages = $ADMIN->LANGUAGE->listActiveLanguages();
 	$targetPage = $targetPage == null ? $_SERVER["REQUEST_URI"] : $targetPage;
-	$languageLinks = "";
+	$languageLinks = $as_array ? array()  : "";
 	
 	foreach($languages as $l)
 	{
-		$languageLinks .= '<a href="index.php?language=' . $l->locale . '&back=' . $targetPage . '" ' . ($currentLanguage == $l->locale ? ' class="selected" ' : "") . '>' . $l->language_name . '</a>';
+		$link = "index.php?language={$l->locale}&back={$targetPage}"; 
+		if($as_array)
+		{
+			$languageLinks[] = array("link"=>$link, "name"=>$name, "locale"=>$l->locale, "abbr"=>$l->language_abbr);
+		}
+		else
+		{
+			$languageLinks .= "<a href='{$link}'" . ($currentLanguage == $l->locale ? " class='selected' " : "") . ">" . $l->language_name . '</a>';
+		}
 	}
 	
 	return $languageLinks;

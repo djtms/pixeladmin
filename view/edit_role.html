@@ -1,0 +1,10 @@
+<form method="post">
+	<h2>Rol Adı:</h2>
+	<input type="text" name="role_name" value="{%role.role_name%}" />
+	<br clear="all" /><br />
+	<h2>Yetkileri:</h2>
+	<div class="sortableTreeList">
+	{%permissions_html%}
+	</div>
+	<input type="submit" name="admin_action" value="Kaydet" />
+</form>

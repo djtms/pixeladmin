@@ -1032,7 +1032,7 @@ ul.cs3 li {
 
 /* TREE GRID */
 
-.treeGridOuter
+.treeGridOuter, .treeGridOuter .itemsList
 {
 	width:500px;
 	float:left;
@@ -1207,3 +1207,23 @@ ul.cs3 li {
 	background: #999;
 	color: #fff;
 }
+
+/* NestedList */
+
+
+.placeholder
+{	
+	box-shadow: inset 0 0 3px #000;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #f0f0f0;
+	margin-top: 0px;
+	margin-bottom: 1px;
+}
+
+.mjs-nestedSortable-error {
+	background: #fbe3e4;
+	border-color: transparent;
+}
+/*********************************************************************************/

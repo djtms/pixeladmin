@@ -72,10 +72,10 @@ class PA_PERMISSION extends DB
 		}
 	}
 	
-	function listPermissionsByParentAsTreeGrid($permission_parent = "-1", $list_sub_permissions = true)
+	function listPermissionsByParentAsTreeGrid($permission_parent = "-1", $list_sub_permissions = true, $editable=true)
 	{
-		$listHtml  = '<div class="treeGridOuter">';
-		$listHtml .= $this->listAsTreeHtmlList($permission_parent, $list_sub_permissions);
+		$listHtml  = '<div id="permissionsList" class="treeGridOuter">';
+		$listHtml .= $this->listAsTreeHtmlList($permission_parent, $list_sub_permissions, $editable);
 		$listHtml .= '</div>';
 		
 		return $listHtml;
@@ -124,14 +124,15 @@ class PA_PERMISSION extends DB
 		}
 	}
 	
-	function setPermissionOrderNum($permission_id, $order_num)
+	function setPermissionOrderNum($permission_id, $order_num, $permission_parent=-1)
 	{
-		return $this->execute("UPDATE {$this->table} SET order_num=? WHERE permission_id=?", array($order_num, $permission_id));
+		$permission_parent = $permission_parent > 0 ? $permission_parent : -1;
+		return $this->execute("UPDATE {$this->table} SET permission_parent=?, order_num=? WHERE permission_id=?", array($permission_parent, $order_num, $permission_id));
 	}
 	
-	private function listAsTreeHtmlList($permission_parent, $list_sub_permissions)
+	private function listAsTreeHtmlList($permission_parent, $list_sub_permissions, $editable=true)
 	{
-		if($permission_array = $this->get_rows("SELECT * FROM {$this->table} WHERE permission_parent=?", array($permission_parent)))
+		if($permission_array = $this->get_rows("SELECT * FROM {$this->table} WHERE permission_parent=? ORDER BY order_num ASC", array($permission_parent)))
 		{
 			$permission_html = '<ul class="itemsList">';
 			$array_length = sizeof($permission_array);
@@ -139,13 +140,24 @@ class PA_PERMISSION extends DB
 			for($i=0; $i<$array_length; $i++)
 			{
 				$permission_html .= "<li id='order_" . $permission_array[$i]->permission_id . "' permission_id='" . $permission_array[$i]->permission_id . "'>";
-				$permission_html .= "<div class='item'><label class='text'>" . $permission_array[$i]->permission_name . "</label></div>";
+				$permission_html .= "<div class='item'>";
+				if(!$editable)
+				{
+					$permission_html .= "<input type='checkbox' name='permission_checked_" . $permission_array[$i]->permission_id . "' value='permission_checked' style='height:19px !important;' />";
+				}
+				$permission_html .= "<label class='text' style='clear:none !important;'>" . $permission_array[$i]->permission_name . "</label>";
+				if($editable)
+				{
+					$permission_html .= "<div class='rowEditButtonsOuter'><a class='crossBtn' href='admin.php?page=permissions&delete=" . $permission_array[$i]->permission_id . "' onclick='return false;'></a>";
+					$permission_html .= "<a href='admin.php?page=edit_permission&id=" . $permission_array[$i]->permission_id . "' class='editBtn'></a></div>";
+				}
+				$permission_html .= "</div>";
 				
 				if($list_sub_permissions)
 				{
-					$permission_html .= $this->listAsTreeHtmlList($permission_array[$i]->permission_id, true);
+					$permission_html .= $this->listAsTreeHtmlList($permission_array[$i]->permission_id, true, $editable);
 				}
-		
+				
 				$permission_html .= "</li>";
 			}
 		

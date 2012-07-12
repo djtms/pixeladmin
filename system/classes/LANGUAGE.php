@@ -60,7 +60,7 @@ class PA_LANGUAGE extends DB
 				// kontrol yapıp duruma göre $old_language_status değerini minimum aktif dil değeri olan 1 yapıyoruz
 				if(($old_language_status == 0) && ($new_status === null))
 					$old_language_status = 1;
-				else 
+				else if($new_status !== null)
 					$old_language_status = $new_status;
 				
 				return $this->setLanguageStatus($old_locale, -1) &&

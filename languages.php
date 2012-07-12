@@ -5,6 +5,8 @@ if($_POST["admin_action"] == "Kaydet")
 	{
 		setGlobal("defaultLanguage", $ADMIN->I18N->language);
 		postMessage("Başarıyla Kaydedildi!");
+		header("Location:admin.php?page=languageoptions");
+		exit;
 	}
 	else
 		postMessage("Hata Oluştu!", true);
@@ -29,7 +31,7 @@ addScript("js/pages/languages.js");
 <form method="post">
 	<?php
 	$data = $ADMIN->LANGUAGE->listUserSelectedLanguages();
-	echo dataGrid($data, "Mevcut Diller", "activeLanguages", "<input type='radio' name='default_language' value='{%locale%}' /> {%language_name%} / {%country_name%} / {%locale%}", "admin.php?page=edit_language", "admin.php?page=edit_language&locale={%locale%}", "admin.php?page=languageoptions&delete={%locale%}");
+	echo dataGrid($data, "Mevcut Diller", "activeLanguages", "<input type='radio' name='default_language' value='{%locale%}' /> {%language_name%} / {%country_name%} / {%locale%}", "admin.php?page=add_language", "admin.php?page=edit_language&locale={%locale%}", "admin.php?page=languageoptions&delete={%locale%}");
 	?>
 	<input type="submit" name="admin_action" value="Kaydet" />
 </form>
