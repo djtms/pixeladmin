@@ -455,7 +455,31 @@ function createDbTables($dbh,$prefix)
 				  `permission_url` varchar(255) COLLATE utf8_bin NOT NULL,
 				  `order_num` int(11) NOT NULL,
 				  PRIMARY KEY (`permission_id`)
-				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
+	
+				INSERT INTO `pa_permission` (`permission_id`, `permission_parent`, `permission_name`, `permission_url`, `order_num`) VALUES
+				(1, -1, 'AdminPanel', 'admin/', 2),
+				(2, 1, 'Kullanıcı Hesapları', 'admin/admin.php?page=useraccounts', 13),
+				(3, 1, 'Site Haritası', 'admin/admin.php?page=sitemap', 5),
+				(4, 1, 'Kontrol Paneli', 'admin/admin.php?page=dashboard', 3),
+				(5, 3, 'Sayfa Ekle', 'admin/admin.php?page=add_sitemap_page', 6),
+				(6, 1, 'Modüller', 'admin/admin.php?page=modules', 11),
+				(7, 1, 'Mesajlar', 'admin/admin.php?page=messages', 9),
+				(8, 2, 'Kullanıcı Ekle', 'admin/admin.php?page=invite_user', 14),
+				(9, 2, 'Kullanıcı Bilgileri', 'admin/admin.php?page=edit_useraccount', 16),
+				(10, 2, 'Yetkiler', 'admin/admin.php?page=permissions', 18),
+				(11, 2, 'Roller', 'admin/admin.php?page=roles', 24),
+				(12, 10, 'Yetki Ekle', 'admin/admin.php?page=add_permission', 19),
+				(13, 10, 'Yetki Detayı', 'admin/admin.php?page=edit_permission', 21),
+				(14, 11, 'Rol Ekle', 'admin/admin.php?page=add_role', 25),
+				(15, 11, 'Rol Detayı', 'admin/admin.php?page=edit_role', 27),
+				(16, 1, 'Ayarlar', 'admin/admin.php?page=settings', 31),
+				(17, 16, 'Dil Seçenekleri', 'admin/admin.php?page=languageoptions', 0),
+				(18, 17, 'Dil Ekle', 'admin/admin.php?page=edit_language', 0),
+				(19, 17, 'Dil Bilgileri', 'admin/admin.php?page=edit_language', 0),
+				(20, 16, 'Sabit Dil Değişkenleri', 'admin/admin.php?page=global_i18n_variables', 0),
+				(21, 16, 'Geliştiriciler', 'admin/admin.php?page=developers', 0),
+				(22, 16, 'Profil', 'admin/admin.php?page=profile', 0);";
 	
 	$queryRole = "CREATE TABLE IF NOT EXISTS `{$prefix}role` (
 				  `role_id` int(11) NOT NULL AUTO_INCREMENT,
