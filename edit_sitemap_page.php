@@ -6,7 +6,7 @@ if($_POST["admin_action"] == "Kaydet")
 {
 	extract($_POST, EXTR_OVERWRITE);
 	
-	if($ADMIN->SITEMAP->setSiteMap($page_id, $page_url, $page_title, $page_description, $page_parent))
+	if($ADMIN->SITEMAP->setSiteMap($page_id, $page_url, $page_title, $page_description, $page_parent, $changefreq, $priority))
 	{
 		postMessage("Başarıyla Kaydedildi!");
 		header("Location:admin.php?page=sitemap");
@@ -34,4 +34,5 @@ for($i=0; $i<$sitemap_count; $i++)
 	}
 }
 
+addScript("js/pages/edit_sitemap_page.js");
 echo $edit_sitemap_page->html();

@@ -11,6 +11,20 @@
 	<label>Sayfa Adresi: (url adresi)</label>
 	<input type="text" name="page_url" value="{%smpage.page_url%}" maxlength="255" />
 	
+	<label>Güncellenme Sıklığı:</label>
+	<select name="changefreq" checked_option='{%smpage.changefreq%}'>
+		<option value="always">Her Zaman</option>
+		<option value="hourly">Her Saat</option>
+		<option value="daily">Her Gün</option>
+		<option value="weekly">Her Hafta</option>
+		<option value="monthly">Her Ay</option>
+		<option value="yearly">Her Yıl</option>
+		<option value="never">Hiçbir Zaman</option>
+	</select>
+	
+	<label>Öncelik:</label>
+	<input type="text" name="priority" value="{%smpage.priority%}" />
+	
 	<label>Sayfa Başlığı: (title)</label>
 	<input type="text" name="page_title" i18n="{%smpage.page_title%}" forcei18n maxlength="250" />
 	

@@ -12,7 +12,7 @@ class PA_SITEMAP extends DB
 		$this->table_i18n = $this->tables->i18n;
 	}
 	
-	function setSiteMap($page_id, $page_url, $page_title, $page_description, $page_parent = -1)
+	function setSiteMap($page_id, $page_url, $page_title, $page_description, $page_parent = -1, $changefreq="monthly", $priority="0.5")
 	{
 		if(!saveI18n())
 		{
@@ -20,9 +20,9 @@ class PA_SITEMAP extends DB
 		}
 		
 		if($this->selectSiteMap($page_id))
-			return $this->update($this->table, array("page_parent"=>$page_parent, "page_url"=>$page_url), array("page_id"=>$page_id));
+			return $this->update($this->table, array("page_parent"=>$page_parent, "page_url"=>$page_url, "changefreq"=>$changefreq, "priority"=>$priority, "modified_date"=>"NOW()"), array("page_id"=>$page_id));
 		else
-			return $this->insert($this->table, array("page_id"=>$page_id, "page_parent"=>$page_parent, "page_url"=>$page_url, "page_title"=>$page_title, "page_description"=>$page_description));
+			return $this->insert($this->table, array("page_id"=>$page_id, "page_parent"=>$page_parent, "page_url"=>$page_url, "page_title"=>$page_title, "page_description"=>$page_description, "changefreq"=>$changefreq, "priority"=>$priority, "modified_date"=>"NOW()"));
 	}
 	
 	function selectSiteMap($page_id)
@@ -46,6 +46,11 @@ class PA_SITEMAP extends DB
 		$query .= $return_empty_urls ? "" : "WHERE sm.page_url != '' AND sm.page_url IS NOT NULL";
 		
 		return $this->get_rows($query);
+	}
+	
+	function listSitemapsForSearchEngines()
+	{
+		return $this->get_rows("SELECT * FROM {$this->table} WHERE page_url != '' AND page_url IS NOT NULL");
 	}
 	
 	function listSitemapsByParentAsHtmlTree($page_parent = null, $list_sub_sitemaps = true, $return_empty_urls = false)

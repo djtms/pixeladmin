@@ -508,11 +508,14 @@ function createDbTables($dbh,$prefix)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 	
 	$querySitemap = "CREATE TABLE IF NOT EXISTS `{$prefix}sitemap` (
-				  `page_id` varchar(255) COLLATE utf8_bin NOT NULL,
-				  `page_parent` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '-1',
+				  `page_id` varchar(25) COLLATE utf8_bin NOT NULL,
+				  `page_parent` varchar(25) COLLATE utf8_bin NOT NULL DEFAULT '-1',
 				  `page_url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
 				  `page_title` varchar(25) COLLATE utf8_bin DEFAULT NULL,
 				  `page_description` varchar(25) COLLATE utf8_bin DEFAULT NULL,
+				  `changefreq` varchar(20) COLLATE utf8_bin DEFAULT 'monthly',
+				  `priority` double DEFAULT '0.5',
+				  `modified_date` date DEFAULT NULL,
 				  PRIMARY KEY (`page_id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 	
