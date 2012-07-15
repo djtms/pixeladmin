@@ -130,6 +130,11 @@ class PA_PERMISSION extends DB
 		return $this->execute("UPDATE {$this->table} SET permission_parent=?, order_num=? WHERE permission_id=?", array($permission_parent, $order_num, $permission_id));
 	}
 	
+	
+	
+	/* PRIVATE FUNCTIONS */
+	//--------------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------------
 	private function listAsTreeHtmlList($permission_parent, $list_sub_permissions, $editable=true)
 	{
 		if($permission_array = $this->get_rows("SELECT * FROM {$this->table} WHERE permission_parent=? ORDER BY order_num ASC", array($permission_parent)))
@@ -139,11 +144,11 @@ class PA_PERMISSION extends DB
 		
 			for($i=0; $i<$array_length; $i++)
 			{
-				$permission_html .= "<li id='order_" . $permission_array[$i]->permission_id . "' permission_id='" . $permission_array[$i]->permission_id . "'>";
+				$permission_html .= "<li id='order_" . $permission_array[$i]->permission_id . "' permission_id='" . $permission_array[$i]->permission_id . "' >";
 				$permission_html .= "<div class='item'>";
-				if(!$editable)
+				if(!$editable && ($permission_array[$i]->permission_url != ""))
 				{
-					$permission_html .= "<input type='checkbox' name='permission_checked_" . $permission_array[$i]->permission_id . "' value='permission_checked' style='height:19px !important;' />";
+					$permission_html .= "<input type='checkbox' name='permission_checked_" . $permission_array[$i]->permission_id . "' value='permission_checked' />";
 				}
 				$permission_html .= "<label class='text' style='clear:none !important;'>" . $permission_array[$i]->permission_name . "</label>";
 				if($editable)

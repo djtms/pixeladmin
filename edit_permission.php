@@ -9,10 +9,6 @@ if($_POST["admin_action"] == "Kaydet")
 	{
 		postMessage("Hata: Lütfen \"Yetki Adı\" değerini doldurun!", true);	
 	}
-	else if(trim($permission_url) == "")
-	{
-		postMessage("Hata: Lütfen \"Yetki Adresi\" değerini doldurun!", true);
-	}
 	else if($permission_id > 0)
 	{
 		if($ADMIN->PERMISSION->updatePermission($permission_id, $permission_name, $permission_url, $permission_parent))

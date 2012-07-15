@@ -29,7 +29,7 @@ if($_POST["admin_action"] == "Kaydet")
 		$permissions = $ADMIN->PERMISSION->listPermissions();
 		$permission_count = sizeof($permissions);
 		if($ADMIN->ROLE_PERMISSION->deleteRolePermissionByRoleId($role_id))
-		{	
+		{
 			for($i=0; $i<$permission_count; $i++)
 			{
 				$permission_id = $permissions[$i]->permission_id;
@@ -39,6 +39,10 @@ if($_POST["admin_action"] == "Kaydet")
 				}
 			}
 			
+			// yetkiler güncellendikten sonra tekrar authorize ol
+			$ADMIN->AUTHORIZATION->authorize();
+			
+			// Sayfayı yönlendir
 			postMessage("Başarıyla Kaydedildi!");
 			header("Location:admin.php?page=roles");
 			exit;

@@ -288,6 +288,7 @@ class PA_USER extends PA_USER_TICKET
 	{
 		$tracking_key = $_SESSION[$this->trackKeyName];
 		$track = $this->selectTrackByTrackingKey($tracking_key);
+		
 		if($track->status == "active")
 			return $this->getUserById($track->user_id);
 		else

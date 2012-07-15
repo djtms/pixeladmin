@@ -54,7 +54,7 @@
 	margin:-1px 0 0 0;
 }
 
-.itemsList > li input[type=radio]
+.itemsList > li input[type=radio], .itemsList > li input[type=checkbox]
 {
 	position:relative;
 	top:-5px;
