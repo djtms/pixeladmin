@@ -1,3 +1,6 @@
+
+// EDITED:  /(.+)[-=_](.+)/   regular expression yerine şu kullanılıyor: /([a-zA-Z0-9]+)[-=_](.+)/
+ 
 /*
  * jQuery UI Nested Sortable
  * v 1.3.5 / 21 jun 2012
@@ -245,11 +248,11 @@
 
 			$(items).each(function() {
 				var res = ($(o.item || this).attr(o.attribute || 'id') || '')
-						.match(o.expression || (/(.+)[-=_](.+)/)),
+						.match(o.expression || (/([a-zA-Z0-9]+)[-=_](.+)/)),
 				    pid = ($(o.item || this).parent(o.listType)
 						.parent(o.items)
 						.attr(o.attribute || 'id') || '')
-						.match(o.expression || (/(.+)[-=_](.+)/));
+						.match(o.expression || (/([a-zA-Z0-9]+)[-=_](.+)/));
 
 				if (res) {
 					str.push(((o.key || res[1]) + '[' + (o.key && o.expression ? res[1] : res[2]) + ']')
@@ -280,7 +283,7 @@
 			return ret;
 
 			function _recursiveItems(item) {
-				var id = ($(item).attr(o.attribute || 'id') || '').match(o.expression || (/(.+)[-=_](.+)/));
+				var id = ($(item).attr(o.attribute || 'id') || '').match(o.expression || (/([a-zA-Z0-9]+)[-=_](.+)/));
 				if (id) {
 					var currentItem = {"id" : id[2]};
 					if ($(item).children(o.listType).children(o.items).length > 0) {
@@ -313,7 +316,7 @@
 			$(this.element).children(o.items).each(function () {
 				left = _recursiveArray(this, sDepth + 1, left);
 			});
-
+			
 			ret = ret.sort(function(a,b){ return (a.left - b.left); });
 
 			return ret;
@@ -332,15 +335,15 @@
 					depth --;
 				}
 
-				id = ($(item).attr(o.attribute || 'id')).match(o.expression || (/(.+)[-=_](.+)/));
-
+				id = ($(item).attr(o.attribute || 'id')).match(o.expression || (/([a-zA-Z0-9]+)[-=_](.+)/));
+				
 				if (depth === sDepth + 1) {
 					pid = o.rootID;
 				} else {
 					var parentItem = ($(item).parent(o.listType)
 											 .parent(o.items)
 											 .attr(o.attribute || 'id'))
-											 .match(o.expression || (/(.+)[-=_](.+)/));
+											 .match(o.expression || (/([a-zA-Z0-9]+)[-=_](.+)/));
 					pid = parentItem[2];
 				}
 

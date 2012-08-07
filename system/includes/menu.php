@@ -6,10 +6,9 @@ function addMenu($menuTitle,$menuIcon,$pageTitle,$menuId,$menuPage,$order=2,$per
 	global $ADMIN;
 	global $pa_menu_array;
 	
-	$user = $ADMIN->USER->loggedInUser;
+	$user = $ADMIN->AUTHENTICATION->authenticated_user;
 	
-	if($user->user_type >= $permission)
-		$pa_menu_array[] = array("subMenus"=>array(),"menuTitle"=>$menuTitle,"menuIcon"=>$menuIcon,"pageTitle"=>$pageTitle,"menuId"=>$menuId,"menuPage"=>$menuPage,"menuOrder"=>$order,"permission"=>$permission,"addLinkToSubMenu"=>$addLinkToSubMenu);
+	$pa_menu_array[$menuId] = array("menuTitle"=>$menuTitle,"menuIcon"=>$menuIcon,"pageTitle"=>$pageTitle,"menuPage"=>$menuPage,"menuOrder"=>$order,"permission"=>$permission, "addLinkToSubMenu"=>$addLinkToSubMenu);
 }
 
 function addSubMenu($menuTitle,$pageTitle,$parentMenuId,$menuId,$menuPage,$order=-1,$permission=USER_AUTHOR)
@@ -19,23 +18,12 @@ function addSubMenu($menuTitle,$pageTitle,$parentMenuId,$menuId,$menuPage,$order
 	global $ADMIN;
 	global $pa_menu_array;
 	
-	$user = $ADMIN->USER->loggedInUser;
-	
-	if($user->user_type >= $permission)
-	{
-		foreach($pa_menu_array as &$menu)
-		{
-			if($menu["menuId"] == $parentMenuId)
-			{
-				$menu["subMenus"][] = array("menuTitle"=>$menuTitle,"pageTitle"=>$pageTitle,"parentMenuId"=>$parentMenuId,"menuId"=>$menuId,"menuPage"=>$menuPage,"menuOrder"=>$order,"permission"=>$permission);
-			}
-		}
-	}
+	$pa_menu_array[$parentMenuId]["subMenus"][$order][$menuId] = array("menuTitle"=>$menuTitle,"pageTitle"=>$pageTitle,"parentMenuId"=>$parentMenuId,"menuPage"=>$menuPage,"permission"=>$permission);
 }
 
 function addSettingsMenu($menuTitle,$pageTitle,$menuId,$menuPage,$order=-1,$permission=USER_AUTHOR)
 {
-	addSubMenu($menuTitle,$pageTitle,"settings",$menuId,$menuPage,$order=-1,$permission=USER_AUTHOR);
+	addSubMenu($menuTitle, $pageTitle, "settings", $menuId, $menuPage, $order, $permission=USER_AUTHOR);
 }
 
 function addPage($pageTitle,$parentMenuId,$pageId,$page,$permission=USER_AUTHOR)
@@ -45,131 +33,119 @@ function addPage($pageTitle,$parentMenuId,$pageId,$page,$permission=USER_AUTHOR)
 	global $ADMIN;
 	global $pa_menu_array;
 	
-	$user = $ADMIN->USER->loggedInUser;
-	
-	if($user->user_type >= $permission)
-	{
-		foreach($pa_menu_array as &$menu)
-		{
-			if($menu["menuId"] == $parentMenuId)
-			{
-				$menu["subPages"][] = array("pageTitle"=>$pageTitle,"parentMenuId"=>$parentMenuId,"pageId"=>$pageId,"page"=>$page,"permission"=>$permission);
-			}
-		}
-	}
+	$pa_menu_array[$parentMenuId]["subPages"][$pageId] = array("pageTitle"=>$pageTitle,"parentMenuId"=>$parentMenuId,"page"=>$page,"permission"=>$permission);
 }
 
 function loadMenus($currentPageId = null)
 {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
 	
+	global $pa_page_permission_info_array;
+	global $default_menu_icon;
 	global $pa_menu_array;
 	global $master;
 	$MenuHtml = "";
 	$BarIconsHtml = "";
-	$ids = array();
+	$menuIds = array();
+	$menuOrder =0;
 	
-	/* Menüleri Sırala   *********************************************************/
-		foreach($pa_menu_array as $m)
+	// Menüleri Sırala 
+	foreach($pa_menu_array as $key=>$val)
+	{
+		$menuIds[$val["menuOrder"]] = $key;
+		ksort($menuIds);
+	}
+		
+	// Menu html'ini oluştur 
+	foreach($menuIds as $menu_id)
+	{
+		$menu = $pa_menu_array[$menu_id];
+		$menuSelected = "";
+		
+		// Permission sayfası için kullanılacak array'a menüyü ekle
+		$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" . $menu_id, "permission_parent"=>"ADMIN_ADMINPANEL", "permission_name"=>$menu["pageTitle"]);
+		
+		// Sayfanın seçili olup olmadığını belirle
+		if($currentPageId == $menu_id)
 		{
-			$ids = array_merge($ids,array($m["menuId"]=>$m["menuOrder"]));
+			$menuSelected = ' selected ';
+			$master->pageTitle = $menu["pageTitle"];
 		}
 		
-		asort($ids);
-		$sortedMenu = array();
 		
-		foreach($ids as $id=>$order)
-		{
-			foreach($pa_menu_array as $m)
-			{
-				if($m["menuId"] == $id)
-				{
-					$sortedMenu[] = $m;
-					break;
-				}
-			}
-		}
+		// Menü ikonunu hazırla
+		$menuIcon = file_exists($menu["menuIcon"]) ? $menu["menuIcon"] : $default_menu_icon;
 		
-		$pa_menu_array = &$sortedMenu;
-	/*****************************************************************************/
-	
-	/* Generate MenuHtml *********************************************************/
-		foreach($pa_menu_array as $m)
+		// Menü sayfalarını ekle
+		$MenuHtml .= '<li id="' . $menu_id . '" class="menu {%menuSelected%}" ><div class="menuWrapper">';
+		
+		// Varsa alt sayfaları kontrol et ve talep edilen sayfa bir alt sayfa ise ve o sayfa seçilmişse onun parent menüsünü selected yapmak için aşağıdaki işlemi yap
+		if(sizeof($menu["subPages"]) > 0)
 		{
-			$selected = "";
-			$hasSubMenus = false;
-			
-			if(($currentPageId != null) && ($currentPageId == $m["menuId"]))
+			foreach($menu["subPages"] as $pageId=>$sp)
 			{
-				$selected = ' selected ';
-				$master->pageTitle = $m["pageTitle"];
-			}
-			
-			if(sizeof($m["subMenus"]) > 0)
-			{
-				$hasSubMenus = true;
-				if($m["addLinkToSubMenu"])
-					array_unshift($m["subMenus"],array("menuTitle"=>$m["menuTitle"],"pageTitle"=>$m["pageTitle"],"parentMenuId"=>$m["menuId"],"menuId"=>$m["menuId"],"menuPage"=>$m["menuPage"],"menuOrder"=>$m["menuOrder"],"permission"=>$m["permission"]));
+				// Permission sayfası için kullanılacak array'a alt menüyü ekle
+				$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$pageId, "permission_parent"=>"ADMIN_" . $menu_id, "permission_name"=>$sp["pageTitle"]);
 				
-				foreach($m["subMenus"] as $sm)
-				{
-					if(($currentPageId != null) && ($currentPageId == $sm["menuId"]))
-					{
-						$selected = ' selected ';
-						$master->pageTitle = $sm["pageTitle"];
-						$selectedSubMenuId = $sm["menuId"];
-					}
-				}
-			}
-			
-			
-			if(sizeof($m["subPages"]) > 0)
-			{
-				foreach($m["subPages"] as $sp)
-				{
-					if(($currentPageId != null) && ($currentPageId == $sp["pageId"]))
-					{
-						$selected = ' selected ';
-						$master->pageTitle = $sp["pageTitle"];
-					}
-				}
-			}
-			
-			
-			if( ($m["menuIcon"] != ".") && ($m["menuIcon"] != "..") && (file_exists($m["menuIcon"])))
-			{
-				$menuIcon = $m["menuIcon"];
-			}
-			else
-			{
-				global $default_menu_icon;
-				$menuIcon = $default_menu_icon;
-			}
-			
-			$MenuHtml .= '<li id="' . $m["menuId"] . '" class="menu ' . $selected . '" ><div class="menuWrapper">';
-			
-			if($hasSubMenus)
-				$MenuHtml .= '<span class="pageLink"><span class="menuIcon" style="background-image:url(' . $menuIcon . ');"></span>' . $m["menuTitle"] . '</span>';
-			else
-				$MenuHtml .= '<a href="admin.php?page=' . $m["menuId"] . '" class="pageLink"><span class="menuIcon" style="background-image:url(' . $menuIcon . ');"></span>' . $m["menuTitle"] . '</a>';
-	
-			/* Menü'nün "Alt Menü" lerini ekle *************************************************************/
-			if($hasSubMenus)
-			{
-				foreach($m["subMenus"] as $sm)
-				{
-					$MenuHtml .= '<a href="admin.php?page=' . $sm["menuId"] . '" class="subMenuLink ' . ($selectedSubMenuId == $sm["menuId"] ? 'selected' : '') . '">' . $sm["menuTitle"] . '</a>';
-				}
-			}
 				
-			$MenuHtml .= '</div></li>';
-			
-			/* Bar Menü'yü oluştur */
-			if( ($m["menuIcon"] != ".") && ($m["menuIcon"] != "..") && (file_exists($m["menuIcon"])))
-				$BarIconsHtml .= '<a href="admin.php?page=' . urlencode($m["menuId"]) . '" style="background-image:url('.$m["menuIcon"] .')"  class="' . $selected . '" title="' . $m["menuTitle"] . '"></a>';
+				if($currentPageId == $pageId)
+				{
+					$menuSelected = ' selected ';
+					$master->pageTitle = $sp["pageTitle"];
+				}
+			}
 		}
+
+		/* Menü'nün "Alt Menü" lerini ekle *************************************************************/
+		if(sizeof($menu["subMenus"]) > 0) 
+		{
+			ksort($menu["subMenus"]);
+			
+			// Eğer menü sayfası alt menüyede eklenmek isteniyorsa menü sayfası bilgileri uygun şekilde onun alt menü dizisinin en başına eklenir
+			if($menu["addLinkToSubMenu"] === true)
+			{
+				array_unshift($menu["subMenus"], array("$menu_id"=>array("menuTitle"=>$menu["menuTitle"],"pageTitle"=>$menu["pageTitle"],"parentMenuId"=>$menu["parentMenuId"],"menuPage"=>$menu["menuPage"],"permission"=>$menu["permission"])));						
+			}
+			
+			// Alt menünün bağlı olduğu üst menüyü ekle
+			$MenuHtml .= '<span class="pageLink"><span class="menuIcon" style="background-image:url(' . $menuIcon . ');"></span>' . $menu["menuTitle"] . '</span>';
+			
+			
+			foreach($menu["subMenus"] as $subMenuOrder=>$sm)
+			{
+				$subMenuId = key($sm);
+				$sm = $sm[$subMenuId];
+				
+				// Permission sayfası için kullanılacak array'a alt menüyü ekle
+				if($subMenuId != $menu_id) // ana menüyü buradaki alt menüye ekleme
+					$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$subMenuId, "permission_parent"=>"ADMIN_" .$menu_id, "permission_name"=>$sm["pageTitle"]);
+				
+				if($currentPageId == $subMenuId)
+				{
+					$menuSelected = ' selected ';
+					$subMenuSelected = ' selected ';
+					$master->pageTitle = $sm["pageTitle"];
+				}
+				else
+					$subMenuSelected = "";
+				
+				$MenuHtml .= '<a href="admin.php?page=' . $subMenuId . '" class="subMenuLink ' . $subMenuSelected . '">' . $sm["menuTitle"] . '</a>';
+			}
+		}
+		else
+		{
+			$MenuHtml .= '<a href="admin.php?page=' . $menu_id . '" class="pageLink"><span class="menuIcon" style="background-image:url(' . $menuIcon . ');"></span>' . $menu["menuTitle"] . '</a>';
+		}
+			
+		$MenuHtml .= '</div></li>';
+		
+		$MenuHtml = renderHtml($MenuHtml, array("menuSelected"=>$menuSelected));
+		
+		/* Bar Menü'yü oluştur */
+		if( ($m["menuIcon"] != ".") && ($m["menuIcon"] != "..") && (file_exists($m["menuIcon"])))
+			$BarIconsHtml .= '<a href="admin.php?page=' . urlencode($m["menuId"]) . '" style="background-image:url('.$m["menuIcon"] .')"  class="' . $menuSelected . '" title="' . $m["menuTitle"] . '"></a>';
+	}
 	/*****************************************************************************/
-	
 	
 	$master->barIcons = $BarIconsHtml;
 	$master->leftMenu = $MenuHtml;

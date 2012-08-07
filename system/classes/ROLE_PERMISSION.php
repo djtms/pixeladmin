@@ -10,9 +10,9 @@ class PA_ROLE_PERMISSION extends DB
 		$this->table = $this->tables->role_permission;
 	}
 	
-	function addRolePermission($role_id, $permission_id)
+	function addRolePermission($role_id, $permission_key)
 	{
-		return $this->insert($this->table, array("role_id"=>$role_id, "permission_id"=>$permission_id));
+		return $this->insert($this->table, array("role_id"=>$role_id, "permission_key"=>$permission_key));
 	}
 	
 	function deleteRolePermissionByRoleId($role_id)
@@ -20,9 +20,9 @@ class PA_ROLE_PERMISSION extends DB
 		return $this->execute("DELETE FROM {$this->table} WHERE role_id=?", array($role_id));
 	}
 	
-	function deleteRolePermissionByPermissionId($permission_id)
+	function deleteRolePermissionByPermissionKey($permission_key)
 	{
-		return $this->execute("DELETE FROM {$this->table} WHERE permission_id=?", array($permission_id));
+		return $this->execute("DELETE FROM {$this->table} WHERE permission_key=?", array($permission_key));
 	}
 	
 	function listRolePermissionsByRoleId($role_id)
@@ -30,8 +30,8 @@ class PA_ROLE_PERMISSION extends DB
 		return $this->get_rows("SELECT * FROM {$this->table} WHERE role_id=?", array($role_id));
 	}
 	
-	function listRolePermissionsByPermissionId($permission_id)
+	function listRolePermissionsByPermissionKey($permission_key)
 	{
-		return $this->get_rows("SELECT * FROM {$this->table} WHERE permission_id=?", array($permission_id));
+		return $this->get_rows("SELECT * FROM {$this->table} WHERE permission_key=?", array($permission_key));
 	}
 }

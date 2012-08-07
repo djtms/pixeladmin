@@ -31,6 +31,7 @@ require_once "system/classes/VALIDATE.php";
 require_once "system/classes/USER_TRACK.php";
 require_once "system/classes/USER_TICKET.php";
 require_once "system/classes/USER.php";
+require_once "system/classes/AUTHENTICATION.php";
 require_once "system/classes/AUTHORIZATION.php";
 require_once "system/classes/I18N.php";
 require_once "system/classes/LANGUAGE.php";
@@ -56,8 +57,7 @@ require_once "system/includes/mail.php";
 require_once "system/includes/messages.php";
 require_once "system/includes/logs.php";
 require_once "system/includes/gui.php";
-require_once "system/includes/authentication.php";
-require_once "system/includes/authorization.php";
+require_once "system/includes/authentication_auhorization.php";
 require_once "system/includes/users.php";
 require_once "system/includes/file.php";
 require_once "system/includes/image.php";
@@ -77,7 +77,7 @@ if(in_admin)
 }
 else
 {
-	if(maintanance_mode && !$ADMIN->USER->loggedInUser)
+	if(maintanance_mode && !$ADMIN->AUTHENTICATION->authenticated_user)
 	{
 		global $allowed_dirs_in_maintanance_mode;
 		$allow = false;

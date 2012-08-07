@@ -10,7 +10,7 @@ if($admin_action == "inviteUser")
 	}
 	else
 	{
-		if($ADMIN->USER->inviteAdminUser($displayname, $email, $user_type))
+		if($ADMIN->USER->inviteUser($displayname, $email, $_POST["user_roles"]))
 		{
 			postMessage("Davetiyeniz başarıyla gönderildi!");
 			header("Location:admin.php?page=useraccounts");
@@ -49,6 +49,10 @@ else if($admin_action == "resendinvitationmail")
 	
 	exit;
 }
+
+$roles = $ADMIN->ROLE->listRoles();
+$invite_user_roles_html =  dataGrid($roles, "", "userRolesList", "<input type='checkbox' name='user_roles[]' value='{%role_id%}' /> {%role_name%}", null, null, null);
+
 
 addScript("js/pages/invite_user.js");
 $invite_user->render();

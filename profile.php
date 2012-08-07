@@ -7,7 +7,7 @@ if($_POST["admin_action"] == "Kaydet")
 	$error = false;
 	
 	$password = isset($password) ? $password : null;
-	$user = $ADMIN->USER->loggedInUser;
+	$user = $ADMIN->AUTHENTICATION->authenticated_user;
 	$postedEmail = $email;
 	$userEmail = $user->email;
 	
@@ -48,6 +48,6 @@ if($_POST["admin_action"] == "Kaydet")
 
 
 $profile->addScript("js/pages/profile.js");
-$profile->user = $ADMIN->USER->loggedInUser;
+$profile->user = $ADMIN->AUTHENTICATION->authenticated_user;
 $profile->render();
 

@@ -5,9 +5,10 @@ define("USER_ADMIN",100);
 define("USER_SUPER",100);
 
 $pa_menu_array = array(); // Menü özelliklerinin tutulduğu global değişken
+$pa_page_permission_info_array = array(); // Yönetim panelinde çalışan sayfaların permission bilgilerini tutan array
 $register_module_function; // Herhangi bir Modülün aktivastonu esnasında çalıştırılması istenen fonsiyonu tutan değişken
 
-$admin_version = "BETA 0.6.6";
+$admin_version = "BETA 0.6.7";
 $track_wait_limit = 300; // Kullanıcı için açılan track'in kullanıcı browser'ı kapattığında veya internet bağlantısı kesildiğinde ne kadar süre daha açık kalacağını belirtir
 $currenturl = $_SERVER["REQUEST_URI"];
 $currentpage = "admin.php?page=" . $_GET["page"];
@@ -31,8 +32,6 @@ $trCharsForRegExp = preg_quote("ıİüÜöÖğĞşŞçÇ","/");
 
 $modules_main_file_name = "main.php"; // Modüllerin başlangıç dosyasının adı
 $modulesContent = ""; // module dosyaları require edildiğinde mvc dışında ekrana yazılan verileri output buffering sonucu tutan değişken.
-
-$user_types = array("Konuk"=>USER_GUEST,"Yazar"=>USER_AUTHOR,"Yönetici"=>USER_ADMIN);
 
 /* Hem javascript hemde html içinde kullanılabilecek şekilde tanımla */
 if(in_admin)

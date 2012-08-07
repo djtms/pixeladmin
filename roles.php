@@ -2,7 +2,11 @@
 
 if($_GET["delete"] > 0)
 {
-	if($ADMIN->ROLE->deleteRole($_GET["delete"]))
+	if(in_array($_GET["delete"], array(1,2)))
+	{
+		postMessage("Bu işlemi gerçekleştirmek için yetkiniz bulunmamaktadır!", true);
+	}
+	else if($ADMIN->ROLE->deleteRole($_GET["delete"]))
 	{
 		postMessage("Başarıyla Silindi!");
 		header("Location:admin.php?page=roles");

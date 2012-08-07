@@ -8,25 +8,16 @@ if($_GET["delete"] > 0)
 {
 	$user_id = $_GET["delete"];
 	$user = $ADMIN->USER->getUserById($user_id);
-	$logged_user_permission = $ADMIN->USER->loggedInUser->user_type;
-	$delete_user_permission = $user->user_type;
 	
-	if($logged_user_permission > $delete_user_permission)
+	if($ADMIN->USER->deleteUser($user_id))
 	{
-		if($ADMIN->USER->deleteUser($user_id))
-		{
-			postMessage("Kullanıcı başarıyla silindi!");
-			header("Location:admin.php?page=useraccounts");
-			exit;
-		}
-		else
-		{
-			postMessage("Hata Oluştu! Lütfen tekrar deneyin!", true);
-		}
+		postMessage("Kullanıcı başarıyla silindi!");
+		header("Location:admin.php?page=useraccounts");
+		exit;
 	}
 	else
 	{
-		postMessage("Bu işlem için yeterli yetkiniz yok!", true);
+		postMessage("Beklenmedi bir hata oluştu! Lütfen tekrar deneyin!", true);
 	}
 }
 

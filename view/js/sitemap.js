@@ -21,7 +21,6 @@ function SitemapStart()
 					if(response.found == true)
 					{
 						var page = response.page;
-						page_url = page.page_url;
 						page_parent = page_parent == -1 ? page.page_parent : page_parent;
 						page_title = page_title == "" ? page.page_title : page_title;
 						page_description = page_description == "" ? page.page_description : page_description;

@@ -11,50 +11,94 @@ class PA_AUTHORIZATION extends DB
 		$this->authorizationKeyName = $sessionKeysPrefix . "_AUTHORIZATION";
 	}
 	
-	function checkAuthorization()
+	/**
+	*
+	* Kullanıcının bulunduğu sayfaya erişim yetkisinin olup olmadığını kontrol eder
+	* @return boolean
+	*/
+	function isAuthorized($permission_key, $full_control = true)
 	{
 		global $secureKey;
+		global $ADMIN;
 		
 		if(isset($_SESSION[$this->authorizationKeyName]))
 		{
-			$user_permissions = $_SESSION[$this->authorizationKeyName]["PERMISSIONS"];
+			$user_roles = $_SESSION[$this->authorizationKeyName]["ROLES"];
+			$user_roles_count = sizeof($user_roles);
+			
+			$user_groups = $_SESSION[$this->authorizationKeyName]["GROUPS"];
+			$user_groups_count = sizeof($user_groups);
+			
+			// İstenen permission'a bağlı rolleri listele
+			$role_permissions = $ADMIN->ROLE_PERMISSION->listRolePermissionsByPermissionKey($permission_key);
+			$role_permission_count = sizeof($role_permissions);
+			
+			// İstenen permission'a bağlı gurupları listele
+			$group_permissions = $ADMIN->GROUP_PERMISSION->listGroupPermissionsByPermissionKey($permission_key);
+			$group_permission_count = sizeof($group_permissions);
+			
 			// Olurda birşekilde kişi session'ı illegal şekilde düzenleyip yetkilerini değiştirirse diye burada kontrol yapıyoruz.
-			// normalde kişi authorize olduğunda permission id lerini ve config.php de tanımlı olan secureKey değerini hashleyip yine 
-			// session a atıyoruz. burada da kontrol yaparken aynı şekilde sessionları secureKey ile hashleyip authorize olduğundaki hash ile
-			// karşılaştırıyoruz, eğer doğruysa permissionlara dokunulmamıştır diyip işleme devam ediyoruz.
-			if($_SESSION[$this->authorizationKeyName]["VALIDATE_PERMISSIONS_HASH"] == sha1($secureKey . implode($user_permissions, "-")))
+			// normalde kişi authorize olduğunda bağlı olduğu role_id ve group_id değerlerini ve config.php de tanımlı olan secureKey değerini 
+			// hashleyip session a atıyoruz. burada da kontrol yaparken aynı şekilde session daki permissionları secureKey ile hashleyip 
+			// authorize olduğundaki hash ile karşılaştırıyoruz, eğer doğruysa permissionlara dokunulmamıştır diyip işleme devam ediyoruz.
+			if($_SESSION[$this->authorizationKeyName]["VALIDATE_ROLES_GROUPS_HASH"] == sha1($secureKey . implode($user_roles, "-") . "-" . implode($user_groups, "-")))
 			{
-				// eğer permission tablosunda kaydı varsa, istenen permission'ın login olan kullanıcıda olup olmadığını kontrol et
-				if($permission = $this->getCurrentPagePermissionInfo())
+				// Eğer istenen permission'ın role_permission ve/veya group_permission tablosunda kayıtları varsa kullanıcıya izin vermek için
+				// kullanıcıda bu tablolardan dönen kayırları ara. eğer yoksa izin verme, en az biri varsa izin ver.
+				if(($role_permission_count > 0) || ($group_permission_count > 0))
 				{
-					$permission_count = sizeof($user_permissions);
-					$has_permission = false;
-					for($i = 0; $i<$permission_count; $i++)
+					// İstenen permission'a bağlı rollerin kullanıcıda olup olmadığını ara. 
+					// En az bir rol authenticate olmuş kullanıcıda varsa giriş izni ver ve bu fonksiyondan çık 
+					for($i=0; $i<$role_permission_count; $i++)
 					{
-						if($user_permissions[$i] == $permission->permission_id)
+						// Aranan role_id
+						$role_id = $role_permissions[$i]->role_id;
+
+						// Kullanıcıda yukardaki role_id'yi ara
+						for($j=0; $j<$user_roles_count; $j++)
 						{
-							$has_permission = true;
-							break;
+							// Kullanıcı rollerden birine sahipse izin ver
+							if($role_id == $user_roles[$j])
+							{
+								return true;
+							}
 						}
 					}
 					
-					return $has_permission;
+					// İstenen permission'a bağlı gurupların kullanıcıda olup olmadığını ara.
+					// En az bir gurup authenticate olmuş kullanıcıda varsa giriş izni ver ve bu fonksiyondan çık
+					for($i=0; $i<$group_permission_count; $i++)
+					{
+						// Aranan group_id
+						$group_id = $group_permissions[$i]->group_id;
+					
+						// Kullanıcıda yukardaki group_id'yi ara
+						for($j=0; $j<$user_groups_count; $j++)
+						{
+							// Kullanıcı guruplardan birine sahipse izin ver
+							if($group_id == $user_groups[$j])
+							{
+								return true;
+							}
+						}
+					}
+					
+					// Buraya kadar gelmişse kullanıcıda ilgili tablolardan dönen kayıtları bulamadı demektir o yüzden giriş izni vermiyoruz.
+					return false;
 				}
-				else
+				else // Aranan permission database de ilgili tablolarda bulunamadıysa
 				{
-					// eğer bu sayfa permission tablosuna eklenmemişse herkese açık demektir.
-					return true;
+					// Eğer tam denetim yapıyorsak kullanıcıya giriş izni vermiyoruz, ama tam denetim yapmıyorsak authenticate olmuş herkese izin veriyoruz.
+					return !$full_control;
 				}
 			}
-			else
+			else // Session daki hash ile eşleşmediği için illegal erişim olduğunu düşünüp izin vermiyoruz.
 			{
-				echo "sdsf"; exit;
 				return false;
 			}
 		}
 		else
 		{
-			echo "aa"; exit;
 			return false;
 		}
 	}
@@ -63,84 +107,56 @@ class PA_AUTHORIZATION extends DB
 	{
 		global $ADMIN;
 		global $secureKey;
-		$user = $ADMIN->USER->loggedInUser;
+		$user = $ADMIN->AUTHENTICATION->authenticated_user;
 		$user_permissions = array();
 		$hash_string_source = "";
 		
-		// Kullanıcının rollerini listesini al.
-		$roles = $ADMIN->USER_ROLE->listUserRolesByUser($user->user_id);
-		$role_count = sizeof($roles);
+		// Kullanıcının rollerini listele
+		$query  = "SELECT role_id FROM {$this->tables->user_role} WHERE user_id=?";
+		$user_roles = $ADMIN->DB->get_rows($query, array($user->user_id), FETCH_NUM);
+		$user_roles_count = sizeof($user_roles);
 		
 		// Kullanıcının gruplarını listele
-		$groups = $ADMIN->USER_GROUP->listUserGroupsByUser($user->user_id);
-		$group_count = sizeof($groups);
+		$query  = "SELECT group_id FROM {$this->tables->user_group} WHERE user_id=?";
+		$user_groups = $ADMIN->DB->get_rows($query, array($user->user_id), FETCH_NUM);
+		$user_groups_count = sizeof($user_groups);
 		
-		// Kullanıcının rollerine göre permission larını listele
-		$query  = "SELECT permission_id FROM {$this->tables->role_permission} WHERE role_id IN (";
-		for($i=0; $i<$role_count; $i++)
+		$roles = array();
+		for($i=0; $i<$user_roles_count; $i++)
 		{
-			$query .= $roles[$i]->role_id . ",";
-		}
-		$query = substr($query, 0, -1) . ")";
-		$user_role_permissions = $ADMIN->DB->get_rows($query, null, FETCH_NUM);
-		$user_role_permission_count = sizeof($user_role_permissions);
-		
-		for($i=0; $i<$user_role_permission_count; $i++)
-		{
-			$user_permissions[] = $user_role_permissions[$i][0];
+			$roles[] = $user_roles[$i][0];
 		}
 		
-		
-		// Kullanıcının grubuna göre permission larını listele
-		$query  = "SELECT permission_id FROM {$this->tables->group_permission} WHERE group_id IN (";
-		for($i=0; $i<$group_count; $i++)
+		$groups = array();
+		for($i=0; $i<$user_groups_count; $i++)
 		{
-			$query .= $groups[$i]->group_id . ",";
-		}
-		$query = substr($query, 0, -1) . ")";
-		$user_group_permissions = $ADMIN->DB->get_rows($query, null, FETCH_NUM);
-		$user_group_permission_count = sizeof($user_group_permissions);
-		
-		for($i=0; $i<$user_group_permission_count; $i++)
-		{
-			$user_permissions[] = $user_group_permissions[$i][0];
+			$groups[] = $user_groups[$i][0];
 		}
 		
-		
-		$_SESSION[$this->authorizationKeyName]["VALIDATE_PERMISSIONS_HASH"] = sha1($secureKey . implode($user_permissions, "-"));
-		$_SESSION[$this->authorizationKeyName]["PERMISSIONS"] = $user_permissions;
+		$_SESSION[$this->authorizationKeyName]["VALIDATE_ROLES_GROUPS_HASH"] = sha1($secureKey . implode($roles, "-") . "-" . implode($groups, "-"));
+		$_SESSION[$this->authorizationKeyName]["ROLES"] = $roles;
+		$_SESSION[$this->authorizationKeyName]["GROUPS"] = $groups;
 		
 		return true;
 	}
 	
 	/**
-	*
-	* Bu fonksiyon, çalıştırıldığı sayfanın varsa database deki permission
-	* tablosundan request_uri değerine göre kendine en yakın kaydını döndürür.
-	* Örnek: çalıştığı sayfa admin.php?page=test  diyelim,
-	* database de deşu şekilde 3 kayıt var diyelim
-	* - admin.php?page=test
-	* - admin.php?page=test2
-	* - admin.php?page=te
-	*
-	* bu kayıtlar içinde sorgu yaparken, databasedeki kolonlar içinde bizim sayfamızın farklı hesapladığımız şekildeki
-	* adresini aramayacak, tam tersi şekilde bizim farklı hesapladığımız sayfa adresi içinde database deki kolonları
-	* arıyacak ve eşleşen datalar arasında string değeri en uzun olanı döndürecek.
-	* bu duruma göre döndüreceği kayıt "admin.php?page=test" sayfası olacaktır
-	* eğer arama işlemini kolonlar içinde sayfa adresini arama şeklinde yapsaydık dönen sonuç
-	* "admin.php?page=test2" olacaktı ve yanlış olacaktı. Burada anahtar nokta aramayı kolonlar içinde değil
-	* farklı şekilde hesapladığımız sayfa url i içinde databasedeki kayıtları aratarak yapıyoruz
-	*/
-	function getCurrentPagePermissionInfo()
+	 * 
+	 * Yetki bilgilerini session'dan temizler.
+	 * @return boolean
+	 */
+	function drop()
 	{
-		$fixed_request_uri = preg_replace("/.*(" . working_folder_name . "\/){1}(?=admin)/i", "", $_SERVER["REQUEST_URI"]);
-	
-		$query  = "SELECT * FROM {$this->tables->permission} ";
-		$query .= "WHERE ? LIKE CONCAT( permission_url, '%') ";
-		$query .= "AND permission_url != '' AND permission_url IS NOT NULL ";
-		$query .= "ORDER BY LENGTH(permission_url) DESC LIMIT 0,1";
-	
-		return $this->get_row($query, array($fixed_request_uri));
+		unset($_SESSION[$this->authorizationKeyName]);
+		return true;
 	}
 	
+	
+	function getRolesAndGroupsByPermission($permission_key)
+	{
+		$query  = "SELECT * FROM  ";
+		$query .= "";
+		
+		return $this->get_row($query, array($fixed_request_uri));
+	}
 }

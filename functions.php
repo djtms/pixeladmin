@@ -4,10 +4,12 @@
 addMenu("Kontrol Paneli","$VIEW_URL/images/icons/dashboard_icon.png","Kontrol Paneli","dashboard","dashboard.php",1,USER_GUEST);
 addMenu("Mesajlar","$VIEW_URL/images/icons/messages_icon.png","Mesajlar","messages","messages.php",101,USER_SUPER);
 addPage("Mesaj İçeriği","messages" ,"readmessage", "readmessage.php",USER_SUPER);
-addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraccounts","useraccounts.php",108,USER_SUPER);
-addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraccounts", "invite_user", "invite_user.php",2, USER_SUPER);
-//addSubMenu("Yetkiler", "Yetkiler", "useraccounts", "permissions", "permissions.php");
-//addSubMenu("Roller", "Roller", "useraccounts", "roles", dirname(__FILE__) . "/roles.php");
+addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraccounts","useraccounts.php",20,USER_SUPER); // 108
+addSubMenu("Davet Gönder", "Davet Gönder", "useraccounts", "invite_user", "invite_user.php",1, USER_SUPER);
+//addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraccounts", "add_user", "add_user.php", 2, USER_SUPER);
+
+addSubMenu("Yetkiler", "Yetkiler", "useraccounts", "permissions", "permissions.php", 3);
+addSubMenu("Roller", "Roller", "useraccounts", "roles", dirname(__FILE__) . "/roles.php", 4);
 addPage("Kullanıcı Bilgileri", "useraccounts", "edit_useraccount", "edit_useraccount.php");
 addPage("Yetki Ekle", "useraccounts", "add_permission", "edit_permission.php");
 addPage("Yetki Detayı", "useraccounts", "edit_permission", "edit_permission.php");
@@ -17,13 +19,13 @@ addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings"
 
 if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
 {
-	addSettingsMenu("Dil Seçenekleri", "Dil Seçenekleri", "languageoptions", "languages.php",10,USER_SUPER);
-	addSettingsMenu("Sabit Dil Değişkenleri", "Sabit Dil Değişkenleri", "global_i18n_variables", "global_i18n_variables.php",10,USER_SUPER);
+	addSettingsMenu("Dil Seçenekleri", "Dil Seçenekleri", "languageoptions", "languages.php",1,USER_SUPER);
+	addSettingsMenu("Sabit Dil Değişkenleri", "Sabit Dil Değişkenleri", "global_i18n_variables", "global_i18n_variables.php",2,USER_SUPER);
 	addPage("Dil Ekle", "settings", "add_language", "edit_language.php");
 	addPage("Dil Bilgileri", "settings", "edit_language", "edit_language.php");
 }
 
-addSettingsMenu("Geliştiriciler", "Geliştiriciler", "developers", "developers.php",1000,USER_GUEST);
+addSettingsMenu("Geliştiriciler", "Geliştiriciler", "developers", "developers.php",2,USER_GUEST);
 
 addMenu("Site Haritası", "", "Site Haritası", "sitemap", "sitemap.php", 100);
 addSubMenu("Sayfa Ekle", "Sayfa Ekle", "sitemap", "add_sitemap_page", "edit_sitemap_page.php");
@@ -37,7 +39,7 @@ if($add_modules_menu)
 	addMenu("Modüller","$VIEW_URL/images/icons/modules_icon.png","Modüller","modules","modules.php",107,USER_SUPER);
 	
 global $master;
-$master->user = $ADMIN->USER->loggedInUser;
+$master->user = $ADMIN->AUTHENTICATION->authenticated_user;
 if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
 {
 	$master->siteTitle = getI18n("admin_siteTitleI18N");

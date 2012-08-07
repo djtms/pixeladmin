@@ -17,6 +17,9 @@ if($_GET["user"] > 0)
 		{
 			$ADMIN->USER_ROLE->addUserRole($user_id, $user_roles[$i]);
 		}
+		
+		// Yetkileri tekrar al
+		$ADMIN->AUTHORIZATION->authorize();
 	}
 	
 	$roles = $ADMIN->ROLE->listRoles();

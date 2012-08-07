@@ -16,7 +16,7 @@ class PA_LOG extends DB
 	{
 		global $ADMIN;
 		
-		$user = $ADMIN->USER->loggedInUser;
+		$user = $ADMIN->AUTHENTICATION->authenticated_user;
 		$user_id = $user->user_id;
 		$date = currentDateTime();
 		

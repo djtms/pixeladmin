@@ -2,7 +2,7 @@ $(PermissionsStart);
 
 function PermissionsStart()
 {
-	 $('#permissionsList .itemsList').nestedSortable({
+	 $('#sortablePermissionLists .itemsList').nestedSortable({
          handle: '.item',
          items: 'li',
          toleranceElement: '> .item',
@@ -19,10 +19,9 @@ function PermissionsStart()
         		 url:"admin.php?page=permissions",
         		 data: "admin_action=updatePermissionsSort&sort=" +  JSON.encode($('#permissionsList .itemsList').nestedSortable("toArray")),
         		 success:function(response){
-        			 
+        			 console.log(response);
         		 }
         	 });
-        	 
          }
      });
 }

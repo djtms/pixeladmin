@@ -1,5 +1,6 @@
 <?php require_once 'includes.php';
 
+// Recaptcha private anahtarı
 $private_key = '6LdIQM0SAAAAAHAEnAYlIrwRKfjLRh2a8oIY_PmW';
 $user_id = $_GET["user"];
 $ticket_key = $_GET["key"];
@@ -8,7 +9,7 @@ $username = trim($_POST["username"]);
 
 if($_POST["admin_action"] == "checkusername")
 {
-	checkUsername(); // pa-users.php içinde tanımlı, bu sayfada login olmadığım için panelin kendi ajax standardını kullanamıyorum onun için soruyu bu şekilde yapıyoruz
+	checkUsername(); // pa-users.php içinde tanımlı
 	exit;
 }
 if($ticket_id = $ADMIN->USER->validateTicket($user_id, $ticket_key, $ticket_type))
@@ -36,7 +37,7 @@ if($ticket_id = $ADMIN->USER->validateTicket($user_id, $ticket_key, $ticket_type
 			if($ADMIN->USER->completeRegistration($user_id, $username, $password) && $ADMIN->USER->closeTicket($ticket_id))
 			{
 				postMessage("Kaydınız Başarıyla Gerçekleşti!");
-				$ADMIN->USER->login($username, $password);
+				$ADMIN->AUTHENTICATION->authenticate($username, $password);
 				header("Location:admin.php?page=dashboard");
 				exit;
 			}	

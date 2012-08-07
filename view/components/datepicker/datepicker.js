@@ -1,6 +1,6 @@
 // Author: Mehmet Hazar Artuner
-// Release Date: 30.03.2012 / 23:20
-// Version: 1.0
+// Release Date: 28.07.2012 / 23:06
+// Version: 1.1
 // WebPage: www.hazarartuner.com
 
 (function($){
@@ -36,6 +36,7 @@
 		var monthNames = [null, "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 		var yearRange = {"minus":100,"plus":10};
 		var type = _this.attr("type");
+		type = (type in {"date":1,"time":2,"datetime":3}) ? type : options.type;
 		////////////////////////////////////////////////////////////////////
 		
 		
@@ -172,9 +173,9 @@
 				UI += '<select class="dp_day"></select>';
 				UI += '</div>';
 				UI += '<div class="timeOuter">';
-				UI += '<input class="dp_hour" type="text" value="23" /><span>:</span>';
-				UI += '<input class="dp_minute" type="text" value="59" /><span>:</span>';
-				UI += '<input class="dp_second" type="text" value="59" />';
+				UI += '<input class="dp_hour" type="text" value="0" maxlength="2" /><span>:</span>';
+				UI += '<input class="dp_minute" type="text" value="0" maxlength="2" /><span>:</span>';
+				UI += '<input class="dp_second" type="text" value="0" maxlength="2" />';
 				UI += '</div>';
 			_this.html(UI);
 		};

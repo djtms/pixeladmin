@@ -3,12 +3,8 @@
 	<input type="text" name="displayname" value="{%displayname%}" />
 	<label>E-Posta:</label>
 	<input type="text" name="email" value="{%email%}" />
-	<label>Kullanıcı Tipi:</label>
-	<select name="user_type">
-		<option value="1">Konuk</option>
-		<option value="5">Yazar</option>
-		<option value="100">Yönetici</option>
-	</select>
+	<label>Kullanıcı Rolleri:</label>
+	{%invite_user_roles_html%}
 	
 	<button id="btnInviteUser" type="submit" name="admin_action" value="inviteUser">Davet Gönder</button>
 </form>

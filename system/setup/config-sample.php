@@ -31,15 +31,6 @@ else
 	$add_modules_menu = false; // Menüye modules sayfasının eklenip eklenmemesini belirler
 }
 
-/*
-* Web sitesinin çalıştığı ana dizin dosyasının adını hesapla. Bunu php'nin getcwd() fonksiyonu ile
-* yapmıyoruz çünkü web sitemiz ana dizinde değilde başka alt dizinlerden birinde çalıştırılıyor olabilir
-* halbuki bize bu sistemin çalıştığı ana dizin dosyasının adı lazım.
-*/
-$working_folder_name = preg_quote(basename(dirname(dirname(__FILE__))), "/");
-
-
-define("working_folder_name", $working_folder_name);
 define("multilanguage_mode", get_option("admin_SiteMultilanguageMode") == "multilanguage" ? true : false);
 define("maintanance_mode", get_option("admin_SiteDisplayMode") == "maintanance" ? true : false);
 

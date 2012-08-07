@@ -24,6 +24,7 @@ class PA_ADMIN
 	public $ROLE;
 	public $PERMISSION;
 	public $SITEMAP;
+	public $AUTHENTICATION;
 	public $AUTHORIZATION;
 	
 	
@@ -52,7 +53,7 @@ class PA_ADMIN
 		$this->ROLE = new PA_ROLE();
 		$this->PERMISSION = new PA_PERMISSION();
 		$this->SITEMAP = new PA_SITEMAP();
+		$this->AUTHENTICATION = new PA_AUTHENTICATION();
 		$this->AUTHORIZATION = new PA_AUTHORIZATION();
-
 	}
 }

@@ -287,7 +287,6 @@ function createDbTables($dbh,$prefix)
 					  `password` varchar(100) NOT NULL,
 					  `pass_key` varchar(30) NOT NULL,
 					  `register_time` datetime NOT NULL,
-					  `user_type` varchar(20) NOT NULL,
 					  `captcha_limit` tinyint(1) NOT NULL DEFAULT '3',
 					  `status` varchar(50) NOT NULL DEFAULT 'active',
 					  PRIMARY KEY (`user_id`),
@@ -444,55 +443,69 @@ function createDbTables($dbh,$prefix)
 	
 	$queryGroupPermission = "CREATE TABLE IF NOT EXISTS `{$prefix}group_permission` (
 				  `group_id` int(11) NOT NULL,
-				  `permission_id` int(11) NOT NULL,
-				  PRIMARY KEY (`group_id`,`permission_id`)
+				  `permission_key` int(11) NOT NULL,
+				  PRIMARY KEY (`group_id`,`permission_key`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 	
 	$queryPermission = "CREATE TABLE IF NOT EXISTS `{$prefix}permission` (
-				  `permission_id` int(11) NOT NULL AUTO_INCREMENT,
+				  `permission_key` int(11) NOT NULL AUTO_INCREMENT,
 				  `permission_parent` int(11) NOT NULL,
 				  `permission_name` varchar(100) COLLATE utf8_bin NOT NULL,
 				  `permission_url` varchar(255) COLLATE utf8_bin NOT NULL,
 				  `order_num` int(11) NOT NULL,
-				  PRIMARY KEY (`permission_id`)
-				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
-	
-				INSERT INTO `pa_permission` (`permission_id`, `permission_parent`, `permission_name`, `permission_url`, `order_num`) VALUES
-				(1, -1, 'AdminPanel', 'admin/', 2),
-				(2, 1, 'Kullanıcı Hesapları', 'admin/admin.php?page=useraccounts', 13),
-				(3, 1, 'Site Haritası', 'admin/admin.php?page=sitemap', 5),
-				(4, 1, 'Kontrol Paneli', 'admin/admin.php?page=dashboard', 3),
-				(5, 3, 'Sayfa Ekle', 'admin/admin.php?page=add_sitemap_page', 6),
-				(6, 1, 'Modüller', 'admin/admin.php?page=modules', 11),
-				(7, 1, 'Mesajlar', 'admin/admin.php?page=messages', 9),
-				(8, 2, 'Kullanıcı Ekle', 'admin/admin.php?page=invite_user', 14),
-				(9, 2, 'Kullanıcı Bilgileri', 'admin/admin.php?page=edit_useraccount', 16),
-				(10, 2, 'Yetkiler', 'admin/admin.php?page=permissions', 18),
-				(11, 2, 'Roller', 'admin/admin.php?page=roles', 24),
-				(12, 10, 'Yetki Ekle', 'admin/admin.php?page=add_permission', 19),
-				(13, 10, 'Yetki Detayı', 'admin/admin.php?page=edit_permission', 21),
-				(14, 11, 'Rol Ekle', 'admin/admin.php?page=add_role', 25),
-				(15, 11, 'Rol Detayı', 'admin/admin.php?page=edit_role', 27),
-				(16, 1, 'Ayarlar', 'admin/admin.php?page=settings', 31),
-				(17, 16, 'Dil Seçenekleri', 'admin/admin.php?page=languageoptions', 0),
-				(18, 17, 'Dil Ekle', 'admin/admin.php?page=edit_language', 0),
-				(19, 17, 'Dil Bilgileri', 'admin/admin.php?page=edit_language', 0),
-				(20, 16, 'Sabit Dil Değişkenleri', 'admin/admin.php?page=global_i18n_variables', 0),
-				(21, 16, 'Geliştiriciler', 'admin/admin.php?page=developers', 0),
-				(22, 16, 'Profil', 'admin/admin.php?page=profile', 0);";
+				  PRIMARY KEY (`permission_key`)
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
 	
 	$queryRole = "CREATE TABLE IF NOT EXISTS `{$prefix}role` (
 				  `role_id` int(11) NOT NULL AUTO_INCREMENT,
 				  `role_name` varchar(100) COLLATE utf8_bin DEFAULT NULL,
 				  `order_num` int(11) NOT NULL,
 				  PRIMARY KEY (`role_id`)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;";
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+	
+				INSERT INTO `{$prefix}role` (`role_id`, `role_name`, `order_num`) VALUES
+				(1, 'Yönetici', 0),
+				(2, 'Sınırlı Yönetici', 0);";
 	
 	$queryRolePermission = "CREATE TABLE IF NOT EXISTS `{$prefix}role_permission` (
 				  `role_id` int(11) NOT NULL,
-				  `permission_id` int(11) NOT NULL,
-				  PRIMARY KEY (`role_id`,`permission_id`)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+				  `permission_key` int(11) NOT NULL,
+				  PRIMARY KEY (`role_id`,`permission_key`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+	
+				INSERT INTO `{$prefix}role_permission` (`role_id`, `permission_key`) VALUES
+				(1, 'ADMIN_ADMINPANEL'),
+				(1, 'ADMIN_add_permission'),
+				(1, 'ADMIN_add_role'),
+				(1, 'ADMIN_add_sitemap_page'),
+				(1, 'ADMIN_add_user'),
+				(1, 'ADMIN_dashboard'),
+				(1, 'ADMIN_developers'),
+				(1, 'ADMIN_edit_permission'),
+				(1, 'ADMIN_edit_role'),
+				(1, 'ADMIN_edit_sitemap_page'),
+				(1, 'ADMIN_edit_useraccount'),
+				(1, 'ADMIN_invite_user'),
+				(1, 'ADMIN_messages'),
+				(1, 'ADMIN_modules'),
+				(1, 'ADMIN_permissions'),
+				(1, 'ADMIN_profile'),
+				(1, 'ADMIN_readmessage'),
+				(1, 'ADMIN_roles'),
+				(1, 'ADMIN_settings'),
+				(1, 'ADMIN_sitemap'),
+				(1, 'ADMIN_useraccounts'),
+				(2, 'ADMIN_ADMINPANEL'),
+				(2, 'ADMIN_add_sitemap_page'),
+				(2, 'ADMIN_dashboard'),
+				(2, 'ADMIN_developers'),
+				(2, 'ADMIN_edit_sitemap_page'),
+				(2, 'ADMIN_messages'),
+				(2, 'ADMIN_modules'),
+				(2, 'ADMIN_profile'),
+				(2, 'ADMIN_readmessage'),
+				(2, 'ADMIN_settings'),
+				(2, 'ADMIN_sitemap');";
 	
 	
 	$queryUserGroup = "CREATE TABLE IF NOT EXISTS `{$prefix}user_group` (

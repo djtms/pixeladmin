@@ -10,7 +10,7 @@ if($ADMIN->USER->getUserCount() <= 0)
 		exit;
 	}
 	
-	if($_POST["admin_action"] == "createSuperUser")
+	if($_POST["admin_action"] == "createFirstUser")
 	{
 		// Setup Default Options ////////////////////////////////////////////////////////////////////////////////////////
 		set_option("admin_siteTitle", $_POST["siteTitle"],"pa_settings");
@@ -29,8 +29,11 @@ if($ADMIN->USER->getUserCount() <= 0)
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		$use_mvc = ($_POST["use_mvc"] == "use") ? true : false;
-		
-		if(!$ADMIN->USER->createFirstAdminUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]))
+		// İlk kullanıcıyı oluştur
+		$user_id = $ADMIN->USER->addUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]);
+		// Kullanıcıya id'si "1" olan rolü ver. (Yönetici Rolüdür ve Panelden Silinemez)
+		$ADMIN->USER_ROLE->addUserRole($user_id, 1);
+		if(!($user_id > 0))
 		{
 			$errorMessage = "* kullanıcı oluşturma esnasında hata oluştu!";
 		}

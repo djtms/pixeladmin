@@ -1,44 +1,48 @@
 <?php 	
 require_once dirname(__FILE__) . '/includes.php';
 
-/* Get requested page file */
+// Talep edilen sayfanın dosyasını bul 
 $pa_menuId = urldecode($_GET["page"]);
-$page = "";
-global $pa_menu_array;
 
-if(is_array($pa_menu_array)):
-	foreach($pa_menu_array as $m)
+foreach($pa_menu_array as $key=>$menu)
+{
+	if($key == $pa_menuId)
 	{
-		if($m["menuId"] == $pa_menuId)
+		$page = $menu["menuPage"];
+	}
+	
+	if(sizeof($menu["subMenus"]) > 0)
+	{
+		foreach($menu["subMenus"] as $order=>$sm)
 		{
-			$page = $m["menuPage"];
-		}
-		
-		if(sizeof($m["subMenus"]) > 0)
-		{
-			foreach($m["subMenus"] as $sm)
+			$key = key($sm);
+			$sm = $sm[$key];
+
+			if($key == $pa_menuId)
 			{
-				if($sm["menuId"] == $pa_menuId)
-				{
-					$page = $sm["menuPage"];
-					break;
-				}
-			}
-		}
-		
-		if(sizeof($m["subPages"]) > 0)
-		{
-			foreach($m["subPages"] as $sp)
-			{
-				if($sp["pageId"] == $pa_menuId)
-				{
-					$page = $sp["page"];
-					break;
-				}
+				$page = $sm["menuPage"];
+				break;
 			}
 		}
 	}
-endif;
+	
+	if(sizeof($menu["subPages"]) > 0)
+	{
+		foreach($menu["subPages"] as $pageId=>$sp)
+		{
+			if($pageId == $pa_menuId)
+			{
+				$page = $sp["page"];
+				break;
+			}
+		}
+	}
+}
+
+// TODO: loadMenus fonksiyonunu burada tanımlamamızın bir dezavantajı var. aslında kullanılacağını sanmadığım ve bence kullanılmaması gereken bir
+//  yöntem ama olurda kişi yazdığı modülde açtığı sayfa içinde bir menü yada page tanımlaması yaparsa panelde onu göremeyecektir. bunun üzerind 
+// vaktin olduğunda bir ara düşün belki başka alternatif yollar bulabilirsin.
+loadMenus($pa_menuId);
 
 if(file_exists($page))
 {
@@ -54,7 +58,7 @@ else
 	$master->content = "Sayfa Bulunamadı";
 }
 
-loadMenus($pa_menuId);
+
 $master->postMessage = get_option("admin_postMessage");
 set_option("admin_postMessage","");
 $master->render();

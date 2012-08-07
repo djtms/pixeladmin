@@ -15,27 +15,39 @@ function login($captcha_used_correctly)
 	$username = $_POST["username"];
 	$password = $_POST["password"];
 	
+	// Bilgilerin bizim formumuzdan gelip gelmediğini kontrol et
 	if($_SESSION["validatePageKey"] != $_POST["VPK"])
 	{
-		$loginAlert = "*Güvensiz Form!";
+		$loginAlert = "* Güvensiz Form!";
 	}
 	else
 	{
-		$login_status =  $ADMIN->USER->login($username,$password, $captcha_used_correctly);
-			
-		if($login_status === true)
+		// Kimlik doğrulaması yap
+		$authentication_status = $ADMIN->AUTHENTICATION->authenticate($username,$password, $captcha_used_correctly);
+		
+		// Kimlik doğrulaması hatasız yapılmış ise
+		if($authentication_status === true)
 		{
+			// Yetkilerini al
+			$ADMIN->AUTHORIZATION->authorize();
+			
 			add_log("giriş yaptı");
 			$_SESSION["USE_CAPTCHA"] = false;
 			header("Location:admin.php?page=dashboard");
 		}
-		else if($login_status === "login_with_captcha")
+		// Captcha kullanarak tekrar giriş yapmak gerekiyorsa.
+		else if($authentication_status === "login_with_captcha")
 		{
 			$_SESSION["USE_CAPTCHA"] = true;
 		}
+		// Hesap henüz aktif edilmemişse
+		else if($authentication_status === "account_not_activated")
+		{
+			$loginAlert = "* Hesabınız henüz aktif edilmemiş!";
+		}
 		else
 		{
-			$loginAlert = "*Yanlış kullanıcı adı veya şifre";
+			$loginAlert = "*Yanlış kullanıcı adı veya şifre!";
 		}
 	}
 }
