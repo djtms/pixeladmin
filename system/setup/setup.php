@@ -443,15 +443,14 @@ function createDbTables($dbh,$prefix)
 	
 	$queryGroupPermission = "CREATE TABLE IF NOT EXISTS `{$prefix}group_permission` (
 				  `group_id` int(11) NOT NULL,
-				  `permission_key` int(11) NOT NULL,
+				  `permission_key` varchar(50) NOT NULL,
 				  PRIMARY KEY (`group_id`,`permission_key`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 	
 	$queryPermission = "CREATE TABLE IF NOT EXISTS `{$prefix}permission` (
-				  `permission_key` int(11) NOT NULL AUTO_INCREMENT,
-				  `permission_parent` int(11) NOT NULL,
+				  `permission_key` varchar(50) COLLATE utf8_bin NOT NULL,
+  				  `permission_parent` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT '',
 				  `permission_name` varchar(100) COLLATE utf8_bin NOT NULL,
-				  `permission_url` varchar(255) COLLATE utf8_bin NOT NULL,
 				  `order_num` int(11) NOT NULL,
 				  PRIMARY KEY (`permission_key`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
@@ -469,7 +468,7 @@ function createDbTables($dbh,$prefix)
 	
 	$queryRolePermission = "CREATE TABLE IF NOT EXISTS `{$prefix}role_permission` (
 				  `role_id` int(11) NOT NULL,
-				  `permission_key` int(11) NOT NULL,
+				  `permission_key` varchar(50) NOT NULL,
 				  PRIMARY KEY (`role_id`,`permission_key`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 	
