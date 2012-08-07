@@ -52,6 +52,13 @@ function login($captcha_used_correctly)
 	}
 }
 
+// Eğer kişi authenticate olmuşsa onu dashboard'a yönlendir.
+if($ADMIN->AUTHENTICATION->isAuthenticated())
+{
+	header("Location:admin.php?page=dashboard");
+	exit;
+}
+
 
 if($_SESSION["USE_CAPTCHA"] === true)
 {
