@@ -10,7 +10,6 @@ if(in_admin):
 	}
 	//------------------------------------------------------------------------------------
 	
-	
 	// Kişi çıkış yapmak istediğinde
 	if($_REQUEST["admin_action"] == "logout")
 	{
@@ -19,7 +18,7 @@ if(in_admin):
 	}
 	//-----------------------------------------------------------------------------------
 	
-	// TODO: burası uygun bir role based access control sistemi yapıldıktan sonra kaldırılacak
+	// TODO: burası başka yöntemlerle yapılabilirmi bilmiyorum ama bi ara üzerinde düşün
 	$page = basename($_SERVER["SCRIPT_FILENAME"], ".php");
 	if(in_array($page, array("login","resetpassword","newpassword", "complete_registration"))) // Login olmadığı halde bu sayfalara erişmeye çalışırsa.
 	{
@@ -35,7 +34,7 @@ endif;
  * Verilen permission_key değerine göre kullanıcının authenticate ve authorize durumlarını kontrol eder ve boolean tipinde sonucu döndürür veya yönlendirme işlemi yapar. 
  * @param string $permission_key kontrol edilmek istenen permission anahtarı
  * @param boolean $full_control eğer bu değişken true olursa, sorgulanan anahtar database deki ilgili tablolarda kayıtlı değilse, authenticate olmuş herkese izin verilir
- * @param unknown_type $redirect işlem sonucunu boolean döndürmek yerine önceden tanımlı hata sayfalarına yönlendirme işlemi yapması istendiğinde kullanılır.
+ * @param boolean $redirect işlem sonucunu boolean döndürmek yerine önceden tanımlı hata sayfalarına yönlendirme işlemi yapması istendiğinde kullanılır.
  */
 function checkAccessStatus($permission_key, $full_control=true, $redirect=true)
 {
