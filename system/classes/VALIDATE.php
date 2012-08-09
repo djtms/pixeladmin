@@ -19,7 +19,7 @@ class PA_VALIDATE
 	
 	function validateEmail($string)
 	{
-		return preg_match('/^\w+[a-z0-9_\-\.]*@[a-z0-9_\-]+\.[a-z0-9_\-]+\.*[a-z0-9_\-]*\w+$/i', $string);
+		return filter_var($string, FILTER_VALIDATE_EMAIL);
 	}
 	
 	function validateFileFormat($fileFullName,$formats = array("docx","doc","pdf","jpeg","jpg","png","gif"))

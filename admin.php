@@ -58,7 +58,6 @@ else
 	$master->content = "Sayfa Bulunamadı";
 }
 
-
 $master->postMessage = get_option("admin_postMessage");
 set_option("admin_postMessage","");
-$master->render();
+echo parseCustomHtml($master->render(false));

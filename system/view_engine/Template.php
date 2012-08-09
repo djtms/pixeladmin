@@ -29,11 +29,14 @@ class Template extends GlobalValues{
 		return $this->setValues();
 	}
 	
-	public function render() 
+	public function render($echo = true) 
 	{	
 		$this->html(false);
 		$this->setupScripts();
-		echo $this->_rendered;
+		if($echo) 
+			echo $this->_rendered;
+		else
+			return $this->_rendered;
 	}
 	
 	/**

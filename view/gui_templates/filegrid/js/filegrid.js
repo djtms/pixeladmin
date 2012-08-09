@@ -20,11 +20,11 @@ function FileGridStart()
 						thumbImage.attr("src", file.thumb);	
 					}
 					
-					btnView.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
+					btnView.attr("href",'lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url));
 				}
 				else
 				{
-					btnPlay.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
+					btnPlay.attr("href",'lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url));
 				}
 			}
 		});

@@ -65,6 +65,7 @@ require_once "system/includes/gallery.php";
 require_once "system/includes/upload.php";
 require_once 'system/includes/fileeditor.php';
 require_once 'system/includes/sitemap.php';
+require_once 'system/includes/custom_html_parser.php';
 
 
 if(in_admin)

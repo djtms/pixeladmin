@@ -8,7 +8,7 @@ function CkeditorStart()
 	var id;
 	ckIds = new Array();
 	
-	$("#content [type=editor]").each(function(){
+	$("#content textarea[editor]").each(function(){
 		i++;
 		try
 		{
@@ -33,7 +33,6 @@ function CkeditorStart()
 		catch(e)
 		{
 			alert(e);
-			postMessage("Lütfen " + i + ". Editör için \"id\" değeri girin!",true);
 		}
 	});
 	

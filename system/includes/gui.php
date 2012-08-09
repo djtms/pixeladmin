@@ -1,26 +1,46 @@
 <?php
 
-function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $editDataLinkQuery, $deleteDataLinkQuery, $sortablekey = null, $sortEvent = null)
-{
-	if(($gridId == null) || (strlen($gridId) <= 0))
-	{
-		$gridId = uniqid();
-	}
-	
-	// DataGrid sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
-	if(($sortablekey != null) && ($sortEvent != null))
+/**
+ * 
+ * Array list şeklindeki dataları görsel olarak grid sistemiyle listeler ve istendiğinde çeşitli özellikler ekler.
+ * @param array $data  listelenecek data dizisi
+ * @param string $gridTitle bu grid için görünmesini istediğiniz başlık
+ * @param string $gridId grid için kullanılacak benzersiz bir id adı. benzersiz olduğu müddetçe her ilk harfi harf olmak üzere isim olabilir
+ * @param string $rowTitleQuery griddeki her satırın nasıl göstereceğini ifade eden query
+ * @param string $addDataLink grid'e bağlı olan dataya yenisini eklemek için kullanılacak sayfa linki
+ * @param string $editDataLinkQuery griddeki datayı düzenlemek için kullanılacak sayfa linkini ifade eden query
+ * @param string $deleteDataLinkQuery griddeki datayı silmek için kullanılacak sayfa linkini ifade eden query
+ * @param string $key_column_name griddeki satırları sıralamak için her bir satırdaki elemanı temsil eden unique değişkenin column adı
+ * @param string $order_column_name_or_sort_function_name sıralama işlemi için kullanılan sıra numarasın ifade eden column adı veya sıralama işlemini yapacak fonksiyon adı. bu ikisinden hangisi olacağını bir sonraki parametrenin null olup olmaması belirler.
+ * @param string $table_name sıralama işlemi için kullanılacak tablonun adı.
+ * @return string işlem sonucunda oluşan dataGrid'i döndürür.
+ */
+function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $editDataLinkQuery, $deleteDataLinkQuery, $key_column_name = null, $order_column_name_or_sort_function_name = null, $table_name = null)
+{	
+	// sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
+	if(($key_column_name != null) && ($order_column_name_or_sort_function_name != null))
 	{
 		if($_POST["admin_action"] == "sortDataGrid_$gridId")
 		{
+			global $DB;
 			$fixed_array = array();
 			$orderList = $_POST["order"];
 			
-			foreach ($orderList as $val=>$key)
+			foreach ($orderList as $order=>$key)
 			{
-				$fixed_array[] = (object) array("key"=>$key,"order"=>$val);
+				// Eğer tablo ismi atanmışsa database deki güncellemeyi biz otomatik yapıyoruz.
+				if($table_name != null)
+				{
+					$DB->execute("UPDATE {$table_name} SET {$order_column_name_or_sort_function_name}=? WHERE {$key_column_name}=?", array($order, $key));
+				}
+				else // Eğer tablo ismi atanmamışsa, değerleri uygun formatta bir array'de topluyoruz.
+				{
+					$fixed_array[] = (object) array("key"=>$key,"order"=>$order);
+				}
 			}
 			
-			if($sortEvent($fixed_array) === false)
+			// Eğertablo ismi atanmamışsa, ismi yazılan fonksiyona yukarıda düzenlediğimiz array'i argüman olarak atayıp fonksiyonu çalıştırıyoruz.
+			if(($table_name === null) && ($order_column_name_or_sort_function_name($fixed_array) === false))
 				echo json_encode(array("error"=>true));
 			else
 				echo json_encode(array("error"=>false));
@@ -30,10 +50,10 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 	}
 
 	$addDataLink = $addDataLink != null ? '<button class="dataGridAddButton" page="' . (preg_match("/\.php\?/", $addDataLink) ? $addDataLink : "admin.php?" . $addDataLink) . '">Yeni Ekle</button>' : "";
-	if($sortablekey != null)
+	if($key_column_name != null)
 	{
 		$sortableClass = "sortableList";
-		$sortableEvent = "sort_event='{$sortEvent}'";
+		$sortableEvent = "sort_event='{$order_column_name_or_sort_function_name}'";
 	}
 	
 	$dataCount = sizeof($data);
@@ -51,7 +71,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 		{
 			$data[$i] = (object) $data[$i];
 			$data[$i]->__index__ = $i;
-			$gridItemsHtml .= "<li " . ($sortablekey != null ? " id='order_" . $data[$i]->{$sortablekey} . "'>"  : ">");
+			$gridItemsHtml .= "<li " . ($key_column_name != null ? " id='order_" . $data[$i]->{$key_column_name} . "'>"  : ">");
 			$gridItemsHtml .= "<div class='item'>";
 			$gridItemsHtml .= "<p class='text'>" . renderHtml($rowTitleQuery, $data[$i]) . '</p>';
 			
@@ -80,10 +100,6 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 			}
 			
 			$gridItemsHtml .= "</div></li>";
-			
-			// Alt elemanların olup olmadığını kontrol et
-			
-			//---------------------------------------------
 		}
 	}
 	else
@@ -201,7 +217,6 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 		
 		
 		// Kullanıcının tanımladığı (eğer tanımlamışsa) ekstra html datasını işleyip ekle ------------------------------------------------
-		
 		if($appendExtraHtml)
 		{
 			if($requestedColumnsCount > 0)

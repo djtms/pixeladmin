@@ -79,7 +79,7 @@ input[type=gallery]
 	display:none;
 }
 
-#content input[type=text],#content input[type=password],#login input[type=text],#login input[type=password]
+#content input[type=text],#content input[type=password],#login input[type=text],#login input[type=password], input[type=i18n]
 {
 	float:left;
 	clear:left;
@@ -108,7 +108,7 @@ input[type=file]
 	color:#828282;
 }
 
-#content input[type=text]:hover, #content textarea:hover, #content input[type=password]:hover,#login input[type=text]:hover, #login textarea:hover, #login input[type=password]:hover
+#content input[type=text]:hover, #content textarea:hover, #content input[type=password]:hover,#login input[type=text]:hover, #login textarea:hover, #login input[type=password]:hover, input[type=i18n]:hover
 {
 	border:1px #CCC solid;
 	background:#FFF url(../images/inputBg_hover.png) repeat-x;
@@ -120,7 +120,7 @@ input[type=file]
 	border:1px #e2e2e2 solid !important;
 }
 
-#content input[type=text]:focus, #content textarea:focus, #content input[type=password]:focus 
+#content input[type=text]:focus, #content textarea:focus, #content input[type=password]:focus, input[type=i18n]:focus
 {
 	border:1px #999 solid;
 	background:#FFF url(../images/inputBg_hover.png) repeat-x;

@@ -247,7 +247,7 @@ jQuery.fn.fileeditor = function(properties){
 								browserFilesList.find("li").removeClass("selected");
 							},
 							onSaved:function(file){
-								var url = MHA.encodeUTF8(file.url);
+								var url = ADMIN.encodeUTF8(file.url);
 								fileName.html(file.basename);
 								btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + url);
 								thisParentObject.attr("url", url);
@@ -512,7 +512,7 @@ jQuery.fn.fileeditor = function(properties){
 								
 								if(files[i].type != "other")
 								{
-									filesHtml += '<a title="' + (files[i].type == "movie" ? "Oynat" : "İncele") + '" class="' + (files[i].type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + files[i].type + '&url=' + MHA.encodeUTF8(files[i].url) + '"></a>';
+									filesHtml += '<a title="' + (files[i].type == "movie" ? "Oynat" : "İncele") + '" class="' + (files[i].type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + files[i].type + '&url=' + ADMIN.encodeUTF8(files[i].url) + '"></a>';
 								}
 								
 								filesHtml += '<span title="Sil" class="btnDelete fBtn"></span>';
@@ -666,7 +666,7 @@ jQuery.fn.fileeditor = function(properties){
 							return false;
 						}
 						
-						var filesHtml = '<li class="file newlyUploaded" title="' + file.basename + '" url="' + MHA.encodeUTF8(file.url) + '" fileId="' + file.file_id + '">';
+						var filesHtml = '<li class="file newlyUploaded" title="' + file.basename + '" url="' + ADMIN.encodeUTF8(file.url) + '" fileId="' + file.file_id + '">';
 						
 						filesHtml += '<span class="filethumbOuter" fileId="' + file.file_id + '">';
 						filesHtml += '<img class="filethumb" src="' + VIEW_URL + 'images/fileeditor/fileloader.gif" />';
@@ -681,7 +681,7 @@ jQuery.fn.fileeditor = function(properties){
 						
 						if(file.type != "other")
 						{
-							filesHtml += '<a title="İncele" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '"></a>';
+							filesHtml += '<a title="İncele" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url) + '"></a>';
 						}
 						
 						filesHtml += '<span title="Sil" class="btnDelete fBtn"></span>';
@@ -831,7 +831,7 @@ jQuery.fn.fileeditor = function(properties){
 			newFolderName.keydown(function(e){
 				if(e.keyCode==13)
 				{
-					newFolderName.val(MHA.fixStringForWeb(newFolderName.val()));
+					newFolderName.val(ADMIN.fixStringForWeb(newFolderName.val()));
 					var filename = $.trim(newFolderName.val());
 					
 					validateFoldername(filename,function(){

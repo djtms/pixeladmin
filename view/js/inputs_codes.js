@@ -104,11 +104,11 @@ function ModuleCodesStart()
 										{
 											fileImage.attr("src", file.thumb);
 										}
-										btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
+										btnLook.attr("href",'lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url));
 									}
 									else
 									{
-										btnPlay.attr("href",'lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url));
+										btnPlay.attr("href",'lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url));
 									}
 								}
 							});
@@ -149,12 +149,12 @@ function ModuleCodesStart()
 					
 					if(data[0].type != "movie")
 					{
-						btnLook.attr("href",'lookfile.php?type=' + data[0].type + '&url=' + MHA.encodeUTF8(data[0].url)).css("display","inline-block");
+						btnLook.attr("href",'lookfile.php?type=' + data[0].type + '&url=' + ADMIN.encodeUTF8(data[0].url)).css("display","inline-block");
 						btnPlay.css("display","none");
 					}
 					else
 					{
-						btnPlay.attr("href",'lookfile.php?type=' + data[0].type + '&url=' + MHA.encodeUTF8(data[0].url)).css("display","inline-block");
+						btnPlay.attr("href",'lookfile.php?type=' + data[0].type + '&url=' + ADMIN.encodeUTF8(data[0].url)).css("display","inline-block");
 						btnLook.css("display","none");
 					}
 				}

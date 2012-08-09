@@ -39,7 +39,7 @@
 			
 			if(file.type == "image")
 			{
-				editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '">Görüntüle</a>';
+				editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url) + '">Görüntüle</a>';
 				editHtml += '<button class="btnEditPicture">Resmi Düzenle</button>';
 				editHtml += '<ul class="editfilePopupMenu">';
 				editHtml += '<li class="btnRotateImage">Resmi Döndür &nbsp; &rsaquo;';
@@ -53,7 +53,7 @@
 			}
 			else if(file.type == "movie")
 			{
-				editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + MHA.encodeUTF8(file.url) + '">İzle</a>';
+				editHtml += '<a class="fancybox button" href="lookfile.php?type=' + file.type + '&url=' + ADMIN.encodeUTF8(file.url) + '">İzle</a>';
 				editHtml += '<div class="changeLogoOuter">';
 				editHtml += '<button>Logo\'yu Değiştir</button>';
 				editHtml += '<input id="thumbfile" type="file" name="thumbfile" />';
@@ -362,11 +362,11 @@
 			function fixUrl()
 			{
 				var urlText = url.val();
-				var newName = MHA.fixStringForWeb($(this).val());
+				var newName = ADMIN.fixStringForWeb($(this).val());
 		
 				basename.val(newName + "." + extension.val());
 				
-				var reg = new RegExp(MHA.quote(filenameLastValue) + "(\.[a-zA-Z0-9\_\-]*)$");
+				var reg = new RegExp(ADMIN.quote(filenameLastValue) + "(\.[a-zA-Z0-9\_\-]*)$");
 				
 				url.val(urlText.replace(reg,newName + "$1"));
 				filenameLastValue = newName;
@@ -434,7 +434,7 @@
 			
 			function saveFile()
 			{
-				filename.val(MHA.fixStringForWeb(filename.val()));
+				filename.val(ADMIN.fixStringForWeb(filename.val()));
 				var basenameText = $.trim(filename.val());
 				
 				if(basenameText.length < 2 )

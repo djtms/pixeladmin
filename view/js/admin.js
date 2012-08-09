@@ -1,19 +1,17 @@
 /* 
  * Author: Mehmet Hazar Artuner
- * Last Update: 18.12.2011
+ * Last Update: 09.08.2012
  */
 
 
-$(MhaStart);
+$(AdminStart);
 
-var MHA;
-
-function MhaStart()
+function AdminStart()
 {
-	MHA = new MHA();
+	ADMIN = new ADMIN();
 }
 
-function MHA()
+function ADMIN()
 {
 	// istenen string değişkeni regular expression da sorgu cümlesi olarak kullanılacak şekilde encode eder.
 	this.quote = function(str){return str.replace(/([.?*+^$[\]\\(){}-])/g, "\\$1");};
@@ -93,7 +91,6 @@ function MHA()
 		}
 		
 		return croppedText;
-		
 	};
 }
 
