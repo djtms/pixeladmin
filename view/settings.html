@@ -2,7 +2,7 @@
 <form method="post">
 	<label style="color:#fc5900;">SEO Ayarları</label>
 	<label>Site Adresi</label>
-	<input name="siteAddress" type="text"  value="{%stg.admin_siteAddress%}"/>
+	<input name="siteAddress" type="text"  value="{%stg.admin_site_address%}"/>
 	<label>Site Başlığı</label>
 	<input type="text" name="siteTitle" {%siteTitleValue%}/>
 	<label>Description</label>
@@ -18,7 +18,7 @@
 	<label>SMTP <input type="checkbox" name="smtp" {%stg.admin_isSmtpMail%} /></label>
 	
 	<label>Gönderen Mail Adresi:</label>
-	<input name="mailUser" type="text" value="{%stg.admin_mailUser%}"/>
+	<input name="mailUser" type="text" value="{%stg.admin_mail_user%}"/>
 	
 	<div id="smtpSettingsOuter">
 		<label>Gönderen Parola:</label>
@@ -26,12 +26,12 @@
 		<label>Gönderen Mail Host:</label>
 		<input name="mailHost" type="text" value="{%stg.admin_mailHost%}"/>
 		<label>Gönderen Mail Port:</label>
-		<input name="mailPort" type="text" value="{%stg.admin_mailPort%}"/>
+		<input name="mailPort" type="text" value="{%stg.admin_mail_port%}"/>
 	</div><!-- smtpSettingsOuter -->
 	
 	<label style="color:#fc5900;">Mail Yönlendirme</label>
 	<label style="width:700px;">Yönlendirme Adresi: &nbsp;&nbsp;&nbsp;&nbsp;<span class="italic">( maillerinizin yönlendirilmesini istediğiniz adresi belirtin! )</span></label>
-	<input name="getMailAddress" type="text" value="{%stg.admin_getMailAddress%}"/>
+	<input name="getMailAddress" type="text" value="{%stg.admin_get_mail_address%}"/>
 	
 	<label style="color:#fc5900;">Sosyal Network Ayarları</label>
 	<label>Facebook:</label>

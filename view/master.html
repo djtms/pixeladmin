@@ -34,7 +34,7 @@
 	<script src="{%VIEW_URL%}components/datepicker/datepicker.js"></script>
 	<script src="{%VIEW_URL%}js/pages/master.js"></script>
 	<script src="{%VIEW_URL%}js/files.js"></script>
-	<script src="{%VIEW_URL%}js/gui/messageBox.js"></script>
+	<script src="{%VIEW_URL%}js/classes/MESSAGEBOX.js"></script>
 	<script src="{%VIEW_URL%}js/menus.js"></script>
 	<script src="{%VIEW_URL%}components/ckeditor/ckeditor.js"></script>
 	<script src="{%VIEW_URL%}components/ckfinder/ckfinder.js"></script>
@@ -93,8 +93,9 @@
 	  			</div><!-- messageBoxHeader -->
 	  			<div id="messageBoxContent">
 	  				<span id="contentIcon" class="contentIconWarning"></span>
-	  				<p id="messageText"><!-- Mesaj Yazısı --></p>
+	  				<p id="messageContentText"><!-- Mesaj Yazısı --></p>
 	  				<div id="messageBoxButtonsOuter"></div>
+	  				<img id="messageBoxLoader" src="{%VIEW_URL%}images/messagebox/loader.gif" />
 	  			</div><!-- messageBoxContent -->
 	  		</div><!-- messageBox -->
 	  		<div id="adminHider"></div>

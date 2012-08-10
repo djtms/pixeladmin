@@ -1,5 +1,5 @@
 <?php
-$mvc_version = "1.0";
+$template_version = "1.0";
 
 require_once "Template.php";
 $View = new View();

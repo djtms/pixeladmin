@@ -16,7 +16,7 @@ require_once "system/classes/DB.php";
 
 require_once "system/includes/options.php";
 
-if(get_option("admin_SiteDebugMode") == "debugmode")
+if(get_option("admin_debug_mode") == "debugmode")
 {
 	define("debug_mode", true);
 	ini_set("display_startup_errors", true);
@@ -31,12 +31,13 @@ else
 	$add_modules_menu = false; // Menüye modules sayfasının eklenip eklenmemesini belirler
 }
 
-define("multilanguage_mode", get_option("admin_SiteMultilanguageMode") == "multilanguage" ? true : false);
-define("maintanance_mode", get_option("admin_SiteDisplayMode") == "maintanance" ? true : false);
+define("multilanguage_mode", get_option("admin_multilanguage_mode") == "multilanguage" ? true : false);
+define("maintanance_mode", get_option("admin_display_mode") == "maintanance" ? true : false);
+define("site_address", get_option("admin_site_address"));
 
 
 // View engine'i bağla
-require_once dirname(__FILE__) . "/system/view_engine/View.php";
+require_once dirname(__FILE__) . "/system/template_engine/View.php";
 
 if(in_admin)
 {
@@ -47,6 +48,6 @@ if(in_admin)
 }
 
 /* SECURITY */
-$secureKey = '{%securekey%}';
+$secretKey = '{%securekey%}';
 $sessionKeysPrefix = "{%sessionKeysPrefix%}";
 /***************************************************/

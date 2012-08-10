@@ -2,7 +2,7 @@
 
 $sitemaps = $ADMIN->SITEMAP->listSitemapsForSearchEngines();
 $sitemap_count = sizeof($sitemaps);
-$site_base_path = get_option("admin_siteAddress");
+$site_base_path = get_option("admin_site_address");
 
 header("Content-Type: text/xml");
 echo '<?xml version="1.0" encoding="UTF-8"?>';

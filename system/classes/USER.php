@@ -11,10 +11,10 @@ class PA_USER extends PA_USER_TICKET
 	
 	function completeRegistration($user_id, $username, $password)
 	{
-		global $secureKey;
+		global $secretKey;
 		
 		$pass_key = randomString(20);
-		$encryptedPassword = sha1($secureKey . $password . $pass_key);
+		$encryptedPassword = sha1($secretKey . $password . $pass_key);
 		
 		return $this->execute("UPDATE {$this->table} SET username=?, password=?, pass_key=?, status='active' WHERE user_id=?", array($username, $encryptedPassword, $pass_key, $user_id));
 	}
@@ -59,10 +59,10 @@ class PA_USER extends PA_USER_TICKET
 		if($this->getUserCount() <= 0)
 		{
 				
-			global $secureKey;
+			global $secretKey;
 				
 			$pass_key = randomString(20);
-			$encryptedPassword = sha1($secureKey . $password . $pass_key);
+			$encryptedPassword = sha1($secretKey . $password . $pass_key);
 				
 			return $this->insert($this->table, array("username"=>$username, "displayname"=>$displayname, "password"=>$encryptedPassword, "pass_key"=>$pass_key, "email"=>$email, "register_time"=>"NOW()"));
 		}
@@ -81,8 +81,8 @@ class PA_USER extends PA_USER_TICKET
 		$this->closeTicketsByTicketType($user_id, "invitation");
 		$ticket_id = $this->openTicket($user_id, "invitation", $end_date);
 		$ticket = $this->selectTicket($ticket_id);
-		$site_title = get_option("admin_siteTitle");
-		$register_link = get_option("admin_siteAddress") . "/admin/complete_registration.php?type=invitation&user={$user_id}&key={$ticket->ticket_key}";
+		$site_title = get_option("admin_site_title");
+		$register_link = get_option("admin_site_address") . "/admin/complete_registration.php?type=invitation&user={$user_id}&key={$ticket->ticket_key}";
 		$invitation_sender = $ADMIN->AUTHENTICATION->authenticated_user; // Davetiyeyi gönderen kullanıcı
 			
 		$mesaj  = "Sayın  <b>{$user->displayname}</b>, <br /> ";
@@ -104,10 +104,10 @@ class PA_USER extends PA_USER_TICKET
 	
 	function changePassword($user_id, $password)
 	{
-		global $secureKey;
+		global $secretKey;
 		
 		$pass_key = randomString(20);
-		$encryptedPassword = sha1($secureKey . $password . $pass_key);
+		$encryptedPassword = sha1($secretKey . $password . $pass_key);
 		
 		return $this->execute("UPDATE {$this->table} SET password=?, pass_key=? WHERE user_id=?", array($encryptedPassword, $pass_key, $user_id));
 	}
@@ -124,8 +124,8 @@ class PA_USER extends PA_USER_TICKET
 			$ticket_id = $this->openTicket($user->user_id, $ticket_type);
 			if($ticket = $this->selectTicket($ticket_id))
 			{
-				$site_title = get_option("admin_siteTitle");
-				$reset_password_link = get_option("admin_siteAddress") . $reset_password_page . "?type=resetpassword&user={$user->user_id}&key={$ticket->ticket_key}";
+				$site_title = get_option("admin_site_title");
+				$reset_password_link = get_option("admin_site_address") . $reset_password_page . "?type=resetpassword&user={$user->user_id}&key={$ticket->ticket_key}";
 					
 				$mesaj  = "Sayın  <b>{$user->displayname},</b><br />";
 				$mesaj .= "Talebiniz üzerine parola değiştirme işleminizi gerçekleştirmek için aşağıda bulunan \"Parolamı Değiştir\" ";
@@ -164,10 +164,10 @@ class PA_USER extends PA_USER_TICKET
 		{
 			$query .= ", password=? ";
 			
-			global $secureKey;
+			global $secretKey;
 				
 			$user = $this->getUserById($user_id);
-			$encryptedPassword = sha1($secureKey . $password . $user->pass_key);
+			$encryptedPassword = sha1($secretKey . $password . $user->pass_key);
 			$variables[] = $encryptedPassword;
 		}
 		$query .= " WHERE user_id=?";

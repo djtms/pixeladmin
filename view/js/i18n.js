@@ -92,7 +92,7 @@ function I18nStart()
 			
 			if((requestedLanguage != activeLanguage) && !isI18nSencronised)
 			{
-				messageBox("Kaydedilmeyen Veriler!", "\"" + $("span[locale=" + activeLanguage + "]").html() + "\" içerik henüz kaydedilmedi, bu sayfadan ayrılmadan önce bilgilerinizin kaybolmaması için Lütfen Kaydedin.",messageType.WARNING,[{"name":"Kaydet","click":ajaxSaveI18n},{"name":"Atla","click":selectI18n}]);
+				MESSAGEBOX.showMessage("Kaydedilmeyen Veriler!", "\"" + $("span[locale=" + activeLanguage + "]").html() + "\" içerik henüz kaydedilmedi, bu sayfadan ayrılmadan önce bilgilerinizin kaybolmaması için Lütfen Kaydedin.",messageType.WARNING,[{"name":"Kaydet","click":ajaxSaveI18n},{"name":"Atla","click":selectI18n}]);
 			}
 			else
 				selectI18n();
@@ -110,7 +110,7 @@ function I18nStart()
 			if($(this).attr("method").toLowerCase() == "get")
 			{
 				// FIXME: messageBox burada çalışmıyor
-				messageBox("Uyarı!", "Formunuzda \"Çoklu Dil\" özelliği kullandığınız için form elemanınızın veri gönderme şekli \"post\" olarak ayarlandı!", messageType.WARNING, [{name:"Tamam", click:closeMessageBox}]);
+				MESSAGEBOX.showMessage("Uyarı!", "Formunuzda \"Çoklu Dil\" özelliği kullandığınız için form elemanınızın veri gönderme şekli \"post\" olarak ayarlandı!", messageType.WARNING, [{name:"Tamam", click:MESSAGEBOX.hideMessage}]);
 			}
 			$(this).attr("method","post");
 			$(this).submit(setI18nValuesToHiddenInput);
@@ -158,7 +158,7 @@ function selectI18n()
 	});
 	
 	isI18nSencronised = true;
-	closeMessageBox();
+	MESSAGEBOX.hideMessage();
 }
 
 function setI18nValuesToHiddenInput()
@@ -245,5 +245,5 @@ function ajaxSaveI18n()
 	});
 	xhr.open("POST", "admin.php?page=dashboard");
 	xhr.send(i18nForm);
-	closeMessageBox();
+	MESSAGEBOX.hideMessage();
 }

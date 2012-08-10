@@ -31,7 +31,7 @@ $thumbsurl =  $upload_root_deep_url . "$thumbs_folder/"; // Upload edilen thumbn
 $trCharsForRegExp = preg_quote("ıİüÜöÖğĞşŞçÇ","/");
 
 $modules_main_file_name = "main.php"; // Modüllerin başlangıç dosyasının adı
-$modulesContent = ""; // module dosyaları require edildiğinde mvc dışında ekrana yazılan verileri output buffering sonucu tutan değişken.
+$modulesContent = ""; // module dosyaları require edildiğinde template engine dışında ekrana yazılan verileri output buffering sonucu tutan değişken.
 
 /* Hem javascript hemde html içinde kullanılabilecek şekilde tanımla */
 if(in_admin)

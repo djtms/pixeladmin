@@ -69,6 +69,5 @@ function checkAccessStatus($permission_key, $full_control=true, $redirect=true)
 		else
 			return false;
 	}
-	
 }
 

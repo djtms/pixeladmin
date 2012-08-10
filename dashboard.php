@@ -5,15 +5,15 @@ if(isset($_POST["admin_action"]))
 	switch ($_POST["admin_action"])
 	{
 		case "SetDisplayMode": 
-			echo set_option("admin_SiteDisplayMode", $_POST["mode"]) ? "succeed" : "error"; // Değiştirme
+			echo set_option("admin_display_mode", $_POST["mode"]) ? "succeed" : "error"; // Değiştirme
 		exit;
 		
 		case "SetMultilanguageMode": 
-			echo set_option("admin_SiteMultilanguageMode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme
+			echo set_option("admin_multilanguage_mode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme
 		exit;
 		
 		case "SetDebugMode": 
-			echo set_option("admin_SiteDebugMode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme	
+			echo set_option("admin_debug_mode", $_POST["mode"]) ? "succeed" : "error";  // Değiştirme	
 		exit;
 	}
 }

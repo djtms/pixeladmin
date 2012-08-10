@@ -16,9 +16,9 @@ class PA_AUTHENTICATION extends PA_USER
 		{
 			if($user->status == "active")
 			{
-				global $secureKey;
+				global $secretKey;
 					
-				$encryptedPassword = sha1($secureKey . $password . $user->pass_key);
+				$encryptedPassword = sha1($secretKey . $password . $user->pass_key);
 					
 				if($encryptedPassword == $user->password)
 				{

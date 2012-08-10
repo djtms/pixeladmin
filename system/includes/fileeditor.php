@@ -6,7 +6,7 @@ $exclamation_image = $ADMIN->DIRECTORY->selectSystemFileByFilename("exclamation"
 
 setGlobal("folder_image", $folder_image);
 setGlobal("exclamation_image", $exclamation_image);
-setGlobal("predefinedCropResoluions", get_option("admin_predefinedCropResoluions"));
+setGlobal("predefinedCropResoluions", get_option("admin_predefined_crop_resolutions"));
 
 function loadFileTree()
 {

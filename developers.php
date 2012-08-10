@@ -1,6 +1,6 @@
 <?php
 
 global $admin_version;
-global $mvc_version;
+global $template_version;
 
 $developers->render();

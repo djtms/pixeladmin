@@ -53,7 +53,7 @@ class GlobalValues
 		$this->User_Defined_Values = self::$userDefinedGlobals;
 			
 		ob_start(); // Çıktıyı hemen göndermeyip tamponlayacağımızı belirtiyoruz
-			require_once "_globals.html"; // Html de global değişken olarak kullanacak değişkenlerin bulunduğu html
+			require_once dirname(__FILE__) . "/_globals.html"; // Html de global değişken olarak kullanacak değişkenlerin bulunduğu html
 			$buffer = ob_get_contents(); // tampondaki çıktıyı başka değişkene atıyoruz
 		ob_clean(); // Çıktı tamponunu temizliyoruz
 		

@@ -15,13 +15,13 @@ function checkUserStatusByEmail()
 			if(response === "already_registered")
 			{
 				var messageText = "Girmiş olduğunuz <b>e-posta adresi</b> başka bir kullanıcı tarafından kullanılmaktadır! Lütfen farklı bir <b>e-posta adresi</b> girin.";
-				messageBox("E-Posta Kullanımda", messageText, messageType.WARNING, [{"name":"Tamam","click":closeMessageBox}])
+				MESSAGEBOX.showMessage("E-Posta Kullanımda", messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}])
 				returnValue = false;
 			}
 			else if(response == "not_activated_account")
 			{
 				var messageText = "Girmiş olduğunuz <b>e-posta adresi</b> henüz aktive edilmemiş bir hesaba ait, bu kullanıcıya tekrar bir aktivasyon maili göndermek istermisiniz?";
-				messageBox("Aktive Edilmemiş Kullanıcı E-posta'sı", messageText, messageType.WARNING, [{name:"İptal",click:closeMessageBox},{name:"Aktivasyon Maili Gönder",click:reSendInvitationMail}]);
+				MESSAGEBOX.showMessage("Aktive Edilmemiş Kullanıcı E-posta'sı", messageText, messageType.WARNING, [{name:"Aktivasyon Maili Gönder",click:reSendInvitationMail},{name:"İptal",click:MESSAGEBOX.hideMessage}]);
 				returnValue = false;
 			}
 			else if(response === "not_exist")
@@ -47,20 +47,22 @@ function reSendInvitationMail()
 {
 	$.ajax({
 		data:"admin_action=resendinvitationmail&email=" + $("[name='email']").val(),
+		beforeSend:MESSAGEBOX.openLoader,
 		success:function(response){
-			closeMessageBox();
+			MESSAGEBOX.hideMessage();
 			if(response !== "succeed")
 			{
-				postMessage("Hata: " + response, true);
+				postMessage("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!", true);
 			}
 			else
 			{
-				messageBox("Davetiye Gönderimi", "Üyelik davetiyesi başarıyla gönderildi!", messageType.INFO, [{"name":"Tamam","click":closeMessageBox}]);
+				MESSAGEBOX.showMessage("Davetiye Gönderimi", "Üyelik davetiyesi başarıyla gönderildi!", messageType.INFO, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);
 			}
 		},
 		error: function(){
-			closeMessageBox();
+			MESSAGEBOX.hideMessage();
 			postMessage("Hata Oluştu!", true);
-		}
+		},
+		complete:MESSAGEBOX.closeLoader
 	});
 }

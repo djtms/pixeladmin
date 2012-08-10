@@ -18,7 +18,7 @@ class PA_AUTHORIZATION extends DB
 	*/
 	function isAuthorized($permission_key, $full_control = true)
 	{
-		global $secureKey;
+		global $secretKey;
 		global $ADMIN;
 		
 		if(isset($_SESSION[$this->authorizationKeyName]))
@@ -38,10 +38,10 @@ class PA_AUTHORIZATION extends DB
 			$group_permission_count = sizeof($group_permissions);
 			
 			// Olurda birşekilde kişi session'ı illegal şekilde düzenleyip yetkilerini değiştirirse diye burada kontrol yapıyoruz.
-			// normalde kişi authorize olduğunda bağlı olduğu role_id ve group_id değerlerini ve config.php de tanımlı olan secureKey değerini 
-			// hashleyip session a atıyoruz. burada da kontrol yaparken aynı şekilde session daki permissionları secureKey ile hashleyip 
+			// normalde kişi authorize olduğunda bağlı olduğu role_id ve group_id değerlerini ve config.php de tanımlı olan secretKey değerini 
+			// hashleyip session a atıyoruz. burada da kontrol yaparken aynı şekilde session daki permissionları secretKey ile hashleyip 
 			// authorize olduğundaki hash ile karşılaştırıyoruz, eğer doğruysa permissionlara dokunulmamıştır diyip işleme devam ediyoruz.
-			if($_SESSION[$this->authorizationKeyName]["VALIDATE_ROLES_GROUPS_HASH"] == sha1($secureKey . implode($user_roles, "-") . "-" . implode($user_groups, "-")))
+			if($_SESSION[$this->authorizationKeyName]["VALIDATE_ROLES_GROUPS_HASH"] == sha1($secretKey . implode($user_roles, "-") . "-" . implode($user_groups, "-")))
 			{
 				// Eğer istenen permission'ın role_permission ve/veya group_permission tablosunda kayıtları varsa kullanıcıya izin vermek için
 				// kullanıcıda bu tablolardan dönen kayırları ara. eğer yoksa izin verme, en az biri varsa izin ver.
@@ -106,7 +106,7 @@ class PA_AUTHORIZATION extends DB
 	function authorize()
 	{
 		global $ADMIN;
-		global $secureKey;
+		global $secretKey;
 		$user = $ADMIN->AUTHENTICATION->authenticated_user;
 		$user_permissions = array();
 		$hash_string_source = "";
@@ -133,7 +133,7 @@ class PA_AUTHORIZATION extends DB
 			$groups[] = $user_groups[$i][0];
 		}
 		
-		$_SESSION[$this->authorizationKeyName]["VALIDATE_ROLES_GROUPS_HASH"] = sha1($secureKey . implode($roles, "-") . "-" . implode($groups, "-"));
+		$_SESSION[$this->authorizationKeyName]["VALIDATE_ROLES_GROUPS_HASH"] = sha1($secretKey . implode($roles, "-") . "-" . implode($groups, "-"));
 		$_SESSION[$this->authorizationKeyName]["ROLES"] = $roles;
 		$_SESSION[$this->authorizationKeyName]["GROUPS"] = $groups;
 		

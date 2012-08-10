@@ -13,22 +13,25 @@ if($ADMIN->USER->getUserCount() <= 0)
 	if($_POST["admin_action"] == "createFirstUser")
 	{
 		// Setup Default Options ////////////////////////////////////////////////////////////////////////////////////////
-		set_option("admin_siteTitle", $_POST["siteTitle"],"pa_settings");
-		set_option("admin_mailUser", $_POST["email"],"pa_settings");
-		set_option("admin_getMailAddress", $_POST["email"],"pa_settings");
-		set_option("admin_mailPort", "587","pa_settings");
-		set_option("admin_siteAddress", "http://" . $_SERVER["SERVER_NAME"],"pa_settings");
-		set_option("admin_SiteDisplayMode","maintanance");
-		set_option("admin_SiteDebugMode","debugmode");
-		set_option("admin_predefinedCropResoluions", array(array(1024,768),array(800,600),array(640,480)));
+		set_option("admin_site_title", $_POST["siteTitle"],"pa_settings");
+		setI18n("admin_site_titleI18N", $_POST["siteTitle"]);
+		set_option("admin_mail_user", $_POST["email"],"pa_settings");
+		set_option("admin_get_mail_address", $_POST["email"],"pa_settings");
+		set_option("admin_mail_port", "587","pa_settings");
+		set_option("admin_site_address", "http:/" . preg_replace("/admin(\/|\\\)system(\/|\\\).*/i", "", $_SERVER["REQUEST_URI"]),"pa_settings");
+		set_option("admin_display_mode","maintanance");
+		set_option("admin_debug_mode","debugmode");
+		set_option("admin_predefined_crop_resolutions", array(array(1024,768),array(800,600),array(640,480)));
 		/**************************************************************************************************************/
+		
+		
 		
 		// Setup Default Language ////////////////////////////////////////////////////////////////////////////////////////
 		$ADMIN->LANGUAGE->addLanguage("tr_TR");
 		$ADMIN->LANGUAGE->setDefaultLanguage("tr_TR");
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		$use_mvc = ($_POST["use_mvc"] == "use") ? true : false;
+		$use_template_engine = ($_POST["use_template_engine"] == "use") ? true : false;
 		// İlk kullanıcıyı oluştur
 		$user_id = $ADMIN->USER->addUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]);
 		// Kullanıcıya id'si "1" olan rolü ver. (Yönetici Rolüdür ve Panelden Silinemez)
@@ -37,27 +40,32 @@ if($ADMIN->USER->getUserCount() <= 0)
 		{
 			$errorMessage = "* kullanıcı oluşturma esnasında hata oluştu!";
 		}
-		else if(!createStartupFiles($use_mvc))
+		else if(!createStartupFiles($use_template_engine))
 		{
 			$errorMessage = "* bazı dosyaların kurulumu esnasında hata oluştu!";
 		}
 		else
 		{
-			header("Location:../../login.php");
+			// Kullanıcı başarılı şekilde kayıt olduktan sonra kullanıcıyı giriş yapmış hale getiriyoruz
+			$ADMIN->AUTHENTICATION->authenticate($_POST["username"], $_POST["password"]);
+			$ADMIN->AUTHORIZATION->authorize();
+			add_log("giriş yaptı");
+			postMessage("Tebrikler! Kurulum işleminiz başarıyla gerçekleştirildi!");
+			header("Location:../../admin.php?page=dashboard");
 			exit;
 		}
 	}
-	
+
 	$html = file_get_contents(dirname(__FILE__) . "/user.html");
 	$html = str_ireplace('{%errorText%}', $errorMessage, $html);
 	echo $html;
 }
 
-function createStartupFiles($use_mvc = true)
+function createStartupFiles($use_template_engine = true)
 {
 	$error = false;
 	
-	$sourceFilesMainDir = dirname(__FILE__) . ($use_mvc ? "/mvc_startup_files/" : "/normal_startup_files/");
+	$sourceFilesMainDir = dirname(__FILE__) . ($use_template_engine ? "/tmp_eng_startup_files/" : "/normal_startup_files/");
 	$targetBaseDir = dirname(__FILE__) . "/../../../";
 	$sourceFilesList = array();
 	$baseDir = $sourceFilesMainDir;

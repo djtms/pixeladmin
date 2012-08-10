@@ -17,7 +17,7 @@ addPage("Rol Ekle", "useraccounts", "add_role", "edit_role.php");
 addPage("Rol Detayı", "useraccounts", "edit_role", "edit_role.php");
 addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings","settings.php",109,USER_SUPER);
 
-if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
+if(get_option("admin_multilanguage_mode") == "multilanguage")
 {
 	addSettingsMenu("Dil Seçenekleri", "Dil Seçenekleri", "languageoptions", "languages.php",1,USER_SUPER);
 	addSettingsMenu("Sabit Dil Değişkenleri", "Sabit Dil Değişkenleri", "global_i18n_variables", "global_i18n_variables.php",2,USER_SUPER);
@@ -40,12 +40,12 @@ if($add_modules_menu)
 	
 global $master;
 $master->user = $ADMIN->AUTHENTICATION->authenticated_user;
-if(get_option("admin_SiteMultilanguageMode") == "multilanguage")
+if(get_option("admin_multilanguage_mode") == "multilanguage")
 {
-	$master->siteTitle = getI18n("admin_siteTitleI18N");
+	$master->siteTitle = getI18n("admin_site_titleI18N");
 }
 else
 {
-	$master->siteTitle = get_option("admin_siteTitle");
+	$master->siteTitle = get_option("admin_site_title");
 }
 $master->siteLink = dirname($_SERVER["SCRIPT_NAME"]) . "/../";

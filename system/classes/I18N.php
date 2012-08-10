@@ -35,7 +35,7 @@ class PA_I18N extends DB
 		return $this->get_value("SELECT {$this->language} FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
 	}
 	
-	function setI18n($i18nCode,$text,$scope="")
+	function setI18n($i18nCode, $text, $scope="")
 	{
 		if($this->checkIfI18nExists($i18nCode))
 			return $this->updateI18n($i18nCode, $text, $scope);
@@ -45,7 +45,20 @@ class PA_I18N extends DB
 	
 	function deleteI18n($i18nCode)
 	{
-		return $this->execute("DELETE FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
+		if(is_array($i18nCode))
+		{
+			$i18n_count = sizeof($i18nCode);
+			$query = "DELETE FROM {$this->table} WHERE i18nCode IN (";
+			for($i=0; $i<$i18n_count; $i++)
+			{
+				$query .= "?,";
+			}
+			$query = substr($query, 0, -1) . ")";
+			
+			return $this->execute($query, $i18nCode);
+		}
+		else
+			return $this->execute("DELETE FROM {$this->table} WHERE i18nCode=?",array($i18nCode));
 	}
 	
 	/* PRIVATE FUNCTIONS */

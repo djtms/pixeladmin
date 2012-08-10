@@ -5,6 +5,7 @@ var EDITORS = new Array();
 
 function MasterStart()
 {
+	MESSAGEBOX = new MESSAGEBOX();
 	validate = new Validate();
 	
 	$.ajaxSetup({
@@ -17,14 +18,6 @@ function MasterStart()
 	
 	postMessage();
 	
-	$(window).resize(function(){
-		var left = ($(window).width() - 460) / 2;
-		var top  = ($(window).height() - 151) / 2;
-		
-		$("#messageBox").css({"left":left,"top":top});
-	});
-	
-	$(window).trigger("resize");
 	$("input[type=date], input[type=datetime], input[type=time]").datepicker();
 }
 
