@@ -95,7 +95,7 @@ else
 		
 		if(!$allow)
 		{
-			header("Location:custom_pages/maintanance.html");
+			header("Location:custom_pages/uc.html");
 			exit;
 		}
 	}
