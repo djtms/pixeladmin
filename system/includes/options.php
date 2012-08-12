@@ -6,6 +6,8 @@ function get_option($option_name)
 	
 	$o = $DB->get_row("SELECT * FROM {$DB->tables->option} WHERE option_name=?",array($option_name));
 	
+	$o = gettype($o) === "object" ? $o : new stdClass();
+	
 	switch($o->data_type)
 	{
 		default:
@@ -61,6 +63,8 @@ function get_optiongroup($group_name)
 		$count = sizeof($options);
 		for($i = 0; $i<$count; $i++)
 		{
+			$options[$i] = gettype($options[$i]) === "object" ? $options[$i] : new stdClass();
+			
 			switch($options[$i]->data_type)
 			{
 				default:
