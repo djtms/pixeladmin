@@ -33,7 +33,7 @@
 			editHtml += '<div class="fileThumbArea">';
 			editHtml += '<div class="fileThumbOuter">';
 			editHtml += '<img class="fileThumb" src="" />';
-			editHtml += '<div class="thumbLoaderOuter"><img class="thumbloader" src="' + VIEW_URL + 'images/fileeditor/thumbloader.gif" /></div>';
+			editHtml += '<div class="thumbLoaderOuter"><img class="thumbloader" src="' + VIEW_URL + '/components/fileeditor/images/thumbloader.gif" /></div>';
 			editHtml += '<div class="fileThumbButtonsOuter">';
 			
 			
@@ -119,7 +119,7 @@
 			editHtml += '<div class="existingResolutionsOuter">';
 			editHtml += '<ul>';
 			editHtml += '</ul>';
-			editHtml += '<div class="loader"><img src="' + VIEW_URL + 'images/fileeditor/thumblistloader.gif" /></div>';
+			editHtml += '<div class="loader"><img src="' + VIEW_URL + 'components/fileeditor/images/thumblistloader.gif" /></div>';
 			editHtml += '</div>';
 			editHtml += '<div>';
 			editHtml += '</div>';
@@ -145,7 +145,7 @@
 			editHtml += '</div>';
 			
 			editHtml += '</div>';
-			editHtml += '<img class="editfileloader" src="' + VIEW_URL + 'images/fileeditor/editfileloader.gif" />';
+			editHtml += '<img class="editfileloader" src="' + VIEW_URL + 'components/fileeditor/images/editfileloader.gif" />';
 			editHtml += '<span class="resultText"></span>';
 			editHtml += '</div>';
 			

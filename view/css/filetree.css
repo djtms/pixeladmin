@@ -14,19 +14,19 @@
 	clear:both;
 	padding:0 0 0 12px;
 	cursor:pointer;
-	background: url(../images/fileeditor/directory_open.png) no-repeat -4px top;
+	background: url(../images/directory_open.png) no-repeat -4px top;
 }
 
 .fileTree .directory.collapsed
 {
 	height:25px !important;
 	overflow:hidden;
-	background: url(../images/fileeditor/directory_close.png) no-repeat -4px top;
+	background: url(../images/directory_close.png) no-repeat -4px top;
 }
 
 .fileTree .directory.expanded
 {
-	background: url(../images/fileeditor/directory_open.png) no-repeat -4px top;
+	background: url(../images/directory_open.png) no-repeat -4px top;
 }
 
 .fileTree a

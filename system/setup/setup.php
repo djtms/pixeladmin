@@ -112,7 +112,7 @@ function createDirectoriesAndFiles()
 		}
 	}
 	
-	$default_thumbs_source_dir = dirname(__FILE__) . "/../../view/images/fileeditor/default_thumbs/";
+	$default_thumbs_source_dir = dirname(__FILE__) . "/../../view/components/fileeditor/images/default_thumbs/";
 	$default_thumbs_target_dir = dirname(__FILE__) . "/../../../upload/system/";
 	
 	if(($files = scandir($default_thumbs_source_dir)) && (sizeof($files) > 2))

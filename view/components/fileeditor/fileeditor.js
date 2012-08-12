@@ -125,7 +125,7 @@ jQuery.fn.fileeditor = function(properties){
 				editorHtml += '<div class="tempQueue" style="display:none;"></div>';
 				editorHtml += '<div class="browserContentLoaderOuter">';
 				editorHtml += '<div class="fileEditorLoader">';
-				editorHtml += '<img src="' + VIEW_URL + '/images/fileeditor/browserLoader.gif" />';
+				editorHtml += '<img src="' + VIEW_URL + 'components/fileeditor/images/browserLoader.gif" />';
 				editorHtml += '</div><!-- fileEditorLoader -->';
 				editorHtml += '</div><!-- browserContentLoaderOuter -->';
 				editorHtml += '<div class="forTooltipVisibility">';
@@ -614,7 +614,7 @@ jQuery.fn.fileeditor = function(properties){
 											<span class="uploadingText">Yükleniyor...</span>\
 											<span class="uploadBarOuter">\
 												<span id="' + file.queue_bar_id + '" class="bar">\
-													<img class="uploaderImage" src="' + VIEW_URL + 'images/fileeditor/loader.gif" />\
+													<img class="uploaderImage" src="' + VIEW_URL + 'components/fileeditor/images/loader.gif" />\
 												</span>\
 											</span>\
 										</li>';
@@ -669,7 +669,7 @@ jQuery.fn.fileeditor = function(properties){
 						var filesHtml = '<li class="file newlyUploaded" title="' + file.basename + '" url="' + ADMIN.encodeUTF8(file.url) + '" fileId="' + file.file_id + '">';
 						
 						filesHtml += '<span class="filethumbOuter" fileId="' + file.file_id + '">';
-						filesHtml += '<img class="filethumb" src="' + VIEW_URL + 'images/fileeditor/fileloader.gif" />';
+						filesHtml += '<img class="filethumb" src="' + VIEW_URL + 'components/fileeditor/images/fileloader.gif" />';
 						filesHtml += '</span>';
 						
 						filesHtml += '<span class="fileEditButtonsOuter">';

@@ -117,7 +117,7 @@
 {
 	height:35px;
 	float:right;
-	background: #474747 url(../images/fileeditor/btnCloseBrowser.png) no-repeat right top;
+	background: #474747 url(images/btnCloseBrowser.png) no-repeat right top;
 	cursor: pointer;
 	padding:0 35px 0 15px;
 	font:13px Arial;
@@ -152,7 +152,7 @@
 	line-height:19px !important;
 	padding:0 0 0 20px ;
 	margin:25px 0 15px 10px  !important;
-	background: url(../images/fileeditor/favoritesTitleIcon.jpg) no-repeat left 3px;
+	background: url(images/favoritesTitleIcon.jpg) no-repeat left 3px;
 }
 
 .browserFavoritesList
@@ -189,7 +189,7 @@
 	margin:25px 0 13px 9px  !important;
 	float:left;
 	clear:left;
-	background: url(../images/fileeditor/directoryTitleIcon.jpg) no-repeat left 4px;
+	background: url(images/directoryTitleIcon.jpg) no-repeat left 4px;
 }
 
 .browserDirectoriesOuter
@@ -204,7 +204,7 @@
 	height:456px;
 	float:left;
 	padding:20px 27px;
-	background: url(../images/fileeditor/repeatBg.png);
+	background: url(images/repeatBg.png);
 }
 
 .browserBigTitle
@@ -223,7 +223,7 @@
 {
 	height:18px;
 	float:left;
-	background: url(../images/fileeditor/navButtonsBg.png);
+	background: url(images/navButtonsBg.png);
 	margin:11px 0 0 5px;
 }
 
@@ -267,7 +267,7 @@
 	height:18px;
 	float:left;
 	margin:11px 0 0 5px;
-	background: url(../images/fileeditor/newFileIcon.png) 0 0px !important;
+	background: url(images/newFileIcon.png) 0 0px !important;
 }
 
 .browserBtn_NewDir:hover
@@ -333,7 +333,7 @@
 	left:244px;
 	top:135px;
 	z-index:100;
-	background: #fff url(../images/fileeditor/panelContentLoaderBg.png) no-repeat left top;
+	background: #fff url(images/panelContentLoaderBg.png) no-repeat left top;
 }
 
 .fileEditorLoader
@@ -343,7 +343,7 @@
 	float:left;
 	margin:126px 0 0 308px;
 	padding:18px;
-	background: url(../images/fileeditor/browserLoaderBg.png) no-repeat left top;
+	background: url(images/browserLoaderBg.png) no-repeat left top;
 }
 
 .fileEditorLoader img
@@ -402,7 +402,7 @@
 	float:left;
 	margin:0 0 5px 0;
 	border:solid 1px #ccc;
-	background: #fff url(../images/fileeditor/fileloader.gif);
+	background: #fff url(images/fileloader.gif);
 }
 
 .browserFilesList .filethumb
@@ -448,7 +448,7 @@
 
 .browserFilesList .btnEdit
 {
-	background: url(../images/fileeditor/btnEdit.png) no-repeat left top;
+	background: url(images/btnEdit.png) no-repeat left top;
 }
 
 .browserFilesList .btnEdit:hover
@@ -458,7 +458,7 @@
 
 .browserFilesList .btnLook
 {
-	background: url(../images/fileeditor/btnView.png) no-repeat left top;
+	background: url(images/btnView.png) no-repeat left top;
 }
 
 .browserFilesList .btnLook:hover
@@ -468,7 +468,7 @@
 
 .browserFilesList .btnPlay
 {
-	background: url(../images/fileeditor/btnPlay.png) no-repeat left top;
+	background: url(images/btnPlay.png) no-repeat left top;
 }
 
 .browserFilesList .btnPlay:hover
@@ -478,7 +478,7 @@
 
 .browserFilesList .btnDelete
 {
-	background: url(../images/fileeditor/btnDelete.png) no-repeat left top;
+	background: url(images/btnDelete.png) no-repeat left top;
 }
 
 .browserFilesList .btnDelete:hover
@@ -575,7 +575,7 @@
 	position:relative;
 	overflow:hidden;
 	border:solid 1px #6c6c6c;
-	background: url(../images/fileeditor/uploaderBarBg.jpg) repeat-x;
+	background: url(images/uploaderBarBg.jpg) repeat-x;
 }
 
 .browserFilesList .bar

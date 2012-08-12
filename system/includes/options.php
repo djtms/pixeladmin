@@ -4,7 +4,7 @@ function get_option($option_name)
 {
 	global $DB;
 	
-	$o = $DB->get_row("SELECT * FROM {$DB->tables->option} WHERE option_name=?",array($option_name));
+	$o = $DB->get_row("SELECT *, '' AS option_value FROM {$DB->tables->option} WHERE option_name=?",array($option_name));
 	
 	switch($o->data_type)
 	{

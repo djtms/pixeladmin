@@ -95,20 +95,20 @@
 
 .fileOuter .editButton
 {
-	background-image: url(../images/fileeditor/btnEdit.png);
+	background-image: url(../images/btnEdit.png);
 }
 
 .fileOuter .lookatButton
 {
-	background-image: url(../images/fileeditor/btnView.png);
+	background-image: url(../images/btnView.png);
 }
 
 .fileOuter .playButton
 {
-	background-image: url(../images/fileeditor/btnPlay.png);
+	background-image: url(../images/btnPlay.png);
 }
 
 .fileOuter .deleteFile
 {
-	background-image: url(../images/fileeditor/btnDelete.png);
+	background-image: url(../images/btnDelete.png);
 }
