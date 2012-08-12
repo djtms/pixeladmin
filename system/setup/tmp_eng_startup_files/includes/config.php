@@ -22,6 +22,9 @@ else
 	setGlobal("keywords", get_option("admin_keywords"));
 }
 
+define("site_title", $site_title);
+define("description", $description);
+define("keywords", $keywords);
 
 setGlobal("multilanguage_mode", multilanguage_mode);
 setGlobal("maintanance_mode", maintanance_mode);

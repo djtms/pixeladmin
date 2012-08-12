@@ -33,7 +33,7 @@ endif;
  * 
  * Verilen permission_key değerine göre kullanıcının authenticate ve authorize durumlarını kontrol eder ve boolean tipinde sonucu döndürür veya yönlendirme işlemi yapar. 
  * @param string $permission_key kontrol edilmek istenen permission anahtarı
- * @param boolean $full_control eğer bu değişken true olursa, sorgulanan anahtar database deki ilgili tablolarda kayıtlı değilse, authenticate olmuş herkese izin verilir
+ * @param boolean $full_control eğer bu değişken false olursa, sorgulanan anahtar database deki ilgili tablolarda kayıtlı değilse, authenticate olmuş herkese izin verilir, aksi durumda kesinlikle sorgulanan permission kullanıcıda olma şartı aranır.
  * @param boolean $redirect işlem sonucunu boolean döndürmek yerine önceden tanımlı hata sayfalarına yönlendirme işlemi yapması istendiğinde kullanılır.
  */
 function checkAccessStatus($permission_key, $full_control=true, $redirect=true)
