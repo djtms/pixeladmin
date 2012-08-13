@@ -124,7 +124,7 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 	$template = file_get_contents(GUI_TEMPLATES_DIR . "filegrid/filegrid.html");
 	$itemsList = "";
 	$showAllButtons = false; // Tüm butonları kullanıp kullanmaması gerektiğini belirten değişken.
-	$visibleButtonTypes; // Kullanıcının atadığı değere göre gösterilmesi istenen buton tiplerinin listesini tutan değişken.
+	$visibleButtonTypes = new stdClass(); // Kullanıcının atadığı değere göre gösterilmesi istenen buton tiplerinin listesini tutan değişken.
 	$appendExtraHtml = false; // Kullanıcının ekstra html ekleyip eklemediğini belirten değişken.
 	$requestedColumnNames = array(); // Kullanıcının (eğer eklediyse) eklediği html data içinde tanımlanmış column adlarının listesini tutan değişken.
 	$requestedColumnsCount = 0;

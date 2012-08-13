@@ -87,6 +87,7 @@ function browseFiles()
 	else
 		$parent_id = -1;
 	
+	$return = new stdClass();
 	$return->directories = $ADMIN->DIRECTORY->listDirectoriesByParentId($parent_id);
 	$return->files = $ADMIN->DIRECTORY->listFilesByDirectory($directory);
 	$length = sizeof($return->files);
