@@ -486,6 +486,16 @@
 	background-position: left bottom;
 }
 
+.browserFilesList .btnDownload
+{
+	background: url(images/btnDownload.png) no-repeat left top;
+}
+
+.browserFilesList .btnDownload:hover
+{
+	background-position: left bottom;
+}
+
 .browserFilesList .fileName
 {
 	position:absolute;

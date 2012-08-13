@@ -5,6 +5,7 @@ function DataGridStart()
 	$(".crossBtn").live("click",function(){
 		if(confirm("Silmek istediğinize eminmisiniz?"))
 		{
+			$(this).css("background","none").find("img").css("display","block");
 			window.location.href = $(this).attr("href");
 		}
 		

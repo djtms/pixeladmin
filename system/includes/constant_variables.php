@@ -20,7 +20,7 @@ $upload_root_folder = "upload"; // Upload dosyalarının bulunduğu kök dizinin
 $system_folder = "system"; // Sistem tarafından kullanılan dosyaların bulunduğu upload dizini içindeki klasörün adı
 $files_folder = "files"; // Upload edilen dosyaların bulunduğu upload dizinindeki klasörün adı
 $thumbs_folder = "thumbs"; // Thumbnail lerin bulunduğu upload dizinindeki klasörün adı
-$allowedFileFormatsForUpload = array("jpeg","jpg","gif","png","css","mp4","avi","flv","f4v","swf"); // Upload işleminde izin verilen dosya formatları dizisi
+$allowedFileFormatsForUpload = array("jpeg","jpg","gif","png","css","mp4","avi","flv","f4v","swf","pdf","doc","docx"); // Upload işleminde izin verilen dosya formatları dizisi
 
 $upload_root_deep_url = getDeepUrl($upload_root_folder); // Bulunulan dizinden upload kök dizinine gitmek için kullanılan url
 

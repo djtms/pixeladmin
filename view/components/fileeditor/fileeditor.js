@@ -204,7 +204,7 @@ jQuery.fn.fileeditor = function(properties){
 				{
 					if($(this).hasClass("selected"))
 					{
-						//$(this).removeClass("selected"); // Sorun çıkarıyor sonra bak
+						//$(this).removeClass("selected"); // TODO: Sorun çıkarıyor sonra bak
 					}
 					else
 						$(this).addClass("selected");
@@ -447,6 +447,7 @@ jQuery.fn.fileeditor = function(properties){
 
 		function browseFiles(directory)
 		{
+			alert("Load Event");
 			currentDirectory = directory;
 			var treeObject = editor.find(".fileTree a[href='" + directory + "']");
 			browserFavoritesList.find("a").removeClass("selected");
@@ -513,6 +514,10 @@ jQuery.fn.fileeditor = function(properties){
 								if(files[i].type != "other")
 								{
 									filesHtml += '<a title="' + (files[i].type == "movie" ? "Oynat" : "İncele") + '" class="' + (files[i].type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + files[i].type + '&url=' + ADMIN.encodeUTF8(files[i].url) + '"></a>';
+								}
+								else
+								{
+									filesHtml += '<a title="İndir"  class="btnDownload fBtn" href="'  + ADMIN.encodeUTF8(files[i].url) + '"></a>';
 								}
 								
 								filesHtml += '<span title="Sil" class="btnDelete fBtn"></span>';

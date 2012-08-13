@@ -84,7 +84,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 					
 					$gridItemsHtml .=  "<a class='crossBtn' href='";	
 					$gridItemsHtml .= ($cross_button_cleared_link ? "admin.php?" . $deleteLink : $deleteLink);			
-					$gridItemsHtml .= "' onclick='return false;'></a>";
+					$gridItemsHtml .= "' onclick='return false;'><img src='view/images/transparentLoader.gif' /></a>";
 				}
 
 				if($use_edit_button)
