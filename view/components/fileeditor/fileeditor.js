@@ -447,7 +447,6 @@ jQuery.fn.fileeditor = function(properties){
 
 		function browseFiles(directory)
 		{
-			alert("Load Event");
 			currentDirectory = directory;
 			var treeObject = editor.find(".fileTree a[href='" + directory + "']");
 			browserFavoritesList.find("a").removeClass("selected");
