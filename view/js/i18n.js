@@ -40,7 +40,7 @@ function I18nStart()
 			
 			formObject.append(hiddenObject);
 			i18nObject.removeAttr("name");
-			if(i18nObject.attr("type") == "editor")
+			if(i18nObject.is("[editor]"))
 			{
 				var id = i18nObject.attr("id"); 
 				EDITORS[id] = CKEDITOR.replace(id);
@@ -135,7 +135,7 @@ function selectI18n()
 				var selector = "[i18n=" + response[i].i18nCode + "]";
 				if(multilanguage_mode || ($(selector + "[forcei18n]").length > 0))
 				{
-					if($(selector).attr("type") == "editor")
+					if($(selector).is("[editor]"))
 					{
 						var editorName = $(selector).attr("id");
 						EDITORS[editorName].setData(response[i].text,function(){
@@ -169,7 +169,7 @@ function setI18nValuesToHiddenInput()
 	{
 		$(this).find("[i18n]").each(function(){
 			var i18nCode = $(this).attr("i18n");
-			if($(this).attr("type") == "editor")
+			if($(this).is("[editor]"))
 			{	
 				var id = $(this).attr("id");
 				var text = EDITORS[id].getData();
@@ -202,7 +202,7 @@ function updateStyles()
 		var i18nCode = $(this).attr("i18n");
 		i18nCodesArray.push({"i18nCode":i18nCode});
 		
-		if($(this).attr("type") == "editor")
+		if($(this).is("[editor]"))
 		{
 			var id = $(this).attr("id");
 			$("#" + id).css("opacity","0.5");
@@ -224,7 +224,7 @@ function ajaxSaveI18n()
 	$("[i18n]").each(function(){
 		var i18nCode = $(this).attr("i18n");
 		
-		if($(this).attr("type") == "editor")
+		if($(this).is("[editor]"))
 		{	
 			var editorId = $(this).attr("id");
 			i18nText = EDITORS[editorId].getData();

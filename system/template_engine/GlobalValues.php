@@ -10,6 +10,8 @@ class GlobalValues
 	
 	public function setGlobal($name, $value)
 	{
+		$value = isset($value) ? $value : "";
+		
 		$GLOBALS[$name] = $value;
 		$this->{$name} = $value;
 		

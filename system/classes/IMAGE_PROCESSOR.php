@@ -280,6 +280,7 @@ class PA_IMAGE_PROCESSOR
 		{
 			$target_width = $source_width;
 			$target_height = $source_height;
+			$pos = new stdClass();
 			$pos->left = 0;
 			$pos->top = 0;
 		}

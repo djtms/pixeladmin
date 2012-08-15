@@ -15,6 +15,7 @@ if($ADMIN->USER->getUserCount() <= 0)
 		// Setup Default Options ////////////////////////////////////////////////////////////////////////////////////////
 		set_option("admin_site_title", $_POST["siteTitle"],"pa_settings");
 		setI18n("admin_site_titleI18N", $_POST["siteTitle"]);
+		setI18n("admin_descriptionI18N", $_POST["admin_descriptionI18N"]);
 		set_option("admin_mail_user", $_POST["email"],"pa_settings");
 		set_option("admin_get_mail_address", $_POST["email"],"pa_settings");
 		set_option("admin_mail_port", "587","pa_settings");

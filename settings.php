@@ -40,7 +40,7 @@ $stg = get_optiongroup("pa_settings");
 if($IsSiteMultilanguage)
 {
 	$siteTitleValue = ' i18n="admin_site_titleI18N" ';
-	$siteDescriptionI18N = ' i18n="admin_siteDescriptionI18N" ';
+	$siteDescriptionI18N = ' i18n="admin_descriptionI18N" ';
 	$siteKeywordsI18N = ' i18n="admin_keywordsI18N" ';
 }
 else

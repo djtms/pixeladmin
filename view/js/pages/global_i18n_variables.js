@@ -45,7 +45,7 @@ function GlobalI18nVariablesStart()
 			
 			var i18n_code = $(this).attr("i18n_code");
 			var add_new_data = i18n_code == "" ? true : false;
-			var value = $(this).val();
+			var value = encodeURIComponent($(this).val());
 			var column_name = $(this).attr("column_name");
 			
 			$.ajax({

@@ -245,7 +245,7 @@ function removeHtmlAttribute($html_content, $attribute_fiter = "all", $html_filt
 		$attribute_pattern .= ")";
 	}
 	
-	$pattern = "/<{$tagname_pattern}+ *({$attribute_pattern}+ *= *(\"|\') *[\w :;.,()-]+ *(\"|\')) *(>|\/>)/i";
+	$pattern = "/<{$tagname_pattern}+ *({$attribute_pattern}+ *= *(\"|\').*?(\\1)).*?(>|\/>)/i";
 	
 	return preg_replace($pattern, "", $html_content);
 }
