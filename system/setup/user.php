@@ -18,7 +18,7 @@ if($ADMIN->USER->getUserCount() <= 0)
 		set_option("admin_mail_user", $_POST["email"],"pa_settings");
 		set_option("admin_get_mail_address", $_POST["email"],"pa_settings");
 		set_option("admin_mail_port", "587","pa_settings");
-		set_option("admin_site_address", "http:/" . preg_replace("/admin(\/|\\\)system(\/|\\\).*/i", "", $_SERVER["REQUEST_URI"]),"pa_settings");
+		set_option("admin_site_address", "http:/" . $_SERVER["HTTP_HOST"] . preg_replace("/admin(\/|\\\)system(\/|\\\).*/i", "/", $_SERVER["REQUEST_URI"]),"pa_settings");
 		set_option("admin_display_mode","maintanance");
 		set_option("admin_debug_mode","debugmode");
 		set_option("admin_predefined_crop_resolutions", array(array(1024,768),array(800,600),array(640,480)));
