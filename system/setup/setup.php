@@ -152,7 +152,7 @@ function createDbTables($dbh,$prefix)
 					  `language_abbr` varchar(4) NOT NULL,
 					  `country_name` varchar(100) NOT NULL,
 					  `country_abbr` varchar(4) NOT NULL,
-					  `date_format` varchar(25) NOT NULL DEFAULT ' %d %M %y',
+					  `date_format` varchar(25) NOT NULL DEFAULT '%d %M %y',
 					  `status` tinyint(2) NOT NULL DEFAULT '-1',
 					  PRIMARY KEY (`locale`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
