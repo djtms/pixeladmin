@@ -68,7 +68,7 @@ function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisi
 	$pageCount = ceil($totalItemCount / $eachPageItemCount);
 	$itemHtml = '<a href="{%link%}">{%page%}</a>';
 	$selectedItemHtml = '<span>{%page%}</span>';
-	$pagerHtml = '';
+	$pagerHtml = in_admin ? '<div class="pagerOuter">' : '';
 	
 	if($pageCount > 1)
 	{
@@ -109,6 +109,8 @@ function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisi
 			}
 		}
 	}
+	
+	$pagerHtml .= in_admin ? '</div>' : '';
 		
 	return $pagerHtml;
 }
