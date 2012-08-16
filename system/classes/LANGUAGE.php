@@ -2,6 +2,7 @@
 class PA_LANGUAGE extends DB
 {
 	public $error = "";
+	public $date_format = "'%d %M %y'";
 	private $tableI18n = "";
 	private $tableLang = "";
 	
@@ -36,15 +37,16 @@ class PA_LANGUAGE extends DB
 	}
 	
 	
-	function addLanguage($locale)
+	function addLanguage($locale, $date_format='%d %M %y')
 	{
 		if(!$this->checkIfColumnExists($this->tableI18n, $locale) && !$this->execute("ALTER TABLE {$this->tableI18n} ADD $locale TEXT DEFAULT NULL"))
 			return false; // Belirtilen column un tabloda olmadığı durumda eğer o column u oluşturamıyorsak return false olacak.
 		
-		return $this->setLanguageStatus($locale, 1);
+		return $this->setLanguageStatus($locale, 1) && 
+				$this->execute("UPDATE {$this->tableLang} SET date_format=? WHERE locale=?", array($date_format, $locale));
 	}
 	
-	function updateLanguage($old_locale, $new_locale, $new_status=null)
+	function updateLanguage($old_locale, $new_locale, $new_status=null, $date_format='%d %M %y')
 	{
 		// Eğer dil değişikliği yapmıyorsa belki sadece "status" değerini değiştiriyorsa 
 		// veya şu anda aktif olan bir dili seçmiyorsa
@@ -64,7 +66,8 @@ class PA_LANGUAGE extends DB
 					$old_language_status = $new_status;
 				
 				return $this->setLanguageStatus($old_locale, -1) &&
-						$this->setLanguageStatus($new_locale, $old_language_status);
+						$this->setLanguageStatus($new_locale, $old_language_status) &&
+						$this->execute("UPDATE {$this->tableLang} SET date_format=? WHERE locale=?", array($date_format, $new_locale));
 				 
 			}
 			else

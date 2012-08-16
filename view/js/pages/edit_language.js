@@ -9,6 +9,28 @@ function EditLanguage()
 	
 	if(selected_language_abbr != "no_language")
 		languageObject.val(selected_language_abbr).change();
+	
+	$("#country").change(function(){
+		$.ajax({
+			type:"post",
+			url:"admin.php?page=edit_language",
+			data:"admin_action=get_date_format&locale=" + $("[name='language']").val() + "_" + $("#country").val(),
+			dataType:"json",
+			success:function(response){
+				if(response.success === true)
+				{
+					$("#date_format").val(response.format);
+				}
+				else
+				{
+					postMessage("Beklenmedik hata oluştu!", true);
+				}
+			},
+			error: function(){
+				postMessage("Beklenmedik hata oluştu!", true);
+			}
+		});
+	});
 }
 
 function listCountries()
@@ -31,7 +53,7 @@ function listCountries()
 				cHtml += '>' + l.country_name + '</option>';
 			}
 			
-			$("[name='country']").html(cHtml);
+			$("[name='country']").html(cHtml).trigger("change");
 		},
 		error:function(){
 			postMessage("Hata: edit_language.js, Satır:26, Adres: admin/view/js/pages/edit_language.js", true);

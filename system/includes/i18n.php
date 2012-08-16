@@ -89,9 +89,11 @@ function saveI18n()
 function setLanguage($language)
 {
 	global $ADMIN;
+	$l = $ADMIN->LANGUAGE->selectLanguage($language);
 	
 	$ADMIN->DB->execute("SET LC_TIME_NAMES=?", array($language));
 	$ADMIN->I18N->language = $language;
+	$ADMIN->LANGUAGE->date_format = "'{$l->date_format}'";
 	$_SESSION["language"] = $language;
 }
 

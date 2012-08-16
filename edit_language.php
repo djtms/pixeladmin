@@ -10,10 +10,21 @@ if(isset($admin_action))
 			echo json_encode($ADMIN->LANGUAGE->listCountriesByLanguageAbbreviation($language));
 		exit;
 		
+		case "get_date_format":
+			if($language = $ADMIN->LANGUAGE->selectLanguage($locale))
+			{
+				echo json_encode(array("success"=>true, "format"=>$language->date_format));
+			}
+			else
+			{
+				echo json_encode(array("success"=>false));
+			}
+		exit;
+		
 		case "edit_language":
 			if($locale == "no_locale")
 			{
-				if($ADMIN->LANGUAGE->addLanguage("{$language}_{$country}"))
+				if($ADMIN->LANGUAGE->addLanguage("{$language}_{$country}", $date_format))
 				{
 					postMessage("Başarıyla Kaydedildi!");
 					header("Location:admin.php?page=languageoptions");
@@ -28,7 +39,7 @@ if(isset($admin_action))
 			{
 				$status = ($_POST["status"] == "active" ? null : 0);
 				
-				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}", $status))
+				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}", $status, $date_format))
 				{
 					postMessage("Başarıyla Kaydedildi!");
 					header("Location:admin.php?page=languageoptions");
@@ -71,10 +82,13 @@ setGlobal("selected_country_abbr", isset($selected_language->country_abbr) ? $se
 		?>
 	</select>
 	
-	<label>Ülke</label>
-	<select name="country">
+	<label>Ülke:</label>
+	<select id="country" name="country">
 		<option value="null">Seçiniz</option>
 	</select>
+	
+	<label>Tarih Formatı:</label>
+	<input id="date_format" type="text" name="date_format" />
 	
 	<button type="submit" name="admin_action" value="edit_language">Kaydet</button>
 </form>
