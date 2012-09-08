@@ -12,20 +12,19 @@ class PA_UPLOADER extends DB
 		$this->table = $this->tables->file;
 	}
 	
-	function uploadFile($directory,$file=null, $access_type = "public")
+	function uploadFile($directory_id,$file=null, $access_type = "public")
 	{
 		global $ADMIN;
 		global $uploadurl;
 		
 		$size = $file["size"];
-		$properties = $this->calculateFileProperties($directory,$file["name"]);
+		$properties = $this->calculateFileProperties($directory_id, $file["name"]);
 		$thumb_file_id = $this->calculateThumbnailFileId($properties->extension);
-		$uploadError = $file["error"];
 		$resolution = (object)array("width"=>0,"height"=>0);
 		
-		if($uploadError != 0)
+		if($file["error"] != 0)
 		{
-			$this->error = "Upload Hata Kodu: $uploadError";
+			$this->error = "Upload hata kodu: " . $file["error"];
 			return false;
 		}
 		else if(!move_uploaded_file($file["tmp_name"], $uploadurl . $properties->url))
@@ -42,7 +41,7 @@ class PA_UPLOADER extends DB
 		
 		if(!$this->insert($this->table,array("basename"=>$properties->basename,
 												"filename"=>$properties->filename,
-												"directory"=>$properties->directory,
+												"directory_id"=>$properties->directory_id,
 												"url"=>$properties->url,
 												"type"=>$properties->type,
 												"extension"=>$properties->extension,
@@ -79,16 +78,15 @@ class PA_UPLOADER extends DB
 		}
 	}
 	
-	function calculateFileProperties($directory,$fileName)
+	function calculateFileProperties($directory_id, $fileName)
 	{
 		$file = array();
 		$creation_time = currentDateTime();
-		$directory = trim($directory);
 		$fileName = fixStringForWeb($fileName);
 		
 		if(trim($fileName) != "")
 		{
-			$copied_file_id = $this->getCopiedFileId($directory,basename($fileName));
+			$copied_file_id = $this->getCopiedFileId($directory_id,basename($fileName));
 			
 			if($copied_file_id > 0)
 				$basename = $this->generateDuplicatedName($copied_file_id);
@@ -100,9 +98,9 @@ class PA_UPLOADER extends DB
 			$filename = basename($pInfo->basename,".$pInfo->extension"); // PHP 5.2.0 sürümü öncesinde pathinfo() fonksiyonu "basename" değeri üretmediği için kendimiz üretiyoruz.
 			$basename = $filename . ".{$extension}";
 			$type = $this->getType($basename);
-			$url = $directory . $basename;
+			$url = $this->get_value("SELECT directory FROM {$this->tables->directory} WHERE directory_id=?", array($directory_id)) . $basename;
 			
-			return (object)array("basename"=>$basename,"filename"=>$filename,"directory"=>$directory,
+			return (object)array("basename"=>$basename,"filename"=>$filename,"directory_id"=>$directory_id,
 				"url"=>$url,"type"=>$type,"extension"=>$extension,"size"=>0,
 				"creation_time"=>$creation_time,"last_update_time"=>$creation_time,
 				"width"=>0,"height"=>0,"thumb_file_id"=>-1,"copied_file_id"=>$copied_file_id,
@@ -114,13 +112,11 @@ class PA_UPLOADER extends DB
 	
 	
 	/* PRIVATE */
-	private function getCopiedFileId($directory,$basename)
+	private function getCopiedFileId($directory_id, $basename)
 	{
-		$query = "SELECT file_id FROM {$this->table} WHERE url=?";
-		$url = $directory . $basename;
-		$fileId = $this->get_value($query,array($url));
+		$file_id = $this->get_value("SELECT file_id FROM {$this->table} WHERE directory_id=? AND basename=?",array($directory_id, $basename));
 		
-		return $fileId > 0 ? $fileId : -1;
+		return $file_id > 0 ? $file_id : -1;
 	}
 	
 	private function getType($basename)

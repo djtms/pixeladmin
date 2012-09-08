@@ -76,7 +76,6 @@ function loadGallery(gallery,columnsCount,rowsCount)
 	_this.html(gHtml);
 	
 	btnAddFile  = _this.find(".galleryAddFileButton");
-	btnAddFile.fileeditor();
 	galleryObject = _this.find(".galleryList");
 	galleryListOuter = _this.find(".galleryListOuter");
 	
@@ -138,22 +137,20 @@ function loadGallery(gallery,columnsCount,rowsCount)
 			updatedFilesList.push({id:fileId});
 		});
 		
-		$(this).openFileEditor({
-			multiSelection:true,
-			hideFileIds:updatedFilesList,
-			onSelect:function(files){
+		$(document).fileeditor("openFileEditor",{
+			multiselection:true,
+			onFilesSelect:function(files){
 				var fileCount = files.length;
 				var filesHtml = '';
 				
 				galleryObject.find(".galleryItem").removeClass("lastAdded");
-				for(var i=0; i<fileCount; i++)
+				for(i=0; i<fileCount; i++)
 				{
 					// Galerinin ilk yüklendiği andaki dosyaları ile sonradan yüklenen dosyaları ayırabilmek için farklı class'lar ekle
 					var fileStatusClass = "newFile";
-					var fileId = files[i].file_id;
 					for(var j=0; j<existingFilesIds.length; j++)
 					{
-						if(fileId == existingFilesIds[j].id)
+						if(files[i].file_id == existingFilesIds[j].id)
 						{
 							fileStatusClass = "existingFile";
 							break;
@@ -161,12 +158,12 @@ function loadGallery(gallery,columnsCount,rowsCount)
 					}
 					
 					//editör'de seçilen dosyaları "updatedFilesList" dizisine ekle
-					updatedFilesList.push({id:fileId});
-					
+					updatedFilesList.push({id:files[i].file_id});
+
 					filesHtml += '<li class="galleryItem ' + fileStatusClass + ' lastAdded">';
-					filesHtml += '<img src="" fileId=' + fileId + ' /><span class="shadow"></span>';
+					filesHtml += '<img src="' + files[i].thumb + '" fileId=' + files[i].file_id + ' /><span class="shadow"></span>';
 					filesHtml += '<span class="delButton button">Sil</span>';
-					filesHtml += '<input class="fileId" type="hidden" value="' + fileId + '" />';
+					filesHtml += '<input class="fileId" type="hidden" value="' + files[i].file_id + '" />';
 					filesHtml += '</li>';
 				}
 				
@@ -174,14 +171,6 @@ function loadGallery(gallery,columnsCount,rowsCount)
 				galleryObject.sortable();
 				
 				galleryObject.find(".lastAdded").each(function(){
-					var imageObject = $(this).find("img");
-					$.ajax({
-						data:"admin_action=getBrowserThumb&fileId=" + imageObject.attr("fileId"),
-						success:function(response){
-							imageObject.attr("src", response);
-						}
-					});
-					
 					var del = $(this).find(".delButton");
 					if(del)
 					{
@@ -220,7 +209,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 				existingFilesIds.push({id:fileId});
 				
 				filesHtml += '<li class="galleryItem existingFile">';
-				filesHtml += '<img src="" fileId="' + fileId + '" /><span class="shadow"></span>';
+				filesHtml += '<img src="' + response[i].thumb + '" fileId="' + fileId + '" /><span class="shadow"></span>';
 				filesHtml += '<span class="delButton button">Sil</span>';
 				filesHtml += '<input class="fileId" type="hidden" value="' + fileId + '" />';
 				filesHtml += '</li>';
@@ -239,7 +228,6 @@ function loadGallery(gallery,columnsCount,rowsCount)
 			_this.css({"width":width + 12});
 			
 			
-			
 			galleryObject.find(".galleryItem").each(function(){
 				var del = $(this).find(".delButton");
 				if(del)
@@ -252,19 +240,6 @@ function loadGallery(gallery,columnsCount,rowsCount)
 						del.animate({"opacity":0},300);
 					});
 				}
-			});
-			
-			galleryObject.find(".galleryItem").each(function(){
-				var imageObject = $(this).find("img");
-				$.ajax({
-					data:"admin_action=getBrowserThumb&fileId=" + imageObject.attr("fileId"),
-					success:function(response){
-						if((response == "") || (response == undefined) || (response == null))
-							imageObject.attr("src",exclamation_image);
-						else
-							imageObject.attr("src",response);
-					}
-				});
 			});
 		}
 	});

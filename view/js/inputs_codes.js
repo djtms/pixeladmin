@@ -6,10 +6,6 @@ function ModuleCodesStart()
 		if(!$(this).is("[fileid]"))
 			return;
 		
-		$(this).fileeditor({
-			containorId:"file_editor_main_container"
-		});
-		
 		var file;
 		var fileButtonsOuter;
 		var btnEdit;
@@ -62,24 +58,22 @@ function ModuleCodesStart()
 		else
 		{
 			$.ajax({
-				data:"admin_action=getBrowserThumbInfo&fileId=" + fileId,
+				data:"admin_action=getFileInfoById&file=" + fileId,
 				dataType:"json",
 				success:function(response){
 					if((response.url != undefined) && (response.url != ""))
 					{
 						fileImage.attr("src", response.url);
-						fileName.html(response.owner.basename);
-						var file_id = response.owner.file_id;
-						var fileType = response.owner.type;
+						fileName.html(response.basename);
 						
-						if(fileType != "movie")
+						if(response.type != "movie")
 						{
-							btnLook.attr("href",'lookfile.php?type=' + fileType + '&url=' + response.owner.url);
+							btnLook.attr("href",'lookfile.php?type=' + response.type + '&url=' + response.url);
 							btnPlay.css("display","none");
 						}
 						else
 						{
-							btnPlay.attr("href",'lookfile.php?type=' + fileType + '&url=' + response.owner.url);
+							btnPlay.attr("href",'lookfile.php?type=' + response.type + '&url=' + response.url);
 							btnLook.css("display","none");
 						}
 						
@@ -98,7 +92,7 @@ function ModuleCodesStart()
 								onSaved:function(file){
 									fileName.html(file.basename);
 									
-									if(fileType != "movie")
+									if(file.type != "movie")
 									{
 										if(file.thumb != null)
 										{
@@ -135,14 +129,12 @@ function ModuleCodesStart()
 			{
 				return false;
 			}
-			
-			$(this).openFileEditor({
-				containorId:"file_editor_main_container",
-				multiSelection:false,
-				onSelect:function(data){
+			$(document).fileeditor("openFileEditor",{
+				multiselection:false,
+				onFilesSelect:function(data){
 					fileInput.val(data[0].file_id);
 					btnEdit.attr("file", data[0].file_id);
-					fileImage.attr("src",data[0].thumb_url);
+					fileImage.attr("src",data[0].thumb);
 					file.attr("file",data[0].url);
 					fileName.html(data[0].name);
 					fileButtonsOuter.css("visibility","visible");

@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-.editorOuter
+#fileEditorMainContainer
 {
 	position:absolute;
 	left:0;
@@ -9,11 +9,12 @@
 	height:100%;
 	z-index:1000;
 	opacity:0;
-	display:none;
+	visibility:hidden;
+	-webkit-transition: opacity 0.2s;
 }
 
 
-.editorOuter label
+#fileEditorMainContainer label
 {
 	width:317px;
 	height:25px;
@@ -27,31 +28,56 @@
 	color:#828282;
 }
 
-.editorOuter input[type=text],.editorOuter input[type=password]
+#fileEditorMainContainer input[type=text],#fileEditorMainContainer input[type=password]
 {
 	float:left;
 	clear:left;
 	display:block;
 	height:17px;
-	width:305px;
+	width:205px;
 	border:1px #e2e2e2 solid;
 	outline:none;
 	padding:5px;
 	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;
+	line-height: 22px;
 }
 
-.editorOuter input[type=submit],.editorOuter input[type=button],.editorOuter button
+#fileEditorMainContainer #browser_address
 {
+	width: 295px;
+}
+
+#fileEditorMainContainer input[type=submit], #fileEditorMainContainer input[type=button], #fileEditorMainContainer button
+{
+	min-width:80px;
 	display:block;
 	float:left;
 	clear:left;
 	text-align:center;
-	margin:20px 0 20px 0;
+	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
+	color:#707070;
+	margin:20px 0;
+	padding:5px 17px;
 	cursor: pointer;
+	border:solid 1px #c0c2c4;
+	border-radius:6px;
+	background-image: linear-gradient(bottom, rgb(237,237,237) 50%, rgb(255,255,255) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(237,237,237) 50%, rgb(255,255,255) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(237,237,237) 50%, rgb(255,255,255) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(237,237,237) 50%, rgb(255,255,255) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(237,237,237) 50%, rgb(255,255,255) 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.5, rgb(237,237,237)),
+		color-stop(1, rgb(255,255,255))
+	);
 }
 
-.fileEditorBackHider
+#fileEditorBackHider
 {
 	position:fixed;
 	left:0;
@@ -64,7 +90,7 @@
 	display:block;
 }
 
-.fileEditorOuter
+#fileEditorOuter
 {
 	position:absolute;
 	left:50%;
@@ -76,23 +102,15 @@
 	padding:5px;
 	z-index: 100;
 	opacity:0;
-	display:none;
+	-webkit-transition: opacity 0.3s;
 }
 
-.fileEditorOuter label
+#fileEditorOuter label
 {
 	margin:0;
 }
 
-.fileEditorOuter input
-{
-	width:235px !important;
-	height:18px !important;
-	margin:5px 0 0 0;
-}
-
-
-.fileEditorOuter_InnerShell
+#fileEditorOuter_InnerShell
 {
 	position:relative;
 	float:left;
@@ -102,7 +120,15 @@
 	border:solid 1px #eaeaea;
 }
 
-.fileEditorNavigationBar
+#fileEditorTitle
+{
+	float:left;
+	margin-left: 10px;
+	height:33px;
+	line-height: 33px;
+}
+
+#fileEditorNavigationBar
 {
 	width:100%;
 	height:33px;
@@ -110,10 +136,9 @@
 	border-bottom:solid 1px #eaeaea;
 	font: 13px Arial;
 	line-height: 33px;
-	
 }
 
-.btnClosefileEditor
+#btnCloseFileEditor
 {
 	height:35px;
 	float:right;
@@ -129,23 +154,31 @@
 }
 
 
-.btnClosefileEditor:hover
+#btnCloseFileEditor:hover
 {
 	background-position: right bottom;
 	color:#fff;
 	
 }
 
-.browserLeftCorner
+#fileEditorContentsOuter
+{
+	width:100%;
+	float:left;
+	background: #fff;
+}
+
+#browserLeftCorner
 {
 	width:215px;
 	height:496px;
 	float:left;
 	border-right:solid 1px #eaeaea;
 	overflow-y:scroll;
+	overflow-x:hidden;
 }
 
-.labelFavorites
+.labelFavourites
 {
 	width:160px !important;
 	height:19px !important;
@@ -155,7 +188,7 @@
 	background: url(images/favoritesTitleIcon.jpg) no-repeat left 3px;
 }
 
-.browserFavoritesList
+#browserFavouritesList
 {
 	list-style: none;
 	padding:0;
@@ -164,17 +197,18 @@
 	min-width:140px;
 }
 
-.browserFavoritesList a
+#browserFavouritesList span
 {
 	float:left;
 	clear:both;
 	margin:0 0 6px 0;
 	font: 13px Arial;
 	color:#999999;
+	cursor:pointer;
 	text-decoration: none;
 }
 
-.browserFavoritesList a.selected
+#browserFavouritesList span.selected
 {
 	color:#333;
 	font-weight: bold;
@@ -192,13 +226,13 @@
 	background: url(images/directoryTitleIcon.jpg) no-repeat left 4px;
 }
 
-.browserDirectoriesOuter
+#browserDirectoriesOuter
 {
 	float:left;
-	margin:0 0 0 17px;
+	margin:0 0 0 2px;
 }
 
-.browserRightCorner
+#browserRightCorner
 {
 	width:700px;
 	height:456px;
@@ -213,55 +247,63 @@
 	color:#333 !important;
 }
 
-.addressBarOuter
+#addressBarOuter
 {
 	float:left;
-	margin-right:40px;
+	margin-right:15px;
 }
 
-.addressBarOuter a
+#addressBarOuter a
 {
 	height:18px;
 	float:left;
 	background: url(images/navButtonsBg.png);
-	margin:11px 0 0 5px;
+	margin:4px 0 0 8px;
 }
 
-.browserBtn_Home
+#browserBtn_Home
 {
 	width:19px;
 	background-position: 0px 0px !important;
-	margin-left:10px !important;
 }
 
-.browserBtn_Home:hover
+#browserBtn_Home:hover
 {
 	background-position: 0px -18px !important;
 }
 
-.browserBtn_Fav
+#browserBtn_Refresh
 {
+	width:15px !important;
+	background-position: -73px 0px !important;
+}
+
+#browserBtn_Refresh:hover{
+	background-position: -73px -18px !important;
+}
+
+#browserBtn_Fav{
 	width:18px;
 	background-position: -19px 0px !important;
 }
 
-.browserBtn_Fav:hover,.browserBtn_Fav.active
+#browserBtn_Fav:hover,#browserBtn_Fav.active
 {
 	background-position: -19px -18px !important;
 }
 
-.browserBtn_Prev
+#browserBtn_Prev
 {
 	width:18px;
 	background-position: -37px 0px !important;
 }
 
-.browserBtn_Prev:hover
+#browserBtn_Prev:hover
 {
 	background-position: -37px -18px !important;
 }
 
-.browserBtn_NewDir
+#browserBtn_NewDir
 {
 	width:22px;
 	height:18px;
@@ -270,12 +312,12 @@
 	background: url(images/newFileIcon.png) 0 0px !important;
 }
 
-.browserBtn_NewDir:hover
+#browserBtn_NewDir:hover
 {
 	background-position: 0 -18px !important;
 }
 
-.browserBtn_UploadFile
+#browserBtn_UploadFile
 {
 	width:18px;
 	cursor:pointer !important;
@@ -283,12 +325,12 @@
 	background-position: -55px 0px !important;
 }
 
-.browserBtn_UploadFile:hover
+#browserBtn_UploadFile:hover
 {
 	background-position: -55px -18px !important;
 }
 
-.browserBtn_UploadFile input[type=file]
+#browserBtn_UploadFile input[type=file]
 {
 	float:none !important;
 	margin: 0 !important;
@@ -299,72 +341,116 @@
 	cursor:pointer !important;
 }
 
-.browserSearchOuter
+#browserSearchOuter
 {
-	float:left;
+	float:right;
 	margin:0;
 	position:relative;
-	left:2px;
+	z-index:100;
 }
 
-.browserSearchOuter label
+#browserSearchOuter label
 {
 	width: auto !important; 
 }
 
-.browserFilesListOuter
+#search_input
+{
+	width: 180px !important;
+}
+
+
+#searchAlertBox
+{
+	padding:5px 10px 5px 25px;
+	background: #ccc url(images/search_alertbox_bg.png) no-repeat 6px center;
+	color: #555;
+	box-shadow: 0 0 3px #555;
+	border-radius: 3px;
+	font: 13px Arial;
+	position:absolute;
+	left:1px;
+	top: 44px;
+	z-index:10000;
+}
+
+#browserFilesListOuter
 {
 	width:700px;
 	height:324px;
 	float:left;
 	margin:20px 0;
-	border:solid 1px #eaeaea;
+	/*border:solid 1px #eaeaea;*/
 	position:relative;
+	z-index:10;
 	overflow-x: hidden;
 	overflow-y: scroll;
 	background: #fff;
+	box-shadow: inset 0 0 3px #aaa;
 }
 
-.browserContentLoaderOuter
+#fileEditorContentsLoader
 {
-	width:684px;
-	height:325px;
+	width:100%;
+	height:100%;
 	position:absolute;
-	left:244px;
-	top:135px;
 	z-index:100;
-	background: #fff url(images/panelContentLoaderBg.png) no-repeat left top;
+	background: rgba(255,255,255,0.9) url(images/browserLoaderBg.png) no-repeat center;
+	box-shadow: inset 0 0 40px 10px #eee;
+	-webkit-transition: opacity 0.15s;
+	visibility:hidden;
+	opacity:0;
 }
 
-.fileEditorLoader
+#fileEditorContentsLoader span
 {
 	width:32px;
 	height:32px;
 	float:left;
-	margin:126px 0 0 308px;
-	padding:18px;
-	background: url(images/browserLoaderBg.png) no-repeat left top;
+	position:relative;
+	left:50%;
+	top:50%;
+	margin: -16px 0 0 -16px;
+	background: url(images/browserLoader.gif) no-repeat left top;
 }
 
-.fileEditorLoader img
+#editorDragFilesArea
 {
-	width:32px;
-	height:32px;
-	float:left;
+	width:100%;
+	height:100%;
+	position:absolute;
+	left:0;
+	top:0;
+	background: url(images/dropfiles_bg.png);
+	visibility:hidden;
+	box-shadow:inset 0 0 1px #aaa;
+	z-index: 1000;
 }
 
-.browserFilesList
+#editorDragFilesArea span
+{
+	width:202px;
+	height: 72px;
+	float:left;
+	position:relative;
+	left:50%;
+	top:50%;
+	margin: -36px 0 0 -101px;
+	background: url(images/dropfiles.png) no-repeat left top;
+}
+
+#browserFilesList
 {
 	width:684px;
 	min-height:304px;
 	float:left;
 	margin:0 0 0 0;
-	padding:0 0 20px 0;
+	padding:0 0 22px 0;
 	list-style: none;
 	position:relative;
 }
 
-.browserFilesListScroller
+#browserFilesListScroller
 {
 	display:none;
 	width:19px;
@@ -373,47 +459,80 @@
 	border-left:solid 1px #eaeaea;
 }
 
-.browserFilesList li
+#browserFilesList li
 {
 	width:125px;
 	height:110px;
-	border:solid 1px #cccccc;
+	/*border:solid 1px #cccccc;*/
 	float:left;
 	position:relative;
-	margin:20px 0 0 20px;
+	margin:22px 0 0 21px;
 	padding:10px;
+	transition: opacity 0.3s;
+	-o-transition: opacity 0.3s;
+	-moz-transition: opacity 0.3s;
+	-webkit-transition: opacity 0.3s linear;
+	box-shadow: 0 0 3px #999;
+	
 }	
 
-.browserFilesList li.selected
+#browserFilesList li.selected
 {
-	background: #ddd;
-	
+	background: #ebebe4;
+	box-shadow: 0 0 3px #999;
 }
 
-.browserFilesList li.selected span
+#browserFilesList li.selected span
 {
-	color:#999 !important;
+	color:#777 !important;
 }
 
-.browserFilesList .filethumbOuter
+#browserFilesList .editorFileThumbOuter
 {
 	width:123px;
 	height:87px;
 	float:left;
-	margin:0 0 5px 0;
-	border:solid 1px #ccc;
-	background: #fff url(images/fileloader.gif);
+	margin:1px 1px 6px 1px;
+	position:relative;
+	background: #fff url(images/fileloader.gif) no-repeat center;
 }
 
-.browserFilesList .filethumb
+#browserFilesList .editorFileThumb
 {
 	width:123px;
 	height:87px;
 	float:left;
 	background:#fff;
+	visibility:hidden;
+	opacity:0;
+	transition: opacity 0.5s;
+	-o-transition: opacity 0.5s;
+	-moz-transition: opacity 0.5s;
+	-webkit-transition: opacity 0.5s;
 }
 
-.browserFilesList .fileEditButtonsOuter
+#browserFilesList .thumbShadow
+{
+	width: 123px;
+	height: 87px;
+	display:block;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:10;
+	box-shadow: inset 0 0 5px #ccc;
+}
+
+.selected .editorFileThumbOuter{
+	box-shadow: inset 0 0 5px #aaa;
+}
+
+#browserFilesList .loaderror
+{
+	background: url(images/exclamation.jpg) !important;
+}
+
+#browserFilesList .fileEditButtonsOuter
 {
 	position:relative;
 	z-index:10;
@@ -424,6 +543,11 @@
 	text-align: center;
 	-webkit-transition:opacity 0.2s linear;
 	opacity:0;
+}
+
+#browserFilesList li:hover .fileEditButtonsOuter
+{
+	opacity:1;
 }
 
 .file:hover .fileEditButtonsOuter
@@ -437,7 +561,7 @@
 	display:none;
 }
 
-.browserFilesList .fBtn
+#browserFilesList .fBtn
 {
 	display:inline-block;
 	width:20px;
@@ -446,57 +570,57 @@
 	margin:0 3px;
 }
 
-.browserFilesList .btnEdit
+#browserFilesList .btnEdit
 {
 	background: url(images/btnEdit.png) no-repeat left top;
 }
 
-.browserFilesList .btnEdit:hover
+#browserFilesList .btnEdit:hover
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .btnLook
+#browserFilesList .btnLook
 {
 	background: url(images/btnView.png) no-repeat left top;
 }
 
-.browserFilesList .btnLook:hover
+#browserFilesList .btnLook:hover
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .btnPlay
+#browserFilesList .btnPlay
 {
 	background: url(images/btnPlay.png) no-repeat left top;
 }
 
-.browserFilesList .btnPlay:hover
+#browserFilesList .btnPlay:hover
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .btnDelete
+#browserFilesList .btnDelete
 {
 	background: url(images/btnDelete.png) no-repeat left top;
 }
 
-.browserFilesList .btnDelete:hover
+#browserFilesList .btnDelete:hover
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .btnDownload
+#browserFilesList .btnDownload
 {
 	background: url(images/btnDownload.png) no-repeat left top;
 }
 
-.browserFilesList .btnDownload:hover
+#browserFilesList .btnDownload:hover
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .fileName
+#browserFilesList .fileName
 {
 	position:absolute;
 	z-index:5;
@@ -516,54 +640,54 @@
 
 /* IF SELECTED **************************************************************************************/
 
-.browserFilesList .selected .fileEditButtonsOuter
+#browserFilesList .selected .fileEditButtonsOuter
 {
-	background: #ddd;
+	background: #ebebe4;
 }
 
-.browserFilesList .selected .btnEdit
+#browserFilesList .selected .btnEdit
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .selected .btnEdit:hover
+#browserFilesList .selected .btnEdit:hover
 {
 	background-position: left top;
 }
 
-.browserFilesList .selected .btnLook
+#browserFilesList .selected .btnLook
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .selected .btnLook:hover
+#browserFilesList .selected .btnLook:hover
 {
 	background-position: left top;
 }
 
-.browserFilesList .selected .btnPlay
+#browserFilesList .selected .btnPlay
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .selected .btnPlay:hover
+#browserFilesList .selected .btnPlay:hover
 {
 	background-position: left top;
 }
 
-.browserFilesList .selected .btnDelete
+#browserFilesList .selected .btnDelete
 {
 	background-position: left bottom;
 }
 
-.browserFilesList .selected .btnDelete:hover
+#browserFilesList .selected .btnDelete:hover
 {
 	background-position: left top;
 }
 
 /******************************************************************************************************/
 
-.browserFilesList .uploadingText
+#browserFilesList .uploadingText
 {
 	width:100%;
 	height:17px;
@@ -575,7 +699,7 @@
 	line-height: 16px;
 }
 
-.browserFilesList .uploadBarOuter
+#browserFilesList .uploadBarOuter
 {
 	width:111px;
 	height:11px;
@@ -588,7 +712,7 @@
 	background: url(images/uploaderBarBg.jpg) repeat-x;
 }
 
-.browserFilesList .bar
+#browserFilesList .bar
 {
 	width:111px;
 	height:11px;
@@ -597,37 +721,45 @@
 	position:relative;
 	top:0;
 	left:-111px;
+	transition:left 0.3s;
+	-o-transition:left 0.3s;
+	-moz-transition:left 0.3s;
+	-webkit-transition:left 0.3s;
 }
 
-.browserFilesList .uploaderImage
+#browserFilesList .uploaderImage
 {
 	width:220px;
 	height:19px;
 	float:left;
 	position:relative;
 	top:-4px;
-	left:-10px;	
+	left:-10px;
+	background: url(images/loader.gif);
 }
 
-.browserFilesList .folder
+#browserFilesList .directory
 {
 	padding:10px;
 	cursor: pointer;
 	user-select: none;
 }
 
-.browserFilesList .file,.browserFilesList .file *
+#browserFilesList .file,#browserFilesList .file *
 {
 	user-select: none;
 }
 
-.browserFilesList .folder img
+#browserFilesList .directory icon
 {
+	width:58px;
+	height: 51px;
 	display:block;
+	background: url(images/folder.png) no-repeat left top;
 	margin:20px auto 0 auto;
 }
 
-.browserFilesList .folder span
+#browserFilesList .directory span
 {
 	width:118px;
 	height:12px;
@@ -639,25 +771,29 @@
 	text-align: center;
 }
 
-input#newFolderName,input#updatedFolderName
+#browserFilesList .directory input[type=text]
 {
-	margin:15px 0 0 0;
-	border:solid 1px #ccc;
-	width:123px !important;
+	margin:15px 0 0 0 !important;
+	border:solid 1px #ccc !important;
+	width:117px !important;
+	height: 20px !important;
+	padding:0 3px !important;
+	line-height: 18px !important;
+	font-size: 13px !important;
 }
 
-.browserBtnUseFiles
+#browserBtnUseFiles
 {
 	float:right !important;
 	margin:0 !important;
 }
 
-.browserBtnUseFiles.disabled
+#browserBtnUseFiles.disabled
 {
 	opacity:0.5;
 }
 
-.browserBtnUseFiles.disabled:hover
+#browserBtnUseFiles.disabled:hover
 {
 	color:inherit;
 	cursor:default;
@@ -677,27 +813,9 @@ input#newFolderName,input#updatedFolderName
 	
 }
 
-.forTooltipVisibility
-{
-	width:700px;
-	float:left;
-	position:relative;
-}
-
-.fileTooltip
-{
-	width:150px;
-	height:87px;
-	background: #f00;
-	position:absolute;
-	display:none;
-	z-index:1000000;
-}
-
-
 /* COLLISION */
 
-.collisionDetector
+#selectorPlaceHolder
 {
 	display:none;
 	width:0px;
@@ -705,15 +823,74 @@ input#newFolderName,input#updatedFolderName
 	position:absolute;
 	left:-10px;
 	top:-10px;
-	z-index:1000;
+	z-index:100000;
 	border:solid 1px #3399ff;
+	background: rgba(168, 202, 236, 0.8);
+	box-shadow: 0 0 2px #5fafff;
 }
 
-.collisionDetectorBg
+/*FILE TREE*/
+.fileTree
 {
-	width:100%;
-	height:100%;
 	float:left;
-	background: #a8caec;
-	opacity:0.8;
+	list-style: none;
+	margin:0 0 0 12px;
+	padding:0;
+}
+
+.fileTree li
+{
+	float:left;
+	clear:left;
+	cursor:pointer;
+	position:relative;
+	min-height: 20px;
+	height:20px;
+	overflow:hidden;
+}
+
+.fileTree li > icon
+{
+	width:16px;
+	height: 16px;
+	display:block;
+	position:absolute;
+	left:0;
+	top:0;
+	background: url(images/directory_close.png) no-repeat left top !important;
+}
+
+.fileTree li.expanded
+{
+	height:auto;
+	overflow:visible;
+}
+
+.fileTree li.expanded > icon
+{
+	background: url(images/directory_open.png) no-repeat left top !important;
+}
+
+.fileTree .name
+{
+	margin:0 0 3px 16px;
+	width:100%;
+	height:17px;
+	float:left;
+	font:13px Arial;
+	line-height:17px;
+	color:#999;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.fileTree li.selected > .name
+{
+	font-weight:bold !important;
+	color:#333 !important;
+}
+
+.fileTree li.empty icon
+{
+	background-image: none !important;
 }

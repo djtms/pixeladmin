@@ -18,13 +18,13 @@ class PA_FILE extends PA_THUMB
 		return $this->get_value("SELECT CONCAT('{$systemurl}',url) AS url FROM {$this->table} WHERE filename=? AND access_type='system'",array($filename));
 	}
 	
-	public function listFilesByDirectory($directory)
+	public function listFilesByDirectory($directory_id)
 	{
 		global $uploadurl;
 		
-		$query  = "SELECT *,CONCAT('{$uploadurl}',url) AS url FROM {$this->table} WHERE directory=? AND access_type='public'";
+		$query  = "SELECT *,CONCAT('{$uploadurl}',url) AS url FROM {$this->table} WHERE directory_id=? AND access_type='public'";
 		
-		return $this->get_rows($query,array($directory));
+		return $this->get_rows($query,array($directory_id));
 	}
 	
 	public function selectFileById($file_id)
@@ -45,11 +45,6 @@ class PA_FILE extends PA_THUMB
 		return $this->get_value("SELECT CONCAT('{$full_upload_url}',url) AS url FROM {$this->table} WHERE file_id=?",array($file_id));
 	}
 	
-	public function selectFileIdByUrl($url)
-	{
-		return $this->get_value("SELECT file_id FROM {$this->table} WHERE url=? ",array($url));
-	}
-	
 	public function checkFileExists($fileurl)
 	{
 		return $this->get_value("SELECT file_id FROM {$this->table} WHERE url=?",array($fileurl));
@@ -61,44 +56,31 @@ class PA_FILE extends PA_THUMB
 		
 		$oldFileInfo = $this->selectFileById($file_id);
 		$last_update_time = currentDateTime();
-		$url = $oldFileInfo->directory . $basename;
+		$url = $this->get_value("SELECT directory FROM {$this->tables->directory} WHERE directory_id=?", array($oldFileInfo->directory_id)) . $basename;
 		$full_url = $uploadurl . $url;
 		
-		if(rename($oldFileInfo->url, $full_url))
+		if(rename($oldFileInfo->url, $full_url)) // Dosya ismini güncelle
 		{
+			// dosya bilgilerini database de de güncelle
 			return $this->execute("UPDATE {$this->table} SET basename=?, filename=?, url=?, thumb_file_id=?, last_update_time=? WHERE file_id=?", array($basename, $filename, $url, $thumb_file_id, $last_update_time, $file_id));	
 		}
 		else
 			return false;
 	}
 	
-	public function deleteFileByUrl($fileurl)
+	public function deleteFile($file_id)
 	{
-		global $uploadurl;
+		$file = $this->selectFileById($file_id);
 		
-		$fileurl = preg_replace("/^" . preg_quote($uploadurl,"/") . "/", "", $fileurl);
-		$fullpath = $uploadurl . $fileurl;
+		// dosya mevcutsa sil
+		if(file_exists($file->url))
+			unlink($file->url);
 		
-		if(is_dir($fullpath))
+		// dosyanın thumbnaillerini sil
+		if(!$this->deleteFileThumbs($file_id))
 			return false;
-		else if(file_exists($fullpath))
-			unlink($fullpath);
 		
-		
-		if(!$this->deleteFileThumbs($this->selectFileIdByUrl($fileurl)))
-			return false;
-		else if(!is_dir($fullpath))
-			return $this->execute("DELETE FROM {$this->table} WHERE url=?",array($fileurl));
-	}
-	
-	public function deleteFileById($file_id)
-	{
-		if($file_id > 0)
-		{
-			$file = $this->selectFileById($file_id);
-			return $this->deleteFileByUrl($file->url);
-		}
-		else
-			return true;
+		// dosya bilgilerini database den sil
+		return $this->execute("DELETE FROM {$this->table} WHERE file_id=?",array($file_id));
 	}
 }

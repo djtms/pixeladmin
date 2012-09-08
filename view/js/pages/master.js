@@ -19,6 +19,7 @@ function MasterStart()
 	postMessage();
 	
 	$("input[type=date], input[type=datetime], input[type=time]").datepicker();
+	$(document).fileeditor();
 }
 
 function postMessage(message,error)

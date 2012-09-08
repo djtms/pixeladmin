@@ -8,7 +8,7 @@ $pa_menu_array = array(); // Menü özelliklerinin tutulduğu global değişken
 $pa_page_permission_info_array = array(); // Yönetim panelinde çalışan sayfaların permission bilgilerini tutan array
 $register_module_function; // Herhangi bir Modülün aktivastonu esnasında çalıştırılması istenen fonsiyonu tutan değişken
 
-$admin_version = "BETA 0.6.7";
+$admin_version = "BETA 0.6.8";
 $track_wait_limit = 300; // Kullanıcı için açılan track'in kullanıcı browser'ı kapattığında veya internet bağlantısı kesildiğinde ne kadar süre daha açık kalacağını belirtir
 $currenturl = $_SERVER["REQUEST_URI"];
 $currentpage = "admin.php?page=" . $_GET["page"];

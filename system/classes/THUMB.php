@@ -137,8 +137,6 @@ class PA_THUMB extends DB
 	
 	public function selectThumbById($thumb_id)
 	{
-		
-		
 		return $this->get_row("SELECT * FROM {$this->table} WHERE thumb_id=?",array($thumb_id));
 	}
 	

@@ -65,7 +65,18 @@ if(in_admin)
 	switch($_POST["admin_action"])
 	{
 		case("listGalleryFiles"):		
-			echo json_encode($ADMIN->GALLERY->listGalleryFiles($_POST["galleryId"],-1,true));
+			if($files = $ADMIN->GALLERY->listGalleryFiles($_POST["galleryId"],-1,true)){
+				$file_count = sizeof($files);
+				for($i=0; $i<$file_count; $i++){
+					if(!$files[$i]->thumb = $ADMIN->DIRECTORY->getThumbUrl($files[$i]->file_id, 123, 87, false, true, "center top", "FFFFFF"))
+						$files[$i]->thumb = "../upload/system/exclamation.jpg";
+				}
+			}
+			else{
+				$files = array();
+			}
+			
+			echo json_encode($files);
 		exit;
 		
 		case("createTemporaryGallery"):		

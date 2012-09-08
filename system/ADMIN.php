@@ -11,7 +11,7 @@ class PA_ADMIN
 	public $MESSAGE;
 	public $LOG;
 	public $IMAGE_PROCESSOR;
-	public $DIRECTOR;
+	public $DIRECTORY;
 	public $FILE;
 	public $THUMB;
 	public $UPLOADER;
@@ -26,6 +26,7 @@ class PA_ADMIN
 	public $SITEMAP;
 	public $AUTHENTICATION;
 	public $AUTHORIZATION;
+	public $FILE_EDITOR;
 	
 	
 	function PA_ADMIN()
@@ -55,5 +56,6 @@ class PA_ADMIN
 		$this->SITEMAP = new PA_SITEMAP();
 		$this->AUTHENTICATION = new PA_AUTHENTICATION();
 		$this->AUTHORIZATION = new PA_AUTHORIZATION();
+		$this->FILE_EDITOR = new PA_FILE_EDITOR();
 	}
 }

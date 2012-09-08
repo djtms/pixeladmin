@@ -2,36 +2,10 @@
 
 if(in_admin)
 {
-	if($_POST["admin_action"] == "uploadFile")
-	{
-		adminFileEditorFileUpload();
-		exit;
-	}
-	else if($_POST["admin_action"] == "changeThumbnailExceptFileTypeIsImage")
+	if($_POST["admin_action"] == "changeThumbnailExceptFileTypeIsImage")
 	{
 		changeThumbnailExceptFileTypeIsImage($_POST["file_id"], $_FILES["thumbfile"]);
 	}
-}
-
-function adminFileEditorFileUpload()
-{
-	global $ADMIN;
-	global $allowedFileFormatsForUpload;
-
-	if(!$ADMIN->VALIDATE->validateFileFormat($_FILES["uploadFile"]["name"], $allowedFileFormatsForUpload))
-	{
-		echo json_encode(array("error"=>true,"message"=>"Bu dosyayı yüklemek için yeterli izniniz yok!"));
-		exit;
-	}
-
-	$file_id = $ADMIN->UPLOADER->uploadFile($_POST["directory"],$_FILES["uploadFile"]);
-	$file = $ADMIN->DIRECTORY->selectFileById($file_id);
-
-	$file->url = preg_replace( "/^" . preg_quote("../../","/") . "/","", $file->url);
-	$file->error = false;
-
-	
-	echo json_encode($file);
 }
 
 function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile)
