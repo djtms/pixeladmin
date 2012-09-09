@@ -11,7 +11,7 @@ function FileGridStart()
 		var thumbImage = btnEdit.closest(".gridFile").find(".thumbImage");
 		
 		$(this).editfile({
-			file: file_id,
+			file_id: file_id,
 			onSaved:function(file){
 				if(file.type != "movie")
 				{

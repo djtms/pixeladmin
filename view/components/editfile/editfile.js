@@ -6,7 +6,7 @@
 	$.fn.editfile = function(properties){
 		
 		var defaultoptions = {
-				file:{},
+				file_id:-1,
 				onSaved:function(){},
 				onInit:function(){}
 		};
@@ -17,7 +17,7 @@
 			var options = $.extend({}, defaultoptions, properties);
 			options.onInit();
 			var uniqueId = $(this).index();
-			var file = typeof(options.file) == "object" ? options.file : FILES.getFileInfoById(options.file);
+			var file = ADMIN.getFileInfoById(options.file_id);
 			var resizeWidth;
 			var resizeHeight;
 			

@@ -92,6 +92,22 @@ function ADMIN()
 		
 		return croppedText;
 	};
+	
+	this.getFileInfoById = function(file_id){
+		$return = false;
+		
+		$.ajax({
+			data:"admin_action=getFileInfoById&file=" + file_id,
+			dataType:"json",
+			async: false,
+			success:function(response){
+				$return = response;
+			}
+		});
+		
+		return $return;
+	}
+		
 }
 
 

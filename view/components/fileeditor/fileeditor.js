@@ -88,7 +88,7 @@
 		};
 		
 		var generateFileHtml = function(file){
-			temp_html = '<li class="file editor_content notload" file_id="' + file.file_id + '" url="' + file.url + '"  title="' + file.basename + '" thumb="' + file.thumb + '" >';
+			temp_html = '<li class="file editor_content notload" file_id="' + file.file_id + '" url="' + file.url + '"  title="' + file.basename + '" thumb="' + file.thumb + '" file_type="' + file.type + '" >';
 			temp_html += '<span class="editorFileThumbOuter">';
 			temp_html += '<span class="thumbShadow"></span>';
 			temp_html += '<img class="editorFileThumb" src="' + file.thumb + '" />';
@@ -661,7 +661,7 @@
 					files = [];
 					$selected_files.each(function(){
 						file = $(this);
-						files.push({"file_id":file.attr("file_id"), "basename":file.attr("title"), "url":file.attr("url"), "thumb":file.attr("thumb")});
+						files.push({"file_id":file.attr("file_id"), "basename":file.attr("title"), "url":file.attr("url"), "thumb":file.attr("thumb"), "type":file.attr("file_type")});
 					});
 					
 					options.onFilesSelect(files);
