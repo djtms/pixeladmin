@@ -1,0 +1,78 @@
+<style type="text/css" >
+input[type=file]
+{
+	float:none !important;
+}
+
+b
+{
+	color: #222; !important;
+	font-weight: 700 !important;
+}
+</style>
+<br clear="all"/><br />
+<form method="post">
+	<h2>Date Inputs</h2>
+	<p>
+	Tarih / Saat ile ilgili inputlar almak istediğimizde işimizi kolaylaştırmak için kullanılır. Üç farklı çeşidi vardır, bunlar date, time, datetime<br /><br />
+		<b>Örnek 1.0:</b><br />
+<script class="brush: php; html-script: true" type="syntaxhighlighter">
+&lt;input type="date" value="" />
+
+&lt;input type="time" value="" />
+
+&lt;input type="datetime" value="" />
+</script>
+
+<input type="date" value="" />
+<br clear="all" /><br />
+<input type="time" value="" />
+<br clear="all" /><br />
+<input type="datetime" value="" />
+<br clear="all" /><br />
+"value" özellikleri boş bırakıldığın çalıştığı anın tarih ve saatini döndürür. Sayfayı yenileyip bu örnektei değerleri tekrar kontrol edin.<br /><br />
+"value" özelliğini kullanırken gireceğimiz değer database'de kullandığımız format ile aynı olmalıdır.<br /><br />
+<b>Örnek 1.1:</b><br />
+<script class="brush: php; html-script: true" type="syntaxhighlighter">
+&lt;input type="date" value="2010-04-28" />
+
+&lt;input type="time" value="21:00:00" />
+
+&lt;input type="datetime" value="2010-04-28 21:00:00" />
+</script>
+
+<input type="date" value="2010-04-28" />
+<br clear="all" /><br />
+<input type="time" value="21:00:00" />
+<br clear="all" /><br />
+<input type="datetime" value="2010-04-28 21:00:00" />
+
+<br clear="all" /><br />
+Bu değişkenleri değerlerinede input'a vereceğimiz "name" değerini kullanarak formu post ettiğimizde php tarafındaki $_POST  array'inden erişebiliriz.
+
+
+
+
+
+	
+	
+
+<!--
+<input type="file" name="sampleLogoId" value=""<?php echo get_option("sampleLogoId"); ?>" />
+	<label>Logo</label>
+	<input type="file"  value=" />
+	
+	<label>Tarih:</label>
+	<input type="date" name="birth" value="1987-08-28" />
+	
+	<label>Galeri</label>
+	<input type="gallery" name="sampleGalleryId" value="<?php echo get_option("sampleGalleryId"); ?>" />
+	<label>Başlık:</label>
+	<input type="i18n" value="sampleHeaderI18n" />
+	
+	<label>Yazı:</label>
+	<textarea type="i18n" value="sampleCommentI18n" editor></textarea>
+	
+	<input type="submit" name="action" value="Kaydet" />   -->
+</form>
+<?php

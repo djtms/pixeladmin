@@ -31,14 +31,13 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile)
 	echo json_encode($file);
 }
 
-function uploadFile($file)
+function uploadFile($file, $directory = "Harici_Dosyalar/")
 {
 	global $ADMIN;
-	$directory = "Harici_Dosyalar/";
 	
 	if(!is_dir($directory))
 	{
-		if(!$ADMIN->DIRECTORY->createDirectory($directory))
+		if(!$ADMIN->DIRECTORY->createDirectory($directory, -1))
 			return false;
 	}
 	

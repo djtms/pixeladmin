@@ -12,14 +12,14 @@ class PA_UPLOADER extends DB
 		$this->table = $this->tables->file;
 	}
 	
-	function uploadFile($directory_id,$file=null, $access_type = "public")
+	function uploadFile($directory_id, $file=null, $access_type = "public")
 	{
 		global $ADMIN;
 		global $uploadurl;
 		
 		$size = $file["size"];
 		$properties = $this->calculateFileProperties($directory_id, $file["name"]);
-		$thumb_file_id = $this->calculateThumbnailFileId($properties->extension);
+		$thumb_file_id = $this->calculateSystemThumbnailId($properties->extension);
 		$resolution = (object)array("width"=>0,"height"=>0);
 		
 		if($file["error"] != 0)
@@ -63,8 +63,7 @@ class PA_UPLOADER extends DB
 		}
 	}
 	
-	function calculateThumbnailFileId($extension)
-	{
+	function calculateSystemThumbnailId($extension){
 		if(preg_match("/jpg|jpeg|png|gif$/i", $extension))
 			return -1;
 		else
@@ -78,20 +77,20 @@ class PA_UPLOADER extends DB
 		}
 	}
 	
-	function calculateFileProperties($directory_id, $fileName)
+	function calculateFileProperties($directory_id, $file_name)
 	{
 		$file = array();
 		$creation_time = currentDateTime();
-		$fileName = fixStringForWeb($fileName);
+		$file_name = fixStringForWeb($file_name);
 		
-		if(trim($fileName) != "")
+		if(trim($file_name) != "")
 		{
-			$copied_file_id = $this->getCopiedFileId($directory_id,basename($fileName));
+			$copied_file_id = $this->getDuplicatedFileId($directory_id,basename($file_name));
 			
 			if($copied_file_id > 0)
 				$basename = $this->generateDuplicatedName($copied_file_id);
 			else
-				$basename = basename($fileName);
+				$basename = basename($file_name);
 			
 			$pInfo = (object)pathinfo($basename);
 			$extension = strtolower($pInfo->extension);
@@ -112,7 +111,7 @@ class PA_UPLOADER extends DB
 	
 	
 	/* PRIVATE */
-	private function getCopiedFileId($directory_id, $basename)
+	private function getDuplicatedFileId($directory_id, $basename)
 	{
 		$file_id = $this->get_value("SELECT file_id FROM {$this->table} WHERE directory_id=? AND basename=?",array($directory_id, $basename));
 		

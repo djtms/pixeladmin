@@ -78,10 +78,17 @@ class DB
 		$this->tables = new DB_TABLES();
 	}
 	
-	function get_value($query, $values=null)
+	/**
+	 * 
+	 * Select query'sinde ilk field'ın değerini döndürür
+	 * @param string $query
+	 * @param array $values query içinde veri bağlanacaksa, o verileri bu array içine ekliyoruz
+	 * @return strings
+	 */ 
+	function get_value($query, $values=array())
 	{
 		$sth = $this->dbh->prepare($query);
-		if(is_array($values))
+		if(is_array($values) && (sizeof($values) > 0))
 		{
 			foreach($values as $key=>$val)
 			{
@@ -97,10 +104,16 @@ class DB
 		}
 	}
 	
-	function get_row($query, $values=null, $fetchType = FETCH_OBJ)
+	/**
+	 * Select query'sinde ilk satırı döndürür.
+	 * @param string $query
+	 * @param array $values query içinde veri bağlanacaksa, o verileri bu array içine ekliyoruz
+	 * @param defined_values $fetchType
+	 */
+	function get_row($query, $values=array(), $fetchType = FETCH_OBJ)
 	{
 		$sth = $this->dbh->prepare($query);
-		if(is_array($values))
+		if(is_array($values) && (sizeof($values) > 0))
 		{
 			foreach($values as $key=>$val)
 			{
@@ -108,14 +121,21 @@ class DB
 				$sth->bindValue($key,$val);	
 			}
 		}
+		
 		if($sth->execute())
 			return $sth->fetch($fetchType);
 	}
 
-	function get_rows($query, $values=null, $fetchType = FETCH_OBJ)
+	/**
+	* Select query'sindeki tüm satırları döndürür.
+	* @param string $query
+	* @param array $values query içinde veri bağlanacaksa, o verileri bu array içine ekliyoruz
+	* @param defined_values $fetchType
+	*/
+	function get_rows($query, $values=array(), $fetchType = FETCH_OBJ)
 	{
 		$sth = $this->dbh->prepare($query);
-		if(is_array($values))
+		if(is_array($values) && (sizeof($values) > 0))
 		{
 			foreach($values as $key=>$val)
 			{
@@ -127,7 +147,13 @@ class DB
 			return $sth->fetchAll($fetchType);
 	}
 	
-	function insert($table, $variables)
+	/**
+	 * database de istenen tablodaki istenen fieldlara veri ekler.
+	 * @param string $table
+	 * @param array $variables array("key"=>$value) şeklinde bir array olmalı
+	 * @return string|boolean
+	 */
+	function insert($table, $variables=array())
 	{
 		$columns = "";
 		$values = "";
@@ -180,7 +206,13 @@ class DB
 			return false;
 	}
 	
-	function update($table, $variables, $where)
+	/**
+	* database de istenen tablodaki istenen fieldları günceller.
+	* @param string $table
+	* @param array $variables array("key"=>$value) şeklinde bir array olmalı
+	* @return string|boolean
+	*/
+	function update($table, $variables=array(), $where)
 	{
 		$query = "UPDATE {$table} SET";
 		foreach($variables as $col=>$val)
@@ -199,38 +231,33 @@ class DB
 		
 		$query  = substr($query, 0, -1);
 		
-		if(is_array($where))
-		{
-			if(is_array($where))
-			{
-				$query .= " WHERE ";
-				
-				foreach($where as $col=>$val)
-				{
-					$query .= "$col=";
-					$query  .= is_numeric($col) ? "? " : ":$col ";
-					$query .= "AND ";
-				}
-				
-				$query = substr($query, 0, -4);
-			}
-			else if(is_string($where))
-			{
-				if(!preg_match("/^\b+WHERE\b/i", $where))
-				{
-					$query .= " WHERE ";
-				}
-				
-				$query .= $where;
-			}
-		}
 		
-		
-		$sth = $this->dbh->prepare($query);
-		if(is_array($where))
+		if(is_array($where) && (sizeof($where) > 0))
 		{
 			$variables = array_merge($variables, $where);
+			
+			$query .= " WHERE ";
+			
+			foreach($where as $col=>$val)
+			{
+				$query .= "$col=";
+				$query  .= is_numeric($col) ? "? " : ":$col ";
+				$query .= "AND ";
+			}
+			
+			$query = substr($query, 0, -4);
 		}
+		else if(is_string($where))
+		{
+			if(!preg_match("/^\b+WHERE\b/i", $where))
+			{
+				$query .= " WHERE ";
+			}
+			
+			$query .= $where;
+		}
+		
+		$sth = $this->dbh->prepare($query);
 		
 		foreach($variables as $col=>$val)
 		{
@@ -244,10 +271,15 @@ class DB
 		return $sth->execute();
 	}
 	
-	function execute($query, $values = null)
+	/**
+	 * İstenen query'i çalıştırır.
+	 * @param string $query
+	 * @param array $values query içinde veri bağlanacaksa, o verileri bu array içine ekliyoruz
+	 */
+	function execute($query, $values = array())
 	{
 		$sth = $this->dbh->prepare($query);
-		if(is_array($values))
+		if(is_array($values) && (sizeof($values) > 0))
 		{
 			foreach($values as $key=>$val)
 			{
@@ -258,7 +290,14 @@ class DB
 		return $sth->execute();
 	}
 	
-	function checkIfColumnExists($table, $column)
+	/**
+	 * 
+	 * Database deki bir field'ın varolup olmadığını kontrol eder
+	 * @param string $table
+	 * @param string $column
+	 * @return boolean
+	 */
+	function checkFieldExists($table, $column)
 	{
 		$query = "SHOW COLUMNS FROM $table";
 		
@@ -275,11 +314,21 @@ class DB
 		return false;
 	}
 	
+	/**
+	 * 
+	 * Son eklenen primary_key değerini döndürür
+	 * @return string
+	 */
 	function lastInsertId()
 	{
 		return $this->dbh->lastInsertId();
 	}
 	
+	/**
+	 * 
+	 * Transaction işlemi başlatır
+	 * @return boolean
+	 */
 	function beginTransaction()
 	{
 		if(self::$inTransaction == false)
@@ -300,11 +349,21 @@ class DB
 		}
 	}
 	
+	/**
+	 * 
+	 * Transaction işlemine daha önce başlanıp başlanmadığını bildirir
+	 * @return boolean
+	 */
 	function inTransaction()
 	{
 		return self::$inTransaction;
 	}
 	
+	/**
+	 * 
+	 * Transaction işlemini olumlu şekilde tamamlar ve transaction süresi boyunca database için yapılan tüm işlemleri database de gerçekleştirir
+	 * @return boolean
+	 */
 	function commit()
 	{
 		if($this->dbh->commit())
@@ -316,6 +375,9 @@ class DB
 			return false;
 	}
 	
+	/**
+	 * Transaction işlemini olumsuz şekilde bitirir. Transaction süresi boyunca yapılan işlemleri geri alır.
+	 */
 	function rollBack()
 	{
 		

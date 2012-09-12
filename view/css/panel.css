@@ -99,10 +99,8 @@ input[type=file]
 	float:left;
 	clear:left;
 	display:block;
-	background:#fff url(../images/inputBg_normal.png) repeat-x top;
 	height:27px;
 	width:315px;
-	border:1px #e2e2e2 solid;
 	outline:none;
 	font:13px Segoe UI, Arial, Arial, Helvetica, sans-serif;
 	color:#828282;

@@ -47,13 +47,6 @@
 							{
 								private_methods.setFileInfo(response);
 								
-								$(".fileOuter .fancybox").fancybox({
-									"titleShow":false,
-									"scrolling":"no"
-								});
-								
-								
-								
 								objects.btn_edit.click(function(){
 									var file_id = $(this).attr("file");
 									
@@ -94,6 +87,11 @@
 				if(file.type != "movie")
 				{
 					objects.btn_look.attr("href",'lookfile.php?type=' + file.type + '&url=' + file.url);
+					objects.btn_look.fancybox({
+						"titleShow":false,
+						"scrolling":"no"
+					});
+					
 					objects.btn_play.css("display","none");
 				}
 				else
@@ -102,7 +100,7 @@
 					objects.btn_look.css("display","none");
 				}
 			}
-		}
+		};
 		
 		var public_methods = {
 			initialize: function(){

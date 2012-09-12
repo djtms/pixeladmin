@@ -39,7 +39,7 @@ class PA_LANGUAGE extends DB
 	
 	function addLanguage($locale, $date_format='%d %M %y')
 	{
-		if(!$this->checkIfColumnExists($this->tableI18n, $locale) && !$this->execute("ALTER TABLE {$this->tableI18n} ADD $locale TEXT DEFAULT NULL"))
+		if(!$this->checkFieldExists($this->tableI18n, $locale) && !$this->execute("ALTER TABLE {$this->tableI18n} ADD $locale TEXT DEFAULT NULL"))
 			return false; // Belirtilen column un tabloda olmadığı durumda eğer o column u oluşturamıyorsak return false olacak.
 		
 		return $this->setLanguageStatus($locale, 1) && 

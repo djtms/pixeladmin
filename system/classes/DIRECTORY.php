@@ -12,8 +12,7 @@ class PA_DIRECTORY extends PA_FILE
 		$this->table_file = $this->tables->file;
 	}
 	
-	function createDirectory($name, $parent_id=-1)
-	{
+	function createDirectory($name, $parent_id=-1){
 		global $uploadurl;
 		
 		if(!$this->selectDirectoryByNameAndParent($parent_id, $name))
@@ -43,7 +42,7 @@ class PA_DIRECTORY extends PA_FILE
 		}
 		else
 			return false;
-	}
+	}	
 	
 	function updateDirectory($directory_id, $new_name){
 		global $uploadurl;
@@ -133,12 +132,12 @@ class PA_DIRECTORY extends PA_FILE
 	
 	function setDirectoryFavouriteStatus($directory_id, $status = 1)
 	{
-		return $this->execute("UPDATE {$this->table} SET is_favourite=? WHERE directory_id=?",array($status, $directory_id));
+		return $this->execute("UPDATE {$this->table} SET is_favourite=? WHERE directory_id=?", array($status, $directory_id));
 	}
 	
 	function generateFileTreeHtmlByParentId($parent_id)
 	{
-		$dirs = $this->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?",array($parent_id));
+		$dirs = $this->get_rows("SELECT * FROM {$this->table} WHERE parent_id=?", array($parent_id));
 		
 		$dirHtml = '<ul class="fileTree">';
 		foreach($dirs as $d)
