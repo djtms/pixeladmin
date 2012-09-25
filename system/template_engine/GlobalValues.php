@@ -12,6 +12,9 @@ class GlobalValues
 	{
 		$value = isset($value) ? $value : "";
 		
+		if(gettype($value) === "string")
+			$value = addslashes($value);
+		
 		$GLOBALS[$name] = $value;
 		$this->{$name} = $value;
 		

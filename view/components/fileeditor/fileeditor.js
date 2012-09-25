@@ -916,12 +916,14 @@
 					editor_html += '<p id="searchAlertBox" style="display:none;">Kayıt bulunamadı!</p>';
 					editor_html += '</div>';
 					editor_html += '<div id="tempQueue" style="display:none;"></div>';
-					editor_html += '<div id="browserFilesListOuter">';
+					editor_html += '<div id="browserCotentsOuter">';
 					editor_html += '<div id="fileEditorContentsLoader"><span></span></div>';
+					editor_html += '<div id="browserFilesListOuter">';
 					editor_html += '<div id="editorDragFilesArea"><span></span></div>';
 					editor_html += '<ul id="browserFilesList">';
 					editor_html += '</ul>';
 					editor_html += '<div id="browserFilesListScroller"></div>';
+					editor_html += '</div>';
 					editor_html += '</div>';
 					editor_html += '<button id="browserBtnUseFiles" type="button">Kullan</button>';
 					editor_html += '</div>';
