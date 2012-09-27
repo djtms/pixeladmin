@@ -2,11 +2,8 @@
 	<label>Sayfa Id'si: (readonly)</label>
 	<input type="text" readonly="readonly" name="page_id" value="{%smpage.page_id%}" />
 	
-	<label>Ebeveyn</label>
-	<select name=page_parent>
-		<option value="-1">Yok</option>
-		{%otherSMPagesHtml%}
-	</select>
+	<label>Sayfa Resmi</label>
+	<input type="file" name="page_image" value="{%smpage.page_image%}" />
 	
 	<label>Sayfa Adresi: (url adresi)</label>
 	<input type="text" name="page_url" value="{%smpage.page_url%}" maxlength="255" />
