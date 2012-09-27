@@ -1,5 +1,5 @@
 <?php
-if($_GET["delete"] > 0)
+if(strlen($_GET["delete"]) > 0)
 {
 	if($ADMIN->SITEMAP->deleteSitemap($_GET["delete"]))
 	{
