@@ -107,7 +107,7 @@ function I18nStart()
 			i18nHiddenInputs += "<input type='hidden' name='i18nLanguage' value='' />";
 			
 			$(this).append(i18nHiddenInputs);
-			if($(this).attr("method").toLowerCase() == "get")
+			if(!$(this).attr("method") || $(this).attr("method").toLowerCase() == "get")
 			{
 				// FIXME: messageBox burada çalışmıyor
 				MESSAGEBOX.showMessage("Uyarı!", "Formunuzda \"Çoklu Dil\" özelliği kullandığınız için form elemanınızın veri gönderme şekli \"post\" olarak ayarlandı!", messageType.WARNING, [{name:"Tamam", click:MESSAGEBOX.hideMessage}]);
