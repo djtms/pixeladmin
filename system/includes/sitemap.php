@@ -2,12 +2,10 @@
 if($_POST["admin_action"] == "selectSitemap")
 {
 	$page_id = $_POST["page_id"];
-	if($page = $ADMIN->SITEMAP->selectSiteMap($page_id))
-	{
+	if($page = $ADMIN->SITEMAP->selectSiteMap($page_id)){
 		echo json_encode(array("found"=>true, "page"=>$page));
 	}
-	else
-	{
+	else{
 		echo json_encode(array("found"=>false));
 	}
 	
@@ -20,7 +18,7 @@ function saveSitemap($url_params = array())
 	global $ADMIN;
 	$page_url = renderHtml($_REQUEST["sm_page_url"], $url_params);
 
-	if($ADMIN->SITEMAP->setSiteMap($_POST["sm_page_id"], $page_url, $_POST["sm_page_title"], $_POST["sm_page_description"], $_POST["sm_page_parent"]))
+	if($ADMIN->SITEMAP->setSiteMap($_POST["sm_page_id"], $_POST["sm_image_id"], $page_url, $_POST["sm_page_title"], $_POST["sm_page_description"]))
 	{
 		return saveI18n();
 	}

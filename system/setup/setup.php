@@ -526,7 +526,7 @@ function createDbTables($dbh,$prefix)
 	
 	$querySitemap = "CREATE TABLE IF NOT EXISTS `{$prefix}sitemap` (
 				  `page_id` varchar(25) COLLATE utf8_bin NOT NULL,
-				  `page_parent` varchar(25) COLLATE utf8_bin NOT NULL DEFAULT '-1',
+				  `page_image` int(11) DEFAULT '-1',
 				  `page_url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
 				  `page_title` varchar(25) COLLATE utf8_bin DEFAULT NULL,
 				  `page_description` varchar(25) COLLATE utf8_bin DEFAULT NULL,
