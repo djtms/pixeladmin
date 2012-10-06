@@ -28,27 +28,26 @@ function I18nStart()
 		}
 		////////////////////////////////////////////////////////////////////////////////////////
 		
+		var formObject = $(this).parents("form");
+		
 		if($.trim(i18nObject.attr("i18n")).length <= 0)
 		{
-			var formObject = $(this).parents("form");
 			var uniqueI18nCode = uniqid();
-			var name = i18nObject.attr("name");
-			var hiddenObject = '<input type="hidden" name="' + name + '" value="' + uniqueI18nCode + '" />';
-			
 			i18nObject.attr("i18n",uniqueI18nCode);
-			
-			
-			formObject.append(hiddenObject);
-			i18nObject.removeAttr("name");
-			if(i18nObject.is("[editor]"))
-			{
-				var id = i18nObject.attr("id"); 
-				EDITORS[id] = CKEDITOR.replace(id);
-				EDITORS[id].on("key",function(){isI18nSencronised = false;});
-				CKFinder.setupCKEditor(EDITORS[id], 'view/components/ckfinder/');
-				ckIds.push("cke_" + id);
-			}
 		}
+		
+		if(i18nObject.is("[editor]"))
+		{
+			var id = i18nObject.attr("id"); 
+			EDITORS[id] = CKEDITOR.replace(id);
+			EDITORS[id].on("key",function(){isI18nSencronised = false;});
+			CKFinder.setupCKEditor(EDITORS[id], 'view/components/ckfinder/');
+			ckIds.push("cke_" + id);
+		}
+		
+		var hiddenObject = '<input type="hidden" name="' + i18nObject.attr("name") + '" value="' + i18nObject.attr("i18n") + '" />';
+		formObject.append(hiddenObject);
+		i18nObject.removeAttr("name");
 	});
 	
 	// Dil tablarını oluştur

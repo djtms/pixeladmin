@@ -18,7 +18,10 @@ if($_POST["admin_action"] == "Kaydet")
 	}
 }
 
-$smpage = $ADMIN->SITEMAP->selectSiteMap($page_id);
+if(!$smpage = $ADMIN->SITEMAP->selectSiteMap($page_id)){
+	$smpage = new stdClass();
+	$smpage->priority = "0.5";
+}
 $smpage->page_id = $page_id; // Eğer yeni bir sitemap sayfası eklenecekse page_id değerini yukarıda aldığımız uniqid değeri olarak kullanıyoruz.
 
 

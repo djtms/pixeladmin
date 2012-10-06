@@ -153,7 +153,7 @@ class DB
 	 * @param array $variables array("key"=>$value) şeklinde bir array olmalı
 	 * @return string|boolean
 	 */
-	function insert($table, $variables=array())
+	function insert($table, $variables)
 	{
 		$columns = "";
 		$values = "";
@@ -212,7 +212,7 @@ class DB
 	* @param array $variables array("key"=>$value) şeklinde bir array olmalı
 	* @return string|boolean
 	*/
-	function update($table, $variables=array(), $where)
+	function update($table, $variables, $where)
 	{
 		$query = "UPDATE {$table} SET";
 		foreach($variables as $col=>$val)
