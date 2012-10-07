@@ -34,16 +34,17 @@ function I18nStart()
 		{
 			var uniqueI18nCode = uniqid();
 			i18nObject.attr("i18n",uniqueI18nCode);
+			
+			if(i18nObject.is("[editor]"))
+			{
+				var id = i18nObject.attr("id"); 
+				EDITORS[id] = CKEDITOR.replace(id);
+				EDITORS[id].on("key", function(){isI18nSencronised = false;});
+				CKFinder.setupCKEditor(EDITORS[id], 'view/components/ckfinder/');
+				ckIds.push("cke_" + id);
+			}
 		}
 		
-		if(i18nObject.is("[editor]"))
-		{
-			var id = i18nObject.attr("id"); 
-			EDITORS[id] = CKEDITOR.replace(id);
-			EDITORS[id].on("key",function(){isI18nSencronised = false;});
-			CKFinder.setupCKEditor(EDITORS[id], 'view/components/ckfinder/');
-			ckIds.push("cke_" + id);
-		}
 		
 		var hiddenObject = '<input type="hidden" name="' + i18nObject.attr("name") + '" value="' + i18nObject.attr("i18n") + '" />';
 		formObject.append(hiddenObject);
