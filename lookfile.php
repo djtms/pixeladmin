@@ -32,7 +32,7 @@ else if($type == "sound")
     so.addVariable("frontcolor","ffffff");
     so.write("videoPlayer");
 </script>
-<div id="videoPlayer" style="width:720px; height:576px; float:left; background: #f00;"></div>
+<div id="videoPlayer" style="width:720px; height:576px; float:left; background: #000;"></div>
 <?php
 }
 else if($type == "image")

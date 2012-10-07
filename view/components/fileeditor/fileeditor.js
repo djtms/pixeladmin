@@ -58,6 +58,7 @@
 			objects.browserFavouritesList.delegate("span", "mousedown", events.onClickFavouritedDirectoryItem);
 			objects.browserFilesListOuter.on("mousedown", events.onContentsAreaMouseDown);
 			objects.browserFilesList.delegate(".btnDelete","click", events.onEditorItemDeleteButtonClick);
+			objects.browserFilesList.delegate(".btnEdit","click", events.onEditFile);
 			objects.browserBtnUseFiles.on("click", events.onUseSelectedItems);
 			objects.browserFilesList.delegate(".file","dblclick", events.onUseSelectedItems);
 			objects.browserFilesList.delegate(".directory","dblclick", events.onLoadFiles);
@@ -102,7 +103,7 @@
 			
 			if(file.type != "other")
 			{
-				temp_html += '<a title="' + (file.type == "movie" ? "Oynat" : "İncele") + '" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url) + '" target="_blank"></a>';
+				temp_html += '<a title="' + (file.type == "movie" ? "Oynat" : "İncele") + '" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url) + '" ></a>';
 			}
 			else
 			{
@@ -373,6 +374,34 @@
 				});
 				
 				return false; // event olarak kullandığımızda sayfa yönlendirmesini engellemek için "return false;" yapıyoruz
+			},
+			onEditFile: function(){
+				var parent = $(this).parents(".editor_content");
+				var file_id = $(this).attr("file_id");
+				var filename = parent.find(".fileName");
+				var thumb = parent.find(".editorFileThumb");
+				var btnlook = parent.find(".btnLook");
+				
+				$(this).editfile({
+					file_id: file_id,
+					onSaved:function(file){
+						filename.html(file.basename);
+						
+						if(file.type != "movie")
+						{
+							if(file.thumb != null)
+							{
+								thumb.attr("src", file.thumb);
+							}
+							
+							btnlook.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
+						}
+						else
+						{
+							btnlook.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
+						}
+					}
+				});
 			},
 			onSearchFiles: function(){
 				
