@@ -232,22 +232,24 @@ function removeHtmlAttribute($html_content, $attribute_fiter = "all", $html_filt
 	
 	if($attribute_fiter == "all")
 	{
-		$attribute_pattern = "[a-z0-9_-]";
+		$attribute_pattern = "[a-z0-9_-]+";
 	}
 	else
 	{
 		$attribute_array = preg_split("/,/", $attribute_fiter);
 		$attribute_count = sizeof($attribute_array);
-		$attribute_pattern  = "(";
+		
+		$attribute_pattern  = $attribute_count > 1 ? "(" : "";
 		for($i=0; $i<$attribute_count; $i++)
 		{
 			$attribute_pattern .= trim($attribute_array[$i]) . "|";
 		}
 		$attribute_pattern  = substr($attribute_pattern, 0, -1);
-		$attribute_pattern .= ")";
+		$attribute_pattern .= $attribute_count > 1 ? ")" : "";
+		
 	}
 	
-	$pattern = "/<{$tagname_pattern}+ *({$attribute_pattern}+ *= *(\"|\').*?(\\1)).*?(>|\/>)/i";
+	$pattern = "/<{$tagname_pattern}+.*?({$attribute_pattern} *= *(\"|\').*?(\\2)).*?(>|\/>)/i";
 	
 	return preg_replace($pattern, "", $html_content);
 }
