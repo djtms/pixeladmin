@@ -158,9 +158,18 @@ function fixStringForWeb($string)
 * @param string $birthday
 * @return number
 */
-function calculateAge($birthday)
-{
+function calculateAge($birthday){
 	return floor((time() - strtotime($birthday)) / 31536000);
+}
+
+/**
+*
+* mysql desenine uygun stringlerin kullanarak şimdiki zamana göre ay hesabı yapar
+* @param string $birthday
+* @return number
+*/
+function calculateMonthAmount($birthday){
+	return round((time() - strtotime($birthday)) / 2592000);
 }
 
 /**

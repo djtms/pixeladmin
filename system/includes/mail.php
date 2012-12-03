@@ -26,7 +26,7 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 			$mesaj = $mailer;
 		}
 		
-		$konu = get_option("admin_site_title") . " - " . $konu;
+		//$konu = get_option("admin_site_title") . " - " . $konu;
 		
 		if(!is_array($aliciAdresi))
 			$aliciAdresi = ($aliciAdresi == null) ? get_option("admin_get_mail_address") : $aliciAdresi;
@@ -38,9 +38,9 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 			$konu="=?UTF-8?B?".base64_encode($konu)."?=\n";
 			$from ="From: =?UTF-8?B?".base64_encode($gonderenAdi)."?= <". $kimden . ">\r\n";
 			
-			$headers = "MIME-Version: 1.0\r\n";
-			$headers .= "Content-type: text/html; charset=utf-8\r\n";
-			$headers .= "Content-Transfer-Encoding: utf-8\r\n";
+			$headers = "MIME-Version: 1.0\n";
+			$headers .= "Content-Transfer-encoding: 8bit\n";
+			$headers .= "Content-type: text/html; charset=utf-8\n";
 			$headers .= $from;
 			
 			if(is_array($aliciAdresi))

@@ -283,6 +283,7 @@ class DB
 		{
 			foreach($values as $key=>$val)
 			{
+				
 				$key = is_numeric($key) ? ($key + 1) : $key;
 				$sth->bindValue($key,$val);	
 			}

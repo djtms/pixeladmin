@@ -185,7 +185,8 @@ function fileGrid($files, $gridId, $visibleEditButtons = "all", $rowCount=1, $co
 		$file_id = $files[$i]->file_id;
 		$file_type = $files[$i]->type;
 		$thumb_url = getThumbImage($file_id, 123, 87, false);
-		$file_url = "lookfile.php?type={$file_type}&url={$files[$i]->url}";
+		$thumb_url2 = getThumbImage($file_id, 0,600, false);
+		$file_url = "lookfile.php?type={$file_type}&url={$thumb_url2}";
 		$file_type = $files[$i]->type;
 		
 		$itemsList .= "<li class='gridFile' file='{$file_id}'>";

@@ -34,12 +34,19 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile)
 function uploadFile($file, $directory = "Harici_Dosyalar/")
 {
 	global $ADMIN;
+	global $uploadurl;
 	
-	if(!is_dir($directory))
+	if(!is_dir($uploadurl . $directory))
 	{
-		if(!$ADMIN->DIRECTORY->createDirectory($directory, -1))
+		if(!$directory_id = $ADMIN->DIRECTORY->createDirectory($directory, -1))
+		{
 			return false;
+		}
 	}
 	
-	return $ADMIN->UPLOADER->uploadFile($directory, $file);
+	if(!$temp = $ADMIN->DIRECTORY->selectDirectoryByNameAndParent(-1, $directory)){
+		return false;
+	}
+	
+	return $ADMIN->UPLOADER->uploadFile($temp->directory_id, $file);
 }

@@ -121,3 +121,4 @@ function listCustomCroppedImages()
 	else
 	echo json_encode(array("error"=>true, "data"=>"error happened!"));
 }
+
