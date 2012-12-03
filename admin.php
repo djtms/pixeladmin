@@ -1,6 +1,6 @@
 <?php 	
 require_once dirname(__FILE__) . '/includes.php';
-
+/////
 // Talep edilen sayfanın dosyasını bul 
 $pa_menuId = urldecode($_GET["page"]);
 
