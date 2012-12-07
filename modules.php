@@ -23,6 +23,10 @@ if(isset($_GET["admin_action"]))
 						$activeModules .= $moduleFolder . ',';
 						set_option("admin_active_modules",$activeModules);
 						executeActivationCode(urldecode($moduleFolder));
+						postMessage("Modül Başarıyla Kuruldu!");
+					}
+					else{
+						postMessage("Hata Oluştu!", true);
 					}
 				}
 				else
