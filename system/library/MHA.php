@@ -4,7 +4,7 @@
 * Author: Mehmet Hazar Artuner
 * WebPage: www.hazarartuner.com
 * Version: 1.4
-* Release Date: 12.11.2011
+* Release Date: 17.12.2012
 */
 
 function cropString($text,$limit)
@@ -23,6 +23,7 @@ function cropString($text,$limit)
 		}
 	}
 	
+	$newString = preg_replace("/(\,|\;|\.|\:) $/", "", $newString);
 	$newString = substr($newString,0,-1) . ($limitExceed ? "..." : "");
 	
 	return $newString;
