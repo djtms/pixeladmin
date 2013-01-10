@@ -22,7 +22,9 @@ class GlobalValues
 		{
 			default:
 			case "unknown type":
-			case "string":			$temp = "'$value'";							break;
+			case "string":
+				$temp = "'" . addslashes(preg_replace("/\n/", "\\n", $value)) . "'";							
+			break;
 			case "boolean":			$temp = $value === true ? "true" : "false";	break;
 			case "double":
 			case "integer":			$temp = $value;								break;

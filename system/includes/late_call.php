@@ -11,7 +11,7 @@ if(in_admin && ($_POST["admin_action"] == "sortDataGrid"))
 	/*
 	 * Önemli Not: Birgün sortable işlemi yapan mesela dataGrid gibi bir özelliği admin dışında kullanmaya karar verirsen
 	 * burayı mutlaka kontrol et, admin dışında çalıştırırsan çok büyük bir güvenlik açığı olur. şu anda mecburiyetten php 
-	 * tarafında sort işlemini olan fonksiyon post ile gönderilen değişken ile belirleniyor. Bu da admin dışında kullanıldığında
+	 * tarafında sort işlemini yapan fonksiyon post ile gönderilen değişken ile belirleniyor. Bu da admin dışında kullanıldığında
 	 * çok büyük açık olur.
 	 */
 	

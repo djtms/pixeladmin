@@ -18,14 +18,15 @@ if(isset($_GET["admin_action"]))
 				{
 					require_once "$moduleFileUrl";
 					global $register_module_function;
-					if(call_user_func($register_module_function) !== false)
+					$activation_result = call_user_func($register_module_function);
+					if($activation_result !== false)
 					{
 						$activeModules .= $moduleFolder . ',';
 						set_option("admin_active_modules",$activeModules);
 						executeActivationCode(urldecode($moduleFolder));
 						postMessage("Modül Başarıyla Aktifleştirildi!");
 					}
-					else{
+					else if($activation_result === false){
 						postMessage("Hata Oluştu!", true);
 					}
 				}
