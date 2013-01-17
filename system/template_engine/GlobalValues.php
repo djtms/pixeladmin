@@ -33,10 +33,7 @@ class GlobalValues
 			case "NULL":			$temp = null;									break;
 		};
 
-		//$value = (is_array($value) || is_object($value)) ? json_encode($value) : "'$value'";
 		self::$userDefinedGlobals .= "\n var $name = $temp;";
-		
-		
 	}
 	
 	function __construct($directory)

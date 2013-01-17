@@ -24,7 +24,7 @@ if(isset($_GET["admin_action"]))
 						$activeModules .= $moduleFolder . ',';
 						set_option("admin_active_modules",$activeModules);
 						executeActivationCode(urldecode($moduleFolder));
-						postMessage("Modül Başarıyla Aktifleştirildi!");
+						postMessage("Modül Başarıyla Etkinleştirildi!");
 					}
 					else if($activation_result === false){
 						postMessage("Hata Oluştu!", true);

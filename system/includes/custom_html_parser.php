@@ -3,13 +3,13 @@
 function parseCustomHtml($html_string)
 {
 	// input[type=i18n]  elementlerini düzenle
-	$html_string = preg_replace_callback("/<input.*?type=(\"|')i18n\\1.*?>/i", "parseI18nInputs", $html_string);
+	$html_string = preg_replace_callback("/<input[^>]*?type=(\"i18n\"|'i18n')[^>]*>/i", "parseI18nInputs", $html_string);
 	
 	// textarea[type=i18n]  elementlerini düzenle
-	$html_string = preg_replace_callback("/<textarea.*?type=(\"|')i18n\\1.*?>/i", "parseI18nInputs", $html_string);
+	$html_string = preg_replace_callback("/<textarea[^>]*?type=(\"i18n\"|'i18n')[^>]*>/i", "parseI18nInputs", $html_string);
 	
 	// input[type=file] elementlerini düzenle
-	$html_string = preg_replace_callback("/<input.*?type=(\"|')file\\1.*?>/i", "parseFileInputs", $html_string);
+	$html_string = preg_replace_callback("/<input[^>]*type=(\"file\"|'file')[^>]*>/i", "parseFileInputs", $html_string);
 	
 	return $html_string;
 }
