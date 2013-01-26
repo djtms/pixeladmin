@@ -84,7 +84,7 @@
 			str = str.replace(/\ş/g,"s");
 			str = str.replace(/\Ç/g,"C");
 			str = str.replace(/\ç/g,"c");
-			str = remove_forbidden_chars === true ? str.replace(/\\|\/|:|*|?|<|>|\|/g, "") : str;
+			str = remove_forbidden_chars === true ? str.replace("/\\|\/|:|*|?|<|>|\|/g", "") : str;
 			return str.replace(/\s/g,"_");
 		};
 		
