@@ -55,7 +55,7 @@ function checkAccessStatus($permission_key, $full_control=true, $redirect=true)
 				return false;
 		}
 		else // Kullanıcının gerekli yetkisi varsa
-		{
+	    {
 			return true;
 		}
 	}
@@ -63,7 +63,14 @@ function checkAccessStatus($permission_key, $full_control=true, $redirect=true)
 	{
 		if($redirect)
 		{
-			header("Location:" . (in_admin ? "../" : "") . "custom_pages/401.html");
+            if(in_admin){
+                $_SESSION["back_to"] = $_SERVER["REQUEST_URI"];
+                header("Location:login.php");
+            }
+            else{
+                header("Location:custom_pages/401.html");
+            }
+
 			exit;
 		}
 		else

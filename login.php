@@ -33,7 +33,14 @@ function login($captcha_used_correctly)
 			
 			add_log("giriş yaptı");
 			$_SESSION["USE_CAPTCHA"] = false;
-			header("Location:admin.php?page=dashboard");
+            if(isset($_SESSION["back_to"])){
+                header("Location:" . $_SESSION["back_to"]);
+                unset($_SESSION["back_to"]);
+                exit;
+            }
+            else{
+			    header("Location:admin.php?page=dashboard");
+            }
 		}
 		// Captcha kullanarak tekrar giriş yapmak gerekiyorsa.
 		else if($authentication_status === "login_with_captcha")
