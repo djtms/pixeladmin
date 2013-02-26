@@ -5,8 +5,9 @@ addMenu("Kontrol Paneli","$VIEW_URL/images/icons/dashboard_icon.png","Kontrol Pa
 addMenu("Mesajlar","$VIEW_URL/images/icons/messages_icon.png","Mesajlar","messages","messages.php",101,USER_SUPER);
 addPage("Mesaj İçeriği","messages" ,"readmessage", "readmessage.php",USER_SUPER);
 addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraccounts","useraccounts.php",20,USER_SUPER); // 108
-addSubMenu("Davet Gönder", "Davet Gönder", "useraccounts", "invite_user", "invite_user.php",1, USER_SUPER);
 //addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraccounts", "add_user", "add_user.php", 2, USER_SUPER);
+addSubMenu("Davet Gönder", "Davet Gönder", "useraccounts", "invite_user", "invite_user.php",1, USER_SUPER);
+
 
 addSubMenu("Yetkiler", "Yetkiler", "useraccounts", "permissions", "permissions.php", 3);
 addSubMenu("Roller", "Roller", "useraccounts", "roles", dirname(__FILE__) . "/roles.php", 4);

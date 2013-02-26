@@ -1,10 +1,10 @@
-var validate;
+var VALIDATE;
 
 $(UserStart);
 
 function UserStart()
 {
-	validate = new Validate();
+	VALIDATE = new VALIDATE();
 }
 
 
@@ -16,7 +16,7 @@ function checkForm()
 {
 	var message = "";
 	
-	if(!validate.validateUsername($("[name=username]").val()))
+	if(!VALIDATE.validateUsername($("[name=username]").val()))
 	{
 		message = "kullanıcı adında boşluk karakteri kullanmayın!";
 	}
@@ -36,7 +36,7 @@ function checkForm()
 	{
 		message = "parolalar eşleşmiyor!";
 	}
-	else if(!validate.validateEmail($("#email").val()))
+	else if(!VALIDATE.validateEmail($("#email").val()))
 	{
 		message = "uygun bir mail adresi girin!";
 	}

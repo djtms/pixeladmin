@@ -3,7 +3,7 @@
  * 
  */
 
-function Validate()
+function VALIDATE()
 {
 	this.validateUsername = function(str){
 		return !str.match(/[\s]+/i);

@@ -1,0 +1,21 @@
+<form method="post">
+	<h2>Hesap Bilgileri</h2>
+	<label>Kullanıcı Adı:</label>
+	<input id="username" type="text" name="username" value="" />
+	
+	<label>E-Posta Adresi:</label>
+	<input id="email" type="text" name="email" value="" />
+	
+	<label>Parola:</label>
+	<input id="password" type="password" name="password" />
+	
+	<label>Parola (Tekrar):</label>
+	<input id="password_again" type="password" />
+	
+	<br clear="all" /><br /><br />
+	
+	<h2>Rolleri:</h2>
+	{%add_user_roles_html%}
+	
+	<button id="btnAddUser" type="submit" name="admin_action" value="addUser">Kullanıcı Ekle</button>
+</form>

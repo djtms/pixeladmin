@@ -1,12 +1,12 @@
 $(MasterStart);
 
-var validate;
+var VALIDATE;
 var EDITORS = new Array();
 
 function MasterStart()
 {
 	MESSAGEBOX = new MESSAGEBOX();
-	validate = new Validate();
+	VALIDATE = new VALIDATE();
 	
 	$.ajaxSetup({
 		type:"post"

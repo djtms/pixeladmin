@@ -3,7 +3,7 @@
  * Version: 1.01; 02.08.2011
  */
 
-function Validate()
+function VALIDATE()
 {
 	this.validateName = function(str){
 		return str.match(/^[a-z\s\ç\Ç\ş\Ş\ü\Ü\ı\İ\ğ\Ğ\ö\Ö]+$/i);

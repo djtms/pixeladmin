@@ -441,7 +441,7 @@
 				{
 					resultText.html("dosya ismi en az iki karakterden oluşmalı!");
 				}
-				else if(!validate.validateFilename(basenameText,true))
+				else if(!VALIDATE.validateFilename(basenameText,true))
 				{
 					alert("lütfen uygun klasör ismi girin! \n * dosya ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * dosya ismi nokta (.) karakteri ile başlayamaz! \n * dosya isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
 				}

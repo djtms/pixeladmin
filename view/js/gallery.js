@@ -8,6 +8,7 @@ function GalleryStart()
 		var galleryId = gallery.val();
 		var columnsCount = gallery.is("[cols]") ? (gallery.attr("cols") <= 5 ? gallery.attr("cols") : 5 ) : 5;
 		var rowsCount = gallery.is("[rows]") ? gallery.attr("rows") : 1;
+        var readonly = $(this).is("[readonly]") ? true : false;
 		
 		if((galleryId == undefined) || (galleryId==null) || (galleryId <= 0))
 		{
@@ -24,21 +25,21 @@ function GalleryStart()
 					else
 					{
 						gallery.val(galleryId);
-						loadGallery(gallery,columnsCount,rowsCount);
+						loadGallery(gallery,columnsCount,rowsCount, readonly);
 					}
 				}
 			});
 		}
 		else
 		{
-			loadGallery(gallery,columnsCount,rowsCount);
+			loadGallery(gallery,columnsCount,rowsCount, readonly);
 		}
 	});
 	
-	$(".galleryList").sortable();
+	$(".galleryList:not(.readonly)").sortable();
 }
 
-function loadGallery(gallery,columnsCount,rowsCount)
+function loadGallery(gallery,columnsCount,rowsCount,readonly)
 {
 	var existingFilesIds = new Array(); // Galerinin yüklenmesi sırasında alınan dosyaların id'lerinin olduğu dizi
 	var updatedFilesList = new Array(); // Galeride bulunan dosyaların id ve özelliklerinin bulunduğu dizi
@@ -60,10 +61,10 @@ function loadGallery(gallery,columnsCount,rowsCount)
 	var gHtml = '<input type="hidden" name="' + thisName + '" value="' + galleryId + '" />';
 		gHtml += '<input type="hidden" class="galleryFilesInfo" name="galleries[]" value="" />';
 		gHtml += '<div class="galleryListOuter">';
-		gHtml += '<ul class="galleryList">';	
+		gHtml += '<ul class="galleryList ' + (readonly ? "readonly" : "") + '">';
 		gHtml += '</ul><!-- galleryList -->  ';
 		gHtml += '</div><!-- galleryListOuter -->';
-		gHtml += '<button type="button" class="galleryAddFileButton">Ekle</button>';
+		gHtml += readonly ? "" : '<button type="button" class="galleryAddFileButton">Ekle</button>';
 		gHtml += '</div>';
 		
 	gallery.wrap('<div class="galleryOuter">');
@@ -105,8 +106,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 				}
 			});
 			
-			if(isFileDeleted)
-			{
+			if(isFileDeleted){
 				calculatedFilesList.push({id:existingFilesIds[i].id,"status":"deleted"});
 			}
 		}
@@ -115,12 +115,10 @@ function loadGallery(gallery,columnsCount,rowsCount)
 			var fileId = $(this).find(".fileId").val();
 			var index = $(this).index();
 			
-			if($(this).hasClass("newFile"))
-			{	
+			if($(this).hasClass("newFile")){
 				calculatedFilesList.push({id:fileId,"status":"new","order":index});
 			}
-			else if($(this).hasClass("existingFile"))
-			{
+			else if($(this).hasClass("existingFile")){
 				calculatedFilesList.push({id:fileId,"status":"existing","order":index});
 			}
 		});
@@ -129,66 +127,70 @@ function loadGallery(gallery,columnsCount,rowsCount)
 		
 		_this.find(".galleryFilesInfo").val(JSON.encode(galleryAndFilesInfo));
 	});
-	
-	btnAddFile.click(function(){
-		updatedFilesList = new Array();
-		galleryObject.find(".fileId").each(function(){
-			var fileId = $(this).val();
-			updatedFilesList.push({id:fileId});
-		});
-		
-		$(document).fileeditor("openFileEditor",{
-			multiselection:true,
-			onFilesSelect:function(files){
-				var fileCount = files.length;
-				var filesHtml = '';
-				
-				galleryObject.find(".galleryItem").removeClass("lastAdded");
-				for(i=0; i<fileCount; i++)
-				{
-					// Galerinin ilk yüklendiği andaki dosyaları ile sonradan yüklenen dosyaları ayırabilmek için farklı class'lar ekle
-					var fileStatusClass = "newFile";
-					for(var j=0; j<existingFilesIds.length; j++)
-					{
-						if(files[i].file_id == existingFilesIds[j].id)
-						{
-							fileStatusClass = "existingFile";
-							break;
-						}
-					}
-					
-					//editör'de seçilen dosyaları "updatedFilesList" dizisine ekle
-					updatedFilesList.push({id:files[i].file_id});
 
-					filesHtml += '<li class="galleryItem ' + fileStatusClass + ' lastAdded">';
-					filesHtml += '<img src="' + files[i].thumb + '" fileId=' + files[i].file_id + ' /><span class="shadow"></span>';
-					filesHtml += '<span class="delButton button">Sil</span>';
-					filesHtml += '<input class="fileId" type="hidden" value="' + files[i].file_id + '" />';
-					filesHtml += '</li>';
-				}
-				
-				galleryObject.append(filesHtml);
-				galleryObject.sortable();
-				
-				galleryObject.find(".lastAdded").each(function(){
-					var del = $(this).find(".delButton");
-					if(del)
-					{
-						del.css("display","block");
-						$(this).hover(function(){
-							del.animate({"opacity":1},300);
-						},
-						function(){
-							del.animate({"opacity":0},300);
-						});
-					}
-				});
-			}
-		});
-		
-		$(this).blur();
-	});
-	
+    if(!readonly){
+        btnAddFile.click(function(){
+            updatedFilesList = new Array();
+            galleryObject.find(".fileId").each(function(){
+                var fileId = $(this).val();
+                updatedFilesList.push({id:fileId});
+            });
+
+            $(document).fileeditor("openFileEditor",{
+                multiselection:true,
+                onFilesSelect:function(files){
+                    var fileCount = files.length;
+                    var filesHtml = '';
+
+                    galleryObject.find(".galleryItem").removeClass("lastAdded");
+                    for(i=0; i<fileCount; i++)
+                    {
+                        // Galerinin ilk yüklendiği andaki dosyaları ile sonradan yüklenen dosyaları ayırabilmek için farklı class'lar ekle
+                        var fileStatusClass = "newFile";
+                        for(var j=0; j<existingFilesIds.length; j++)
+                        {
+                            if(files[i].file_id == existingFilesIds[j].id)
+                            {
+                                fileStatusClass = "existingFile";
+                                break;
+                            }
+                        }
+
+                        //editör'de seçilen dosyaları "updatedFilesList" dizisine ekle
+                        updatedFilesList.push({id:files[i].file_id});
+
+                        filesHtml += '<li class="galleryItem ' + fileStatusClass + ' lastAdded">';
+                        filesHtml += '<img src="' + files[i].thumb + '" fileId=' + files[i].file_id + ' /><span class="shadow"></span>';
+                        if(!readonly){
+                            filesHtml += '<span class="delButton button">Sil</span>';
+                        }
+                        filesHtml += '<input class="fileId" type="hidden" value="' + files[i].file_id + '" />';
+                        filesHtml += '</li>';
+                    }
+
+                    galleryObject.append(filesHtml);
+                    galleryObject.sortable();
+
+                    galleryObject.find(".lastAdded").each(function(){
+                        var del = $(this).find(".delButton");
+                        if(del.length > 0)
+                        {
+                            del.css("display","block");
+                            $(this).hover(function(){
+                                del.animate({"opacity":1},300);
+                            },
+                            function(){
+                                del.animate({"opacity":0},300);
+                            });
+                        }
+                    });
+                }
+            });
+
+            $(this).blur();
+        });
+    }
+
 	// Galerinin varolan dosyalarını listele
 	$.ajax({
 		data:"admin_action=listGalleryFiles&galleryId=" + galleryId,
@@ -210,7 +212,7 @@ function loadGallery(gallery,columnsCount,rowsCount)
 				
 				filesHtml += '<li class="galleryItem existingFile">';
 				filesHtml += '<img src="' + response[i].thumb + '" fileId="' + fileId + '" /><span class="shadow"></span>';
-				filesHtml += '<span class="delButton button">Sil</span>';
+				filesHtml += readonly ? "" : '<span class="delButton button">Sil</span>';
 				filesHtml += '<input class="fileId" type="hidden" value="' + fileId + '" />';
 				filesHtml += '</li>';
 			}

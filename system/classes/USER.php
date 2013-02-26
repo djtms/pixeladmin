@@ -66,11 +66,6 @@ class PA_USER extends PA_USER_TICKET
 				
 			return $this->insert($this->table, array("username"=>$username, "displayname"=>$displayname, "password"=>$encryptedPassword, "pass_key"=>$pass_key, "email"=>$email, "register_time"=>"NOW()"));
 		}
-		else
-		{
-			$this->error = "Zaten en az bir kullanıcı mevcut, bu şekilde yeni bir kullanıcı oluşturamazsınız!";
-			return false;
-		}
 	}
 	
 	function sendInvitationMail($user_id, $end_date = "0000-00-00 00:00:00")

@@ -2,8 +2,7 @@ $(UserAccounts);
 
 minInputLength = 6;
 
-function UserAccounts()
-{
+function UserAccounts(){
 	$("#username").blur(checkUsername);
 	$("#email").blur(checkEmail);
 	$("#username").blur(function(){
@@ -14,8 +13,7 @@ function UserAccounts()
 	$("#userAccountsList .crossBtn").click(deleteUser);
 }
 
-function deleteUser()
-{
+function deleteUser(){
 	var del = confirm("Silmek istediğinize eminmisiniz?");
 	var user_id = $(this).attr("user_id");
 	var button = $(this);
@@ -54,13 +52,11 @@ function deleteUser()
 	}
 }
 
-function openAddUserForm()
-{
+function openAddUserForm(){
 	$("#addUserFormOuter").css("display","block");
 }
 
-function checkUserInfo()
-{
+function checkUserInfo(){
 	var username = $.trim($("#username").val());
 	var pass1 =	$.trim($("#password").val());
 	var pass2 = $.trim($("#password_again").val());
@@ -96,8 +92,7 @@ function checkUserInfo()
 	return !error;
 }
 
-function checkUsername()
-{
+function checkUsername(){
 	var username = $.trim($(this).val());
 	
 	if(username.length >= minInputLength)
@@ -138,7 +133,7 @@ function checkUsername()
 function checkEmail()
 {
 	var email = $.trim($(this).val());
-	if(validate.validateEmail(email)) // daha sonra buraya mail validation koy
+	if(VALIDATE.validateEmail(email)) // daha sonra buraya mail validation koy
 	{
 		$("#emailCheckLoader p").html("");
 		$.ajax({

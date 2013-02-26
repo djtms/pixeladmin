@@ -16,7 +16,7 @@ function checkUserInfo()
 	var error = false;
 	var message = "";
 	
-	if(!validate.validateEmail($("#email").val()))
+	if(!VALIDATE.validateEmail($("#email").val()))
 	{
 		error = true;
 		message = "Geçerli bir \"E-Posta\" girin!";
@@ -51,7 +51,7 @@ function checkUserInfo()
 function checkEmail()
 {
 	var email = $.trim($(this).val());
-	if(!validate.validateEmail(email))
+	if(!VALIDATE.validateEmail(email))
 	{
 		$("#emailCheckLoader p").html("Uygun mail adresi girin!").addClass("error");
 	}
