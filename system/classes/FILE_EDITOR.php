@@ -6,18 +6,16 @@ class PA_FILE_EDITOR extends DB
 		
 		$return = new stdClass();
 		$return->directories = $ADMIN->DIRECTORY->listDirectoriesByParentId($directory_id);
-		
-		//
-		if($return->files = $ADMIN->DIRECTORY->listFilesByDirectory($directory_id))
-		{
-			$length = sizeof($return->files);
-		
-			for($i=0; $i<$length; $i++)
-			{
-				if(!$return->files[$i]->thumb = $ADMIN->DIRECTORY->getThumbUrl($return->files[$i]->file_id, 123, 87, false, true, "center top", "FFFFFF"))
-					$return->files[$i]->thumb = "../upload/system/exclamation.jpg";
-			}	
-		}
+
+        if($return->files = $ADMIN->DIRECTORY->listFilesByDirectory($directory_id))
+        {
+            $length = sizeof($return->files);
+
+            for($i=0; $i<$length; $i++){
+                if(!($return->files[$i]->thumb = $ADMIN->DIRECTORY->getThumbUrl($return->files[$i]->file_id, 123, 87, false, true, "center top", "FFFFFF")))
+                    $return->files[$i]->thumb = "../upload/system/exclamation.jpg";
+            }
+        }
 		
 		echo json_encode($return);
 		exit;
@@ -83,8 +81,11 @@ class PA_FILE_EDITOR extends DB
 	function updateDirectory($directory_id, $name){
 		global $ADMIN;
 		$directory = $ADMIN->DIRECTORY->selectDirectoryById($directory_id);
+
+        // check if directory exists
+        $selected_directory = $ADMIN->DIRECTORY->selectDirectoryByNameAndParent($directory->parent_id, $name);
 		
-		if($ADMIN->DIRECTORY->selectDirectoryByNameAndParent($directory->parent_id, $name))
+		if($directory_id != $selected_directory->directory_id)
 			echo json_encode(array("success"=>false, "msg"=>"already_exists"));
 		else if($ADMIN->DIRECTORY->updateDirectory($directory_id, $name))
 			echo json_encode(array("success"=>true));

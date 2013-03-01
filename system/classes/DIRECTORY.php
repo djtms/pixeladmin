@@ -46,15 +46,22 @@ class PA_DIRECTORY extends PA_FILE
 	
 	function updateDirectory($directory_id, $new_name){
 		global $uploadurl;
-		
+
+        $directory = $this->selectDirectoryById($directory_id);
+        $selected_directory = $this->selectDirectoryByNameAndParent($directory->parent_id, $new_name);
+
 		// Eğer böyle bir dizin yoksa işlemi hatalı olarak sonlandır
-		if(!$directory = $this->selectDirectoryById($directory_id)){
+		if(!$directory){
 			return false;
 		}
 		else if(($directory->name == $new_name)){// Eğer ismi değişmemişse işlemi sonlandır
 			return true;
 		}
-		else if(!$this->selectDirectoryByNameAndParent($directory->parent_id, $new_name)){ // Eğer yeni isim, içinde bulunduğu dizinde yok ise güncelleme işemini gerçekleştir
+        else if($selected_directory->directory_id != $directory_id){ // eğer bulunan dizin başka bir dizine aitse farklı isim kullanması gerekir
+            echo "asd";
+            return false;
+        }
+		else { // Eğer yeni isim, içinde bulunduğu dizinde yok ise güncelleme işemini gerçekleştir
 			$error = false;
 			
 			// Önce database de olmayan ve olmaması gereken ama bizim kolaylık olsun diye database den seçim esnasında CONCAT() ile eklediğimiz
@@ -64,7 +71,7 @@ class PA_DIRECTORY extends PA_FILE
 			
 			// Şimdi uploadurl değeri temizlenmiş url içinden directory adını yenisiyle değiştir.
 			$replace_directory = preg_replace(("/" . preg_quote($directory->name, "/") . "\/?$/"), $new_name . "/", $search_directory);
-			
+
 			// varsa güncellenecek dizinin altında bulunan dosyaların url'lerini güncelle
 			if($files = $this->get_rows("SELECT file_id, url FROM {$this->table_file} WHERE directory_id > 0 AND url LIKE ? '%'",array($search_directory)))
 			{
@@ -100,9 +107,6 @@ class PA_DIRECTORY extends PA_FILE
 			}
 			else
 				return false;
-		}
-		else{
-			return false;
 		}
 	}
 	
