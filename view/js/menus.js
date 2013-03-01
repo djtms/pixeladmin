@@ -15,13 +15,11 @@ function MenusStart()
 				$(this).css({"height":"45px"});
 				$(this).find(".pageLink").click(function(){
 					var height = parseInt($(this).parents(".menu").height());
-					if(height <= 45)
-					{
+					if(height <= 46){
 						height = totalHeight;
 						$(this).parents(".menu").addClass("selected");
 					}
-					else
-					{
+					else{
 						height = 45;
 						$(this).parents(".menu").removeClass("selected");
 					}
