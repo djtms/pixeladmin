@@ -138,4 +138,13 @@ class PA_FILE_EDITOR extends DB
 		echo json_encode(array("success"=>true, "favourited_directories"=>$favourited_directories));
 		exit;
 	}
+
+    function synchronizeFilesAndDirectories(){
+        global $ADMIN;
+
+        if($ADMIN->DIRECTORY->synchronizeDirectories() && $ADMIN->FILE->syncronizeFiles()){
+            echo "succeed";
+        }
+        exit;
+    }
 }

@@ -214,8 +214,7 @@
 	font-weight: bold;
 }
 
-.labelDirectory
-{
+.labelDirectory{
 	width:139px !important;
 	height:20px !important;
 	line-height:18px !important;
@@ -226,10 +225,18 @@
 	background: url(images/directoryTitleIcon.jpg) no-repeat left 4px;
 }
 
-#browserDirectoriesOuter
-{
+#browserDirectoriesOuter{
 	float:left;
 	margin:0 0 0 2px;
+}
+
+#btnSync{
+    width: 18px;
+    height: 18px;
+    float:left;
+    margin: 27px 0 0 -60px;
+    cursor: pointer;
+    background: url(images/btnSync.jpg) no-repeat;
 }
 
 #browserRightCorner
@@ -345,6 +352,7 @@
 {
 	float:right;
 	margin:0;
+    display:none;
 	position:relative;
 	z-index:100;
 }

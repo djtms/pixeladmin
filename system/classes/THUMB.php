@@ -9,6 +9,7 @@ class PA_THUMB extends DB
 	private $link_table;
 	private $browser_width;
 	private $browser_height;
+    public $error = array();
 	
 	function PA_THUMB()
 	{

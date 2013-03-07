@@ -28,22 +28,10 @@ if(in_admin)
 	else if($_POST["admin_action"] == "loadFavouritedDirectories"){
 		$ADMIN->FILE_EDITOR->loadFavouritedDirectories();
 	}
+    else if($_POST["admin_action"] == "syncFilesAndDirs"){
+        $ADMIN->FILE_EDITOR->synchronizeFilesAndDirectories();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 $exclamation_image = $ADMIN->DIRECTORY->selectSystemFileByFilename("exclamation");

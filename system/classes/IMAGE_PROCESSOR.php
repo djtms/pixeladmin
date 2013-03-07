@@ -75,7 +75,7 @@ class PA_IMAGE_PROCESSOR
 	{
 		$width = imagesx($this->image);
 		$height = imagesy($this->image);
-		
+
 		return (object) array("width"=>$width,"height"=>$height);
 	}
 	

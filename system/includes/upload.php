@@ -2,14 +2,12 @@
 
 if(in_admin)
 {
-	if($_POST["admin_action"] == "changeThumbnailExceptFileTypeIsImage")
-	{
+	if($_POST["admin_action"] == "changeThumbnailExceptFileTypeIsImage"){
 		changeThumbnailExceptFileTypeIsImage($_POST["file_id"], $_FILES["thumbfile"]);
 	}
 }
 
-function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile)
-{
+function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 	global $ADMIN;
 
 	$file = $ADMIN->FILE->selectFileById($file_id);
@@ -31,22 +29,13 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile)
 	echo json_encode($file);
 }
 
-function uploadFile($file, $directory = "Harici_Dosyalar/")
-{
+function uploadFile($file, $directory = "Harici_Dosyalar/"){
 	global $ADMIN;
-	global $uploadurl;
-	
-	if(!is_dir($uploadurl . $directory))
-	{
-		if(!$directory_id = $ADMIN->DIRECTORY->createDirectory($directory, -1))
-		{
-			return false;
-		}
-	}
-	
-	if(!$temp = $ADMIN->DIRECTORY->selectDirectoryByNameAndParent(-1, $directory)){
-		return false;
-	}
-	
-	return $ADMIN->UPLOADER->uploadFile($temp->directory_id, $file);
+
+    if($directory_id = $ADMIN->DIRECTORY->createDirectoryByPath($directory)){
+        return $ADMIN->UPLOADER->uploadFile($directory_id, $file);
+    }
+    else{
+        return false;
+    }
 }

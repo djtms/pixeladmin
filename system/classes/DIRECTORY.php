@@ -15,8 +15,10 @@ class PA_DIRECTORY extends PA_FILE
 	function createDirectory($name, $parent_id=-1){
 		global $uploadurl;
 		
-		if(!$this->selectDirectoryByNameAndParent($parent_id, $name))
-		{
+		if($dir = $this->selectDirectoryByNameAndParent($parent_id, $name)){
+            return $dir->directory_id;
+        }
+        else{
 			// database e kaydedilecek şekilde dizin bilgisini hesapla
 			if($parent_directory = $this->selectDirectoryById($parent_id)) // Üst dizin varsa 
 				$directory = preg_replace("/^" . preg_quote($uploadurl, "/") . "/", "", $parent_directory->directory) . $name . "/";
@@ -27,21 +29,18 @@ class PA_DIRECTORY extends PA_FILE
 			$full_path = $uploadurl . $directory;
 			
 			// dizinleri oluştur ve yetkilerini ata
-			if(!file_exists($full_path))
-			{
-				if(!mkdir($full_path, 0755)) // dosyayı oluştururken mode değeri desteklenmediği için aşağıda tekrardan chmod işlemi yapıyoruz
+			if(!file_exists($full_path)){
+				if(!mkdir($full_path, 0775)) // dosyayı oluştururken mode değeri desteklenmediği için aşağıda tekrardan chmod işlemi yapıyoruz
 					return false;
 				
 				// Bazen chmod yanlış atanıyor, onu sağlama almak tekrar chmod değişikliği yaptırıyoruz.
-				if(!chmod($full_path, 0755))
+				if(!chmod($full_path, 0775))
 					return false;
 			}
 			
 			// database'e kaydet ve sonucu döndür
 			return $this->insert($this->table,array("parent_id"=>$parent_id,"name"=>$name,"directory"=>$directory));
 		}
-		else
-			return false;
 	}	
 	
 	function updateDirectory($directory_id, $new_name){
@@ -112,14 +111,37 @@ class PA_DIRECTORY extends PA_FILE
 	function selectDirectoryById($directory_id)
 	{
 		global $uploadurl;
-		return $this->get_row("SELECT *, CONCAT('$uploadurl', directory) AS directory FROM {$this->table} WHERE directory_id=?",array($directory_id));
+		return $this->get_row("SELECT *, CONCAT('{$uploadurl}', directory) AS directory FROM {$this->table} WHERE directory_id=?",array($directory_id));
 	}
 	
 	function selectDirectoryByNameAndParent($parent_id, $name)
 	{
 		global $uploadurl;
-		return $this->get_row("SELECT *, CONCAT('$uploadurl', directory) AS directory FROM {$this->table} WHERE parent_id=? AND name=?",array($parent_id, $name));
+		return $this->get_row("SELECT *, CONCAT('{$uploadurl}', directory) AS directory FROM {$this->table} WHERE parent_id=? AND name=?",array($parent_id, $name));
 	}
+
+    // parametre olarak verilen dizini parent dizinleri ile birlikte oluşturur.
+    function createDirectoryByPath($directory_path){
+        global $uploadurl;
+
+        $fixed_path = preg_replace("/^.*?" . preg_quote($uploadurl, "/") . "/", "", $directory_path);
+        $parent_id = -1;
+
+        $path_array = explode("/", $fixed_path);
+        $path_amount = sizeof($path_array);
+
+        for($i=0; $i<$path_amount; $i++){
+            $directory_name = $path_array[$i];
+
+            if(strlen($directory_name) > 0){
+                if(!$parent_id = $this->createDirectory($directory_name, $parent_id)){
+                    return false;
+                }
+            }
+        }
+
+        return $parent_id;
+    }
 	
 	function listDirectoriesByParentId($parent_id)
 	{
@@ -202,7 +224,7 @@ class PA_DIRECTORY extends PA_FILE
 	
 	/**
 	 * 
-	 * girilen dizini içerikleri ile birlikte siler, herhangi bir database işlemi yapmar, işlemi sadece dosya bazında gerçekleştirir
+	 * girilen dizini içerikleri ile birlikte siler, herhangi bir database işlemi yapmaz, işlemi sadece dosya bazında gerçekleştirir
 	 * @param string $directory
 	 */
 	private function deleteDirectoryCompletely($directory)
@@ -231,4 +253,81 @@ class PA_DIRECTORY extends PA_FILE
 			return rmdir($directory);
 		}
 	}
+
+    /**
+     * upload/files/ dizinindeki tüm dizinleri veritabanı ile senkronize hale getirir, kaydı olmayan dizinleri
+     * veritabanına ekler, kaydı olupta kendisi olmayan dizinlerin bilgilerini veritabanından siler
+     * @return bool
+     */
+    function synchronizeDirectories(){
+        global $ADMIN;
+        global $uploadurl;
+
+        $table_directory =  $ADMIN->DB->tables->directory;
+        $table_file = $ADMIN->DB->tables->file;
+
+        // dizinleri database'de ara ve olmayanları database'e ekle.
+        $directories = $this->listWholeDirectoriesInPath($uploadurl);
+        $directory_amount = sizeof($directories);
+        $error = false;
+
+        for($i=0; $i<$directory_amount; $i++){
+            if(!$this->createDirectoryByPath($directories[$i])){
+                $error = true;
+            }
+        }
+
+        // database'deki dizinleri dosya sisteminde ara ve olmayanları database'den sil
+        $directories = $ADMIN->DB->get_rows("SELECT * FROM {$table_directory}");
+        foreach($directories as $d){
+            if(!is_dir($uploadurl . $d->directory)){
+                // eğer dizin yoksa veritabanından sil, dosya silme işlemi riskli olacağı için
+                // sistemin DIRECTORY class'ındaki fonksiyonu kullanma burda bir query çalıştır.
+                $ADMIN->DB->execute("DELETE FROM {$table_directory} WHERE directory_id=?", array($d->directory_id));
+            }
+        }
+
+        return !$error;
+    }
+
+    /**
+     * upload/files/ dizini içindeki herhangi bir dizinin içinde bulunan tüm dizinleri yine tüm alt dizinleri ile birlikte döndürür
+     * @param $directory_path
+     * @return array
+     */
+    private function listWholeDirectoriesInPath($directory_path){
+        $parent_path = preg_replace("/^\/?(.*?)\/?$/","$1", $directory_path) . "/";
+
+        $files = scandir($parent_path);
+        $file_amount = sizeof($files);
+        $subdirs = array();
+
+        if($file_amount > 2){
+            for($i=0; $i<$file_amount; $i++){
+                $directory_name = $files[$i];
+                $directory = $parent_path . $directory_name . "/";
+
+                // sıradaki data'nın dizin olup olmadığını kontrol et
+                if(($directory_name != ".") && ($directory_name != "..") && is_dir($directory)){
+                    $subdirs[] = $directory;
+                    $subdirs = array_merge($subdirs, $this->listWholeDirectoriesInPath($directory));
+                }
+            }
+        }
+
+        return $subdirs;
+    }
+
+    /**
+     * İstenen dizinin veritabanında kaydının olup olmadığını kontrol eder, kaydı varsa o dizinin veritabanındaki bilgileri döndürür.
+     * @param $directory_path
+     * @return mixed
+     */
+    function checkIfDirectoryExistInDbByPath($directory_path){
+        global $uploadurl;
+
+        $fixed_path = preg_replace("/^" . preg_quote($uploadurl, "/") . "/", "", $directory_path);
+
+        return $this->get_row("SELECT * FROM {$this->table} WHERE directory=?", array($fixed_path));
+    }
 }

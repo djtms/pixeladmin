@@ -41,6 +41,7 @@
 			objects.fileEditorUploader = objects.fileEditorMainContainer.find("#fileEditorUploader");
 			objects.browserFavouritesList = objects.fileEditorMainContainer.find("#browserFavouritesList");
 			objects.browserDirectoriesOuter = objects.fileEditorMainContainer.find("#browserDirectoriesOuter");
+            objects.btnSync = objects.fileEditorMainContainer.find("#btnSync");
 			objects.browserFilesListOuter = objects.fileEditorMainContainer.find("#browserFilesListOuter");
 			objects.browserFilesListOuter.focused = false; // bu değişkene bakarak browserFilesListOuter alanındaki klavye kısayollarını kullanıp kullanmaman gerektiğini kontrol edebilirsin
 			objects.browserFilesList = objects.browserFilesListOuter.find("#browserFilesList");
@@ -56,6 +57,7 @@
 			objects.browserBtn_Prev.click(events.onMoveUpperDirectory);
 			objects.btnCloseFileEditor.click(public_methods.closeFileEditor);
 			objects.browserDirectoriesOuter.delegate("li", "mousedown", events.onClickDirectoryItem);
+            objects.btnSync.click(events.onSyncFilesAndDirs);
 			objects.browserFavouritesList.delegate("span", "mousedown", events.onClickFavouritedDirectoryItem);
 			objects.browserFilesListOuter.on("mousedown", events.onContentsAreaMouseDown);
 			objects.browserFilesList.delegate(".btnDelete","click", events.onEditorItemDeleteButtonClick);
@@ -279,6 +281,19 @@
 		};
 
 		var events = {
+            onSyncFilesAndDirs: function(){
+                $.ajax({
+                    type:"post",
+                    data:"admin_action=syncFilesAndDirs",
+                    success: function(response){
+                        if(response == "succeed"){
+                            events.onListFavouritedDirectories();
+                            events.onLoadDirectoryTree();
+                            events.onLoadFiles();
+                        }
+                    }
+                });
+            },
 			onLoadFiles: function(e, settings){
 				// önceki requestleri iptal et
 				if(requests.loadFiles.abort){
@@ -924,6 +939,7 @@
 					editor_html += '<label class="labelFavourites browserBigTitle">Sık Kullanılanlar</label>';
 					editor_html += '<div id="browserFavouritesList"></div>';
 					editor_html += '<label class="labelDirectory browserBigTitle">Dizinler</label>';
+                    editor_html += '<span id="btnSync" title="Dosya ve dizinleri senkronize et"></span>';
 					editor_html += '<div id="browserDirectoriesOuter"></div>';
 					editor_html += '</div>';
 					editor_html += '<div id="browserRightCorner">';

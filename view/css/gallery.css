@@ -42,19 +42,17 @@
     cursor:default;
 }
 
-.galleryItem .shadow
-{
-	width:123px;
-	height:87px;
-	background:url(../images/shadowBg_123x87.png) no-repeat left top;
+.galleryItem .shadow{
+	width:125px;
+	height:89px;
+	box-shadow: inset 0 0 7px #aaa;
 	position:absolute;
 	left:11px;
 	top:11px;
 	z-index: 5;
 }
 
-.galleryItem img
-{
+.galleryItem img{
 	float:left;
 	position:relative;
 	z-index: 1;
