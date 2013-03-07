@@ -145,10 +145,9 @@ function getDeepUrl($foldername)
 	return $deepUrl . $foldername . "/";
 }
 
-function fixStringForWeb($string)
-{
-	$look = array("/\İ/","/\ı/","/\Ü/","/\ü/","/\Ö/","/\ö/","/\Ğ/","/\ğ/","/\Ş/","/\ş/","/\Ç/","/\ç/","/\s/");
-	$replace = array("I","i","U","u","O","o","G","g","S","s","C","c","-");;
+function fixStringForWeb($string){
+	$look = array("/\İ/","/\ı/","/\Ü/","/\ü/","/\Ö/","/\ö/","/\Ğ/","/\ğ/","/\Ş/","/\ş/","/\Ç/","/\ç/","/\s/","/\!/","/\*/");
+	$replace = array("I","i","U","u","O","o","G","g","S","s","C","c","-","-","-");
 	
 	return preg_replace($look, $replace, $string);
 }

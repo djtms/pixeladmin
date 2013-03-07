@@ -57,8 +57,7 @@ class PA_DIRECTORY extends PA_FILE
 		else if(($directory->name == $new_name)){// Eğer ismi değişmemişse işlemi sonlandır
 			return true;
 		}
-        else if($selected_directory->directory_id != $directory_id){ // eğer bulunan dizin başka bir dizine aitse farklı isim kullanması gerekir
-            echo "asd";
+        else if(($selected_directory->directory_id > 0) && ($selected_directory->directory_id != $directory_id)){ // eğer bulunan dizin başka bir dizine aitse farklı isim kullanması gerekir
             return false;
         }
 		else { // Eğer yeni isim, içinde bulunduğu dizinde yok ise güncelleme işemini gerçekleştir

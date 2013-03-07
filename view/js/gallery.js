@@ -196,9 +196,7 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 		data:"admin_action=listGalleryFiles&galleryId=" + galleryId,
 		dataType:"json",
 		success:function(response){
-			
-			if((response == null) || (response == undefined) || (response.length <= 0))
-			{
+			if((response == null) || (response == undefined) || (response.length <= 0)){
 				return false;
 			}
 			
@@ -232,8 +230,7 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 			
 			galleryObject.find(".galleryItem").each(function(){
 				var del = $(this).find(".delButton");
-				if(del)
-				{
+				if(del){
 					del.css("display","block");
 					$(this).hover(function(){
 						del.animate({"opacity":1},300);
@@ -251,11 +248,10 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 		galleryObject.trigger("calculateGalleryAndFilesInfo");
 	});
 	
-	$(".galleryItem .delButton").live("click",function(){
+	$(".galleryItem .delButton").die("click").live("click",function(){
 		var del = confirm("Eminmisiniz ?");
 		
-		if(del)
-		{
+		if(del){
 			$(this).parents(".galleryItem").animate({opacity:"0"},300,function(){
 				$(this).remove();
 			});

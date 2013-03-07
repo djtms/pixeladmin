@@ -13,6 +13,7 @@ $track_wait_limit = 300; // Kullanıcı için açılan track'in kullanıcı brow
 $currenturl = $_SERVER["REQUEST_URI"];
 $currentpage = "admin.php?page=" . $_GET["page"];
 $default_menu_icon = "view/images/icons/default_icon.png";
+$upload_limit = ini_get("upload_max_filesize");
 $allowed_dirs_in_maintanance_mode = array("mobile"); // "Maintanance Mode" dayken erişime izin verilecek dizinlerin listesi
 
 $common_admin_site = ""; // Admin in tek yerden kontrol edilmesi istendiğinde ortak olarak belirlenecek içinde admin panel'in olduğu sitenin adresi
@@ -42,6 +43,7 @@ if(in_admin)
 	}
 	define("GUI_TEMPLATES_DIR", dirname(__FILE__) . "/../../view/gui_templates/");
 	
+	$master->setGlobal("upload_limit", $upload_limit);
 	$master->setGlobal("allowedFileExtensionsString",$allowedFileExtensionsString);
 	$master->setGlobal("currentpage",$currentpage);
 	$master->setGlobal("uploadurl",$uploadurl);

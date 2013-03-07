@@ -54,7 +54,7 @@ class PA_FILE_EDITOR extends DB
 				echo json_encode(array("success"=>true, "file"=>$temp));
 			}
 			else{
-				echo json_encode(array("success"=>false, "msg"=>"Dosya yüklenemedi!"));
+				echo json_encode(array("success"=>false, "msg"=>"Hata: " . $ADMIN->UPLOADER->error));
 			}
 		}
 		else
@@ -85,7 +85,7 @@ class PA_FILE_EDITOR extends DB
         // check if directory exists
         $selected_directory = $ADMIN->DIRECTORY->selectDirectoryByNameAndParent($directory->parent_id, $name);
 		
-		if($directory_id != $selected_directory->directory_id)
+		if(($selected_directory->directory_id > 0) && ($directory_id != $selected_directory->directory_id))
 			echo json_encode(array("success"=>false, "msg"=>"already_exists"));
 		else if($ADMIN->DIRECTORY->updateDirectory($directory_id, $name))
 			echo json_encode(array("success"=>true));
