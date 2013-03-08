@@ -157,7 +157,7 @@
 						setTimeout(function(){editor_contents.remove();}, 500); // burdaki 500 değeri fade animasyonunun süresini temsil ediyor
 					},
 					error:function(){
-						console.log("Hata: dosyalar silinemedi!");
+						MESSAGEBOX.showMessage("Hata", "Dosyalar silinemedi!");
 					}
 				});
 			}
@@ -732,11 +732,11 @@
 					file_reader_list[i].addEventListener("loadstart", (function(i){
 						var index = i;
 						return function(e){
-							if(e.total > upload_limit_as_byte){
+							if(e.total > 100){
                                 var upload_limit_as_mb = upload_limit_as_byte / 1048576;
                                 file_reader_list[index].abort();
                                 
-                                MESSAGEBOX.showMessage("Uyarı", "Yüklemek istediğiniz dosya boyutu upload limitinizi aşmakta olduğu için yüklenemiyor. Kullanabileceğiniz maximum upload limitiniz " + upload_limit_as_mb + "MB'tır.", messageType.INFO, [{name:"Tamam", click:MESSAGEBOX.hideMessage}]);
+                                MESSAGEBOX.showMessage("Uyarı", "Yüklemek istediğiniz dosyanın boyutu upload limitinizi aşmakta olduğu için yüklene işlemini gerçekleştiremiyoruz. Kullanabileceğiniz maximum upload limitiniz " + upload_limit_as_mb + "MB'tır.");
                             }
 						};
 					}(i)));
@@ -784,12 +784,12 @@
 									}, 500);
 								}
 								else{
-									console.log($response.msg);
+                                    MessageEvent.showMessage("Hata Oluştu!", "Hata: " + $response.msg);
 									delete $response;
 								}
 							}
 							catch(e){
-								console.log("Hata: " + e.target.response);
+								MessageEvent.showMessage("Hata Oluştu!", "Hata: " + e.target.response);
 							}
 						};
 					}()));
@@ -1032,7 +1032,7 @@
 		this.startCapturing = function(e){
 			if((self.selector.selectableObject === null) || (self.selector.selectableArea === null))
 			{
-				console.log("Hata: 'selectableObject' ve 'selectableArea' değerleri atanmamış!");
+				MESSAGEBOX.show("Hata", "'selectableObject' ve 'selectableArea' değerleri atanmamış!");
 				self.drag_select_enabled = false;
 				return false;
 			}
@@ -1173,7 +1173,7 @@
 			}
 			else
 			{
-				console.log(action + " fonksiyonu bulunamadı!");
+				MESSAGEBOX.showMessage("Hata", action + " fonksiyonu bulunamadı!");
 				return this;
 			}
 		}

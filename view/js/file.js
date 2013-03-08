@@ -163,7 +163,7 @@
 				FILE[action].call(this, properties);
 			}
 			else{
-				console.log(action + " method'u bulunamadı!");
+				MESSAGEBOX.show("Hata", action + " method'u bulunamadı!");
 			}
 		});
 	};

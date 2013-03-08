@@ -23,7 +23,7 @@
 			
 			if(file === false)
 			{
-				console.log("\"file\" bulunamadı!");
+				MESSAGEBOX.showMessage("Hata", "Dosya bulunamadı!");
 				return false;
 			}
 			

@@ -30,6 +30,18 @@ switch($_POST["admin_action"])
 	case("selectI18n"):		ajaxSelectI18N(); exit;
 }
 
+
+// seçili olan dil için belirlenmiş date_format değerini define et.
+if(multilanguage_mode){
+    $temp = $DB->get_row("SELECT * FROM {$DB->tables->language} WHERE locale=?", array(getLanguage()));
+
+    define("date_format", $temp->date_format);
+
+    if(function_exists("setGlobal")){
+        setGlobal("date_format", date_format);
+    }
+}
+
 function ajaxSaveI18n()
 {
 	global $ADMIN;
@@ -97,18 +109,13 @@ function setLanguage($language)
 	$_SESSION["language"] = $language;
 }
 
-function getLanguage()
-{
+function getLanguage(){
 	global $ADMIN;
 	
-	$language = isset($_SESSION["language"]) ? $_SESSION["language"] : $ADMIN->LANGUAGE->getDefaultLanguage();
-	// Sebebini henüz bilmiyorum ama bazen $language değeri object olarak dönüyor, onu 
-	// kontrol edip hatayı önlemek için bu işlemi yapıyoruz
-	return is_object($language) ? $language->locale : $language;
+	return isset($_SESSION["language"]) ? $_SESSION["language"] : $ADMIN->LANGUAGE->getDefaultLanguage();
 }
 
-function getDefaultLanguage()
-{
+function getDefaultLanguage(){
 	global $ADMIN;
 	
 	return $ADMIN->LANGUAGE->getDefaultLanguage();

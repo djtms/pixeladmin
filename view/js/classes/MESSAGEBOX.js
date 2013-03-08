@@ -14,22 +14,26 @@ function MESSAGEBOX()
 	var contentIconClass = "";
 	var buttonCount = 0;
 	var buttonsHtml = "";
+    var msgType = messageType;
 	
 	return {
 		showMessage : function(messageTitle,messageText,messageType,buttons){
+            messageType = !messageType ? msgType.WARNING : messageType;
+            buttons = !buttons ? [{"name":"Tamam"}] : buttons;
+
 			switch(messageType)
 			{
-				case(messageType.INFO):
+				case(msgType.INFO):
 					headerIconClass = "headerIconInfo";
 					contentIconClass = "contentIconInfo";
 				break;
 				
-				case(messageType.WARNING):
+				case(msgType.WARNING):
 					headerIconClass = "headerIconWarning";
 					contentIconClass = "contentIconWarning";
 				break;
 				
-				case(messageType.ERROR):
+				case(msgType.ERROR):
 					headerIconClass = "headerIconError";
 					contentIconClass = "contentIconError";
 				break;
@@ -41,8 +45,7 @@ function MESSAGEBOX()
 			buttonCount = buttons.length;
 			buttonsHtml = "";
 			
-			for(var i=0; i<buttonCount; i++)
-			{
+			for(var i=0; i<buttonCount; i++){
 				buttonsHtml += '<button>' + buttons[i].name + '</button>';
 			}
 			
@@ -50,9 +53,8 @@ function MESSAGEBOX()
 			headerText.html(messageTitle);
 			contentText.html(messageText);
 			
-			for(var i=0; i<buttonCount; i++)
-			{
-				buttonsOuter.find("button").eq(i).click(buttons[i].click);
+			for(var i=0; i<buttonCount; i++){
+				buttonsOuter.find("button").eq(i).click(buttons[i].click || this.hideMessage);
 			}
 			
 			messageBoxOuter.css({"visibility":"visible", "opacity":1});

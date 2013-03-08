@@ -2,8 +2,6 @@ $(EditLanguage);
 
 function EditLanguage()
 {
-	
-	
 	var languageObject = $("[name='language']");
 	languageObject.change(listCountries);
 	

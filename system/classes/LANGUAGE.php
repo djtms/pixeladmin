@@ -6,39 +6,33 @@ class PA_LANGUAGE extends DB
 	private $tableI18n = "";
 	private $tableLang = "";
 	
-	function PA_LANGUAGE()
-	{
+	function PA_LANGUAGE(){
 		parent::DB();
 		
 		$this->tableI18n = $this->tables->i18n;
 		$this->tableLang = $this->tables->language;
 		
-		if(sizeof($this->listLanguages()) <= 0)
-		{
+		if(sizeof($this->listLanguages()) <= 0){
 			$this->createLanguage("en", "English");
 			$this->createLanguage("tr", "Türkçe");
 			$this->setDefaultLanguage("tr");
 		}
 	}
 	
-	function listLanguages()
-	{
+	function listLanguages(){
 		return $this->get_rows("SELECT language_name, language_abbr FROM {$this->tableLang} GROUP BY language_abbr");
 	}
 	
-	function listCountries()
-	{
+	function listCountries(){
 		return $this->get_rows("SELECT country_name, country_abbr FROM {$this->tableLang} GROUP BY country_abbr");
 	}
 	
-	function listCountriesByLanguageAbbreviation($language_abbr)
-	{
+	function listCountriesByLanguageAbbreviation($language_abbr){
 		return $this->get_rows("SELECT country_name, country_abbr FROM {$this->tableLang} WHERE language_abbr=? GROUP BY country_abbr", array($language_abbr));
 	}
 	
 	
-	function addLanguage($locale, $date_format='%d %M %y')
-	{
+	function addLanguage($locale, $date_format='%d %M %y'){
 		if(!$this->checkFieldExists($this->tableI18n, $locale) && !$this->execute("ALTER TABLE {$this->tableI18n} ADD $locale TEXT DEFAULT NULL"))
 			return false; // Belirtilen column un tabloda olmadığı durumda eğer o column u oluşturamıyorsak return false olacak.
 		
@@ -46,8 +40,7 @@ class PA_LANGUAGE extends DB
 				$this->execute("UPDATE {$this->tableLang} SET date_format=? WHERE locale=?", array($date_format, $locale));
 	}
 	
-	function updateLanguage($old_locale, $new_locale, $new_status=null, $date_format='%d %M %y')
-	{
+	function updateLanguage($old_locale, $new_locale, $new_status=null, $date_format='%d %M %y'){
 		// Eğer dil değişikliği yapmıyorsa belki sadece "status" değerini değiştiriyorsa 
 		// veya şu anda aktif olan bir dili seçmiyorsa
 		if(($old_locale == $new_locale) || $this->getLanguageStatus($new_locale) < 0)
@@ -78,8 +71,7 @@ class PA_LANGUAGE extends DB
 	}
 	
 	
-	function deleteLanguage($locale)
-	{
+	function deleteLanguage($locale){
 		if(sizeof($this->listUserSelectedLanguages()) > 1)
 		{
 			if($this->execute("ALTER TABLE {$this->tableI18n} DROP $locale") && $this->setLanguageStatus($locale, -1))
@@ -114,9 +106,11 @@ class PA_LANGUAGE extends DB
 				$this->execute("UPDATE {$this->tableLang} SET status=10 WHERE locale=?",array($locale));
 	}
 	
-	function getDefaultLanguage()
-	{
-		return $this->get_value("SELECT locale FROM {$this->tableLang} WHERE status=10 LIMIT 0,1");
+	function getDefaultLanguage(){
+        $language = $this->get_value("SELECT locale FROM {$this->tableLang} WHERE status=10 LIMIT 0,1");
+        // Sebebini henüz bilmiyorum ama bazen $language değeri object olarak dönüyor, onu
+        // kontrol edip hatayı önlemek için bu işlemi yapıyoruz
+        return is_object($language) ? $language->locale : $language;
 	}
 	
 	/**

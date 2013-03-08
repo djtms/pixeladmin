@@ -1,9 +1,10 @@
 <?php
 
-extract($_POST, EXTR_SKIP);
+extract($_POST, EXTR_OVERWRITE);
 
 if(isset($admin_action))
 {
+
 	switch($admin_action)
 	{
 		case "l_c_b_l": // list countries by language
@@ -22,7 +23,7 @@ if(isset($admin_action))
 		exit;
 		
 		case "edit_language":
-			if($locale == "no_locale")
+            if($locale == "no_locale")
 			{
 				if($ADMIN->LANGUAGE->addLanguage("{$language}_{$country}", $date_format))
 				{
@@ -38,7 +39,6 @@ if(isset($admin_action))
 			else
 			{
 				$status = ($_POST["status"] == "active" ? null : 0);
-				
 				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}", $status, $date_format))
 				{
 					postMessage("Başarıyla Kaydedildi!");
