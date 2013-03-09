@@ -70,7 +70,7 @@
 			$(window).on("resize", events.onDocumentMouseWheel);
 			$(document).on("mouseup", events.onDocumentMouseUp)
 						.on("keydown", events.onDocumentKeyDown)
-						.on("mousewheel", events.onDocumentMouseWheel);
+						.on("mousewheel", events.onDocumentMouseWheel).trigger("mousewheel");
 			document.addEventListener("dragover", events.onDragOver);
 			document.addEventListener("dragend", events.onDragEnd);
 			objects.editorDragFilesArea[0].addEventListener("drop", events.onFilesSelectedForUpload);
