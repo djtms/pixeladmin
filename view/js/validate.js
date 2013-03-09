@@ -6,7 +6,7 @@
 function VALIDATE()
 {
 	this.validateName = function(str){
-		return str.match(/^[a-z\s\ç\Ç\ş\Ş\ü\Ü\ı\İ\ğ\Ğ\ö\Ö]+$/i);
+		return str.match("/^[a-z\s\ç\Ç\ş\Ş\ü\Ü\ı\İ\ğ\Ğ\ö\Ö]+$/i");
 	};
 	
 	this.validatePhone = function(str){

@@ -93,8 +93,8 @@ function GlobalI18nVariablesStart()
 						{
 							$("#" + i18n_code + "_" + column_name).val(i18n_code);
 						}
-						
-						alert(response.msg);
+
+                        MESSAGEBOX.showMessage("Hata", response.msg);
 					}
 				},
 				complete: function(){

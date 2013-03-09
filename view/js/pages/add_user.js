@@ -51,7 +51,6 @@
 					data:"admin_action=checkUserStatusByEmail&email=" + $("#email").val().trim(),
 					async:false,
 					success:function(response){
-						alert(response);
 						if(response === "existing_user"){
 							var messageText = "Girmiş olduğunuz <b>e-posta adresi</b> başka bir kullanıcı tarafından kullanılmaktadır! Lütfen farklı bir <b>e-posta adresi</b> girin.";
 							MESSAGEBOX.showMessage("E-Posta Kullanımda", messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}])

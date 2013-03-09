@@ -6,6 +6,8 @@ var EDITORS = new Array();
 function MasterStart()
 {
 	MESSAGEBOX = new MESSAGEBOX();
+    MESSAGEBOX.init();
+
 	VALIDATE = new VALIDATE();
 	
 	$.ajaxSetup({

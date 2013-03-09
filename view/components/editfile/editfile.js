@@ -257,7 +257,7 @@
 							}
 						},
 						error: function(){
-							alert("Hata Oluştu!");
+							MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						},
 						complete:function(){
 							thumbLoaderOuter.css("display","none");
@@ -443,7 +443,7 @@
 				}
 				else if(!VALIDATE.validateFilename(basenameText,true))
 				{
-					alert("lütfen uygun klasör ismi girin! \n * dosya ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * dosya ismi nokta (.) karakteri ile başlayamaz! \n * dosya isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
+					MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! <br /> * dosya ismi uzunluğu en az 1 karakterden oluşmalıdır! <br /> * dosya ismi nokta (.) karakteri ile başlayamaz! <br /> * dosya isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
 				}
 				else
 				{

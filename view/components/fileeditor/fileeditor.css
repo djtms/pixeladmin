@@ -230,13 +230,32 @@
 	margin:0 0 0 2px;
 }
 
+#syncElementsOuter{
+    width: 18px;
+    height: 18px;
+    float:left;
+    position:relative;
+    margin: 27px 0 0 -60px;
+}
+
 #btnSync{
     width: 18px;
     height: 18px;
     float:left;
-    margin: 27px 0 0 -60px;
     cursor: pointer;
     background: url(images/btnSync.jpg) no-repeat;
+}
+
+#syncLoader{
+    width:18px;
+    height: 18px;
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:10;
+    visibility: hidden;
+    background: url(images/syncLoader.gif);
+    background-size: 17px 18px;
 }
 
 #browserRightCorner
@@ -416,6 +435,7 @@
 	z-index:100;
 	background: rgba(255,255,255,0.9) url(images/browserLoaderBg.png) no-repeat center;
 	box-shadow: inset 0 0 40px 10px #eee;
+    transition: opacity 0.15s
 	-webkit-transition: opacity 0.15s;
 	visibility:hidden;
 	opacity:0;

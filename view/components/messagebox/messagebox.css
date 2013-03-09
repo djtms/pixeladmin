@@ -1,0 +1,156 @@
+/* MESSAGEBOX */
+
+#messageBoxOuter
+{
+    width:100%;
+    height:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    z-index: 100000;
+    visibility:hidden;
+    transition:opacity 0.3s;
+    -o-transition:opacity 0.3s;
+    -moz-transition:opacity 0.3s;
+    -webkit-transition:opacity 0.3s;
+}
+
+#adminHider
+{
+    width:100%;
+    height:100%;
+    float:left;
+    background:#222;
+    opacity:0.7;
+}
+
+#messageBox{
+    width:460px;
+    height:151px;
+    position:fixed;
+    left:50%;
+    top:50%;
+    z-index:1000;
+    margin: -75px 0 0 -230px;
+    border: solid 1px #6d6d6d;
+}
+
+#messageBoxHeader{
+    width:100%;
+    height:26px;
+    float:left;
+    background: url(images/header.png) repeat-x;
+}
+
+#messageBoxContent{
+    width:100%;
+    min-height: 124px;
+    float:left;
+    background: #f4f4f4;
+    background: -moz-linear-gradient(top,  #f4f4f4 0%, #dedede 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#dedede));
+    background: -webkit-linear-gradient(top,  #f4f4f4 0%,#dedede 100%);
+    background: -o-linear-gradient(top,  #f4f4f4 0%,#dedede 100%);
+    background: -ms-linear-gradient(top,  #f4f4f4 0%,#dedede 100%);
+    background: linear-gradient(to bottom,  #f4f4f4 0%,#dedede 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#dedede',GradientType=0 );
+}
+
+#messageBox #headerIcon
+{
+    width:26px;
+    height:26px;
+    float:left;
+    margin:1px 0 0 3px;
+}
+
+#messageBox .headerIconWarning
+{
+    background: url(images/headerIcon_warning.png) no-repeat left top;
+}
+
+#messageBox .contentIconWarning
+{
+    background: url(images/contentIcon_warning.png) no-repeat left top;
+}
+
+#messageBox .headerIconInfo
+{
+    background: url(images/headerIcon_info.png) no-repeat left top;
+}
+
+#messageBox .contentIconInfo
+{
+    background: url(images/contentIcon_info.png) no-repeat left top;
+}
+
+#messageBox .headerIconError
+{
+    background: url(images/headerIcon_error.png) no-repeat left top;
+}
+
+#messageBox .contentIconError
+{
+    background: url(images/contentIcon_error.png) no-repeat left top;
+}
+
+#messageBox  #headerText
+{
+    width:425px;
+    height:26px;
+    float:left;
+    margin:1px 0 0 3px;
+    padding:0;
+    font:13px Segoe UI, Arial;
+    color:#f0f1f3;
+    line-height: 24px;
+    text-align: left;
+    overflow: hidden;
+}
+
+#messageBox #contentIcon
+{
+    width: 62px;
+    height:62px;
+    float:left;
+    margin:24px 0 0 17px;
+}
+
+#messageBox #messageContentText
+{
+    width:351px;
+    min-height:59px;
+    float:left;
+    margin:24px 0 0 10px;
+    font:13px Segoe UI, Arial;
+    color:#4d4d4d;
+}
+
+#messageBoxButtonsOuter
+{
+    float:right;
+    margin:20px;
+}
+
+#messageBoxButtonsOuter button
+{
+    float:left;
+    clear:none;
+    margin:0 0 0 5px;
+    padding:5px 17px;
+}
+
+#messageBoxLoader
+{
+    width: 23px;
+    height: 23px;
+    float:right;
+    opacity:0;
+    margin: 2px 0 0 0;
+    transition: opacity 0.2s;
+    -o-transition: opacity 0.2s;
+    -moz-transition: opacity 0.2s;
+    -webkit-transition: opacity 0.2s;
+    background: url(images/loader.gif);
+    background-size: 23px 23px;
+}

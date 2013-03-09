@@ -42,7 +42,7 @@ function deleteUser(){
 				}
 				catch(e)
 				{
-					alert(response);
+                    MESSAGEBOX.showMessage("Hata", response);
 				}
 			},
 			beforeSend:function(){

@@ -42,7 +42,8 @@
 			objects.browserFavouritesList = objects.fileEditorMainContainer.find("#browserFavouritesList");
 			objects.browserDirectoriesOuter = objects.fileEditorMainContainer.find("#browserDirectoriesOuter");
             objects.btnSync = objects.fileEditorMainContainer.find("#btnSync");
-			objects.browserFilesListOuter = objects.fileEditorMainContainer.find("#browserFilesListOuter");
+            objects.syncLoader = objects.fileEditorMainContainer.find("#syncLoader");
+            objects.browserFilesListOuter = objects.fileEditorMainContainer.find("#browserFilesListOuter");
 			objects.browserFilesListOuter.focused = false; // bu değişkene bakarak browserFilesListOuter alanındaki klavye kısayollarını kullanıp kullanmaman gerektiğini kontrol edebilirsin
 			objects.browserFilesList = objects.browserFilesListOuter.find("#browserFilesList");
 			objects.browserBtnUseFiles = objects.fileEditorMainContainer.find("#browserBtnUseFiles");
@@ -79,18 +80,18 @@
 		var requests = {loadFiles:{}};
 
 		var fixStringForWeb =  function(str, remove_forbidden_chars){
-			str = str.replace(/\İ/g,"I");
-			str = str.replace(/\ı/g,"i");
-			str = str.replace(/\Ü/g,"U");
-			str = str.replace(/\ü/g,"u");
-			str = str.replace(/\Ö/g,"O");
-			str = str.replace(/\ö/g,"o");
-			str = str.replace(/\Ğ/g,"G");
-			str = str.replace(/\ğ/g,"g");
-			str = str.replace(/\Ş/g,"S");
-			str = str.replace(/\ş/g,"s");
-			str = str.replace(/\Ç/g,"C");
-			str = str.replace(/\ç/g,"c");
+			str = str.replace("/\İ/g","I");
+			str = str.replace("/\ı/g","i");
+			str = str.replace("/\Ü/g","U");
+			str = str.replace("/\ü/g","u");
+			str = str.replace("/\Ö/g","O");
+			str = str.replace("/\ö/g","o");
+			str = str.replace("/\Ğ/g","G");
+			str = str.replace("/\ğ/g","g");
+			str = str.replace("/\Ş/g","S");
+			str = str.replace("/\ş/g","s");
+			str = str.replace("/\Ç/g","C");
+			str = str.replace("/\ç/g","c");
 			str = remove_forbidden_chars === true ? str.replace("/\\|\/|:|*|?|<|>|\|/g", "") : str;
 			return str.replace(/\s/g,"_");
 		};
@@ -170,7 +171,7 @@
 				$parent_id = current_directory_id;
 
 				if(($directory_name.length <= 0) || ($directory_name.match(/^\./i)) || ($directory_name.match(/[\s\/\\:\*\?\>\<\|"]+$/i))){
-					alert("Lütfen uygun klasör ismi girin! \n * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * klasör ismi nokta (.) karakteri ile başlayamaz! \n * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
+                    MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! <br /> * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! <br /> * klasör ismi nokta (.) karakteri ile başlayamaz! <br /> * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz!");
 				}
 				else{
 					$.ajax({
@@ -181,10 +182,10 @@
 						success:function(response){
 							if(response.success === false){
 								if(response.msg == "already_exists"){
-									alert("Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
+									MESSAGEBOX.showMessage("Uyarı", "Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
 								}
 								else if(response.msg == "error_happened"){
-									alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                                    MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 								}
 							}
 							else{
@@ -211,7 +212,7 @@
 							}
 						},
 						error:function(){
-							alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						},
 						complete: function(){
 							delete temp_html, $parent_id, parent_tag;
@@ -236,7 +237,7 @@
 				}
 
 				if(($directory_name.length <= 0) || ($directory_name.match(/^\./i)) || ($directory_name.match(/[\s\/\\:\*\?\>\<\|"]+$/i))){
-					alert("Lütfen uygun klasör ismi girin! \n * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * klasör ismi nokta (.) karakteri ile başlayamaz! \n * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
+					MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! \n * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * klasör ismi nokta (.) karakteri ile başlayamaz! \n * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
 					return false;
 				}
 				else{
@@ -249,10 +250,10 @@
 						success:function(response){
 							if(response.success === false){
 								if(response.msg == "already_exists"){
-									alert("Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
+									MESSAGEBOX.show("Uyarı", "Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
 								}
 								else if(response.msg == "error_happened"){
-									alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                                    MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 								}
 							}
 							else{
@@ -263,7 +264,7 @@
 							}
 						},
 						error:function(){
-							alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						}
 					});
 
@@ -285,12 +286,24 @@
                 $.ajax({
                     type:"post",
                     data:"admin_action=syncFilesAndDirs",
+                    beforeSend:function(){
+                        objects.syncLoader.css("visibility", "visible");
+                    },
                     success: function(response){
                         if(response == "succeed"){
                             events.onListFavouritedDirectories();
                             events.onLoadDirectoryTree();
                             events.onLoadFiles();
                         }
+                        else{
+                            MESSAGEBOX.showMessage("Hata", "* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        }
+                    },
+                    error: function(){
+                        MESSAGEBOX.showMessage("Hata", "* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                    },
+                    complete: function(){
+                        objects.syncLoader.css("visibility", "hidden");
                     }
                 });
             },
@@ -368,7 +381,7 @@
 					},
 					error:function(e){
 						if(!e.statusText || (e.statusText != "abort")){
-							alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+							MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						}
 					}
 				});
@@ -456,11 +469,11 @@
 								}
 							}
 							else{
-								alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+								MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 							}
 						},
 						error:function(){
-							alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						},
 						complete:function(){
 							delete favourite_action, temp_directory_id;
@@ -858,11 +871,11 @@
 						}
 						else
 						{
-							alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						}
 					},
 					error:function(){
-						alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 					}
 				});
 			},
@@ -879,11 +892,11 @@
 						}
 						else
 						{
-							alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 						}
 					},
 					error:function(){
-						alert("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
 					}
 				});
 			}
@@ -924,8 +937,7 @@
 			},
 
 			initialize: function(properties){
-				if($("#fileEditorMainContainer").length <= 0)
-				{
+				if($("#fileEditorMainContainer").length <= 0){
 					editor_html += '<div id="fileEditorMainContainer">';
 					editor_html += '<div id="fileEditorBackHider"></div>';
 					editor_html += '<div id="fileEditorOuter">';
@@ -939,7 +951,10 @@
 					editor_html += '<label class="labelFavourites browserBigTitle">Sık Kullanılanlar</label>';
 					editor_html += '<div id="browserFavouritesList"></div>';
 					editor_html += '<label class="labelDirectory browserBigTitle">Dizinler</label>';
+                    editor_html += '<div id="syncElementsOuter">';
                     editor_html += '<span id="btnSync" title="Dosya ve dizinleri senkronize et"></span>';
+                    editor_html += '<span id="syncLoader"></span>';
+                    editor_html += '</div>';
 					editor_html += '<div id="browserDirectoriesOuter"></div>';
 					editor_html += '</div>';
 					editor_html += '<div id="browserRightCorner">';
