@@ -41,7 +41,18 @@ class PA_THUMB extends DB
 		if(!$file = $this->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file_id)))
 			return false; // Dosya bulunamadığı zaman geri dön.
 		$thumb_file = ($file->thumb_file_id <= 0) ? $file : $this->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file->thumb_file_id));
-		
+
+
+        // Genişlik yükseklik değerleri hesaplanmamışsa onları hesapla ve database'de güncelle
+        if(($thumb_file->width <= 0) || ($thumb_file->height <= 0)){
+            $ADMIN->IMAGE_PROCESSOR->load($uploadurl . $thumb_file->url);
+            $res = $ADMIN->IMAGE_PROCESSOR->getResolution();
+            $thumb_file->width = $res->width;
+            $thumb_file->height = $res->height;
+
+            $this->update($this->table_file, array("width"=>$res->width, "height"=>$res->height), array("file_id"=>$thumb_file->file_id));
+        }
+
 		//---------------------------------------------------------------------------------------------------------------
 		// Önce Custom Crop yapılmış dosyayı ara, yok ise auto crop yap.
 		//---------------------------------------------------------------------------------------------------------------
