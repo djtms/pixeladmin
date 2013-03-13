@@ -745,7 +745,7 @@
 					file_reader_list[i].addEventListener("loadstart", (function(i){
 						var index = i;
 						return function(e){
-							if(e.total > 100){
+							if(e.total > upload_limit_as_byte){
                                 var upload_limit_as_mb = upload_limit_as_byte / 1048576;
                                 file_reader_list[index].abort();
                                 
