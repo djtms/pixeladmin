@@ -34,6 +34,7 @@ class PA_THUMB extends DB
 		global $thumbsurl;
 		global $uploadurl;
 		global $systemurl;
+		global $ADMIN;
 		$temp_thumbs_url = $this->baseDir . $thumbsurl;
 		$temp_files_url = $this->baseDir . $uploadurl;
 		
