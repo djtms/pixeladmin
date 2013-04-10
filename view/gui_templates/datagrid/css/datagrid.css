@@ -7,6 +7,10 @@
 	clear:both;
 }
 
+.dataGridOuter .dataGridOuter ul{
+    margin:0 0 0 40px !important;
+}
+
 .dataGridTitle
 {
 	width:75% !important;

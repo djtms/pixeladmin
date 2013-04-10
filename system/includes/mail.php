@@ -30,6 +30,9 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 		
 		if(!is_array($aliciAdresi))
 			$aliciAdresi = ($aliciAdresi == null) ? get_option("admin_get_mail_address") : $aliciAdresi;
+
+        $aliciAdresi = preg_replace("/\,/", ";", $aliciAdresi);
+        $aliciAdresi = explode(";",$aliciAdresi);
 		
 		if(trim(get_option("admin_isSmtpMail")) == "")
 		{

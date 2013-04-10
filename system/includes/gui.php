@@ -99,7 +99,11 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 				$gridItemsHtml .= "</div>";
 			}
 			
-			$gridItemsHtml .= "</div></li>";
+			$gridItemsHtml .= "</div>";
+            if(is_array($data[$i]->sub)){
+                $gridItemsHtml .= dataGrid($data[$i]->sub, "", $gridId, $rowTitleQuery, null, $editDataLinkQuery, $deleteDataLinkQuery, $key_column_name, $order_column_name_or_sort_function_name, $table_name);
+            }
+            $gridItemsHtml .= "</li>";
 		}
 	}
 	else
