@@ -16,7 +16,7 @@
  * @return string işlem sonucunda oluşan dataGrid'i döndürür.
  */
 function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $editDataLinkQuery, $deleteDataLinkQuery, $key_column_name = null, $order_column_name_or_sort_function_name = null, $table_name = null)
-{	
+{
 	// sıralama işlemi için ajax ve jqueryui bağlamasını yapıyoruz
 	if(($key_column_name != null) && ($order_column_name_or_sort_function_name != null))
 	{

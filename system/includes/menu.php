@@ -47,18 +47,15 @@ function loadMenus($currentPageId = null)
 	$MenuHtml = "";
 	$BarIconsHtml = "";
 	$menuIds = array();
-	$menuOrder =0;
 	
 	// Menüleri Sırala 
-	foreach($pa_menu_array as $key=>$val)
-	{
+	foreach($pa_menu_array as $key=>$val){
 		$menuIds[$val["menuOrder"]] = $key;
-		ksort($menuIds);
 	}
-		
+    ksort($menuIds);
+
 	// Menu html'ini oluştur 
-	foreach($menuIds as $menu_id)
-	{
+	foreach($menuIds as $menu_id){
 		$menu = $pa_menu_array[$menu_id];
 		$menuSelected = "";
 		
@@ -66,8 +63,7 @@ function loadMenus($currentPageId = null)
 		$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" . $menu_id, "permission_parent"=>"ADMIN_ADMINPANEL", "permission_name"=>$menu["pageTitle"]);
 		
 		// Sayfanın seçili olup olmadığını belirle
-		if($currentPageId == $menu_id)
-		{
+		if($currentPageId == $menu_id){
 			$menuSelected = ' selected ';
 			$master->pageTitle = $menu["pageTitle"];
 		}
@@ -80,16 +76,13 @@ function loadMenus($currentPageId = null)
 		$MenuHtml .= '<li id="' . $menu_id . '" class="menu {%menuSelected%}" ><div class="menuWrapper">';
 		
 		// Varsa alt sayfaları kontrol et ve talep edilen sayfa bir alt sayfa ise ve o sayfa seçilmişse onun parent menüsünü selected yapmak için aşağıdaki işlemi yap
-		if(sizeof($menu["subPages"]) > 0)
-		{
-			foreach($menu["subPages"] as $pageId=>$sp)
-			{
+		if(sizeof($menu["subPages"]) > 0){
+			foreach($menu["subPages"] as $pageId=>$sp){
 				// Permission sayfası için kullanılacak array'a alt menüyü ekle
 				$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$pageId, "permission_parent"=>"ADMIN_" . $menu_id, "permission_name"=>$sp["pageTitle"]);
 				
 				
-				if($currentPageId == $pageId)
-				{
+				if($currentPageId == $pageId){
 					$menuSelected = ' selected ';
 					$master->pageTitle = $sp["pageTitle"];
 				}
@@ -97,13 +90,11 @@ function loadMenus($currentPageId = null)
 		}
 
 		/* Menü'nün "Alt Menü" lerini ekle *************************************************************/
-		if(sizeof($menu["subMenus"]) > 0) 
-		{
+		if(sizeof($menu["subMenus"]) > 0){
 			ksort($menu["subMenus"]);
 			
 			// Eğer menü sayfası alt menüyede eklenmek isteniyorsa menü sayfası bilgileri uygun şekilde onun alt menü dizisinin en başına eklenir
-			if($menu["addLinkToSubMenu"] === true)
-			{
+			if($menu["addLinkToSubMenu"] === true){
 				array_unshift($menu["subMenus"], array("$menu_id"=>array("menuTitle"=>$menu["menuTitle"],"pageTitle"=>$menu["pageTitle"],"parentMenuId"=>$menu["parentMenuId"],"menuPage"=>$menu["menuPage"],"permission"=>$menu["permission"])));						
 			}
 			
@@ -111,8 +102,7 @@ function loadMenus($currentPageId = null)
 			$MenuHtml .= '<span class="pageLink"><span class="menuIcon" style="background-image:url(' . $menuIcon . ');"></span>' . $menu["menuTitle"] . '</span>';
 			
 			
-			foreach($menu["subMenus"] as $subMenuOrder=>$sm)
-			{
+			foreach($menu["subMenus"] as $subMenuOrder=>$sm){
 				$subMenuId = key($sm);
 				$sm = $sm[$subMenuId];
 				
@@ -120,8 +110,7 @@ function loadMenus($currentPageId = null)
 				if($subMenuId != $menu_id) // ana menüyü buradaki alt menüye ekleme
 					$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$subMenuId, "permission_parent"=>"ADMIN_" .$menu_id, "permission_name"=>$sm["pageTitle"]);
 				
-				if($currentPageId == $subMenuId)
-				{
+				if($currentPageId == $subMenuId){
 					$menuSelected = ' selected ';
 					$subMenuSelected = ' selected ';
 					$master->pageTitle = $sm["pageTitle"];
@@ -132,8 +121,7 @@ function loadMenus($currentPageId = null)
 				$MenuHtml .= '<a href="admin.php?page=' . $subMenuId . '" class="subMenuLink ' . $subMenuSelected . '">' . $sm["menuTitle"] . '</a>';
 			}
 		}
-		else
-		{
+		else{
 			$MenuHtml .= '<a href="admin.php?page=' . $menu_id . '" class="pageLink"><span class="menuIcon" style="background-image:url(' . $menuIcon . ');"></span>' . $menu["menuTitle"] . '</a>';
 		}
 			
@@ -146,7 +134,7 @@ function loadMenus($currentPageId = null)
 			$BarIconsHtml .= '<a href="admin.php?page=' . urlencode($m["menuId"]) . '" style="background-image:url('.$m["menuIcon"] .')"  class="' . $menuSelected . '" title="' . $m["menuTitle"] . '"></a>';
 	}
 	/*****************************************************************************/
-	
+
 	$master->barIcons = $BarIconsHtml;
 	$master->leftMenu = $MenuHtml;
 }

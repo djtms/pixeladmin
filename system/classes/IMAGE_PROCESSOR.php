@@ -11,14 +11,17 @@ class PA_IMAGE_PROCESSOR
 	public $error = array();
 	
 	public $image;
+    public $width = 0;
+    public $height = 0;
 	
 	private $ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
-	private $ERROR_TEXT_USE_PNG_FILE;
+	private $ERROR_TEXT_FILE_MUST_BE_PNG;
 	
 	function PA_IMAGE_PROCESSOR()
 	{
 		$this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT = "Geçersiz dosya formatı girdiniz! Lütfen jpg,png veya gif formatlarından birini kullanın!";
-		$this->ERROR_TEXT_FILE_MUST_BE_PNG = "png formatında olmalı!";
+		$this->ERROR_TEXT_FILE_MUST_BE_PNG = "Resim .png formatında olmalı!";
+        $this->ERROR_TEXT_FILE_NOT_FOUND = "Dosya bulunamadı!";
 	}
 	
 	/**
@@ -29,19 +32,29 @@ class PA_IMAGE_PROCESSOR
 	*/
 	function load($path)
 	{
-		if(preg_match("/\.jpeg$|\.jpg$/i",$path))
-			$this->image = imagecreatefromjpeg($path);
-		else if(preg_match("/\.png$/i",$path))
-			$this->image = imagecreatefrompng($path);
-		else if(preg_match("/\.gif$/i",$path))
-			$this->image = imagecreatefromgif($path);
-		else
-		{
-			$this->error[] = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
-			return false;
-		}
-	
-		return true;
+        if(file_exists($path)){
+            if(preg_match("/\.jpeg$|\.jpg$/i",$path))
+                $this->image = imagecreatefromjpeg($path);
+            else if(preg_match("/\.png$/i",$path))
+                $this->image = imagecreatefrompng($path);
+            else if(preg_match("/\.gif$/i",$path))
+                $this->image = imagecreatefromgif($path);
+            else
+            {
+                $this->error[] = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
+                $this->image = null;
+                return false;
+            }
+
+            $this->width = imagesx($this->image);
+            $this->height = imagesy($this->image);
+
+            return true;
+        }
+        else{
+            $this->image = null;
+            return false;
+        }
 	}
 	
 	/**
@@ -73,10 +86,15 @@ class PA_IMAGE_PROCESSOR
 	 */
 	public function getResolution()
 	{
-		$width = imagesx($this->image);
-		$height = imagesy($this->image);
+        if($this->image != null){
+            $width = imagesx($this->image);
+            $height = imagesy($this->image);
 
-		return (object) array("width"=>$width,"height"=>$height);
+            return (object) array("width"=>$width,"height"=>$height);
+        }
+        else{
+            return (object) array("width"=>0, "height"=>0);
+        }
 	}
 	
 	/**
@@ -363,13 +381,49 @@ class PA_IMAGE_PROCESSOR
 		return true;
 	}
 	
-	function setOpacity($opacity = 100)
-	{
+	function setOpacity($opacity = 100){
 		$alpha = (127 / 100) * $opacity;
 		imagealphablending($this->image, false);
 		imagesavealpha($this->image, true);
 		return imagefilter($this->image, IMG_FILTER_COLORIZE, 0, 0, 0, $alpha);
 	}
+
+    function addWatermark($watermark_path, $left=0, $top=0){
+        $watermark = new stdClass();
+
+        if(file_exists($watermark_path)){
+            if(preg_match("/\.jpeg$|\.jpg$/i",$watermark_path))
+                $watermark->image = imagecreatefromjpeg($watermark_path);
+            else if(preg_match("/\.png$/i",$watermark_path))
+                $watermark->image = imagecreatefrompng($watermark_path);
+            else if(preg_match("/\.gif$/i",$watermark_path))
+                $watermark->image = imagecreatefromgif($watermark_path);
+            else{
+                $this->error[] = $this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
+                return false;
+            }
+        }
+        else{
+            $this->error[] = $this->ERROR_TEXT_FILE_NOT_FOUND;
+            return false;
+        }
+
+        $watermark->width = imagesx($watermark->image);
+        $watermark->height = imagesy($watermark->image);
+
+        imagealphablending($this->image, true);
+        imagesavealpha($this->image, true);
+
+        if(imagecopy($this->image, $watermark->image, $left, $top, 0, 0, $watermark->width, $watermark->height)){
+            imagedestroy($watermark->image);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
 	
 	/***************************************************************************************************
 	** IMAGE FILTERING FUNCTIONS ***********************************************************************

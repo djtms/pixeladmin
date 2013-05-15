@@ -195,11 +195,14 @@ function renderHtml($html_string, $values = array())
 		{
 			$explodedKey = explode("=", $key);
 			
-			if($explodedKey[0] == "i18n")
-			{
+			if($explodedKey[0] == "i18n"){
 				$i18nCode = $isValuesTypeArray ? $values[$explodedKey[1]] : $values->{$explodedKey[1]};
 				$value = getI18n($i18nCode);	
 			}
+            else if($explodedKey[0] == "file"){
+                $file_id = $isValuesTypeArray ? $values[$explodedKey[1]] : $values->{$explodedKey[1]};
+                $value = "<img src='" . getThumbImage($file_id, 100, 75, false) . "' />";
+            }
 		}
 		
 		$html_string = preg_replace($pattern, $value, $html_string);

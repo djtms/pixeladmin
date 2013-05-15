@@ -782,23 +782,21 @@
 
 						return function(e){
 							try{
-								$response = $.parseJSON(e.target.response);
+								var $response = $.parseJSON(e.target.response);
 
 								if($response.success === true){
 									setTimeout(function(){
-										$temp = $(generateFileHtml($response.file));
+										var $temp = $(generateFileHtml($response.file));
 										$temp.attr("id", "uploaded_" + index);
 
 										$("#queue_" + index).replaceWith($temp);
 										// yeni yüklenen dosyanın thumbnailinin load eventini burdan bağla, delegate veya live ile bağlanınca çalışmıyorlar
 										objects.browserFilesList.find("#uploaded_" + index).removeAttr("id").find(".editorFileThumb").load(events.onFileThumbnailLoad).error(events.onFileThumbnailError);
 										//-------------------------------------------------------------------------------------------------------------------
-										delete $temp, $response;
 									}, 500);
 								}
 								else{
                                     MessageEvent.showMessage("Hata Oluştu!", "Hata: " + $response.msg);
-									delete $response;
 								}
 							}
 							catch(e){
