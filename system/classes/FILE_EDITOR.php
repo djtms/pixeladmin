@@ -43,8 +43,7 @@ class PA_FILE_EDITOR extends DB
 		global $ADMIN;
 		global $allowedFileFormatsForUpload;
 		
-		if($ADMIN->VALIDATE->validateFileFormat($file["name"], $allowedFileFormatsForUpload))
-		{
+		if($ADMIN->VALIDATE->validateFileFormat($file["name"], $allowedFileFormatsForUpload)){
 			if($file_id = $ADMIN->UPLOADER->uploadFile($_POST["directory_id"], $file)){
 				$temp = $ADMIN->DIRECTORY->selectFileById($file_id);
 				$temp->error = false;
@@ -57,8 +56,7 @@ class PA_FILE_EDITOR extends DB
 				echo json_encode(array("success"=>false, "msg"=>"Hata: " . $ADMIN->UPLOADER->error));
 			}
 		}
-		else
-		{
+		else{
 			echo json_encode(array("success"=>false,"msg"=>"Bu dosyayı yüklemek için yeterli izniniz yok!"));
 		}
 		

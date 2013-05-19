@@ -1,4 +1,42 @@
 <?php
+
+if($_POST["admin_action"] == "getFileInfoById"){
+    if($file = $ADMIN->FILE->selectFileById($_POST["file"])){
+        if(!$file->thumb = $ADMIN->DIRECTORY->getThumbUrl($file->file_id, 123, 87, false, true, "center top", "FFFFFF"))
+            $file->thumb = "../upload/system/exclamation.jpg";
+    }
+    else{
+        $file = array();
+    }
+
+    echo json_encode($file);
+    exit;
+}
+else if($_POST["admin_action"] == "rotateImage"){
+    if(rotateImage($_POST["file_id"], $_POST["degree"]) && ($big_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 420, 350)) && ($small_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 123, 87)))
+    {
+        $cacheKey = "?cache" . uniqid();
+        echo json_encode(array("success"=>true, "big_thumb"=>$big_thumb . $cacheKey, "small_thumb"=>$small_thumb . $cacheKey, "response"=>"Başarıyla Güncellendi!"));
+    }
+    else
+        echo json_encode(array("success"=>false, "response"=>"Hata Oluştu! 2"));
+
+    exit;
+}
+else if($_POST["admin_action"] == "getFileDetailThumb"){
+    getFileDetailThumb(); exit;
+}
+else if($_POST["admin_action"] == "updateFileInfo"){
+    updateFileInfo(); exit;
+}
+else if($_POST["admin_action"] == "cropImage"){
+    cropImage(); exit;
+}
+else if($_POST["admin_action"] == "listCustomCroppedImages"){
+    listCustomCroppedImages(); exit;
+}
+
+
 function getFileUrl($file_id){
 	global $ADMIN;
 	
@@ -24,43 +62,11 @@ function rotateImage($file_id, $degree){
 	return $ADMIN->IMAGE_PROCESSOR->save($file->url) && $ADMIN->THUMB->deleteFileThumbs($file_id);
 }
 
+function deleteFile($file_id){
+    global $ADMIN;
 
-if($_POST["admin_action"] == "getFileInfoById"){
-	if($file = $ADMIN->FILE->selectFileById($_POST["file"])){
-		if(!$file->thumb = $ADMIN->DIRECTORY->getThumbUrl($file->file_id, 123, 87, false, true, "center top", "FFFFFF"))
-			$file->thumb = "../upload/system/exclamation.jpg";
-	}
-	else{
-		$file = array();
-	}
-	
-	echo json_encode($file);
-	exit;
+    return $ADMIN->FILE->deleteFile($file_id);
 }
-else if($_POST["admin_action"] == "rotateImage"){
-	if(rotateImage($_POST["file_id"], $_POST["degree"]) && ($big_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 420, 350)) && ($small_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 123, 87)))
-	{
-		$cacheKey = "?cache" . uniqid();
-		echo json_encode(array("success"=>true, "big_thumb"=>$big_thumb . $cacheKey, "small_thumb"=>$small_thumb . $cacheKey, "response"=>"Başarıyla Güncellendi!"));
-	}
-	else
-		echo json_encode(array("success"=>false, "response"=>"Hata Oluştu! 2"));
-
-	exit;
-}
-else if($_POST["admin_action"] == "getFileDetailThumb"){
-	getFileDetailThumb(); exit;
-}
-else if($_POST["admin_action"] == "updateFileInfo"){
-	updateFileInfo(); exit;
-}
-else if($_POST["admin_action"] == "cropImage"){
-	cropImage(); exit;
-}
-else if($_POST["admin_action"] == "listCustomCroppedImages"){
-	listCustomCroppedImages(); exit;
-}
-
 
 function getFileDetailThumb(){
 	global $ADMIN;
@@ -79,11 +85,11 @@ function updateFileInfo(){
 	$checkedFileId = $ADMIN->DIRECTORY->checkFileExists($fixedurl);
 
 	if(($checkedFileId > 0) && ($checkedFileId != $_POST["file_id"]))
-	echo json_encode(array("error"=>true,"message"=>"varolan bir dosya adı girdiniz, lütfen başka bir isim girin!"));
+	    echo json_encode(array("error"=>true,"message"=>"varolan bir dosya adı girdiniz, lütfen başka bir isim girin!"));
 	else if(!$ADMIN->DIRECTORY->updateFileInfo($_POST["file_id"], $_POST["basename"], $_POST["filename"],$_POST["thumb_file_id"]))
-	echo json_encode(array("error"=>true,"message"=>"bir hata oluştu, lütfen tekrar deneyin!"));
+	    echo json_encode(array("error"=>true,"message"=>"bir hata oluştu, lütfen tekrar deneyin!"));
 	else
-	echo json_encode(array("error"=>false,"message"=>"başarıyla kaydedildi!"));
+	    echo json_encode(array("error"=>false,"message"=>"başarıyla kaydedildi!"));
 }
 
 function cropImage(){
