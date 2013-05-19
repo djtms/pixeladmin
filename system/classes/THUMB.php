@@ -60,13 +60,11 @@ class PA_THUMB extends DB
 		$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
 		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
 		
-		if(!$squeeze)
-		{
+		if(!$squeeze){
 			$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
 			$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
 			
-			if($thumb = $this->get_row("SELECT *, CONCAT('{$temp_thumbs_url}',url) AS url FROM {$this->table} WHERE basename=? AND crop_type='custom_crop'",array($thumb_basename)))
-			{
+			if($thumb = $this->get_row("SELECT *, CONCAT('{$temp_thumbs_url}',url) AS url FROM {$this->table} WHERE basename=? AND crop_type='custom_crop'",array($thumb_basename))){
 				return $thumb;
 			}
 		}

@@ -76,7 +76,6 @@ function getFileDetailThumb(){
 	echo json_encode(array("thumb_url"=>$thumb->url, "thumb_file_id"=>$thumb->owner->thumb_file_id));
 }
 
-
 function updateFileInfo(){
 	global $ADMIN;
 	global $uploadurl;
