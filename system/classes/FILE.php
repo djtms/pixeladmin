@@ -76,7 +76,7 @@ class PA_FILE extends PA_THUMB
             }
         }
 
-        // tüm dosyaları tara, var olmayan dosyaları databse'den sil.
+        // tüm dosyaları tara, var olmayan dosyaları database'den sil.
         $files = $ADMIN->DB->get_rows("SELECT * FROM {$table_file} WHERE access_type='public'");
         foreach($files as $f){
             if(!file_exists($uploadurl . $f->url)){
@@ -96,8 +96,6 @@ class PA_FILE extends PA_THUMB
      * @return bool|array
      */
     function calculateFileProperties($directory_id, $file_path, $fix_filename = true, $generate_duplicated_name = true){
-        global $ADMIN;
-
         $file_name = basename($file_path);
         $creation_time = currentDateTime();
         if($fix_filename){
@@ -128,16 +126,17 @@ class PA_FILE extends PA_THUMB
             $resolution->width = 0;
             $resolution->height = 0;
             $size = 0;
+
             if(file_exists($file_path)){
                 $size = filesize($file_path);
-                //TODO: burada hata alıyorum resim yüklenmiyor
-                /*if($type == "image"){
+
+                if(($type == "image") && ($size > 0)){
+                    global $ADMIN;
+
                     $ADMIN->IMAGE_PROCESSOR->load($file_path);
                     $resolution = $ADMIN->IMAGE_PROCESSOR->getResolution();
                 }
-                */
             }
-
 
             return (object)array("basename"=>$basename,
                                 "filename"=>$filename,

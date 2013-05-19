@@ -13,12 +13,12 @@ class PA_IMAGE_PROCESSOR
 	public $image;
     public $width = 0;
     public $height = 0;
+    public $memory_limit = "128M";
 	
 	private $ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
 	private $ERROR_TEXT_FILE_MUST_BE_PNG;
 	
-	function PA_IMAGE_PROCESSOR()
-	{
+	function PA_IMAGE_PROCESSOR(){
 		$this->ERROR_TEXT_UNSUPPORTED_FILE_FORMAT = "Geçersiz dosya formatı girdiniz! Lütfen jpg,png veya gif formatlarından birini kullanın!";
 		$this->ERROR_TEXT_FILE_MUST_BE_PNG = "Resim .png formatında olmalı!";
         $this->ERROR_TEXT_FILE_NOT_FOUND = "Dosya bulunamadı!";
@@ -30,8 +30,7 @@ class PA_IMAGE_PROCESSOR
 	* @param (string) $path yüklenecek dosya yolu
 	* @return boolean
 	*/
-	function load($path)
-	{
+	function load($path){
         if(file_exists($path)){
             if(preg_match("/\.jpeg$|\.jpg$/i",$path))
                 $this->image = imagecreatefromjpeg($path);
@@ -48,6 +47,8 @@ class PA_IMAGE_PROCESSOR
 
             $this->width = imagesx($this->image);
             $this->height = imagesy($this->image);
+
+            ini_set('memory_limit', $this->memory_limit);
 
             return true;
         }

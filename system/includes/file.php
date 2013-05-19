@@ -1,6 +1,5 @@
 <?php
-function getFileUrl($file_id)
-{
+function getFileUrl($file_id){
 	global $ADMIN;
 	
 	if($file = $ADMIN->DIRECTORY->selectFileUrlById($file_id))
@@ -9,15 +8,13 @@ function getFileUrl($file_id)
 		return false;		
 }
 
-function getFileInfo($file_id)
-{
+function getFileInfo($file_id){
 	global $ADMIN;
 	
 	return $ADMIN->DIRECTORY->selectFileById($file_id);
 }
 
-function rotateImage($file_id, $degree)
-{
+function rotateImage($file_id, $degree){
 	global $ADMIN;
 	$file = getFileInfo($file_id);
 
@@ -54,12 +51,6 @@ else if($_POST["admin_action"] == "rotateImage"){
 else if($_POST["admin_action"] == "getFileDetailThumb"){
 	getFileDetailThumb(); exit;
 }
-else if($_POST["admin_action"] == "deleteFile"){
-	deleteFile(); exit;
-}
-else if($_POST["admin_action"] == "selectFileInfo"){
-	selectFileInfo(); exit;
-}
 else if($_POST["admin_action"] == "updateFileInfo"){
 	updateFileInfo(); exit;
 }
@@ -71,8 +62,7 @@ else if($_POST["admin_action"] == "listCustomCroppedImages"){
 }
 
 
-function getFileDetailThumb()
-{
+function getFileDetailThumb(){
 	global $ADMIN;
 
 	$thumb = $ADMIN->DIRECTORY->getThumbInfo($_POST["fileId"], 420, 350, false, true, "center top", "FFFFFF");
@@ -81,8 +71,7 @@ function getFileDetailThumb()
 }
 
 
-function updateFileInfo()
-{
+function updateFileInfo(){
 	global $ADMIN;
 	global $uploadurl;
 
@@ -97,20 +86,16 @@ function updateFileInfo()
 	echo json_encode(array("error"=>false,"message"=>"başarıyla kaydedildi!"));
 }
 
-function cropImage()
-{
+function cropImage(){
 	global $ADMIN;
 
-	extract($_POST, EXTR_SKIP);
-
-	if($ADMIN->THUMB->cropImage($file_id, $left, $top, $crop_width, $crop_height, $resize_width, $resize_height))
-	echo json_encode(array("error"=>false));
+	if($ADMIN->THUMB->cropImage($_POST["file_id"], $_POST["left"], $_POST["top"], $_POST["crop_width"], $_POST["crop_height"], $_POST["resize_width"], $_POST["resize_height"]))
+	    echo json_encode(array("error"=>false));
 	else
-	echo json_encode(array("error"=>true));
+	    echo json_encode(array("error"=>true));
 }
 
-function listCustomCroppedImages()
-{
+function listCustomCroppedImages(){
 	global $ADMIN;
 
 	if($thumbs = $ADMIN->THUMB->listCustomCroppedImages($_POST["file_id"]))
@@ -119,6 +104,6 @@ function listCustomCroppedImages()
 		echo json_encode(array("error"=>false, "data"=>$thumbs, "list_thumb_url"=>$list_thumb_url));
 	}
 	else
-	echo json_encode(array("error"=>true, "data"=>"error happened!"));
+	    echo json_encode(array("error"=>true, "data"=>"error happened!"));
 }
 

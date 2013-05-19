@@ -2,7 +2,6 @@
 class PA_DIRECTORY extends PA_FILE
 {
 	private $table;
-	private $table_file;
 	
 	function PA_DIRECTORY()
 	{
@@ -264,7 +263,6 @@ class PA_DIRECTORY extends PA_FILE
         global $uploadurl;
 
         $table_directory =  $ADMIN->DB->tables->directory;
-        $table_file = $ADMIN->DB->tables->file;
 
         // dizinleri database'de ara ve olmayanları database'e ekle.
         $directories = $this->listWholeDirectoriesInPath($uploadurl);

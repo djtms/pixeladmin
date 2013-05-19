@@ -18,8 +18,7 @@ function executeActivationCode($directory)
 	
 	$moduleFileUrl = $directory . $modules_main_file_name;
 	
-	if(file_exists($moduleFileUrl))
-	{
+	if(file_exists($moduleFileUrl)){
 		require_once $moduleFileUrl;
 		call_user_func($register_module_function);
 	}
