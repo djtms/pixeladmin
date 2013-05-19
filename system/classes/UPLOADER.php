@@ -12,7 +12,7 @@ class PA_UPLOADER extends DB
 		$this->table = $this->tables->file;
 	}
 	
-	function uploadFile($directory_id, $file=null, $access_type = "public"){
+	function uploadFile($directory_id, $file=null, $rename = null, $access_type = "public"){
 		global $ADMIN;
 		global $uploadurl;
 
@@ -39,6 +39,9 @@ class PA_UPLOADER extends DB
             }
         }
 
+        if(($rename != null) && (strlen($rename) > 2)){
+            $filename = $rename;
+        }
 
 		$properties = $ADMIN->FILE->calculateFileProperties($directory_id, $filename);
 		$thumb_file_id = $ADMIN->FILE->calculateThumbnailId($properties->extension);
@@ -59,15 +62,9 @@ class PA_UPLOADER extends DB
                 $this->error = "Geçici dosya taşınamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
                 return false;
             }
-            else{
-                if(file_exists($file)){
-                    echo "EXISTS " . $uploadurl . $properties->url;
-                }
-
-                if(!copy($file, $uploadurl . $properties->url)){
-                    $this->error = "Dosya kopyalanamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
-                    return false;
-                }
+            else if(!copy($file, $uploadurl . $properties->url)){
+                $this->error = "Dosya kopyalanamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
+                return false;
             }
         }
 

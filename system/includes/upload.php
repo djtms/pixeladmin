@@ -18,7 +18,7 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 		$ADMIN->FILE->deleteFileThumbs($file_id);
 	}
 	
-	$thumb_file_id = $ADMIN->UPLOADER->uploadFile($file->directory, $thumbfile, "thumbnail");
+	$thumb_file_id = $ADMIN->UPLOADER->uploadFile($file->directory, $thumbfile, null, "thumbnail");
 	$ADMIN->DB->execute("UPDATE {$ADMIN->DB->tables->file} SET thumb_file_id=? WHERE file_id=?", array($thumb_file_id, $file->file_id));
 	
 	
@@ -29,11 +29,11 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 	echo json_encode($file);
 }
 
-function uploadFile($file, $directory = "Harici_Dosyalar/"){
+function uploadFile($file, $directory = "Harici_Dosyalar/", $rename=null){
 	global $ADMIN;
 
     if($directory_id = $ADMIN->DIRECTORY->createDirectoryByPath($directory)){
-        return $ADMIN->UPLOADER->uploadFile($directory_id, $file);
+        return $ADMIN->UPLOADER->uploadFile($directory_id, $file, $rename);
     }
     else{
         return false;
