@@ -13,7 +13,7 @@ class PA_FILE_EDITOR extends DB
 
             for($i=0; $i<$length; $i++){
                 if(!($return->files[$i]->thumb = $ADMIN->DIRECTORY->getThumbUrl($return->files[$i]->file_id, 123, 87, false, true, "center top", "FFFFFF")))
-                    $return->files[$i]->thumb = "../upload/system/exclamation.jpg";
+                    $return->files[$i]->thumb = "../upload/files/system/exclamation.jpg";
             }
         }
 		
@@ -48,7 +48,7 @@ class PA_FILE_EDITOR extends DB
 				$temp = $ADMIN->DIRECTORY->selectFileById($file_id);
 				$temp->error = false;
 				if(!$temp->thumb = $ADMIN->DIRECTORY->getThumbUrl($file_id, 123, 87, false, true, "center top", "FFFFFF"))
-				$temp->thumb = "../upload/system/exclamation.jpg";
+				$temp->thumb = "../upload/files/system/exclamation.jpg";
 					
 				echo json_encode(array("success"=>true, "file"=>$temp));
 			}

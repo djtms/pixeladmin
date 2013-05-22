@@ -3,7 +3,7 @@
 if($_POST["admin_action"] == "getFileInfoById"){
     if($file = $ADMIN->FILE->selectFileById($_POST["file"])){
         if(!$file->thumb = $ADMIN->DIRECTORY->getThumbUrl($file->file_id, 123, 87, false, true, "center top", "FFFFFF"))
-            $file->thumb = "../upload/system/exclamation.jpg";
+            $file->thumb = "../upload/files/system/exclamation.jpg";
     }
     else{
         $file = array();
@@ -13,8 +13,7 @@ if($_POST["admin_action"] == "getFileInfoById"){
     exit;
 }
 else if($_POST["admin_action"] == "rotateImage"){
-    if(rotateImage($_POST["file_id"], $_POST["degree"]) && ($big_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 420, 350)) && ($small_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 123, 87)))
-    {
+    if(rotateImage($_POST["file_id"], $_POST["degree"]) && ($big_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 420, 350)) && ($small_thumb = $ADMIN->THUMB->getThumbUrl($_POST["file_id"], 123, 87))){
         $cacheKey = "?cache" . uniqid();
         echo json_encode(array("success"=>true, "big_thumb"=>$big_thumb . $cacheKey, "small_thumb"=>$small_thumb . $cacheKey, "response"=>"Başarıyla Güncellendi!"));
     }
@@ -78,10 +77,16 @@ function getFileDetailThumb(){
 
 function updateFileInfo(){
 	global $ADMIN;
-	global $uploadurl;
+    global $public_uploadurl;
+    global $private_uploadurl;
 
-	$fixedurl = preg_replace("/^" . preg_quote($uploadurl,"/") . "/", "", $_POST["url"]);
-	$checkedFileId = $ADMIN->DIRECTORY->checkFileExists($fixedurl);
+    $file = $ADMIN->FILE->selectFileById($_POST["file_id"]);
+
+    $root = ${$file->access_type . "_uploadurl"};
+
+
+	$fixedurl = preg_replace("/^" . preg_quote($root,"/") . "/", "", $_POST["url"]);
+	$checkedFileId = $ADMIN->DIRECTORY->getFileIdByUrl($fixedurl);
 
 	if(($checkedFileId > 0) && ($checkedFileId != $_POST["file_id"]))
 	    echo json_encode(array("error"=>true,"message"=>"varolan bir dosya adı girdiniz, lütfen başka bir isim girin!"));

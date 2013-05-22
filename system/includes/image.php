@@ -1,7 +1,6 @@
 <?php
 
-function generateThumbBase64($fileUrl,$width=129,$height=-1)
-{		
+function generateThumbBase64($fileUrl,$width=129,$height=-1){
 	$info = pathinfo($fileUrl);
 	
 	if(preg_match("/jpeg|jpg/i",$info["extension"]))
@@ -18,8 +17,7 @@ function generateThumbBase64($fileUrl,$width=129,$height=-1)
 	
 	$calcHeight =  round(($width/$ix) * $iy);
 	
-	if(($height > 0) && ($calcHeight < $height))
-	{
+	if(($height > 0) && ($calcHeight < $height)){
 		$sourceWidth = $ix;
 		$sourceHeight = $iy;
 		$destinationWidth = $width;
@@ -58,8 +56,7 @@ function generateThumbBase64($fileUrl,$width=129,$height=-1)
 	return 'data:image/' . $info["extension"] . ';base64,' . $attachment;
 }
 
-function getThumbImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
-{
+function getThumbImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF"){
 	global $ADMIN;
 	
 	if($thumb = $ADMIN->DIRECTORY->getThumbUrl($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
@@ -68,42 +65,29 @@ function getThumbImage($file_id, $width, $height, $squeeze = true, $proportion =
 		return false;
 }
 
-function getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
-{
+function getThumbInfo($file_id, $width, $height, $squeeze=true, $proportion = true, $position = "center center", $bg_color = "FFFFFF"){
 	global $ADMIN;
 	
 	return $ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
 }
 
-function getRetinaImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
-{
+function getRetinaImage($file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF"){
 	global $ADMIN;
-	
-	// Önce normal thumbnail dosyasını kontrol et ve yok ise yenisini oluştur
-	if($ADMIN->DIRECTORY->getThumbInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
-	{
-		// Thumbnail'i ürettikten sonra onun retina resmini oluştur
-		if($retina = $ADMIN->THUMB->getRetinaImageInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
-		{
-			return $retina->url;
-		}
-		else
-			return false;
-	}
-	else
-		return false;
+
+    if($retina = $ADMIN->THUMB->getRetinaImageInfo($file_id, $width, $height, $squeeze, $proportion, $position, $bg_color))
+        return $retina->url;
+    else
+        return false;
 }
 
-function getMaskedImage($mask_image_path, $file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
-{
+function getMaskedImage($mask_image_path, $file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF"){
 	global $ADMIN;
 	
 	$masked_image = $ADMIN->THUMB->getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);
 	return $masked_image->url;
 }
 
-function getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF")
-{
+function getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze = true, $proportion = true, $position = "center center", $bg_color = "FFFFFF"){
 	global $ADMIN;
 
 	return $ADMIN->THUMB->getMaskedImageInfo($mask_image_path, $file_id, $width, $height, $squeeze, $proportion, $position, $bg_color);

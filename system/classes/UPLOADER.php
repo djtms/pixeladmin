@@ -1,20 +1,27 @@
 <?php
-class PA_UPLOADER extends DB
-{
+class PA_UPLOADER extends DB{
 	public $table;
 	public $error = "";
 	public $copyNameTag = "Kopya";
+
+    private $public_root;
+    private $private_root;
 	
-	function PA_UPLOADER()
-	{
+	function PA_UPLOADER(){
 		parent::DB();
 		
 		$this->table = $this->tables->file;
+
+        global $public_uploadurl;
+        global $private_uploadurl;
+
+        $this->public_root = $public_uploadurl;
+        $this->private_root = $private_uploadurl;
 	}
 	
 	function uploadFile($directory_id, $file=null, $rename = null, $access_type = "public"){
 		global $ADMIN;
-		global $uploadurl;
+	    $root = $this->{$access_type . "_root"};
 
         $isStandartUpload = true;
         $filename = $file["name"];
@@ -43,7 +50,7 @@ class PA_UPLOADER extends DB
             $filename = $rename;
         }
 
-		$properties = $ADMIN->FILE->calculateFileProperties($directory_id, $filename);
+		$properties = $ADMIN->FILE->calculateFileProperties($directory_id, $filename, true, true, $access_type);
 		$thumb_file_id = $ADMIN->FILE->calculateThumbnailId($properties->extension);
 		$resolution = (object)array("width"=>0,"height"=>0);
 
@@ -52,24 +59,24 @@ class PA_UPLOADER extends DB
                 $this->error = "Upload hata kodu: " . $file["error"];
                 return false;
             }
-            else if(!move_uploaded_file($file["tmp_name"], $uploadurl . $properties->url)){
+            else if(!move_uploaded_file($file["tmp_name"], $root . $properties->url)){
                 $this->error = "Upload edilemedi!";
                 return false;
             }
         }
         else{
-            if((strlen($temporary_file) > 0) && file_exists($temporary_file) && !rename($temporary_file, ($uploadurl . $properties->url))){
+            if((strlen($temporary_file) > 0) && file_exists($temporary_file) && !rename($temporary_file, ($root . $properties->url))){
                 $this->error = "Geçici dosya taşınamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
                 return false;
             }
-            else if(!copy($file, $uploadurl . $properties->url)){
+            else if(!copy($file, $root . $properties->url)){
                 $this->error = "Dosya kopyalanamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
                 return false;
             }
         }
 
 		if($properties->type == "image"){
-			$ADMIN->IMAGE_PROCESSOR->load($uploadurl . $properties->url);
+			$ADMIN->IMAGE_PROCESSOR->load($root . $properties->url);
 			$resolution = $ADMIN->IMAGE_PROCESSOR->getResolution();
 		}
 		

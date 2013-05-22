@@ -12,9 +12,8 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 
 	$file = $ADMIN->FILE->selectFileById($file_id);
 	
-	if(($old_thumb_file = $ADMIN->FILE->selectFileById($file->thumb_file_id)) && ($old_thumb_file->access_type == "thumbnail"))
-	{
-		$ADMIN->FILE->deleteFileById($old_thumb_file->file_id);
+	if(($old_thumb_file = $ADMIN->FILE->selectFileById($file->thumb_file_id)) && ($old_thumb_file->access_type == "thumbnail")){
+		$ADMIN->FILE->deleteFile($old_thumb_file->file_id);
 		$ADMIN->FILE->deleteFileThumbs($file_id);
 	}
 	
@@ -29,11 +28,11 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 	echo json_encode($file);
 }
 
-function uploadFile($file, $directory = "Harici_Dosyalar/", $rename=null){
+function uploadFile($file, $directory = "Harici_Dosyalar/", $rename=null, $access_type="public"){
 	global $ADMIN;
 
-    if($directory_id = $ADMIN->DIRECTORY->createDirectoryByPath($directory)){
-        return $ADMIN->UPLOADER->uploadFile($directory_id, $file, $rename);
+    if($directory_id = $ADMIN->DIRECTORY->createDirectoryByPath($directory, $access_type)){
+        return $ADMIN->UPLOADER->uploadFile($directory_id, $file, $rename, $access_type);
     }
     else{
         return false;

@@ -19,52 +19,42 @@ abstract class PA_GALLERY_FILE extends DB{
 	}
 	
 	public function listGalleryFiles($gallery_id, $limit=-1 , $listIfFileDeleted = true){
-		global $uploadurl;
-		
-		$query  = "SELECT f.*,CONCAT('{$uploadurl}',f.url) AS url, gf.file_id  FROM {$this->tableGalleryFile} AS gf ";
+		$query  = "SELECT f.*, gf.file_id  FROM {$this->tableGalleryFile} AS gf ";
 		$query .= ($listIfFileDeleted ? "LEFT" : "INNER") . " JOIN {$this->tableFile} AS f ON gf.file_id=f.file_id ";
-		$query .= " WHERE gf.gallery_id=? ORDER BY gf.order_num ASC ";
+		$query .= "WHERE gf.gallery_id=? ORDER BY gf.order_num ASC ";
 		$query .= ($limit > 0 ? "LIMIT 0,$limit" : "");
 		
 		return $this->get_rows($query,array($gallery_id));
 	}
 	
 	public function listGalleryFilesByPage($gallery_id, $limit, $offset, $listIfFileDeleted = true){
-		global $uploadurl;
-		
-		$query  = "SELECT f.*,CONCAT('{$uploadurl}',f.url) AS url, gf.file_id  FROM {$this->tableGalleryFile} AS gf ";
+		$query  = "SELECT f.*, gf.file_id  FROM {$this->tableGalleryFile} AS gf ";
 		$query .= ($listIfFileDeleted ? "LEFT" : "INNER") . " JOIN {$this->tableFile} AS f ON gf.file_id=f.file_id ";
-		$query .= " WHERE gf.gallery_id=? ORDER BY gf.order_num ASC LIMIT $offset,$limit";
+		$query .= "WHERE gf.gallery_id=? ORDER BY gf.order_num ASC LIMIT $offset,$limit";
 		
 		return $this->get_rows($query,array($gallery_id));
 	}
 	
 	public function selectFirstFileInGallery($gallery_id){
-		global $uploadurl;
-		
-		$query  = "SELECT f.*,CONCAT('{$uploadurl}',f.url) AS url FROM {$this->tableGalleryFile} AS gf ";
+		$query  = "SELECT f.* FROM {$this->tableGalleryFile} AS gf ";
 		$query .= "INNER JOIN {$this->tableFile} AS f ON gf.file_id=f.file_id ";
-		$query .= " WHERE gf.gallery_id=? ORDER BY gf.order_num ASC LIMIT 0,1";
+		$query .= "WHERE gf.gallery_id=? ORDER BY gf.order_num ASC LIMIT 0,1";
 		
 		return $this->get_row($query,array($gallery_id));
 	}
 	
 	public function selectNTHFileInGallery($gallery_id,$nthIndex){
-		global $uploadurl;
-		
-		$query  = "SELECT f.*,CONCAT('{$uploadurl}',f.url) AS url FROM {$this->tableGalleryFile} AS gf ";
+		$query  = "SELECT f.* FROM {$this->tableGalleryFile} AS gf ";
 		$query .= "INNER JOIN {$this->tableFile} AS f ON gf.file_id=f.file_id ";
-		$query .= " WHERE gf.gallery_id=? ORDER BY gf.order_num ASC LIMIT 0,$nthIndex";
+		$query .= "WHERE gf.gallery_id=? ORDER BY gf.order_num ASC LIMIT 0,$nthIndex";
 		
 		return $this->get_row($query,array($gallery_id));
 	}
 	
 	public function selectLastFileInGallery($gallery_id){
-		global $uploadurl;
-		
-		$query  = "SELECT f.*,CONCAT('{$uploadurl}',f.url) AS url FROM {$this->tableGalleryFile} AS gf ";
+		$query  = "SELECT f.* FROM {$this->tableGalleryFile} AS gf ";
 		$query .= "INNER JOIN {$this->tableFile} AS f ON gf.file_id=f.file_id ";
-		$query .= " WHERE gf.gallery_id=? ORDER BY gf.order_num DESC LIMIT 0,1";
+		$query .= "WHERE gf.gallery_id=? ORDER BY gf.order_num DESC LIMIT 0,1";
 		
 		return $this->get_row($query,array($gallery_id));
 	}
@@ -72,7 +62,7 @@ abstract class PA_GALLERY_FILE extends DB{
 	public function getGalleryFileCount($gallery_id, $listIfFileDeleted = true){
 		$query  = "SELECT COUNT(*) FROM {$this->tableGalleryFile} AS gf ";
 		$query .= ($listIfFileDeleted ? "LEFT" : "INNER") . " JOIN {$this->tableFile} AS f ON gf.file_id=f.file_id ";
-		$query .= " WHERE gf.gallery_id=? ORDER BY gf.order_num ASC ";
+		$query .= "WHERE gf.gallery_id=? ORDER BY gf.order_num ASC ";
 		
 		return $this->get_value($query,array($gallery_id));
 	}
@@ -81,13 +71,11 @@ abstract class PA_GALLERY_FILE extends DB{
 		return $this->insert($this->tableGalleryFile, compact("gallery_id", "file_id", "order_num"));
 	}
 	
-	public function deleteFileFromGallery($file_id, $gallery_id)
-	{
+	public function deleteFileFromGallery($file_id, $gallery_id){
 		return $this->execute("DELETE FROM {$this->tableGalleryFile} WHERE gallery_id=? AND file_id=?",array($gallery_id, $file_id));
 	}
 	
 	public function deleteWholeFilesFromGallery($gallery_id){
 		return $this->execute("DELETE FROM {$this->tableGalleryFile} WHERE gallery_id=?",array($gallery_id));
 	}
-	
 }

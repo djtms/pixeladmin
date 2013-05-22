@@ -414,7 +414,11 @@ function createDbTables($dbh,$prefix)
 			  `height` int(6) NOT NULL,
 			  `squeeze` tinyint(1) NOT NULL DEFAULT '-1',
 			  `proportion` tinyint(1) NOT NULL DEFAULT '1',
-			  `crop_position` char(20) NOT NULL DEFAULT 'center top',
+			  `crop_position` char(20) NOT NULL DEFAULT 'center_top',
+			  `crop_left` smallint(5) NOT NULL,
+              `crop_top` smallint(5) NOT NULL,
+              `crop_width` smallint(5) NOT NULL,
+              `crop_height` smallint(5) NOT NULL,
 			  `bg_color` char(6) NOT NULL DEFAULT 'FFFFFF',
 			  `crop_type` char(25) NOT NULL DEFAULT 'auto_crop',
 			  PRIMARY KEY (`thumb_id`)

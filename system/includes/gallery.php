@@ -83,7 +83,7 @@ if(in_admin){
 				$file_count = sizeof($files);
 				for($i=0; $i<$file_count; $i++){
 					if(!$files[$i]->thumb = $ADMIN->DIRECTORY->getThumbUrl($files[$i]->file_id, 123, 87, false, true, "center top", "FFFFFF"))
-						$files[$i]->thumb = "../upload/system/exclamation.jpg";
+						$files[$i]->thumb = "../upload/files/system/exclamation.jpg";
 				}
 			}
 			else{

@@ -372,8 +372,7 @@
 				filenameLastValue = newName;
 			}
 			
-			function openDetailsEditor()
-			{
+			function openDetailsEditor(){
 				$.ajax({
 					data:"admin_action=getFileDetailThumb&fileId=" + fileId.val(),
 					dataType:"json",
@@ -388,8 +387,7 @@
 				});
 			}
 			
-			function prepareForChangeLogo()
-			{
+			function prepareForChangeLogo(){
 				var uploader = document.getElementById("thumbfile");
 				if($("#thumbfile").length > 0)
 				{
@@ -402,8 +400,7 @@
 				}
 			}
 			
-			function changeLogo(e)
-			{
+			function changeLogo(e){
 				var file_id = $("[name='file_id']").val();
 				var form = new FormData();
 				var thumbfile = document.getElementById("thumbfile").files[0];
@@ -432,8 +429,7 @@
 				xhr.send(form);
 			}
 			
-			function saveFile()
-			{
+			function saveFile(){
 				filename.val(ADMIN.fixStringForWeb(filename.val()));
 				var basenameText = $.trim(filename.val());
 				

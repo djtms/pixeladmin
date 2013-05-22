@@ -796,11 +796,11 @@
 									}, 500);
 								}
 								else{
-                                    MessageEvent.showMessage("Hata Oluştu!", "Hata: " + $response.msg);
+                                    MESSAGEBOX.showMessage("Hata Oluştu!", "Hata: " + $response.msg);
 								}
 							}
-							catch(e){
-								MessageEvent.showMessage("Hata Oluştu!", "Hata: " + e.target.response);
+							catch(error){
+                                MESSAGEBOX.showMessage("Hata Oluştu!", "Hata: " + e.target.response);
 							}
 						};
 					}()));

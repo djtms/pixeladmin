@@ -1,30 +1,29 @@
 $(GalleryStart);
 
-function GalleryStart()
-{
-	$("input[type=gallery]").parents("form").attr("method","post"); // Formun metodunu post yapıyoruz
+function GalleryStart(){
 	$("input[type=gallery]").each(function(){
+        $(this).parents("form").attr("method","post"); // Formun metodunu post yapıyoruz
+
 		var gallery = $(this);
-		var galleryId = gallery.val();
+		var gallery_id = gallery.val();
 		var columnsCount = gallery.is("[cols]") ? (gallery.attr("cols") <= 5 ? gallery.attr("cols") : 5 ) : 5;
 		var rowsCount = gallery.is("[rows]") ? gallery.attr("rows") : 1;
         var readonly = $(this).is("[readonly]") ? true : false;
-		
-		if((galleryId == undefined) || (galleryId==null) || (galleryId <= 0))
-		{
+
+		if((gallery_id == undefined) || (gallery_id==null) || (gallery_id <= 0)){
 			$.ajax({
 				data:"admin_action=createTemporaryGallery",
 				dataType:"json",
 				success:function(response){
-					galleryId = response.galleryId;
+					gallery_id = response.gallery_id;
 					
-					if((galleryId == undefined) || (galleryId==null) || (galleryId <= 0))
+					if((gallery_id == undefined) || (gallery_id==null) || (gallery_id <= 0))
 					{
 						postMessage("Galeri yüklenirken hata oluştu!",true);
 					}
 					else
 					{
-						gallery.val(galleryId);
+						gallery.val(gallery_id);
 						loadGallery(gallery,columnsCount,rowsCount, readonly);
 					}
 				}
@@ -43,7 +42,7 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 {
 	var existingFilesIds = new Array(); // Galerinin yüklenmesi sırasında alınan dosyaların id'lerinin olduğu dizi
 	var updatedFilesList = new Array(); // Galeride bulunan dosyaların id ve özelliklerinin bulunduğu dizi
-	var galleryAndFilesInfo = new Array(); /* Galerinin ve galeride olan tüm dosyaların ve silinen dosyaların bilgilerinin bulunduğu dizi, bu değişkenin güncel 
+	var galleryAndFilesInfo = {}; /* Galerinin ve galeride olan tüm dosyaların ve silinen dosyaların bilgilerinin bulunduğu dizi, bu değişkenin güncel
 											  değerini öğrenmek için "galleryObject"'in "calculateGalleryAndFilesInfo" eventini çalıştırmak gerekiyor*/
 	var thisName  = gallery.attr("name");
 	var thisId    = gallery.attr("id");
@@ -54,11 +53,11 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 	var btnAddFile;
 	var galleryObject;
 	var galleryListOuter;
-	var galleryId = gallery.val();
-	
-	galleryAndFilesInfo = {"galleryId":galleryId,"filesInfo":[]};
-	
-	var gHtml = '<input type="hidden" name="' + thisName + '" value="' + galleryId + '" />';
+	var gallery_id = gallery.val();
+
+	galleryAndFilesInfo = {"gallery_id":gallery_id,"filesInfo":[]};
+
+	var gHtml = '<input type="hidden" name="' + thisName + '" value="' + gallery_id + '" />';
 		gHtml += '<input type="hidden" class="galleryFilesInfo" name="galleries[]" value="" />';
 		gHtml += '<div class="galleryListOuter">';
 		gHtml += '<ul class="galleryList ' + (readonly ? "readonly" : "") + '">';
@@ -193,7 +192,7 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 
 	// Galerinin varolan dosyalarını listele
 	$.ajax({
-		data:"admin_action=listGalleryFiles&galleryId=" + galleryId,
+		data:"admin_action=listGalleryFiles&gallery_id=" + gallery_id,
 		dataType:"json",
 		success:function(response){
 			if((response == null) || (response == undefined) || (response.length <= 0)){
