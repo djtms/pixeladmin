@@ -99,9 +99,11 @@ function randomString($length = 6)
 function createDirectoriesAndFiles()
 {
 	$defaultDirectories   = array();
-	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/";	
-	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/system/";
-	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files/";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files/public/";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files/private/";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files/system/";
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/thumbs/";
 
 	foreach($defaultDirectories as $dir)
@@ -113,7 +115,7 @@ function createDirectoriesAndFiles()
 	}
 	
 	$default_thumbs_source_dir = dirname(__FILE__) . "/../../view/components/fileeditor/images/default_thumbs/";
-	$default_thumbs_target_dir = dirname(__FILE__) . "/../../../upload/system/";
+	$default_thumbs_target_dir = dirname(__FILE__) . "/../../../upload/files/system/";
 	
 	if(($files = scandir($default_thumbs_source_dir)) && (sizeof($files) > 2))
 	{
