@@ -13,7 +13,7 @@ class PA_IMAGE_PROCESSOR
 	public $image;
     public $width = 0;
     public $height = 0;
-    public $memory_limit = "128M";
+    public $memory_limit = "256M";
 	
 	private $ERROR_TEXT_UNSUPPORTED_FILE_FORMAT;
 	private $ERROR_TEXT_FILE_MUST_BE_PNG;
@@ -32,11 +32,18 @@ class PA_IMAGE_PROCESSOR
 	*/
 	function load($path){
         if(file_exists($path)){
-            if(preg_match("/\.jpeg$|\.jpg$/i",$path))
+            ini_set('memory_limit', $this->memory_limit);
+
+            // image process sırasında hata olusmamasi icin gercek dosya tipini
+            // bulmak icin mime type degerine bakiyoruz.
+            $file_info = getimagesize($path);
+            $extension = preg_replace("/.*?\//", "", $file_info["mime"]);
+
+            if(preg_match("/jpeg$|jpg$/i",$extension))
                 $this->image = imagecreatefromjpeg($path);
-            else if(preg_match("/\.png$/i",$path))
+            else if(preg_match("/png$/i",$extension))
                 $this->image = imagecreatefrompng($path);
-            else if(preg_match("/\.gif$/i",$path))
+            else if(preg_match("/gif$/i",$extension))
                 $this->image = imagecreatefromgif($path);
             else
             {
@@ -48,7 +55,6 @@ class PA_IMAGE_PROCESSOR
             $this->width = imagesx($this->image);
             $this->height = imagesy($this->image);
 
-            ini_set('memory_limit', $this->memory_limit);
 
             return true;
         }

@@ -32,7 +32,7 @@ class PA_UPLOADER extends DB{
             $filename = basename($file);
             $fileInfo = (object)getimagesize($file);
 
-            $extension = preg_replace("/.*?\//", "", $fileInfo["mime"]);
+            $extension = preg_replace("/.*?\//", "", $fileInfo->mime);
             $extension = $extension == "jpeg" ? "jpg" : $extension;
 
             if(preg_match("/^((http\:)|(https\:)|(\/\/))/", $file) && ($remote_file = file_get_contents($file))){
@@ -50,6 +50,18 @@ class PA_UPLOADER extends DB{
             $filename = $file["name"];
             $fileInfo = (object)pathinfo($filename);
             $extension = strtolower($fileInfo->extension);
+
+            // Once yuklenen dosyasi olup olmadigini kontrol ediyoruz. Yuklenen dosya resim dosyasi ise,
+            // mime-type degerinede bakip dosyanin gercek formatini bulmaya calisiyoruz. Resim dosyalarinda
+            // oldugundan farkli tipte bir uzanti ismi kullanildiginde image process yapmaya kalktigimizda hata olusuyor
+            // o yuzden bu sekilde daha gercekci bir kontrol yapmamiz gerekiyor.
+            if(in_array($extension, array("jpg", "jpeg", "png", "gif"))){
+                $fileInfo = (object)getimagesize($file["tmp_name"]);
+                $extension = preg_replace("/.*?\//", "", $fileInfo->mime);
+                $extension = $extension == "jpeg" ? "jpg" : $extension;
+
+                $filename = preg_replace("/\.[\w]*$/", ".$extension", $filename);
+            }
         }
 
         if(($rename != null) && (strlen($rename) > 2)){
