@@ -26,31 +26,30 @@ class PA_DIRECTORY extends PA_FILE
      */
     function createDirectory($name, $parent_id=-1, $access_type="public"){
         $root = $this->{$access_type . "_root"};
-		
+
+        // database'e kaydedilecek şekilde dizin bilgisini hesapla
+        if($parent_directory = $this->selectDirectoryById($parent_id)) // Üst dizin varsa
+            $directory = preg_replace("/^" . preg_quote($root, "/") . "/", "", $parent_directory->directory) . $name . "/";
+        else
+            $directory = $name . "/";
+
+        // dosyayı oluşturmada kullanmak için tam dizin bilgisini hesapla
+        $full_path = $root . $directory;
+
+        // dizinleri oluştur ve yetkilerini ata
+        if(!file_exists($full_path)){
+            if(!mkdir($full_path, 0775)) // dosyayı oluştururken mode değeri desteklenmediği için aşağıda tekrardan chmod işlemi yapıyoruz
+                return false;
+
+            // Bazen chmod yanlış atanıyor, onu sağlama almak icin tekrar chmod değişikliği yaptırıyoruz.
+            if(!chmod($full_path, 0775))
+                return false;
+        }
+
 		if($dir = $this->selectDirectoryByNameAndParent($parent_id, $name, $access_type)){
             return $dir->directory_id;
         }
         else{
-			// database'e kaydedilecek şekilde dizin bilgisini hesapla
-			if($parent_directory = $this->selectDirectoryById($parent_id)) // Üst dizin varsa 
-				$directory = preg_replace("/^" . preg_quote($root, "/") . "/", "", $parent_directory->directory) . $name . "/";
-			else
-				$directory = $name . "/";
-			
-			// dosyayı oluşturmada kullanmak için tam dizin bilgisini hesapla
-			$full_path = $root . $directory;
-			
-			// dizinleri oluştur ve yetkilerini ata
-			if(!file_exists($full_path)){
-				if(!mkdir($full_path, 0775)) // dosyayı oluştururken mode değeri desteklenmediği için aşağıda tekrardan chmod işlemi yapıyoruz
-					return false;
-				
-				// Bazen chmod yanlış atanıyor, onu sağlama almak tekrar chmod değişikliği yaptırıyoruz.
-				if(!chmod($full_path, 0775))
-					return false;
-			}
-			
-			// database'e kaydet ve sonucu döndür
 			return $this->insert($this->table, compact("parent_id", "name", "directory", "access_type"));
 		}
 	}	
