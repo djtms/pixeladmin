@@ -41,7 +41,6 @@ class PA_DIRECTORY extends PA_FILE
             if(!mkdir($full_path, 0775)) // dosyayı oluştururken mode değeri desteklenmediği için aşağıda tekrardan chmod işlemi yapıyoruz
                 return false;
 
-            // Bazen chmod yanlış atanıyor, onu sağlama almak icin tekrar chmod değişikliği yaptırıyoruz.
             if(!chmod($full_path, 0775))
                 return false;
         }
