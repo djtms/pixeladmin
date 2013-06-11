@@ -12,12 +12,13 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 
 	$file = $ADMIN->FILE->selectFileById($file_id);
 	
-	if(($old_thumb_file = $ADMIN->FILE->selectFileById($file->thumb_file_id)) && ($old_thumb_file->access_type == "thumbnail")){
+	if(($old_thumb_file = $ADMIN->FILE->selectFileById($file->thumb_file_id)) && ($old_thumb_file->access_type == "private")){
 		$ADMIN->FILE->deleteFile($old_thumb_file->file_id);
+		$ADMIN->FILE->deleteFileThumbs($old_thumb_file->file_id);
 		$ADMIN->FILE->deleteFileThumbs($file_id);
 	}
 	
-	$thumb_file_id = $ADMIN->UPLOADER->uploadFile($file->directory, $thumbfile, null, "thumbnail");
+	$thumb_file_id = $ADMIN->UPLOADER->uploadFile(-1, $thumbfile, null, "private");
 	$ADMIN->DB->execute("UPDATE {$ADMIN->DB->tables->file} SET thumb_file_id=? WHERE file_id=?", array($thumb_file_id, $file->file_id));
 	
 	

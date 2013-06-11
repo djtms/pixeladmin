@@ -71,8 +71,9 @@ function getFileDetailThumb(){
 	global $ADMIN;
 
 	$thumb = $ADMIN->DIRECTORY->getThumbInfo($_POST["fileId"], 420, 350, false, true, "center top", "FFFFFF");
+	$editor_thumb = $ADMIN->DIRECTORY->getThumbUrl($_POST["fileId"], 123, 87, false, true, "center top", "FFFFFF");
 
-	echo json_encode(array("thumb_url"=>$thumb->url, "thumb_file_id"=>$thumb->owner->thumb_file_id));
+	echo json_encode(array("thumb_url"=>$thumb->url, "editor_thumb"=>$editor_thumb, "thumb_file_id"=>$thumb->owner->thumb_file_id));
 }
 
 function updateFileInfo(){

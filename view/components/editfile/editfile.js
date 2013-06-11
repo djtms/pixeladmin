@@ -406,9 +406,9 @@
 				var thumbfile = document.getElementById("thumbfile").files[0];
 				var xhr = new XMLHttpRequest();
 				form.append("admin_action","changeThumbnailExceptFileTypeIsImage");
-				form.append("file_id",file_id);
+				form.append("file_id", file_id);
 				form.append("directory",$("[name='directory']").val());
-				form.append("thumbfile",thumbfile);
+				form.append("thumbfile", thumbfile);
 				
 				xhr.addEventListener("load", function(e){
 					$.ajax({
@@ -418,6 +418,7 @@
 							bigThumbUrl = response.thumb_url;
 							fileThumb.attr("src",bigThumbUrl);
 							thumbFileId.val(response.thumb_file_id);
+                            $("#browserFilesList [file_id='" + file_id + "']").find(".editorFileThumb").attr("src", response.editor_thumb);
 						},
 						complete:function(){
 							thumbLoaderOuter.css("display","none");

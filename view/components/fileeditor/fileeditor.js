@@ -316,6 +316,7 @@
 				settings = $.extend({}, {"filter":{"order_by":"default", "type":"all"}, "directory_id":-1}, settings);
 				directory_id = $(this).is("[directory_id]") ? $(this).attr("directory_id") : settings.directory_id;
 				current_directory_id = directory_id; // current_directory_id değerini burada atıyoruz.
+                objects.browser_address.val("").attr("directory_id", directory_id);
 
 				// Eğer bu event büyük alandaki bir dizin tarafından trigger edilmişse, bu eventi iptal edip onun yerine
 				// aynı özellikteki dizini browserDirectoriesOuter içindeki elemanlardan bulup çalıştırıyoruz.
@@ -331,7 +332,6 @@
 				if(directory_id <= 0){
 					objects.browserDirectoriesOuter.find("li").removeClass("selected").removeClass("expanded");
 					objects.browserFavouritesList.find("span").removeClass("selected");
-					objects.browser_address.val("");
 				}
 
 				requests.loadFiles = $.ajax({
@@ -514,7 +514,7 @@
 					adress_path = $(this).find(">.name").text() + "/" + adress_path;
 				});
 				adress_path += 	$(this).find(">.name").text() + "/";
-				objects.browser_address.val(adress_path);
+				objects.browser_address.val(adress_path).attr("directory_id", directory_id);
 
 				delete adress_path, directory_id;
 				//------------------------------------------------------------------------------------------------------------------------

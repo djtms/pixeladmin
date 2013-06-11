@@ -166,7 +166,7 @@ class PA_THUMB extends DB{
 		$file = $ADMIN->FILE->selectFileById($file_id);
 		$thumb_file = $ADMIN->FILE->selectFileById($file->thumb_file_id);
 		
-		if($thumb_file->access_type == "thumbnail"){
+		if($thumb_file->access_type == "private"){
 			$ADMIN->FILE->deleteFile($thumb_file->file_id);
 		}
 		/////////////////////////////////////////////////////////////////////////
