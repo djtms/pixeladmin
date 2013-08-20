@@ -163,7 +163,7 @@ class PA_DIRECTORY extends PA_FILE
 	function listDirectoriesByParentId($parent_id, $access_type = "public"){
         $root = $this->{$access_type . "_root"};
 
-		return $this->get_rows("SELECT *, CONCAT('$root', directory) AS directory FROM {$this->table} WHERE parent_id=? AND access_type=?", array($parent_id, $access_type));
+		return $this->get_rows("SELECT *, CONCAT('$root', directory) AS directory FROM {$this->table} WHERE parent_id=? AND access_type=? ORDER BY name ASC", array($parent_id, $access_type));
 	}
 	
 	function listFavouritedDirectories($access_type = "public"){

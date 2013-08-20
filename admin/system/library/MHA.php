@@ -64,15 +64,20 @@ function currentDateTime($type = "datetime")
 		return date("Y-m-d H:i:s",time());
 }
 
-function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisibleButtonsCount = 5)
+function generatePager($link, $page, $eachPageItemCount, $totalItemCount, $pagerVisibleButtonsCount = 5, $display_first_last_buttons = false, $list_type = "link", $labels = array("first"=>"ilk sayfa", "last"=>"son sayfa"))
 {
 	$pageCount = ceil($totalItemCount / $eachPageItemCount);
-	$itemHtml = '<a href="{%link%}">{%page%}</a>';
-	$selectedItemHtml = '<span>{%page%}</span>';
-	$pagerHtml = in_admin ? '<div class="pagerOuter">' : '';
-	
-	if($pageCount > 1)
-	{
+	if($list_type == "link"){
+        $itemHtml = '<a href="{%link%}">{%page%}</a>';
+        $selectedItemHtml = '<span>{%page%}</span>';
+    }
+    else if($list_type == "selectbox"){
+        $itemHtml = '<option value="{%link%}">{%page%}</option>';
+        $selectedItemHtml = '<option value="{%link%}" selected="selected">{%page%}</option>';
+    }
+
+
+	if($pageCount > 1){
 		// Calculate Page Numbers List
 		/******************************************************************/
 			$pagerVisibleButtonsCount--;
@@ -98,9 +103,15 @@ function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisi
 		/******************************************************************/
 		for($i=$startIndex; $i<=$endIndex; $i++)
 		{
-			if($i == $page)
-			{
-				$pagerHtml .= preg_replace('/\{\%page\%\}/',$i,$selectedItemHtml); 
+			if($i == $page){
+                if($list_type == "link"){
+				    $pagerHtml .= preg_replace('/\{\%page\%\}/',$i,$selectedItemHtml);
+                }
+                else if($list_type == "selectbox"){
+                    $item = preg_replace('/\{\%page\%\}/',$i,$link);
+                    $item = preg_replace('/\{\%link\%\}/', $item, $selectedItemHtml);
+                    $pagerHtml .= preg_replace('/\{\%page\%\}/',$i,$item);
+                }
 			}
 			else
 			{
@@ -109,11 +120,52 @@ function generatePager($link,$page,$eachPageItemCount,$totalItemCount,$pagerVisi
 				$pagerHtml .= preg_replace('/\{\%page\%\}/',$i,$item);
 			}
 		}
+
+        // ilk sayfa, son sayfa degerlerini hesapla
+        if($display_first_last_buttons){
+            $first_page = 1;
+            $last_page = $pageCount;
+
+            if($list_type == "link"){
+                // First Page
+                $item = preg_replace('/\{\%page\%\}/',$first_page, $link);
+                $item = preg_replace('/\{\%link\%\}/', $item, $itemHtml);
+                $pagerHtml = preg_replace('/\{\%page\%\}/', $labels["first"], $item) . $pagerHtml;
+
+                // Last Page
+                $item = preg_replace('/\{\%page\%\}/',$last_page, $link);
+                $item = preg_replace('/\{\%link\%\}/', $item, $itemHtml);
+                $pagerHtml .= preg_replace('/\{\%page\%\}/', $labels["last"], $item);
+            }
+            else if($list_type == "selectbox"){
+                // Last Page
+                $item = preg_replace('/\{\%page\%\}/',$last_page, $link);
+                $item = preg_replace('/\{\%link\%\}/', $item, $itemHtml);
+                $pagerHtml = preg_replace('/\{\%page\%\}/', $labels["last"], $item) . $pagerHtml;
+
+                // First Page
+                $item = preg_replace('/\{\%page\%\}/',$first_page, $link);
+                $item = preg_replace('/\{\%link\%\}/', $item, $itemHtml);
+                $pagerHtml = preg_replace('/\{\%page\%\}/', $labels["first"], $item) . $pagerHtml;
+
+            }
+        }
+        //---------------------------------------------------------------------
 	}
-	
-	$pagerHtml .= in_admin ? '</div>' : '';
-		
-	return $pagerHtml;
+
+    if($list_type == "link"){
+        $return = in_admin ? '<div class="pagerOuter">' : '';
+        $return .= $pagerHtml;
+        $return .= in_admin ? '</div>' : '';
+    }
+    else if($list_type == "selectbox"){
+        $return = '<select class="pagerOuter">';
+        $return .= $pagerHtml;
+        $return .= '</select>';
+    }
+
+
+	return $return;
 }
 
 

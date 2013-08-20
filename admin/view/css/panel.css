@@ -179,7 +179,8 @@ input[type=submit],input[type=button],button,.button
 
 
 
-input[type=submit]:hover,input[type=button]:hover,button:hover,.button:hover
+input[type=submit]:hover,input[type=button]:hover,button:hover,.button:hover,
+input[type=submit].selected,input[type=button].selected,button.selected,.button.selected
 {
 	color:#FFF;
 	background-image: linear-gradient(bottom, rgb(90,90,90) 50%, rgb(112,112,112) 100%);
@@ -1076,7 +1077,7 @@ ul.cs3 li {
 
 /************************************************************************************************************/
 
-.pagerOuter
+div.pagerOuter
 {
 	width: 100%;
 	height:21px;
@@ -1084,6 +1085,10 @@ ul.cs3 li {
 	font-size: 13px;
 	text-align: center;
 	margin:10px 0;
+}
+
+select.pagerOuter{
+    width:60px;
 }
 
 .pagerOuter a, .pagerOuter span

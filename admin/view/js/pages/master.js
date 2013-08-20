@@ -22,6 +22,10 @@ function MasterStart()
 	
 	$("input[type=date], input[type=datetime], input[type=time]").datepicker();
 	$(document).fileeditor();
+
+    $("select.pagerOuter").change(function(){
+        self.location.href = $(this).val();
+    });
 }
 
 function postMessage(message,error)
@@ -44,6 +48,7 @@ function postMessage(message,error)
 	if(openPostMessage)
 	{
 		$("#postMessage").stop().css("opacity","1");
+        $("html,body").animate({"scrollTop": 100}, 300);
 		setTimeout(function(){ $("#postMessage").animate({"opacity":"0"},700,function(){
 			$(this).html("").css("opacity","1");
 		});},5000);

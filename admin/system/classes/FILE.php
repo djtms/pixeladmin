@@ -182,7 +182,7 @@ class PA_FILE extends PA_THUMB
     public function listFilesByDirectory($directory_id, $access_type="public"){
 		$root = $this->{$access_type . "_root"};
 
-		return $this->get_rows("SELECT *, CONCAT('{$root}',url) AS url FROM {$this->table} WHERE directory_id=? AND access_type=?", array($directory_id, $access_type));
+		return $this->get_rows("SELECT *, CONCAT('{$root}',url) AS url FROM {$this->table} WHERE directory_id=? AND access_type=? ORDER BY filename ASC", array($directory_id, $access_type));
 	}
 
     /**

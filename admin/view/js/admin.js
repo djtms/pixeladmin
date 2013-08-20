@@ -6,8 +6,7 @@
 
 $(AdminStart);
 
-function AdminStart()
-{
+function AdminStart(){
 	ADMIN = new ADMIN();
 }
 

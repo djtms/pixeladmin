@@ -13,8 +13,7 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 	{
 		global $admin_folder_name;
 		
-		if($use_theme)
-		{
+		if($use_theme){
 			$publicDataUrl = get_option("admin_site_address") . "/$admin_folder_name/publicdata/";
 	
 			$mailer = file_get_contents(dirname(__FILE__) . "/../../view/mailer.html");
@@ -25,17 +24,25 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 			$mailer = str_replace('{%message%}', $mesaj, $mailer);
 			$mesaj = $mailer;
 		}
-		
-		//$konu = get_option("admin_site_title") . " - " . $konu;
-		
-		if(!is_array($aliciAdresi))
+
+		if(!is_array($aliciAdresi)){
 			$aliciAdresi = ($aliciAdresi == null) ? get_option("admin_get_mail_address") : $aliciAdresi;
 
-        $aliciAdresi = preg_replace("/\,/", ";", $aliciAdresi);
-        $aliciAdresi = explode(";",$aliciAdresi);
-		
-		if(trim(get_option("admin_isSmtpMail")) == "")
-		{
+            $aliciAdresi = preg_replace("/\;/", ",", $aliciAdresi);
+            $aliciAdresi = preg_replace("/\s/", "", $aliciAdresi);
+        }
+        else{
+            $aliciAdresiTemp = "";
+
+            foreach($aliciAdresi as $a)
+            {
+                $aliciAdresiTemp .= trim($a) . ",";
+            }
+
+            $aliciAdresi = substr($aliciAdresiTemp, 0, -1);
+        }
+
+		if(trim(get_option("admin_isSmtpMail")) == ""){
 			$kimden = get_option("admin_mail_user");
 			
 			$konu="=?UTF-8?B?".base64_encode($konu)."?=\n";
@@ -45,18 +52,6 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 			$headers .= "Content-Transfer-encoding: 8bit\n";
 			$headers .= "Content-type: text/html; charset=utf-8\n";
 			$headers .= $from;
-			
-			if(is_array($aliciAdresi))
-			{
-				foreach($aliciAdresi as $a)
-				{
-					$aliciAdresiTemp .= $a . ",";	
-				}
-				
-				$aliciAdresiTemp = substr($aliciAdresiTemp, 0, -1);
-			}
-			else
-				$aliciAdresiTemp = $aliciAdresi;
 			
 			return mail($aliciAdresiTemp, $konu, $mesaj, $headers);
 		}
@@ -78,17 +73,16 @@ function sendMail($gonderenAdi,$konu,$mesaj,$aliciAdresi = null, $use_theme = tr
 			$MAIL->Subject = $konu;
 			$MAIL->MsgHTML($mesaj);
 			
-			if(is_array($aliciAdresi))
+			if(!is_array($aliciAdresi))
 			{
-				foreach($aliciAdresi as $a)
-				{
-					$MAIL->AddAddress($a, $gonderenAdi);
-				}
+                $aliciAdresi = explode(",", $aliciAdresi);
 			}
-			else
-			{
-				$MAIL->AddAddress($aliciAdresi, $gonderenAdi);
-			}
+
+            foreach($aliciAdresi as $a)
+            {
+                $MAIL->AddAddress($a, $gonderenAdi);
+            }
+
 			return $MAIL->Send();
 		}
 	}
