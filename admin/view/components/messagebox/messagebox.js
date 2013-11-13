@@ -11,7 +11,7 @@ function MESSAGEBOX()
     var msgType = messageType;
 
 
-	return {
+	var public_funcs = {
         init: function(){
             if($("#messageBoxOuter").length <= 0){
                 var view_html  = '<div id="messageBoxOuter"><div id="messageBox">';
@@ -70,7 +70,17 @@ function MESSAGEBOX()
             objects.contentText.html(messageText);
 			
 			for(var i=0; i<buttonCount; i++){
-                objects.buttonsOuter.find("button").eq(i).click(buttons[i].click || this.hideMessage);
+                objects.buttonsOuter.find("button").eq(i).click(((function(){
+                    var index = i;
+                    return function(e){
+                        if(buttons[index].click){
+                            buttons[index].click.apply(public_funcs, [e]);
+                        }
+                        else{
+                            public_funcs.hideMessage();
+                        }
+                    };
+                })()));
 			}
 			
 			objects.messageBoxOuter.css({"visibility":"visible", "opacity":1});
@@ -82,7 +92,7 @@ function MESSAGEBOX()
 				objects.messageBoxOuter.css("visibility","hidden");
 			}, 300);
 		},
-		
+
 		openLoader : function(){
             objects.messageBoxLoader.css("opacity",1);
 		},
@@ -91,4 +101,6 @@ function MESSAGEBOX()
             objects.messageBoxLoader.css("opacity",0);
 		}
 	};
+
+    return public_funcs;
 }

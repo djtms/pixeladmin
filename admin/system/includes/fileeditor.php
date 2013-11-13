@@ -31,6 +31,9 @@ if(in_admin)
     else if($_POST["admin_action"] == "syncFilesAndDirs"){
         $ADMIN->FILE_EDITOR->synchronizeFilesAndDirectories();
     }
+    else if($_POST['admin_action'] == "duplicateFilesAndDirectories"){
+        $ADMIN->FILE_EDITOR->duplicateFilesAndDirectories($_POST['directory_id'], json_decode($_POST['data']), $_POST['overwrite_status']);
+    }
 }
 
 

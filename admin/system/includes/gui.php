@@ -61,6 +61,8 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 		
 	if(is_array($data) && $dataCount > 0)
 	{
+        $is_image_grid = preg_match('/\{\%file\=.*?\%\}/', $rowTitleQuery) ? true : false;
+
 		$use_edit_button = (($editDataLinkQuery != null) && (strlen(trim($editDataLinkQuery)) > 0)) ? true : false;
 		$use_cross_button = (($deleteDataLinkQuery != null) && (strlen(trim($deleteDataLinkQuery)) > 0)) ? true : false;
 		
@@ -71,7 +73,7 @@ function dataGrid($data, $gridTitle, $gridId, $rowTitleQuery, $addDataLink, $edi
 		{
 			$data[$i] = (object) $data[$i];
 			$data[$i]->__index__ = $i;
-			$gridItemsHtml .= "<li " . ($key_column_name != null ? " id='order_" . $data[$i]->{$key_column_name} . "'>"  : ">");
+			$gridItemsHtml .= "<li " . ($key_column_name != null ? " id='order_" . $data[$i]->{$key_column_name} . "' "  : "") . ($is_image_grid ? ' class="image_grid_item" ' : '') . ">";
 			$gridItemsHtml .= "<div class='item'>";
 			$gridItemsHtml .= "<p class='text'>" . renderHtml($rowTitleQuery, $data[$i]) . '</p>';
 			

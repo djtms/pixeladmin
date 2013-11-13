@@ -1,5 +1,4 @@
 <?php
-$ADMIN = new PA_ADMIN();
 
 class PA_ADMIN
 {
@@ -59,3 +58,5 @@ class PA_ADMIN
 		$this->FILE_EDITOR = new PA_FILE_EDITOR();
 	}
 }
+
+$ADMIN = new PA_ADMIN();

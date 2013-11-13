@@ -57,11 +57,11 @@ function randomString($length = 6,$charset = null)
 function currentDateTime($type = "datetime")
 {
 	if($type == "date")	
-		return date("Y-m-d",time());
+		return date("Y-m-d", time());
 	if($type == "time")	
-		return date("H:i:s",time());
+		return date("H:i:s", time());
 	if($type == "datetime")	
-		return date("Y-m-d H:i:s",time());
+		return date("Y-m-d H:i:s", time());
 }
 
 function generatePager($link, $page, $eachPageItemCount, $totalItemCount, $pagerVisibleButtonsCount = 5, $display_first_last_buttons = false, $list_type = "link", $labels = array("first"=>"ilk sayfa", "last"=>"son sayfa"))

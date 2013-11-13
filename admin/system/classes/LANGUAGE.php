@@ -13,8 +13,8 @@ class PA_LANGUAGE extends DB
 		$this->tableLang = $this->tables->language;
 		
 		if(sizeof($this->listLanguages()) <= 0){
-			$this->createLanguage("en", "English");
-			$this->createLanguage("tr", "Türkçe");
+			$this->addLanguage("en", "English");
+			$this->addLanguage("tr", "Türkçe");
 			$this->setDefaultLanguage("tr");
 		}
 	}

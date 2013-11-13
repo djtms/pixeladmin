@@ -97,8 +97,7 @@ class DB
 			}
 		}
 		
-		if($sth->execute())
-		{
+		if($sth->execute()){
 			$result = $sth->fetch(PDO::FETCH_NUM);
 			return $result[0];
 		}

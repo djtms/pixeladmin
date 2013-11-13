@@ -1,21 +1,15 @@
 <?php
-function addMenu($menuTitle,$menuIcon,$pageTitle,$menuId,$menuPage,$order=2,$permission=USER_AUTHOR,$addLinkToSubMenu = true)
-{
+function addMenu($menuTitle,$menuIcon,$pageTitle,$menuId,$menuPage,$order=2,$permission=USER_AUTHOR,$addLinkToSubMenu = true){
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
-	
-	global $ADMIN;
+
 	global $pa_menu_array;
-	
-	$user = $ADMIN->AUTHENTICATION->authenticated_user;
 	
 	$pa_menu_array[$menuId] = array("menuTitle"=>$menuTitle,"menuIcon"=>$menuIcon,"pageTitle"=>$pageTitle,"menuPage"=>$menuPage,"menuOrder"=>$order,"permission"=>$permission, "addLinkToSubMenu"=>$addLinkToSubMenu);
 }
 
-function addSubMenu($menuTitle,$pageTitle,$parentMenuId,$menuId,$menuPage,$order=-1,$permission=USER_AUTHOR)
-{
+function addSubMenu($menuTitle,$pageTitle,$parentMenuId,$menuId,$menuPage,$order=-1,$permission=USER_AUTHOR) {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
-	
-	global $ADMIN;
+
 	global $pa_menu_array;
 	
 	$pa_menu_array[$parentMenuId]["subMenus"][$order][$menuId] = array("menuTitle"=>$menuTitle,"pageTitle"=>$pageTitle,"parentMenuId"=>$parentMenuId,"menuPage"=>$menuPage,"permission"=>$permission);
@@ -29,8 +23,7 @@ function addSettingsMenu($menuTitle,$pageTitle,$menuId,$menuPage,$order=-1,$perm
 function addPage($pageTitle,$parentMenuId,$pageId,$page,$permission=USER_AUTHOR)
 {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
-	
-	global $ADMIN;
+
 	global $pa_menu_array;
 	
 	$pa_menu_array[$parentMenuId]["subPages"][$pageId] = array("pageTitle"=>$pageTitle,"parentMenuId"=>$parentMenuId,"page"=>$page,"permission"=>$permission);
@@ -39,7 +32,8 @@ function addPage($pageTitle,$parentMenuId,$pageId,$page,$permission=USER_AUTHOR)
 function loadMenus($currentPageId = null)
 {
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
-	
+
+    global $VIEW_URL;
 	global $pa_page_permission_info_array;
 	global $default_menu_icon;
 	global $pa_menu_array;
@@ -128,10 +122,14 @@ function loadMenus($currentPageId = null)
 		$MenuHtml .= '</div></li>';
 		
 		$MenuHtml = renderHtml($MenuHtml, array("menuSelected"=>$menuSelected));
-		
+
 		/* Bar Menü'yü oluştur */
-		if( ($m["menuIcon"] != ".") && ($m["menuIcon"] != "..") && (file_exists($m["menuIcon"])))
-			$BarIconsHtml .= '<a href="admin.php?page=' . urlencode($m["menuId"]) . '" style="background-image:url('.$m["menuIcon"] .')"  class="' . $menuSelected . '" title="' . $m["menuTitle"] . '"></a>';
+        if (($menu["menuIcon"] != ".") && ($menu["menuIcon"] != "..") && (file_exists($menu["menuIcon"]))) {
+            $BarIconsHtml .= '<a href="admin.php?page=' . urlencode($menu_id) . '" style="background-image:url('.$menu["menuIcon"] .')"  class="' . $menuSelected . '" title="' . $menu["menuTitle"] . '"></a>';
+        }
+        else{
+            $BarIconsHtml .= '<a href="admin.php?page=' . urlencode($menu_id) . '" style="background-image:url(' . $VIEW_URL .'images/icons/default_icon.png);"  class="' . $menuSelected . '" title="' . $menu["menuTitle"] . '"></a>';
+        }
 	}
 	/*****************************************************************************/
 

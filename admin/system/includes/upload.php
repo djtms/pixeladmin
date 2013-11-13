@@ -32,7 +32,10 @@ function changeThumbnailExceptFileTypeIsImage($file_id, $thumbfile){
 function uploadFile($file, $directory = "Harici_Dosyalar/", $rename=null, $access_type="public"){
 	global $ADMIN;
 
-    if($directory_id = $ADMIN->DIRECTORY->createDirectoryByPath($directory, $access_type)){
+    if(is_int($directory)){
+        return $ADMIN->UPLOADER->uploadFile($directory, $file, $rename, $access_type);
+    }
+    else if($directory_id = $ADMIN->DIRECTORY->createDirectoryByPath($directory, $access_type)){
         return $ADMIN->UPLOADER->uploadFile($directory_id, $file, $rename, $access_type);
     }
     else{

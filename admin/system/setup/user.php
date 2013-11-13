@@ -24,30 +24,28 @@ if($ADMIN->USER->getUserCount() <= 0)
 		set_option("admin_debug_mode","debugmode");
 		set_option("admin_predefined_crop_resolutions", array(array(1024,768),array(800,600),array(640,480)));
 		/**************************************************************************************************************/
-		
-		
-		
+
+
+
 		// Setup Default Language ////////////////////////////////////////////////////////////////////////////////////////
 		$ADMIN->LANGUAGE->addLanguage("tr_TR");
 		$ADMIN->LANGUAGE->addLanguage("en_US");
 		$ADMIN->LANGUAGE->setDefaultLanguage("tr_TR");
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+
 		$use_template_engine = ($_POST["use_template_engine"] == "use") ? true : false;
 		// İlk kullanıcıyı oluştur
-		$user_id = $ADMIN->USER->addUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"]);
-		// Kullanıcıya id'si "1" olan rolü ver. (Yönetici Rolüdür ve Panelden Silinemez)
-		$ADMIN->USER_ROLE->addUserRole($user_id, 1);
-		if(!($user_id > 0))
-		{
-			$errorMessage = "* kullanıcı oluşturma esnasında hata oluştu!";
-		}
-		else if(!createStartupFiles($use_template_engine))
-		{
+
+        if(!$user_id = $ADMIN->USER->addUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"])){
+            $errorMessage = "* kullanıcı oluşturma esnasında hata oluştu!";
+        }
+        else if(!createStartupFiles($use_template_engine)){
 			$errorMessage = "* bazı dosyaların kurulumu esnasında hata oluştu!";
 		}
-		else
-		{
+		else{
+            // Kullanıcıya id'si "1" olan rolü ver. (Yönetici Rolüdür ve Panelden Silinemez)
+            $ADMIN->USER_ROLE->addUserRole($user_id, 1);
+
 			// Kullanıcı başarılı şekilde kayıt olduktan sonra kullanıcıyı giriş yapmış hale getiriyoruz
 			$ADMIN->AUTHENTICATION->authenticate($_POST["username"], $_POST["password"]);
 			$ADMIN->AUTHORIZATION->authorize();

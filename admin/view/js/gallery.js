@@ -137,6 +137,7 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 
             $(document).fileeditor("openFileEditor",{
                 multiselection:true,
+                multiusage:true,
                 onFilesSelect:function(files){
                     var fileCount = files.length;
                     var filesHtml = '';

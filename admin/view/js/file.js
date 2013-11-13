@@ -12,7 +12,8 @@
 				}
 				
 				$(document).fileeditor("openFileEditor",{
-					multiselection:false,
+                    multiselection:true,
+                    multiusage:false,
 					onFilesSelect:function(files){
 						file.attr("file",files[0].url);
 						objects.fileinput.val(files[0].file_id);
@@ -30,7 +31,30 @@
 				objects.filethumb.attr("src",exclamation_image).css({"border":"none","width":125,"height":89});
 				objects.filename.html("Dosya Bulunamadı!");
 				objects.buttons_outer.css("visibility","hidden");
-			}
+			},
+            onEditButtonClicked : function(){
+                var file_id = $(this).attr("file");
+
+                $(this).editfile({
+                    file_id: file_id,
+                    onSaved:function(file){
+                        objects.filename.html(file.basename);
+
+                        if(file.type != "movie")
+                        {
+                            if(file.thumb != null)
+                            {
+                                objects.filethumb.attr("src", file.thumb);
+                            }
+                            objects.btn_look.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
+                        }
+                        else
+                        {
+                            objects.btn_play.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
+                        }
+                    }
+                });
+            }
 		};
 		
 		var private_methods = {
@@ -47,29 +71,7 @@
 							{
 								private_methods.setFileInfo(response);
 								
-								objects.btn_edit.click(function(){
-									var file_id = $(this).attr("file");
-									
-									$(this).editfile({
-										file_id: file_id,
-										onSaved:function(file){
-											objects.filename.html(file.basename);
-											
-											if(file.type != "movie")
-											{
-												if(file.thumb != null)
-												{
-													objects.filethumb.attr("src", file.thumb);
-												}
-												objects.btn_look.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
-											}
-											else
-											{
-												objects.btn_play.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
-											}
-										}
-									});
-								});
+								objects.btn_edit.off('click').on('click', events.onEditButtonClicked);
 							}
 							else{
 								events.onFileNotFound();
@@ -144,6 +146,7 @@
 				objects.filethumb.click(events.onChangeFile);
 				objects.btn_change.click(events.onChangeFile);
 				objects.btn_delete.click(events.onRemoveFile);
+                objects.btn_edit.on('click', events.onEditButtonClicked);
 			} 
 		};
 		

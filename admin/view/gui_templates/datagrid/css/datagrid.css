@@ -58,6 +58,14 @@
 	margin:-1px 0 0 0;
 }
 
+.itemsList > li.image_grid_item > .item, .itemsList > li.image_grid_item > .item p{
+    height:75px;
+}
+
+.itemsList > li.image_grid_item > .item .rowEditButtonsOuter{
+    margin-top:27.5px;
+}
+
 .itemsList > li input[type=radio], .itemsList > li input[type=checkbox]
 {
 	position:relative;

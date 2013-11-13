@@ -1,1194 +1,1414 @@
-(function($){
-	var editor_html = '';
-	var contents_html = '';
-	var objects = {};
-	var script_file = window.location.href; // scriptin çalıştığı adresi temsil etmek için undefined atıyoruz.
-	var default_properties = {
-		multiselection: true,
-		files_editable: true,
-		onFilesSelect : function(files){}
-	};
+(function($) {
+    var editor_html = '';
+    var contents_html = '';
+    var objects = {};
+    var script_file = window.location.href; // scriptin çalıştığı adresi temsil etmek için undefined atıyoruz.
+    var default_properties = {
+        multiselection: true,
+        multiusage:true,
+        files_editable: true,
+        onFilesSelect: function(files) {
+        }
+    };
 
-	// statik değişkenleri tanımla
-	FILE_EDITOR.uploaded_file_count = 0;
+    // statik değişkenleri tanımla
+    FILE_EDITOR.uploaded_file_count = 0;
 
-	function FILE_EDITOR(){
-		// SELECTING_OBJECTS_2D class'ını inherit et
-		SELECTING_OBJECTS_2D.call(this);
+    function FILE_EDITOR() {
+        // SELECTING_OBJECTS_2D class'ını inherit et
+        SELECTING_OBJECTS_2D.call(this);
 
-		var self = this;
-		var editor_form_list = [];
-		var file_reader_list = [];
-		var xhr_list = [];
-		var options = {}; // bu değer initialize() fonksiyonu içinde dolduruluyor.
-		var current_directory_id = -1; // ana dizin değeri "-1"
+        var self = this;
+        var editor_form_list = [];
+        var file_reader_list = [];
+        var xhr_list = [];
+        var options = {}; // bu değer initialize() fonksiyonu içinde dolduruluyor.
+        var current_directory_id = -1; // ana dizin değeri "-1"
         var upload_limit_as_byte = 0;
+        var memory = {'files':[], 'folders':[]};
+        var will_copied = {'files':[], 'folders':[]};
+        var overwrite_status = null;
 
-		var loadElements = function(){
-			objects.fileEditorMainContainer = $("#fileEditorMainContainer");
-			objects.fileEditorBackHider = objects.fileEditorMainContainer.find("#fileEditorBackHider");
-			objects.fileEditorOuter = objects.fileEditorMainContainer.find("#fileEditorOuter");
-			objects.btnCloseFileEditor = objects.fileEditorMainContainer.find("#btnCloseFileEditor");
-			objects.fileEditorContentsLoader = objects.fileEditorMainContainer.find("#fileEditorContentsLoader");
-			objects.editorDragFilesArea = objects.fileEditorMainContainer.find("#editorDragFilesArea");
-			objects.browser_address = objects.fileEditorMainContainer.find("#browser_address");
-			objects.search_input = objects.fileEditorMainContainer.find("#search_input");
-			objects.browserBtn_Home = objects.fileEditorMainContainer.find("#browserBtn_Home");
-			objects.browserBtn_Refresh = objects.fileEditorMainContainer.find("#browserBtn_Refresh");
-			objects.browserBtn_Fav = objects.fileEditorMainContainer.find("#browserBtn_Fav");
-			objects.browserBtn_NewDir = objects.fileEditorMainContainer.find("#browserBtn_NewDir");
-			objects.browserBtn_Prev = objects.fileEditorMainContainer.find("#browserBtn_Prev");
-			objects.fileEditorUploader = objects.fileEditorMainContainer.find("#fileEditorUploader");
-			objects.browserFavouritesList = objects.fileEditorMainContainer.find("#browserFavouritesList");
-			objects.browserDirectoriesOuter = objects.fileEditorMainContainer.find("#browserDirectoriesOuter");
+
+        this.hideContextMenu = function(){
+            objects.contextMenu.css({
+                left:-1000,
+                top:-1000
+            });
+        };
+
+        var loadElements = function() {
+            objects.fileEditorMainContainer = $("#fileEditorMainContainer");
+            objects.fileEditorBackHider = objects.fileEditorMainContainer.find("#fileEditorBackHider");
+            objects.fileEditorOuter = objects.fileEditorMainContainer.find("#fileEditorOuter");
+            objects.btnCloseFileEditor = objects.fileEditorMainContainer.find("#btnCloseFileEditor");
+            objects.fileEditorContentsLoader = objects.fileEditorMainContainer.find("#fileEditorContentsLoader");
+            objects.editorDragFilesArea = objects.fileEditorMainContainer.find("#editorDragFilesArea");
+            objects.browser_address = objects.fileEditorMainContainer.find("#browser_address");
+            objects.search_input = objects.fileEditorMainContainer.find("#search_input");
+            objects.browserBtn_Home = objects.fileEditorMainContainer.find("#browserBtn_Home");
+            objects.browserBtn_Refresh = objects.fileEditorMainContainer.find("#browserBtn_Refresh");
+            objects.browserBtn_Fav = objects.fileEditorMainContainer.find("#browserBtn_Fav");
+            objects.browserBtn_NewDir = objects.fileEditorMainContainer.find("#browserBtn_NewDir");
+            objects.browserBtn_Prev = objects.fileEditorMainContainer.find("#browserBtn_Prev");
+            objects.fileEditorUploader = objects.fileEditorMainContainer.find("#fileEditorUploader");
+            objects.browserFavouritesList = objects.fileEditorMainContainer.find("#browserFavouritesList");
+            objects.browserDirectoriesOuter = objects.fileEditorMainContainer.find("#browserDirectoriesOuter");
             objects.btnSync = objects.fileEditorMainContainer.find("#btnSync");
             objects.syncLoader = objects.fileEditorMainContainer.find("#syncLoader");
             objects.browserFilesListOuter = objects.fileEditorMainContainer.find("#browserFilesListOuter");
-			objects.browserFilesListOuter.focused = false; // bu değişkene bakarak browserFilesListOuter alanındaki klavye kısayollarını kullanıp kullanmaman gerektiğini kontrol edebilirsin
-			objects.browserFilesList = objects.browserFilesListOuter.find("#browserFilesList");
-			objects.browserBtnUseFiles = objects.fileEditorMainContainer.find("#browserBtnUseFiles");
-		};
+            objects.browserFilesListOuter.focused = false; // bu değişkene bakarak browserFilesListOuter alanındaki klavye kısayollarını kullanıp kullanmaman gerektiğini kontrol edebilirsin
+            objects.contextMenu = objects.fileEditorMainContainer.find("#contextMenu");
+            objects.browserFilesList = objects.browserFilesListOuter.find("#browserFilesList");
+            objects.browserBtnUseFiles = objects.fileEditorMainContainer.find("#browserBtnUseFiles");
+        };
 
-		var bindEvents = function(){
-			objects.search_input.keydown(events.onSearchFiles);
-			objects.browserBtn_Home.click(events.onLoadFiles);
-			objects.browserBtn_Refresh.click(events.onRefreshCurrentDirectory);
-			objects.browserBtn_Fav.click(events.onSetFavouriteStatus);
-			objects.browserBtn_NewDir.click(events.onCreateNewDirectory);
-			objects.browserBtn_Prev.click(events.onMoveUpperDirectory);
-			objects.btnCloseFileEditor.click(public_methods.closeFileEditor);
-			objects.browserDirectoriesOuter.delegate("li", "mousedown", events.onClickDirectoryItem);
+        var bindEvents = function() {
+            objects.search_input.keydown(events.onSearchFiles);
+            objects.browserBtn_Home.click(events.onLoadFiles);
+            objects.browserBtn_Refresh.click(events.onRefreshCurrentDirectory);
+            objects.browserBtn_Fav.click(events.onSetFavouriteStatus);
+            objects.browserBtn_NewDir.click(events.onCreateNewDirectory);
+            objects.browserBtn_Prev.click(events.onMoveUpperDirectory);
+            objects.btnCloseFileEditor.click(public_methods.closeFileEditor);
+            objects.browserDirectoriesOuter.delegate("li", "mousedown", events.onClickDirectoryItem);
             objects.btnSync.click(events.onSyncFilesAndDirs);
-			objects.browserFavouritesList.delegate("span", "mousedown", events.onClickFavouritedDirectoryItem);
-			objects.browserFilesListOuter.on("mousedown", events.onContentsAreaMouseDown);
-			objects.browserFilesList.delegate(".btnDelete","click", events.onEditorItemDeleteButtonClick);
-			objects.browserFilesList.delegate(".btnEdit","click", events.onEditFile);
-			objects.browserBtnUseFiles.on("click", events.onUseSelectedItems);
-			objects.browserFilesList.delegate(".file","dblclick", events.onUseSelectedItems);
-			objects.browserFilesList.delegate(".directory","dblclick", events.onLoadFiles);
-			objects.fileEditorUploader.on("change", events.onFilesSelectedForUpload);
-			$(window).on("resize", events.onDocumentMouseWheel);
-			$(document).on("mouseup", events.onDocumentMouseUp)
-						.on("keydown", events.onDocumentKeyDown)
-						.on("mousewheel", events.onDocumentMouseWheel).trigger("mousewheel");
-			document.addEventListener("dragover", events.onDragOver);
-			document.addEventListener("dragend", events.onDragEnd);
-			objects.editorDragFilesArea[0].addEventListener("drop", events.onFilesSelectedForUpload);
-			self.onCapturing = events.onContentStatusChange;
-		};
+            objects.browserFavouritesList.delegate("span", "mousedown", events.onClickFavouritedDirectoryItem);
+            objects.browserFilesListOuter.on("mousedown", events.onContentsAreaMouseDown);
+            objects.browserFilesList.delegate(".btnDelete", "click", events.onEditorItemDeleteButtonClick);
+            objects.browserFilesList.delegate(".btnEdit", "click", events.onEditFile);
+            objects.browserBtnUseFiles.on("click", events.onUseSelectedItems);
+            objects.browserFilesList.delegate(".file", "dblclick", events.onUseSelectedItems);
+            objects.browserFilesList.delegate(".directory", "dblclick", events.onLoadFiles);
+            objects.browserFilesList.on("contextmenu", events.onRightClickFromContentsList);
+            objects.contextMenu.find('.copy').click(events.onCopyButtonClickedFromContextMenu);
+            objects.contextMenu.find('.cut').click(events.onCutButtonClickedFromContextMenu);
+            objects.contextMenu.find('.paste').click(events.onPasteButtonClickedFromContextMenu);
+            objects.contextMenu.find('.delete').click(events.onDeleteButtonClickedFromContextMenu);
+            objects.fileEditorUploader.on("change", events.onFilesSelectedForUpload);
+            $(window).on("resize", events.onDocumentMouseWheel);
+            $(document).on("mouseup", events.onDocumentMouseUp)
+                    .on("keydown", events.onDocumentKeyDown)
+                    .on("mousewheel", events.onDocumentMouseWheel).trigger("mousewheel");
+            document.addEventListener("dragover", events.onDragOver);
+            document.addEventListener("dragend", events.onDragEnd);
+            objects.editorDragFilesArea[0].addEventListener("drop", events.onFilesSelectedForUpload);
+            self.onCapturing = events.onContentStatusChange;
+        };
 
-		var requests = {loadFiles:{}};
+        var requests = {loadFiles: {}};
 
-		var fixStringForWeb =  function(str, remove_forbidden_chars){
-			str = str.replace("/\İ/g","I");
-			str = str.replace("/\ı/g","i");
-			str = str.replace("/\Ü/g","U");
-			str = str.replace("/\ü/g","u");
-			str = str.replace("/\Ö/g","O");
-			str = str.replace("/\ö/g","o");
-			str = str.replace("/\Ğ/g","G");
-			str = str.replace("/\ğ/g","g");
-			str = str.replace("/\Ş/g","S");
-			str = str.replace("/\ş/g","s");
-			str = str.replace("/\Ç/g","C");
-			str = str.replace("/\ç/g","c");
-			str = remove_forbidden_chars === true ? str.replace("/\\|\/|:|*|?|<|>|\|/g", "") : str;
-			return str.replace(/\s/g,"_");
-		};
+        var fixStringForWeb = function(str, remove_forbidden_chars) {
+            str = str.replace("/\İ/g", "I");
+            str = str.replace("/\ı/g", "i");
+            str = str.replace("/\Ü/g", "U");
+            str = str.replace("/\ü/g", "u");
+            str = str.replace("/\Ö/g", "O");
+            str = str.replace("/\ö/g", "o");
+            str = str.replace("/\Ğ/g", "G");
+            str = str.replace("/\ğ/g", "g");
+            str = str.replace("/\Ş/g", "S");
+            str = str.replace("/\ş/g", "s");
+            str = str.replace("/\Ç/g", "C");
+            str = str.replace("/\ç/g", "c");
+            str = remove_forbidden_chars === true ? str.replace("/\\|\/|:|*|?|<|>|\|/g", "") : str;
+            return str.replace(/\s/g, "_");
+        };
 
-		var generateFileHtml = function(file){
-			temp_html = '<li class="file editor_content notload" file_id="' + file.file_id + '" url="' + file.url + '"  title="' + file.basename + '" thumb="' + file.thumb + '" file_type="' + file.type + '" >';
-			temp_html += '<span class="editorFileThumbOuter">';
-			temp_html += '<span class="thumbShadow"></span>';
-			temp_html += '<img class="editorFileThumb" src="' + file.thumb + '" />';
-			temp_html += '</span>';
-			temp_html += '<span class="fileEditButtonsOuter">';
+        var generateFileHtml = function(file) {
+            temp_html = '<li class="file editor_content notload" file_id="' + file.file_id + '" url="' + file.url + '"  title="' + file.basename + '" ';
+            temp_html += 'data-name="' + file.basename + '" thumb="' + file.thumb + '" file_type="' + file.type + '" >';
+            temp_html += '<span class="editorFileThumbOuter">';
+            temp_html += '<span class="thumbShadow"></span>';
+            temp_html += '<img class="editorFileThumb" src="' + file.thumb + '" />';
+            temp_html += '</span>';
+            temp_html += '<span class="fileEditButtonsOuter">';
 
-			if(options.files_editable){
-				temp_html += '<span title="Düzenle" class="btnEdit fBtn" file_id="' + file.file_id + '"></span>';
-			}
+            if (options.files_editable) {
+                temp_html += '<span title="Düzenle" class="btnEdit fBtn" file_id="' + file.file_id + '"></span>';
+            }
 
-			if(file.type != "other"){
-				temp_html += '<a title="' + (file.type == "movie" ? "Oynat" : "İncele") + '" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url) + '" ></a>';
-			}
-			else{
-				temp_html += '<a title="İndir"  class="btnDownload fBtn" href="'  + encodeURIComponent(file.url) + '"></a>';
-			}
+            if (file.type != "other") {
+                temp_html += '<a title="' + (file.type == "movie" ? "Oynat" : "İncele") + '" class="' + (file.type == "movie" ? "btnPlay" : "btnLook") + ' fancybox fBtn" href="lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url) + '" ></a>';
+            }
+            else {
+                temp_html += '<a title="İndir"  class="btnDownload fBtn" href="' + encodeURIComponent(file.url) + '"></a>';
+            }
 
-			temp_html += '<span title="Sil" class="btnDelete fBtn"></span>';
-			temp_html += '</span>';
-			temp_html += '<span class="fileName">' + file.basename + '</span>';
-			temp_html += '</li>';
+            temp_html += '<span title="Sil" class="btnDelete fBtn"></span>';
+            temp_html += '</span>';
+            temp_html += '<span class="fileName">' + file.basename + '</span>';
+            temp_html += '</li>';
 
-			return temp_html;
-		};
+            return temp_html;
+        };
 
-		// editor_contents: silinecek elemanların jquery object tipinde listesi
-		var deleteFileEditorItems = function(editor_contents, onDeleted){
-			if((editor_contents.length > 0) && confirm("Silmek istediğinize eminmisiniz?")){
-				items_info = [];
-				editor_contents.each(function(){
-					if($(this).is(".file"))
-						items_info.push({"id":$(this).attr("file_id"), "type":"file"});
-					else
-						items_info.push({"id":$(this).attr("directory_id"), "type":"directory"});
-				});
+        // editor_contents: silinecek elemanların jquery object tipinde listesi
+        var deleteFileEditorItems = function(editor_contents, onDeleted) {
+            if ((editor_contents.length > 0) && confirm("Silmek istediğinize eminmisiniz?")) {
+                items_info = [];
+                editor_contents.each(function() {
+                    if ($(this).is(".file"))
+                        items_info.push({"id": $(this).attr("file_id"), "type": "file"});
+                    else
+                        items_info.push({"id": $(this).attr("directory_id"), "type": "directory"});
+                });
 
-				$.ajax({
-					type:"post",
-					url:script_file,
-					data:"admin_action=deleteFileEditorItems&items=" + JSON.stringify(items_info),
-					dataType:"json",
-					success:function(){
-						// Eğer tanımlanmışsa onDeleted callback ini çalıştır
-						if((typeof(onDeleted) == "object") || (typeof(onDeleted) == "function")){
-							onDeleted();
-						}
-
-						for(i=0, j=items_info.length; i<j; i++){
-							if(items_info[i].type == "directory"){
-								objects.browserDirectoriesOuter.find("[directory_id=" + items_info[i].id + "]").remove();
-								objects.browserFavouritesList.find("[directory_id=" + items_info[i].id + "]").remove();
-							}
-						}
-
-						delete i,j, items_info;
-
-						editor_contents.css("opacity", 0);
-						setTimeout(function(){editor_contents.remove();}, 500); // burdaki 500 değeri fade animasyonunun süresini temsil ediyor
-					},
-					error:function(){
-						MESSAGEBOX.showMessage("Hata", "Dosyalar silinemedi!");
-					}
-				});
-			}
-		};
-
-		// Yeni klasör oluşturur
-		var createDirectory = function(){
-			if(($directory_item = $("#newDirectory")) && ($directory_item.length > 0)){
-				$directory_name = fixStringForWeb($("#newFolderName").val());
-				$parent_id = current_directory_id;
-
-				if(($directory_name.length <= 0) || ($directory_name.match(/^\./i)) || ($directory_name.match(/[\s\/\\:\*\?\>\<\|"]+$/i))){
-                    MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! <br /> * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! <br /> * klasör ismi nokta (.) karakteri ile başlayamaz! <br /> * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz!");
-				}
-				else{
-					$.ajax({
-						type:"post",
-						url:script_file,
-						data:"admin_action=createDirectory&name=" + $directory_name + "&parent_id=" + $parent_id,
-						dataType:"json",
-						success:function(response){
-							if(response.success === false){
-								if(response.msg == "already_exists"){
-									MESSAGEBOX.showMessage("Uyarı", "Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
-								}
-								else if(response.msg == "error_happened"){
-                                    MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-								}
-							}
-							else{
-								$directory_item.removeAttr("id");
-								$directory_item.find("#newFolderName").replaceWith("<span>" + $directory_name + "</span>");
-								$directory_item.attr("directory_id" , response.directory_id);
-
-								// Yeni eklenen dizini directory tree'ye ekle
-								temp_html  = '<li directory_id="' + response.directory_id + '" class="empty">';
-								temp_html += '<icon></icon><span class="name">' + $directory_name + '</span></li>';
-
-								parent_tag = $parent_id == -1 ? objects.browserDirectoriesOuter : objects.browserDirectoriesOuter.find("[directory_id='" + $parent_id + "']");
-
-
-								// en az bir tane treelist varsa, o treelist e ekle.
-								if(parent_tag.find(">ul").length > 0){
-									parent_tag.find(">ul").append(temp_html);
-								}
-								else{ // hiç treelist yoksa yani bu oluşturulan ik klasör ise yeni bir treelist oluştur
-									parent_tag.addClass("expanded").removeClass("empty");
-									parent_tag.append("<ul class='fileTree'>" + temp_html + "</ul>");
-								}
-								//-------------------------------------------------------------------------------
-							}
-						},
-						error:function(){
-                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-						},
-						complete: function(){
-							delete temp_html, $parent_id, parent_tag;
-						}
-					});
-				}
-
-				return true;
-			}
-		};
-
-		// klasör ismini günceller
-		var updateDirectory = function(){
-			if($("#updateFolderName").length > 0){
-				$directory_name = fixStringForWeb($("#updateFolderName").val());
-				$directory_item = $("#updateFolderName").closest(".directory");
-
-				// Eğer dosya ismi değişmemişse server tarafında güncelleme işlemi yapmaya gerek yok
-				if($directory_name == $("#updateFolderName").attr("old_value")){
-					$directory_item.find("#updateFolderName").replaceWith("<span>" + $directory_name + "</span>");
-					return true;
-				}
-
-				if(($directory_name.length <= 0) || ($directory_name.match(/^\./i)) || ($directory_name.match(/[\s\/\\:\*\?\>\<\|"]+$/i))){
-					MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! \n * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * klasör ismi nokta (.) karakteri ile başlayamaz! \n * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
-					return false;
-				}
-				else{
-					directory_id = $directory_item.attr("directory_id");
-					$.ajax({
-						type:"post",
-						url:script_file,
-						data:"admin_action=updateDirectory&name=" + $directory_name + "&directory_id=" + directory_id,
-						dataType:"json",
-						success:function(response){
-							if(response.success === false){
-								if(response.msg == "already_exists"){
-									MESSAGEBOX.show("Uyarı", "Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
-								}
-								else if(response.msg == "error_happened"){
-                                    MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-								}
-							}
-							else{
-								// klasör ismini gerekli yerlerde de değiştir
-								$directory_item.find("#updateFolderName").replaceWith("<span>" + $directory_name + "</span>");
-								objects.browserDirectoriesOuter.find("[directory_id='" + directory_id + "'] > .name").html($directory_name);
-								objects.browserFavouritesList.find("[directory_id='" + directory_id + "']").html($directory_name);
-							}
-						},
-						error:function(){
-                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-						}
-					});
-
-				}
-
-				return true;
-			}
-		};
-
-		// klasör ismini güncelleme işlemini iptal edip klasörün kayıtlı olan ismini geri yükler.
-		var cancelFolderUpdating = function(){
-			if(($directory = $("#updateFolderName").closest(".directory")) && ($directory.length > 0)){
-				$("#updateFolderName").replaceWith("<span>" + $("#updateFolderName").attr("old_value") + "</span>");
-			}
-		};
-
-		var events = {
-            onSyncFilesAndDirs: function(){
                 $.ajax({
-                    type:"post",
-                    data:"admin_action=syncFilesAndDirs",
-                    beforeSend:function(){
-                        objects.syncLoader.css("visibility", "visible");
+                    type: "post",
+                    url: script_file,
+                    data: "admin_action=deleteFileEditorItems&items=" + JSON.stringify(items_info),
+                    dataType: "json",
+                    success: function() {
+                        // Eğer tanımlanmışsa onDeleted callback ini çalıştır
+                        if ((typeof(onDeleted) == "object") || (typeof(onDeleted) == "function")) {
+                            onDeleted();
+                        }
+
+                        for (i = 0, j = items_info.length; i < j; i++) {
+                            if (items_info[i].type == "directory") {
+                                objects.browserDirectoriesOuter.find("[directory_id=" + items_info[i].id + "]").remove();
+                                objects.browserFavouritesList.find("[directory_id=" + items_info[i].id + "]").remove();
+                            }
+                        }
+
+                        delete i, j, items_info;
+
+                        editor_contents.css("opacity", 0);
+                        setTimeout(function() {
+                            editor_contents.remove();
+                        }, 500); // burdaki 500 değeri fade animasyonunun süresini temsil ediyor
                     },
-                    success: function(response){
-                        if(response == "succeed"){
-                            events.onListFavouritedDirectories();
+                    error: function() {
+                        MESSAGEBOX.showMessage("Hata", "Dosyalar silinemedi!");
+                    }
+                });
+            }
+        };
+
+        // Yeni klasör oluşturur
+        var createDirectory = function() {
+            if (($directory_item = $("#newDirectory")) && ($directory_item.length > 0)) {
+                $directory_name = fixStringForWeb($("#newFolderName").val());
+                $parent_id = current_directory_id;
+
+                if (($directory_name.length <= 0) || ($directory_name.match(/^\./i)) || ($directory_name.match(/[\s\/\\:\*\?\>\<\|"]+$/i))) {
+                    MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! <br /> * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! <br /> * klasör ismi nokta (.) karakteri ile başlayamaz! <br /> * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz!");
+                }
+                else {
+                    $.ajax({
+                        type: "post",
+                        url: script_file,
+                        data: "admin_action=createDirectory&name=" + $directory_name + "&parent_id=" + $parent_id,
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.success === false) {
+                                if (response.msg == "already_exists") {
+                                    MESSAGEBOX.showMessage("Uyarı", "Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
+                                }
+                                else if (response.msg == "error_happened") {
+                                    MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                                }
+                            }
+                            else {
+                                $directory_item.removeAttr("id");
+                                $directory_item.find("#newFolderName").replaceWith("<span>" + $directory_name + "</span>");
+                                $directory_item.attr("directory_id", response.directory_id);
+
+                                // Yeni eklenen dizini directory tree'ye ekle
+                                temp_html = '<li directory_id="' + response.directory_id + '" class="empty">';
+                                temp_html += '<icon></icon><span class="name">' + $directory_name + '</span></li>';
+
+                                parent_tag = $parent_id == -1 ? objects.browserDirectoriesOuter : objects.browserDirectoriesOuter.find("[directory_id='" + $parent_id + "']");
+
+
+                                // en az bir tane treelist varsa, o treelist e ekle.
+                                if (parent_tag.find(">ul").length > 0) {
+                                    parent_tag.find(">ul").append(temp_html);
+                                }
+                                else { // hiç treelist yoksa yani bu oluşturulan ik klasör ise yeni bir treelist oluştur
+                                    parent_tag.addClass("expanded").removeClass("empty");
+                                    parent_tag.append("<ul class='fileTree'>" + temp_html + "</ul>");
+                                }
+                                //-------------------------------------------------------------------------------
+                            }
+                        },
+                        error: function() {
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        },
+                        complete: function() {
+                            delete temp_html, $parent_id, parent_tag;
+                        }
+                    });
+                }
+
+                return true;
+            }
+        };
+
+        // klasör ismini günceller
+        var updateDirectory = function() {
+            if ($("#updateFolderName").length > 0) {
+                $directory_name = fixStringForWeb($("#updateFolderName").val());
+                $directory_item = $("#updateFolderName").closest(".directory");
+
+                // Eğer dosya ismi değişmemişse server tarafında güncelleme işlemi yapmaya gerek yok
+                if ($directory_name == $("#updateFolderName").attr("old_value")) {
+                    $directory_item.find("#updateFolderName").replaceWith("<span>" + $directory_name + "</span>");
+                    return true;
+                }
+
+                if (($directory_name.length <= 0) || ($directory_name.match(/^\./i)) || ($directory_name.match(/[\s\/\\:\*\?\>\<\|"]+$/i))) {
+                    MESSAGEBOX.showMessage("Uyarı", "Lütfen uygun klasör ismi girin! \n * klasör ismi uzunluğu en az 1 karakterden oluşmalıdır! \n * klasör ismi nokta (.) karakteri ile başlayamaz! \n * klasör isminde \\,/,:,*,?,<,>,| karakterleri bulunamaz! ");
+                    return false;
+                }
+                else {
+                    directory_id = $directory_item.attr("directory_id");
+                    $.ajax({
+                        type: "post",
+                        url: script_file,
+                        data: "admin_action=updateDirectory&name=" + $directory_name + "&directory_id=" + directory_id,
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.success === false) {
+                                if (response.msg == "already_exists") {
+                                    MESSAGEBOX.showMessage("Uyarı", "Girdiğiniz klasör zaten mevcut, lütfen farklı bir klasör ismi girin! ");
+                                }
+                                else if (response.msg == "error_happened") {
+                                    MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                                }
+                            }
+                            else {
+                                // klasör ismini gerekli yerlerde de değiştir
+                                $directory_item.find("#updateFolderName").replaceWith("<span>" + $directory_name + "</span>");
+                                objects.browserDirectoriesOuter.find("[directory_id='" + directory_id + "'] > .name").html($directory_name);
+                                objects.browserFavouritesList.find("[directory_id='" + directory_id + "']").html($directory_name);
+                            }
+                        },
+                        error: function() {
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        }
+                    });
+
+                }
+
+                return true;
+            }
+        };
+
+        // Kopyalama sirasinda benzer isimde dosya veya klasor bulunursa bu popup'i cikar.
+        var popupOverwriteOnFilesAndFolders = function(){
+            MESSAGEBOX.showMessage('Uyarı: Benzer isimde dosyalar bulundu!', 'Bulunduğunuz dizinde benzer isimde bazı dosyalar bulunuyor, bu dosyalarla ne yapmak istersiniz?', messageType.WARNING, [
+                {'name':'Üzerine Yaz', 'click':function(){
+                    overwrite_status = 'overwrite';
+                    duplicateFilesAndFolders();
+                    this.hideMessage();
+                }},
+                {'name':'Kopyasını Oluştur', 'click':function(){
+                    overwrite_status = 'duplicate';
+                    duplicateFilesAndFolders();
+                    this.hideMessage();
+                }},
+                {'name':'İptal', 'click':function(){
+                    overwrite_status = 'cancel';
+                    this.hideMessage();
+                }}
+            ]);
+        };
+
+        var duplicateFilesAndFolders = function(){
+            will_copied = {files:[], folders:[]};
+
+            // Reset memory queue status
+            for(var i=0; i<memory.files.length; i++){
+                memory.files[i].added_to_queue = false;
+            }
+
+            for(var i=0; i<memory.folders.length; i++){
+                memory.folders[i].added_to_queue = false;
+            }
+
+            // Eger popup acilmissa ve 'overwrite' veya 'skip' degerlerinden biri secilmisse
+            // dosyalari uygun sekilde kopyalama islemini yapiyoruz.
+            if(overwrite_status != 'cancel'){
+                objects.browserFilesList.find('li').each(function(){
+                    if($(this).hasClass('file')){
+                        for(var i=0; i<memory.files.length; i++){
+                            if(memory.files[i].added_to_queue){
+                                continue;
+                            }
+
+                            if(memory.files[i].name == $(this).attr('data-name')){
+                                if((overwrite_status == 'overwrite') || (overwrite_status == 'duplicate')){
+                                    will_copied.files.push({'id':memory.files[i].id, 'name':memory.files[i].name});
+                                    memory.files[i].added_to_queue = true;
+                                }
+                            }
+                            else{
+                                will_copied.files.push({'id':memory.files[i].id, 'name':memory.files[i].name});
+                                memory.files[i].added_to_queue = true;
+                            }
+                        }
+                    }
+                    else{
+                        for(var i=0; i<memory.folders.length; i++){
+                            if(memory.folders[i].name == $(this).attr('data-name')){
+                                if((overwrite_status == 'overwrite') || (overwrite_status == 'duplicate')){
+                                    will_copied.folders.push({'id':memory.folders[i].id, 'name':memory.folders[i].name});
+                                }
+                            }
+                            else{
+                                will_copied.folders.push({'id':memory.folders[i].id, 'name':memory.folders[i].name});
+                            }
+                        }
+                    }
+                });
+
+                $.ajax({
+                    type:'post',
+                    data:'admin_action=duplicateFilesAndDirectories&directory_id=' + current_directory_id + '&overwrite_status=' + overwrite_status + '&data=' + JSON.stringify(will_copied),
+                    dataType:'json',
+                    beforeSend:function(){
+                        // Loader'ı göster
+                        objects.fileEditorContentsLoader.css({"visibility": "visible", "opacity": "1"});
+                    },
+                    success:function(response){
+                        if(response.success){
                             events.onLoadDirectoryTree();
-                            events.onLoadFiles();
+                            events.onLoadFiles(null, {"directory_id": current_directory_id});
                         }
                         else{
                             MESSAGEBOX.showMessage("Hata", "* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
                         }
                     },
-                    error: function(){
+                    error:function(){
+                        MESSAGEBOX.showMessage("Hata", "* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                    }
+                });
+            }
+        };
+
+        // klasör ismini güncelleme işlemini iptal edip klasörün kayıtlı olan ismini geri yükler.
+        var cancelFolderUpdating = function() {
+            if (($directory = $("#updateFolderName").closest(".directory")) && ($directory.length > 0)) {
+                $("#updateFolderName").replaceWith("<span>" + $("#updateFolderName").attr("old_value") + "</span>");
+            }
+        };
+
+        var events = {
+            onSyncFilesAndDirs: function() {
+                $.ajax({
+                    type: "post",
+                    data: "admin_action=syncFilesAndDirs",
+                    beforeSend: function() {
+                        objects.syncLoader.css("visibility", "visible");
+                    },
+                    success: function(response) {
+                        if (response == "succeed") {
+                            events.onListFavouritedDirectories();
+                            events.onLoadDirectoryTree();
+                            events.onLoadFiles();
+                        }
+                        else {
+                            MESSAGEBOX.showMessage("Hata", "* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        }
+                    },
+                    error: function() {
                         MESSAGEBOX.showMessage("Hata", "* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
                     },
-                    complete: function(){
+                    complete: function() {
                         objects.syncLoader.css("visibility", "hidden");
                     }
                 });
             },
-			onLoadFiles: function(e, settings){
-				// önceki requestleri iptal et
-				if(requests.loadFiles.abort){
-					requests.loadFiles.abort();
-				}
+            onLoadFiles: function(e, settings) {
+                // önceki requestleri iptal et
+                if (requests.loadFiles.abort) {
+                    requests.loadFiles.abort();
+                }
 
-				settings = $.extend({}, {"filter":{"order_by":"default", "type":"all"}, "directory_id":-1}, settings);
-				directory_id = $(this).is("[directory_id]") ? $(this).attr("directory_id") : settings.directory_id;
-				current_directory_id = directory_id; // current_directory_id değerini burada atıyoruz.
+                settings = $.extend({}, {"filter": {"order_by": "default", "type": "all"}, "directory_id": -1}, settings);
+                directory_id = $(this).is("[directory_id]") ? $(this).attr("directory_id") : settings.directory_id;
+                current_directory_id = directory_id; // current_directory_id değerini burada atıyoruz.
                 objects.browser_address.val("").attr("directory_id", directory_id);
 
-				// Eğer bu event büyük alandaki bir dizin tarafından trigger edilmişse, bu eventi iptal edip onun yerine
-				// aynı özellikteki dizini browserDirectoriesOuter içindeki elemanlardan bulup çalıştırıyoruz.
-				// böyle yapmamızın sebebi, bir dizine girildiğinde dizinlerden oluşan treeList'i düzenleyebilmek.
-				if($(this).is(".editor_content")){
-					objects.browserDirectoriesOuter.find("li[directory_id='" + directory_id + "']").trigger("mousedown");
-					return false;
-				}
+                // Eğer bu event büyük alandaki bir dizin tarafından trigger edilmişse, bu eventi iptal edip onun yerine
+                // aynı özellikteki dizini browserDirectoriesOuter içindeki elemanlardan bulup çalıştırıyoruz.
+                // böyle yapmamızın sebebi, bir dizine girildiğinde dizinlerden oluşan treeList'i düzenleyebilmek.
+                if ($(this).is(".editor_content")) {
+                    objects.browserDirectoriesOuter.find("li[directory_id='" + directory_id + "']").trigger("mousedown");
+                    return false;
+                }
 
-				// Eğer directory_id değeri 0'dan küçük ise ana dizin listeleniyor demektir. bu durumda directory tree den ve favourites listesinden
-				// seçili olan elemanların seçili olma özelliğini kaldırıp, directory tree deki tüm dizinleri kapalı şekle getiriyoruz.
-				// Ayrıca adres input'unun değerini boş string yapıyoruz
-				if(directory_id <= 0){
-					objects.browserDirectoriesOuter.find("li").removeClass("selected").removeClass("expanded");
-					objects.browserFavouritesList.find("span").removeClass("selected");
-				}
+                // Eğer directory_id değeri 0'dan küçük ise ana dizin listeleniyor demektir. bu durumda directory tree den ve favourites listesinden
+                // seçili olan elemanların seçili olma özelliğini kaldırıp, directory tree deki tüm dizinleri kapalı şekle getiriyoruz.
+                // Ayrıca adres input'unun değerini boş string yapıyoruz
+                if (directory_id <= 0) {
+                    objects.browserDirectoriesOuter.find("li").removeClass("selected").removeClass("expanded");
+                    objects.browserFavouritesList.find("span").removeClass("selected");
+                }
 
-				requests.loadFiles = $.ajax({
-					type:"post",
-					url:script_file,
-					data:"admin_action=loadFileEditorItems&directory_id=" + directory_id + "&order_by=" + settings.filter.order_by,
-					dataType:"json",
-					beforeSend: function(){
-						// Loader'ı göster
-						objects.fileEditorContentsLoader.css({"visibility":"visible", "opacity":"1"});
-					},
-					success:function(response){
-						contents_html = "";
+                requests.loadFiles = $.ajax({
+                    type: "post",
+                    url: script_file,
+                    data: "admin_action=loadFileEditorItems&directory_id=" + directory_id + "&order_by=" + settings.filter.order_by,
+                    dataType: "json",
+                    beforeSend: function() {
+                        // Loader'ı göster
+                        objects.fileEditorContentsLoader.css({"visibility": "visible", "opacity": "1"});
+                    },
+                    success: function(response) {
+                        contents_html = "";
 
-						for(i=0, j=response.directories.length; i<j; i++){
-							contents_html += '<li class="directory editor_content" directory_id="' + response.directories[i].directory_id + '" parent_id="' + response.directories[i].parent_id + '">';
-							contents_html += '<icon></icon>';
-							contents_html += '<span>' + response.directories[i].name + '</span></li>';
-						}
+                        for (i = 0, j = response.directories.length; i < j; i++) {
+                            contents_html += '<li class="directory editor_content" directory_id="' + response.directories[i].directory_id + '" ';
+                            contents_html += 'data-name="' + response.directories[i].name + '" ';
+                            contents_html += 'title="' + response.directories[i].name + '" parent_id="' + response.directories[i].parent_id + '">';
+                            contents_html += '<icon></icon>';
+                            contents_html += '<span>' + response.directories[i].name + '</span></li>';
+                        }
 
-						for(i=0, j=response.files.length; i<j; i++){
-							contents_html += generateFileHtml(response.files[i]);
-						}
+                        for (i = 0, j = response.files.length; i < j; i++) {
+                            contents_html += generateFileHtml(response.files[i]);
+                        }
 
-						objects.browserFilesList.html(contents_html);
+                        objects.browserFilesList.html(contents_html);
 
-						// yeni yüklenen dosyaların thumbnailarına load eventini burdan bağla, delegate veya live ile bağlanınca çalışmıyorlar
-						objects.browserFilesList.find(".notload .editorFileThumb").load(events.onFileThumbnailLoad).error(events.onFileThumbnailError);
+                        // yeni yüklenen dosyaların thumbnailarına load eventini burdan bağla, delegate veya live ile bağlanınca çalışmıyorlar
+                        objects.browserFilesList.find(".notload .editorFileThumb").load(events.onFileThumbnailLoad).error(events.onFileThumbnailError);
 
 
-						// eğer yüklü ise fancybox'ı bağla
-						if($.fn.fancybox){
-							$(".file .fancybox").fancybox({
-								"titleShow":false,
-								"scrolling":"no"
-							});
-						}
+                        // eğer yüklü ise fancybox'ı bağla
+                        if ($.fn.fancybox) {
+                            $(".file .fancybox").fancybox({
+                                "titleShow": false,
+                                "scrolling": "no"
+                            });
+                        }
 
-						//----------------------------------------------------------------------------------------------------------------
-						// success sırasındaki işlemler uzun sürebileceği için loader'ı gizleme işlemini bu işlemlerden sonra yapıyoruz
-						//----------------------------------------------------------------------------------------------------------------
-						objects.fileEditorContentsLoader.css({"opacity":"0"});
-						setTimeout(function(){
-							objects.fileEditorContentsLoader.css({"visibility":"hidden"});
-						}, 150);
-						//-----------------------------------------------------------------
-					},
-					error:function(e){
-						if(!e.statusText || (e.statusText != "abort")){
-							MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-						}
-					}
-				});
-
-				return false; // event olarak kullandığımızda sayfa yönlendirmesini engellemek için "return false;" yapıyoruz
-			},
-			onEditFile: function(){
-				var parent = $(this).parents(".editor_content");
-				var file_id = $(this).attr("file_id");
-				var filename = parent.find(".fileName");
-				var thumb = parent.find(".editorFileThumb");
-				var btnlook = parent.find(".btnLook");
-
-				$(this).editfile({
-					file_id: file_id,
-					onSaved:function(file){
-						filename.html(file.basename);
-
-						if(file.type != "movie"){
-							if(file.thumb != null){
-								thumb.attr("src", file.thumb);
-							}
-
-							btnlook.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
-						}
-						else{
-							btnlook.attr("href",'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
-						}
-					}
-				});
-			},
-			onSearchFiles: function(){
-
-			},
-			onRefreshCurrentDirectory: function(e){
-				events.onLoadFiles(e, {"directory_id": current_directory_id});
-				return false;
-			},
-			onFileThumbnailLoad: function(e){
-				// sebebini bilmiyorum ama direk css'i düzenleyince css de tanımladığım transition çalışmıyor yani opacity fade animasyonlu değilde
-				// direk 1 oluyor. Bu şekilde setTimout fonksiyonu ile çok minik hatta 0 gecikme verdiğimde transition çalışıyor.
-				var temp_uploaded_item = $(this);
-				setTimeout(function(){
-					temp_uploaded_item.parent().parent().removeClass("notload");
-					temp_uploaded_item.css({"visibility":"visible", "opacity":"1"});
-				}, 0);
-			},
-			onFileThumbnailError:function(e){
-				$(this).parent().addClass("loaderror").parent().removeClass("notload");
-			},
-			onSetFavouriteStatus: function(e){
-				e.preventDefault();
-
-				if(objects.browserDirectoriesOuter.find("[directory_id='" + current_directory_id + "']").length > 0){ // Eğer ana dizinde değilse ve belirtilen dizin mevcutsa
-					temp_directory_id = current_directory_id; // ajax işlemi sırasında işlem sonlanmadan önce current_directory_id değeri değişebilir, o yüzden bu değeri dışarıdan değişemeyecek başka bir değişkene atıyoruz
-					favourite_action = "addToFavourites";
-					if(objects.browserFavouritesList.find("[directory_id='" + temp_directory_id + "']").length > 0){
-						favourite_action = "removeFromFavourites";
-					}
-					else{
-						// favourites'e eklenen dizinin bilgilerini alıyoruz. Bunu burada yapma sebebimiz çok çok düşük bir ihtimalde olsa
-						// olurda kullanıcı favourites e eklediği dizini ajax işlemi bitmeden silmeye karar verdi diyelim. Ve bu silme işleminin ajax sonucu
-						// favourites işleminin ajax sonucundan daha önce döndü ve dizin silme işlemi gerçekleşti. Bu durumda favourites için
-						// yapılan ajax işlemi sonucunda ilgili dizin silinmiş olacağı için onun bilgilerini alamayacağız ve hata oluşacak.
-						// buna engel olmak için işlemi burada yapıyoruz
-						temp_directory = objects.browserDirectoriesOuter.find("li[directory_id='" + temp_directory_id + "'] .name");
-					}
-
-					$.ajax({
-						type:"post",
-						url:script_file,
-						data:"admin_action=" + favourite_action + "&directory_id=" + temp_directory_id,
-						dataType:"json",
-						success:function(response){
-							if(response.success === true){
-								if(favourite_action === "addToFavourites"){
-									objects.browserFavouritesList.append("<span class='selected' directory_id='" + temp_directory_id + "'>" + temp_directory.html() + "</span>");
-
-									// temp_directory bazı durumlarda tanımlanmayacağı için, böyle bi durumda delete işleminde hata verebiliyor.
-									// o yüzden bu değişkenin delete işlemini son kullanıldığı yerde yani burda yapıyoruz.
-									delete temp_directory;
-								}
-								else{
-									objects.browserFavouritesList.find("[directory_id='" + temp_directory_id + "']").remove();
-								}
-							}
-							else{
-								MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-							}
-						},
-						error:function(){
+                        //----------------------------------------------------------------------------------------------------------------
+                        // success sırasındaki işlemler uzun sürebileceği için loader'ı gizleme işlemini bu işlemlerden sonra yapıyoruz
+                        //----------------------------------------------------------------------------------------------------------------
+                        objects.fileEditorContentsLoader.css({"opacity": "0"});
+                        setTimeout(function() {
+                            objects.fileEditorContentsLoader.css({"visibility": "hidden"});
+                        }, 150);
+                        //-----------------------------------------------------------------
+                    },
+                    error: function(e) {
+                        if (!e.statusText || (e.statusText != "abort")) {
                             MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-						},
-						complete:function(){
-							delete favourite_action, temp_directory_id;
-						}
-					});
-				}
-			},
-			onClickDirectoryItem: function(e){
-				e.stopPropagation();
-				e.preventDefault();
+                        }
+                    }
+                });
 
-				if(!$(this).is(".empty")){
-					if($(this).is(".expanded"))
-						$(this).removeClass("expanded");
-					else
-						$(this).addClass("expanded");
-				}
+                return false; // event olarak kullandığımızda sayfa yönlendirmesini engellemek için "return false;" yapıyoruz
+            },
+            onEditFile: function() {
+                var parent = $(this).parents(".editor_content");
+                var file_id = $(this).attr("file_id");
+                var filename = parent.find(".fileName");
+                var thumb = parent.find(".editorFileThumb");
+                var btnlook = parent.find(".btnLook");
 
-				// filetree nin durumunu ayarla---------------------------------------------
-				objects.browserDirectoriesOuter.find("li").removeClass("selected");
-				$(this).addClass("selected");
-				//--------------------------------------------------------------------------
+                $(this).editfile({
+                    file_id: file_id,
+                    onSaved: function(file) {
+                        filename.html(file.basename);
 
-				// favourites listesinin durumunu ayarla----------------------------------------------------------------------------------
-				directory_id = $(this).attr("directory_id");
-				objects.browserFavouritesList.find("span").removeClass("selected");
-				objects.browserFavouritesList.find("[directory_id='" + directory_id + "']").addClass("selected");
+                        if (file.type != "movie") {
+                            if (file.thumb != null) {
+                                thumb.attr("src", file.thumb);
+                            }
 
-				adress_path = "";
-				$(this).parents("li[directory_id]").each(function(){
-					// filetree'de seçilen elemanın parent elemanlarından .expanded
-					// class'ına sahip olmayanlara expanded class'ı ekle
-					if($(this).is("li:not(.expanded)")){
-						$(this).addClass("expanded");
-					}
+                            btnlook.attr("href", 'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
+                        }
+                        else {
+                            btnlook.attr("href", 'lookfile.php?type=' + file.type + '&url=' + encodeURIComponent(file.url));
+                        }
+                    }
+                });
+            },
+            onSearchFiles: function() {
 
-					// şu anki çalışma adresini hesapla ve adres input'unda güncelle
-					adress_path = $(this).find(">.name").text() + "/" + adress_path;
-				});
-				adress_path += 	$(this).find(">.name").text() + "/";
-				objects.browser_address.val(adress_path).attr("directory_id", directory_id);
+            },
+            onRefreshCurrentDirectory: function(e) {
+                events.onLoadFiles(e, {"directory_id": current_directory_id});
+                return false;
+            },
+            onFileThumbnailLoad: function(e) {
+                // sebebini bilmiyorum ama direk css'i düzenleyince css de tanımladığım transition çalışmıyor yani opacity fade animasyonlu değilde
+                // direk 1 oluyor. Bu şekilde setTimout fonksiyonu ile çok minik hatta 0 gecikme verdiğimde transition çalışıyor.
+                var temp_uploaded_item = $(this);
+                setTimeout(function() {
+                    temp_uploaded_item.parent().parent().removeClass("notload");
+                    temp_uploaded_item.css({"visibility": "visible", "opacity": "1"});
+                }, 0);
+            },
+            onFileThumbnailError: function(e) {
+                $(this).parent().addClass("loaderror").parent().removeClass("notload");
+            },
+            onSetFavouriteStatus: function(e) {
+                e.preventDefault();
 
-				delete adress_path, directory_id;
-				//------------------------------------------------------------------------------------------------------------------------
+                if (objects.browserDirectoriesOuter.find("[directory_id='" + current_directory_id + "']").length > 0) { // Eğer ana dizinde değilse ve belirtilen dizin mevcutsa
+                    temp_directory_id = current_directory_id; // ajax işlemi sırasında işlem sonlanmadan önce current_directory_id değeri değişebilir, o yüzden bu değeri dışarıdan değişemeyecek başka bir değişkene atıyoruz
+                    favourite_action = "addToFavourites";
+                    if (objects.browserFavouritesList.find("[directory_id='" + temp_directory_id + "']").length > 0) {
+                        favourite_action = "removeFromFavourites";
+                    }
+                    else {
+                        // favourites'e eklenen dizinin bilgilerini alıyoruz. Bunu burada yapma sebebimiz çok çok düşük bir ihtimalde olsa
+                        // olurda kullanıcı favourites e eklediği dizini ajax işlemi bitmeden silmeye karar verdi diyelim. Ve bu silme işleminin ajax sonucu
+                        // favourites işleminin ajax sonucundan daha önce döndü ve dizin silme işlemi gerçekleşti. Bu durumda favourites için
+                        // yapılan ajax işlemi sonucunda ilgili dizin silinmiş olacağı için onun bilgilerini alamayacağız ve hata oluşacak.
+                        // buna engel olmak için işlemi burada yapıyoruz
+                        temp_directory = objects.browserDirectoriesOuter.find("li[directory_id='" + temp_directory_id + "'] .name");
+                    }
 
-				// dosyaları yükle
-				events.onLoadFiles.call(this);
-			},
-			onClickFavouritedDirectoryItem: function(e){
-				e.stopPropagation();
-				e.preventDefault();
+                    $.ajax({
+                        type: "post",
+                        url: script_file,
+                        data: "admin_action=" + favourite_action + "&directory_id=" + temp_directory_id,
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.success === true) {
+                                if (favourite_action === "addToFavourites") {
+                                    objects.browserFavouritesList.append("<span class='selected' directory_id='" + temp_directory_id + "'>" + temp_directory.html() + "</span>");
 
-				// favourite elemanının durumunu ayarla
-				objects.browserFavouritesList.find("span").removeClass("selected");
-				$(this).addClass("selected");
+                                    // temp_directory bazı durumlarda tanımlanmayacağı için, böyle bi durumda delete işleminde hata verebiliyor.
+                                    // o yüzden bu değişkenin delete işlemini son kullanıldığı yerde yani burda yapıyoruz.
+                                    delete temp_directory;
+                                }
+                                else {
+                                    objects.browserFavouritesList.find("[directory_id='" + temp_directory_id + "']").remove();
+                                }
+                            }
+                            else {
+                                MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                            }
+                        },
+                        error: function() {
+                            MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
+                        },
+                        complete: function() {
+                            delete favourite_action, temp_directory_id;
+                        }
+                    });
+                }
+            },
+            onClickDirectoryItem: function(e) {
+                e.stopPropagation();
+                e.preventDefault();
 
-				// filetree deki aynı elemanı trigger et.
-				directory_id = $(this).attr("directory_id");
-				objects.browserDirectoriesOuter.find("[directory_id='" + directory_id + "']").trigger("mousedown");
+                if (!$(this).is(".empty")) {
+                    if ($(this).is(".expanded"))
+                        $(this).removeClass("expanded");
+                    else
+                        $(this).addClass("expanded");
+                }
 
-				delete directory_id;
-			},
-			onContentsAreaMouseDown: function(e){
-				// bu değişkene bakarak browserFilesListOuter alanındaki klavye kısayollarını kullanıp kullanmaman gerektiğini kontrol edebilirsin
-				objects.browserFilesListOuter.focused = true;
+                // filetree nin durumunu ayarla---------------------------------------------
+                objects.browserDirectoriesOuter.find("li").removeClass("selected");
+                $(this).addClass("selected");
+                //--------------------------------------------------------------------------
 
-				// eğer bir klasör içindeki input'a tıklamışsak muhtemelen klasör ismi giriyoruzdur o yüzden bu
-				// eventin iptal edilmemesi gerekiyor bu yüzden eventin gerisini çalıştırmayıp return true yaparak eventi
-				// normal şekilde çalışmasını sağlıyoruz
-				if((e.target.tagName.toLowerCase() == "input") && ($(e.target).closest(".directory").length > 0)){
-					return true;
-				}
-				else{
-					createDirectory(); // Eğer yeni klasör oluşturma işlemi başlatılmışsa onu tamamla
-					updateDirectory(); // Eğer varolan bir klasörü güncelleme işlemi başlatılmışsa onu tamamla
-				}
+                // favourites listesinin durumunu ayarla----------------------------------------------------------------------------------
+                directory_id = $(this).attr("directory_id");
+                objects.browserFavouritesList.find("span").removeClass("selected");
+                objects.browserFavouritesList.find("[directory_id='" + directory_id + "']").addClass("selected");
 
-				// eğer "alt" veya "shift" tuşlarını kullanmıyorsa ve çoklu seçim özelliğini kullanmamız isteniyorsa, sürükle yöntemiyle eleman seçme özelliğini aç
-				if(!e.ctrlKey && !e.shiftKey && options.multiselection)
-				{
-					self.selector.selectableObjects = objects.browserFilesList.find(".editor_content");
-					self.selector.selectableArea = objects.browserFilesList;
-					self.startCapturing(e);
-				}
+                adress_path = "";
+                $(this).parents("li[directory_id]").each(function() {
+                    // filetree'de seçilen elemanın parent elemanlarından .expanded
+                    // class'ına sahip olmayanlara expanded class'ı ekle
+                    if ($(this).is("li:not(.expanded)")) {
+                        $(this).addClass("expanded");
+                    }
 
-				// Üzerine tıklanan eleman bir dosya yada klasör değil ise fonksiyonu bitir
-				if(!($editor_content = $(e.target).closest(".editor_content")))
-				{
-					return false;
-				}
+                    // şu anki çalışma adresini hesapla ve adres input'unda güncelle
+                    adress_path = $(this).find(">.name").text() + "/" + adress_path;
+                });
+                adress_path += $(this).find(">.name").text() + "/";
+                objects.browser_address.val(adress_path).attr("directory_id", directory_id);
 
-				// Eğer ctrl key kullanılmamışsa veya multiselection özelliği kapalı ise önceden seçili olan elemanların hepsini seçilmemiş duruma getiriyoruz
-				if(!e.ctrlKey || (options.multiselection === false))
-				{
-					objects.browserFilesList.find("li").removeClass("selected");
-				}
+                delete adress_path, directory_id;
+                //------------------------------------------------------------------------------------------------------------------------
 
-				if(e.ctrlKey && (options.multiselection === true)) // eğer ctrl tuşu kullanılmış ve çoklu seçip iptal edilmişse
-				{
-					if($editor_content.is(".selected"))
-						$editor_content.removeClass("selected");
-					else
-						$editor_content.addClass("selected");
-				}
-				else if(e.shiftKey && (options.multiselection === true)) // eğer shift butonu kullanılmış ve çoklu seçim aktif edildiyse
-				{
-					// shift ile seçim yaparken kullanacağımız hmtlobject dizisinin başlangıç ve bitiş indexlerini hesapla
-					$start = $first_index = $editor_content.index();
-					$end = $second_index = objects.browserFilesList.find(".last_selected").index();
+                // dosyaları yükle
+                events.onLoadFiles.call(this);
+            },
+            onClickFavouritedDirectoryItem: function(e) {
+                e.stopPropagation();
+                e.preventDefault();
 
-					// eğer ters yönde seçme işlemi yapılıyorsa
-					if($first_index > $second_index)
-					{
-						$start = $second_index;
-						$end = $first_index;
-					}
+                // favourite elemanının durumunu ayarla
+                objects.browserFavouritesList.find("span").removeClass("selected");
+                $(this).addClass("selected");
 
-					objects.browserFilesList.find("li").slice($start, ++$end).addClass("selected");
-				}
-				else
-				{
-					// Üzerine tıklanan elemanı seç
-					$editor_content.addClass("selected");
-				}
+                // filetree deki aynı elemanı trigger et.
+                directory_id = $(this).attr("directory_id");
+                objects.browserDirectoriesOuter.find("[directory_id='" + directory_id + "']").trigger("mousedown");
 
-				// En son seçilen elemanı belirle
-				objects.browserFilesList.find(".last_selected").removeClass("last_selected"); // önceden eklenmiş olan last_selected class'larını kaldır.
-				$editor_content.addClass("last_selected"); // şimdi tıklanan objeye last_selected class'ı ekle.
+                delete directory_id;
+            },
+            onContentsAreaMouseDown: function(e) {
+                // bu değişkene bakarak browserFilesListOuter alanındaki klavye kısayollarını kullanıp kullanmaman gerektiğini kontrol edebilirsin
+                objects.browserFilesListOuter.focused = true;
 
-				// "Kullan" butonunun durumunu belirlemek için bu eventi çalıştırıyoruz
-				events.onContentStatusChange();
-				e.preventDefault();
-			},
-			onDocumentMouseWheel:function(e){
-				var centerOffset = ($(window).height() - objects.fileEditorOuter.outerHeight()) / 2;
+                // eğer bir klasör içindeki input'a tıklamışsak muhtemelen klasör ismi giriyoruzdur o yüzden bu
+                // eventin iptal edilmemesi gerekiyor bu yüzden eventin gerisini çalıştırmayıp return true yaparak eventi
+                // normal şekilde çalışmasını sağlıyoruz
+                if ((e.target.tagName.toLowerCase() == "input") && ($(e.target).closest(".directory").length > 0)) {
+                    return true;
+                }
+                else {
+                    createDirectory(); // Eğer yeni klasör oluşturma işlemi başlatılmışsa onu tamamla
+                    updateDirectory(); // Eğer varolan bir klasörü güncelleme işlemi başlatılmışsa onu tamamla
+                }
 
-				var top = $(document).scrollTop();
-					top = top > 0 ? top : 0;
-					top = top + (centerOffset > 0 ? centerOffset : 0);
+                // eğer "alt" veya "shift" tuşlarını kullanmıyorsa ve çoklu seçim özelliğini kullanmamız isteniyorsa, sürükle yöntemiyle eleman seçme özelliğini aç
+                if (!e.ctrlKey && !e.shiftKey && options.multiselection)
+                {
+                    self.selector.selectableObjects = objects.browserFilesList.find(".editor_content");
+                    self.selector.selectableArea = objects.browserFilesList;
+                    self.startCapturing(e);
+                }
 
-				objects.fileEditorOuter.css("top", top);
-			},
-			onDocumentMouseUp: function(e){
-				if($(e.target).closest(objects.browserFilesListOuter).length <= 0)
-				{
-					// eğer browserFilesListOuter alanına tıklamamışsa bu alanın focused değerini false yap.
-					// bu şekilde buraya bağladığın klavye kısayollarını kullanıp kullanmaman gerektiğini bu
-					// değişkene bakarak kontrol edebilirsin.
-					objects.browserFilesListOuter.focused = false;
-				}
+                $editor_content = $(e.target).closest(".editor_content")
 
-				self.stopCapturing(e);
-				events.onDragEnd();
-			},
-			onDocumentKeyDown:function(e){
-				if(e.keyCode == 46) // Eğer delete tuşuna basmışsa
-				{
-					deleteFileEditorItems(objects.browserFilesList.find("li.selected"));
-				}
-				else if(e.keyCode == 13) // Eğer enter tuşuna basmışsa
-				{
-					// Eğer yeni klasör oluşturma işlemi veya varolan bir klasörü güncelleme işlemi başlatılmışsa onu tamamla
-					if(createDirectory() || updateDirectory())
-					{
-						return true;
-					}
+                // Üzerine tıklanan eleman bir dosya yada klasör değil ise fonksiyonu bitir
+                if ($editor_content.length <= 0){
+                    objects.browserFilesList.find("li").removeClass("selected");
+                    return false;
+                }
 
-					if(objects.browserFilesListOuter.focused === true){
-						// Aksi bir durum yoksa seçili elemanları kullanma eventini çalıştır.
-						events.onUseSelectedItems();
-					}
-				}
-				else if((e.keyCode == 65) && e.ctrlKey) // eğer CTRL + A  tuşuna basıldıysa
-				{
-					if(objects.browserFilesListOuter.focused === true)
-					{
-						objects.browserFilesList.find("li").addClass("selected");
-						events.onContentStatusChange();
-						return false;
-					}
-				}
-				else if(e.keyCode == 27) // Eğer esc tuşuna basarsa
-				{
-					self.stopCapturing(e); // sürükleme ile çoklu dosya seçimi işlemini bitir.
-					events.onDragEnd(); // Sürükleyerek dosya ekleme işlemi başlatılmışsa onu iptal et
-					$("#newDirectory").remove(); // Eğer yeni klasör oluşturma işlemi başlatılmışsa onu iptal et
-					cancelFolderUpdating(); // Eğer varoan klasör ismini güncelleme işlemi yapılıyorsa onu iptal et
-				}
-				else if(e.keyCode == 113) // Eğer f2 tuşuna basıyorsa
-				{
-					if((objects.browserFilesListOuter.focused === true) && ($selected_folder = objects.browserFilesList.find(".selected.directory:first")) && ($selected_folder.length > 0))
-					{
-						temp = $selected_folder.find("span");
-						temp.replaceWith("<input type='text' id='updateFolderName' value='" + temp.html() + "' old_value='" + temp.html() + "' />");
-						$("#updateFolderName").focus();
-						delete temp;
-					}
-				}
-				else if(e.keyCode == 116) // Eğer f5 tuşuna basmışsa
-				{
-					if((objects.browserFilesListOuter.focused === true) && !e.ctrlKey)
-					{
-						events.onRefreshCurrentDirectory(e);
-						return false;
-					}
-				}
-				else if(e.keyCode == 8) // eğer backspace tuşuna basmışsa
-				{
-					if((objects.browserFilesListOuter.focused === true) && ($("#updateFolderName, #newFolderName").length <= 0)){
-						events.onMoveUpperDirectory(e);
-					}
-				}
+                // Eğer ctrl key kullanılmamışsa veya multiselection özelliği kapalı ise önceden seçili olan elemanların hepsini seçilmemiş duruma getiriyoruz
+                if (!e.ctrlKey || (options.multiselection === false)){
+                    objects.browserFilesList.find("li").removeClass("selected");
+                }
 
-				return true;
-			},
-			onEditorItemDeleteButtonClick: function(){
-				deleteFileEditorItems($(this).closest(".editor_content"));
-				return false;
-			},
-			onUseSelectedItems:function(){
-				if(($selected_files = objects.browserFilesList.find(".file.selected")) && ($selected_files.length > 0))
-				{
-					files = [];
-					$selected_files.each(function(){
-						file = $(this);
-						files.push({"file_id":file.attr("file_id"), "basename":file.attr("title"), "url":file.attr("url"), "thumb":file.attr("thumb"), "type":file.attr("file_type")});
-					});
+                if (e.ctrlKey && (options.multiselection === true)) // eğer ctrl tuşu kullanılmış ve çoklu seçip iptal edilmişse
+                {
+                    if ($editor_content.is(".selected"))
+                        $editor_content.removeClass("selected");
+                    else
+                        $editor_content.addClass("selected");
+                }
+                else if (e.shiftKey && (options.multiselection === true)) // eğer shift butonu kullanılmış ve çoklu seçim aktif edildiyse
+                {
+                    // shift ile seçim yaparken kullanacağımız hmtlobject dizisinin başlangıç ve bitiş indexlerini hesapla
+                    $start = $first_index = $editor_content.index();
+                    $end = $second_index = objects.browserFilesList.find(".last_selected").index();
 
-					options.onFilesSelect(files);
-					public_methods.closeFileEditor();
-				}
-			},
-			onContentStatusChange:function(){
-				if((objects.browserFilesList.find(".file.selected").length > 0) && (objects.browserFilesList.find(".directory.selected").length <= 0))
-					objects.browserBtnUseFiles.attr("disabled", false);
-				else
-					objects.browserBtnUseFiles.attr("disabled", true);
-			},
-			onFilesSelectedForUpload:function(e){
-				e.stopPropagation();
-				e.preventDefault();
+                    // eğer ters yönde seçme işlemi yapılıyorsa
+                    if ($first_index > $second_index)
+                    {
+                        $start = $second_index;
+                        $end = $first_index;
+                    }
 
-				// upload edilecek dosyaların kullanıcı tarafından eklenme şekline göre (normal yükleme veya Drag & Drop şeklinde) dosyaları seç
-				files = e.type == "change" ? e.target.files : e.dataTransfer.files;
+                    objects.browserFilesList.find("li").slice($start, ++$end).addClass("selected");
+                }
+                else
+                {
+                    // Üzerine tıklanan elemanı seç
+                    $editor_content.addClass("selected");
+                }
 
-				for(i=0, j=files.length; i<j; i++){
-					// statik değeri arttır
-					FILE_EDITOR.uploaded_file_count++;
+                // En son seçilen elemanı belirle
+                objects.browserFilesList.find(".last_selected").removeClass("last_selected"); // önceden eklenmiş olan last_selected class'larını kaldır.
+                $editor_content.addClass("last_selected"); // şimdi tıklanan objeye last_selected class'ı ekle.
 
-					// kullanılacak classları örnekle
-					xhr_list[i] = new XMLHttpRequest();
-					editor_form_list[i] = new FormData();
-					file_reader_list[i] = new FileReader();
+                // "Kullan" butonunun durumunu belirlemek için bu eventi çalıştırıyoruz
+                events.onContentStatusChange();
+                e.preventDefault();
+            },
+            onDocumentMouseWheel: function(e) {
+                var centerOffset = ($(window).height() - objects.fileEditorOuter.outerHeight()) / 2;
 
-					// form bilgilerini ekle
-					editor_form_list[i].append("file", files[i]);
-					editor_form_list[i].append("directory_id", current_directory_id);
-					editor_form_list[i].append("admin_action", "uploadFile");
+                var top = $(document).scrollTop();
+                top = top > 0 ? top : 0;
+                top = top + (centerOffset > 0 ? centerOffset : 0);
 
-					// filereader eventini bağla
-					file_reader_list[i].addEventListener("load", (function(i){
-						var index = i;
-						return function(e){
-                            xhr_list[index].open("post",script_file);
+                objects.fileEditorOuter.css("top", top);
+                self.hideContextMenu();
+            },
+            onDocumentMouseUp: function(e) {
+                if ($(e.target).closest(objects.browserFilesListOuter).length <= 0)
+                {
+                    // eğer browserFilesListOuter alanına tıklamamışsa bu alanın focused değerini false yap.
+                    // bu şekilde buraya bağladığın klavye kısayollarını kullanıp kullanmaman gerektiğini bu
+                    // değişkene bakarak kontrol edebilirsin.
+                    objects.browserFilesListOuter.focused = false;
+                }
+
+                self.hideContextMenu();
+
+                self.stopCapturing(e);
+                events.onDragEnd();
+            },
+            onDocumentKeyDown: function(e) {
+                if (e.keyCode == 46) // Eğer delete tuşuna basmışsa
+                {
+                    deleteFileEditorItems(objects.browserFilesList.find("li.selected"));
+                }
+                else if (e.keyCode == 13) // Eğer enter tuşuna basmışsa
+                {
+                    // Eğer yeni klasör oluşturma işlemi veya varolan bir klasörü güncelleme işlemi başlatılmışsa onu tamamla
+                    if (createDirectory() || updateDirectory())
+                    {
+                        return true;
+                    }
+
+                    if (objects.browserFilesListOuter.focused === true) {
+                        // Aksi bir durum yoksa seçili elemanları kullanma eventini çalıştır.
+                        events.onUseSelectedItems();
+                    }
+                }
+                else if ((e.keyCode == 65) && e.ctrlKey) // eğer CTRL + A  tuşuna basıldıysa
+                {
+                    if (objects.browserFilesListOuter.focused === true)
+                    {
+                        objects.browserFilesList.find("li").addClass("selected");
+                        events.onContentStatusChange();
+                        return false;
+                    }
+                }
+                else if (e.keyCode == 27) // Eğer esc tuşuna basarsa
+                {
+                    self.stopCapturing(e); // sürükleme ile çoklu dosya seçimi işlemini bitir.
+                    events.onDragEnd(); // Sürükleyerek dosya ekleme işlemi başlatılmışsa onu iptal et
+                    $("#newDirectory").remove(); // Eğer yeni klasör oluşturma işlemi başlatılmışsa onu iptal et
+                    cancelFolderUpdating(); // Eğer varoan klasör ismini güncelleme işlemi yapılıyorsa onu iptal et
+                }
+                else if (e.keyCode == 113) // Eğer f2 tuşuna basıyorsa
+                {
+                    if ((objects.browserFilesListOuter.focused === true) && ($selected_folder = objects.browserFilesList.find(".selected.directory:first")) && ($selected_folder.length > 0))
+                    {
+                        temp = $selected_folder.find("span");
+                        temp.replaceWith("<input type='text' id='updateFolderName' value='" + temp.html() + "' old_value='" + temp.html() + "' />");
+                        $("#updateFolderName").focus();
+                        delete temp;
+                    }
+                }
+                else if (e.keyCode == 116) // Eğer f5 tuşuna basmışsa
+                {
+                    if ((objects.browserFilesListOuter.focused === true) && !e.ctrlKey)
+                    {
+                        events.onRefreshCurrentDirectory(e);
+                        return false;
+                    }
+                }
+                else if (e.keyCode == 8) // eğer backspace tuşuna basmışsa
+                {
+                    if ((objects.browserFilesListOuter.focused === true) && ($("#updateFolderName, #newFolderName").length <= 0)) {
+                        events.onMoveUpperDirectory(e);
+                    }
+                }
+
+                return true;
+            },
+            onEditorItemDeleteButtonClick: function() {
+                deleteFileEditorItems($(this).closest(".editor_content"));
+                return false;
+            },
+            onUseSelectedItems: function() {
+                if (($selected_files = objects.browserFilesList.find(".file.selected")) && ($selected_files.length > 0))
+                {
+                    files = [];
+                    $selected_files.each(function() {
+                        file = $(this);
+                        files.push({"file_id": file.attr("file_id"), "basename": file.attr("title"), "url": file.attr("url"), "thumb": file.attr("thumb"), "type": file.attr("file_type")});
+                    });
+
+                    options.onFilesSelect(files);
+                    public_methods.closeFileEditor();
+                }
+            },
+            onContentStatusChange: function() {
+                this.selected_file_amount = objects.browserFilesList.find(".file.selected").length;
+
+                if ((this.selected_file_amount > 0) && (objects.browserFilesList.find(".directory.selected").length <= 0)) {
+                    if(options.multiusage == true){
+                        objects.browserBtnUseFiles.attr("disabled", false);
+                    }
+                    else if(this.selected_file_amount == 1){
+                        objects.browserBtnUseFiles.attr("disabled", false);
+                    }
+                    else{
+                        objects.browserBtnUseFiles.attr("disabled", true);
+                    }
+                }
+                else
+                    objects.browserBtnUseFiles.attr("disabled", true);
+            },
+            onFilesSelectedForUpload: function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                // upload edilecek dosyaların kullanıcı tarafından eklenme şekline göre (normal yükleme veya Drag & Drop şeklinde) dosyaları seç
+                files = e.type == "change" ? e.target.files : e.dataTransfer.files;
+
+                for (i = 0, j = files.length; i < j; i++) {
+                    // statik değeri arttır
+                    FILE_EDITOR.uploaded_file_count++;
+
+                    // kullanılacak classları örnekle
+                    xhr_list[i] = new XMLHttpRequest();
+                    editor_form_list[i] = new FormData();
+                    file_reader_list[i] = new FileReader();
+
+                    // form bilgilerini ekle
+                    editor_form_list[i].append("file", files[i]);
+                    editor_form_list[i].append("directory_id", current_directory_id);
+                    editor_form_list[i].append("admin_action", "uploadFile");
+
+                    // filereader eventini bağla
+                    file_reader_list[i].addEventListener("load", (function(i) {
+                        var index = i;
+                        return function(e) {
+                            xhr_list[index].open("post", script_file);
                             xhr_list[index].send(editor_form_list[index]);
-						};
-					}(i)));
-					
-					file_reader_list[i].addEventListener("loadstart", (function(i){
-						var index = i;
-						return function(e){
-							if(e.total > upload_limit_as_byte){
+                        };
+                    }(i)));
+
+                    file_reader_list[i].addEventListener("loadstart", (function(i) {
+                        var index = i;
+                        return function(e) {
+                            if (e.total > upload_limit_as_byte) {
                                 var upload_limit_as_mb = upload_limit_as_byte / 1048576;
                                 file_reader_list[index].abort();
-                                
+
                                 MESSAGEBOX.showMessage("Uyarı", "Yüklemek istediğiniz dosyanın boyutu upload limitinizi aşmakta olduğu için yüklene işlemini gerçekleştiremiyoruz. Kullanabileceğiniz maximum upload limitiniz " + upload_limit_as_mb + "MB'tır.");
                             }
-						};
-					}(i)));
+                        };
+                    }(i)));
 
-					// xhr eventlerini bağla-------------------------------------------
-					xhr_list[i].addEventListener("loadstart", (function(){
-						var index = FILE_EDITOR.uploaded_file_count;
+                    // xhr eventlerini bağla-------------------------------------------
+                    xhr_list[i].addEventListener("loadstart", (function() {
+                        var index = FILE_EDITOR.uploaded_file_count;
 
-						return function(e){
-							queueItem  = '<li id="queue_' + index + '" class="fileUploadingOuter uploadifyQueueItem">';
-							queueItem += '<span class="uploadingText">Yükleniyor...</span>';
-							queueItem += '<span class="uploadBarOuter">';
-							queueItem += '<span id="bar_' + index + '" class="bar">';
-							queueItem += '<span class="uploaderImage"></span>';
-							queueItem += '</span></span></li>';
+                        return function(e) {
+                            queueItem = '<li id="queue_' + index + '" class="fileUploadingOuter uploadifyQueueItem">';
+                            queueItem += '<span class="uploadingText">Yükleniyor...</span>';
+                            queueItem += '<span class="uploadBarOuter">';
+                            queueItem += '<span id="bar_' + index + '" class="bar">';
+                            queueItem += '<span class="uploaderImage"></span>';
+                            queueItem += '</span></span></li>';
 
-							objects.browserFilesList.append(queueItem);
-						};
-					}()));
+                            objects.browserFilesList.append(queueItem);
+                        };
+                    }()));
 
-					xhr_list[i].addEventListener("progress", (function(){
-						var index = FILE_EDITOR.uploaded_file_count;
+                    xhr_list[i].addEventListener("progress", (function() {
+                        var index = FILE_EDITOR.uploaded_file_count;
 
-						return function(e){
-							$("#bar_" + index).css("left", ((e.loaded / e.total) * 111) - 111);
-					}; }()));
+                        return function(e) {
+                            $("#bar_" + index).css("left", ((e.loaded / e.total) * 111) - 111);
+                        };
+                    }()));
 
-					xhr_list[i].addEventListener("load", (function(){
-						var index = FILE_EDITOR.uploaded_file_count;
+                    xhr_list[i].addEventListener("load", (function() {
+                        var index = FILE_EDITOR.uploaded_file_count;
 
-						return function(e){
-							try{
-								var $response = $.parseJSON(e.target.response);
+                        return function(e) {
+                            try {
+                                var $response = $.parseJSON(e.target.response);
 
-								if($response.success === true){
-									setTimeout(function(){
-										var $temp = $(generateFileHtml($response.file));
-										$temp.attr("id", "uploaded_" + index);
+                                if ($response.success === true) {
+                                    setTimeout(function() {
+                                        var $temp = $(generateFileHtml($response.file));
+                                        $temp.attr("id", "uploaded_" + index);
 
-										$("#queue_" + index).replaceWith($temp);
-										// yeni yüklenen dosyanın thumbnailinin load eventini burdan bağla, delegate veya live ile bağlanınca çalışmıyorlar
-										objects.browserFilesList.find("#uploaded_" + index).removeAttr("id").find(".editorFileThumb").load(events.onFileThumbnailLoad).error(events.onFileThumbnailError);
-										//-------------------------------------------------------------------------------------------------------------------
-									}, 500);
-								}
-								else{
+                                        $("#queue_" + index).replaceWith($temp);
+                                        // yeni yüklenen dosyanın thumbnailinin load eventini burdan bağla, delegate veya live ile bağlanınca çalışmıyorlar
+                                        objects.browserFilesList.find("#uploaded_" + index).removeAttr("id").find(".editorFileThumb").load(events.onFileThumbnailLoad).error(events.onFileThumbnailError);
+                                        //-------------------------------------------------------------------------------------------------------------------
+                                    }, 500);
+                                }
+                                else {
                                     MESSAGEBOX.showMessage("Hata Oluştu!", "Hata: " + $response.msg);
-								}
-							}
-							catch(error){
+                                }
+                            }
+                            catch (error) {
                                 MESSAGEBOX.showMessage("Hata Oluştu!", "Hata: " + e.target.response);
-							}
-						};
-					}()));
-					//---------------------------------------------------------------
+                            }
+                        };
+                    }()));
+                    //---------------------------------------------------------------
 
-					file_reader_list[i].readAsDataURL(files[i]);
-				}
+                    file_reader_list[i].readAsDataURL(files[i]);
+                }
 
-				objects.editorDragFilesArea.css({"visibility":"hidden"});
-				delete files;
-			},
-			onDragOver:function(e){
-				objects.editorDragFilesArea.css({"visibility":"visible"});
-			},
-			onDragEnd:function(){
-				objects.editorDragFilesArea.css({"visibility":"hidden"});
-			},
-			onMoveUpperDirectory: function(e){
-				e.preventDefault();
+                objects.editorDragFilesArea.css({"visibility": "hidden"});
+                delete files;
+            },
+            onDragOver: function(e) {
+                objects.editorDragFilesArea.css({"visibility": "visible"});
+            },
+            onDragEnd: function() {
+                objects.editorDragFilesArea.css({"visibility": "hidden"});
+            },
+            onMoveUpperDirectory: function(e) {
+                e.preventDefault();
 
-				if((temp = objects.browserDirectoriesOuter.find(".selected")) && (temp.length > 0))
-				{
-					// Var ise üst dizine çık
-					if((temp2 = temp.parent().parent()) && (temp2.is("[directory_id]")))
-					{
-						temp2.trigger("mousedown");
-					}
-					else // bir üst dizin bulunamadıysa ana dizine git.
-						objects.browserBtn_Home.trigger("click");
+                if ((temp = objects.browserDirectoriesOuter.find(".selected")) && (temp.length > 0))
+                {
+                    // Var ise üst dizine çık
+                    if ((temp2 = temp.parent().parent()) && (temp2.is("[directory_id]")))
+                    {
+                        temp2.trigger("mousedown");
+                    }
+                    else // bir üst dizin bulunamadıysa ana dizine git.
+                        objects.browserBtn_Home.trigger("click");
 
-					delete temp2;
-				}
+                    delete temp2;
+                }
 
-				delete temp;
-			},
-			onCreateNewDirectory: function(e){
-				// daha önce başlatılan klasör ismini değiştirme işlemi varsa o işlemi tamamla
-				updateDirectory();
+                delete temp;
+            },
+            onCreateNewDirectory: function(e) {
+                // daha önce başlatılan klasör ismini değiştirme işlemi varsa o işlemi tamamla
+                updateDirectory();
 
-				// editördeki seçili elemanların seçilme durumlarını iptal et
-				objects.browserFilesList.find(".selected").removeClass("selected");
+                // editördeki seçili elemanların seçilme durumlarını iptal et
+                objects.browserFilesList.find(".selected").removeClass("selected");
 
-				// Eğer daha önce yeni klasör oluşturma işlemi başlatılmış ama tamamlanmamışsa
-				if($("#newDirectory").length <= 0)
-				{
-					newDirectoryHtml = '<li class="directory editor_content" id="newDirectory" directory_id="" parent_id="-1">';
-					newDirectoryHtml += '<icon></icon>';
-					newDirectoryHtml += '<input type="text" id="newFolderName" value="" /></li>';
+                // Eğer daha önce yeni klasör oluşturma işlemi başlatılmış ama tamamlanmamışsa
+                if ($("#newDirectory").length <= 0)
+                {
+                    newDirectoryHtml = '<li class="directory editor_content" id="newDirectory" directory_id="" parent_id="-1">';
+                    newDirectoryHtml += '<icon></icon>';
+                    newDirectoryHtml += '<input type="text" id="newFolderName" value="" /></li>';
 
-					objects.browserFilesList.append(newDirectoryHtml);
-				}
+                    objects.browserFilesList.append(newDirectoryHtml);
+                }
 
-				$("#newFolderName").focus();
-				return false;
-			},
-			onLoadDirectoryTree: function(){
-				$.ajax({
-					type:"post",
-					url:script_file,
-					data:"admin_action=loadDirectoryTree",
-					dataType:"json",
-					success:function(response){
-						if(response.success === true)
-						{
-							objects.browserDirectoriesOuter.html(response.directory_tree);
-						}
-						else
-						{
+                $("#newFolderName").focus();
+                return false;
+            },
+            onLoadDirectoryTree: function() {
+                $.ajax({
+                    type: "post",
+                    url: script_file,
+                    data: "admin_action=loadDirectoryTree",
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success === true)
+                        {
+                            objects.browserDirectoriesOuter.html(response.directory_tree);
+                        }
+                        else
+                        {
                             MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-						}
-					},
-					error:function(){
+                        }
+                    },
+                    error: function() {
                         MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-					}
-				});
-			},
-			onListFavouritedDirectories: function(){
-				$.ajax({
-					type:"post",
-					url:script_file,
-					data:"admin_action=loadFavouritedDirectories",
-					dataType:"json",
-					success:function(response){
-						if(response.success === true)
-						{
-							objects.browserFavouritesList.html(response.favourited_directories);
-						}
-						else
-						{
+                    }
+                });
+            },
+            onListFavouritedDirectories: function() {
+                $.ajax({
+                    type: "post",
+                    url: script_file,
+                    data: "admin_action=loadFavouritedDirectories",
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success === true)
+                        {
+                            objects.browserFavouritesList.html(response.favourited_directories);
+                        }
+                        else
+                        {
                             MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-						}
-					},
-					error:function(){
+                        }
+                    },
+                    error: function() {
                         MESSAGEBOX.showMessage("Hata", "Beklenmedik bir hata oluştu, lütfen tekrar deneyin!");
-					}
-				});
-			}
-		};
+                    }
+                });
+            },
+            onRightClickFromContentsList : function(e){
+                e.preventDefault();
 
-		var public_methods = {
-			openFileEditor:function(properties){
-				// İlk ayarları belirle
-				options = $.extend({}, default_properties, properties);
-				//------------------------------------------------------------------
+                objects.contextMenu.css({
+                    left:e.clientX - objects.browserFilesListOuter.offset().left,
+                    top:e.clientY - objects.browserFilesListOuter.offset().top
+                });
 
-				//İçerikleri yüklemeye başla
-				events.onListFavouritedDirectories();
-				events.onLoadDirectoryTree();
-				events.onLoadFiles();
-				//---------------------------------------------
+                if(($(e.target).parents('li').length <= 0) && !$(e.target).is('li')){
+                    objects.contextMenu.find('.copy, .cut, .delete').addClass('disabled');
+                }
+                else{
+                    objects.contextMenu.find('.copy, .cut, .delete').removeClass('disabled');
+                }
+            },
+            onCopyButtonClickedFromContextMenu : function(){
+                memory = {files:[], folders:[]};
 
-				// "Kullan" butonunu disable yap, çünkü henüz hiçbir dosya seçilmedi
-				objects.browserBtnUseFiles.attr("disabled", true);
+                objects.browserFilesList.find('.selected').each(function(){
+                    if($(this).hasClass('directory')){
+                        memory.folders.push({id:$(this).attr('directory_id'), name:$(this).attr('data-name'), after_delete:false});
+                    }
+                    else{
+                        memory.files.push({id:$(this).attr('file_id'), name:$(this).attr('data-name'), after_delete:false});
+                    }
+                });
 
-				// ilk açılışta içerik alanına focus olmuş kabul ediyoruz
-				objects.browserFilesListOuter.focused = true;
+                objects.contextMenu.find('.paste').removeClass('disabled');
+            },
+            onCutButtonClickedFromContextMenu : function(){
+                memory = {files:[], folders:[]};
+                objects.browserFilesList.find('.selected').each(function(){
+                    if($(this).hasClass('directory')){
+                        memory.folders.push({id:$(this).attr('directory_id'), name:$(this).attr('data-name'), after_delete:true});
+                    }
+                    else{
+                        memory.files.push({id:$(this).attr('file_id'), name:$(this).attr('data-name'), after_delete:true});
+                    }
+                });
 
-				// Editörü göster
-				objects.fileEditorMainContainer.css({"visibility":"visible", "opacity":"1"});
-				setTimeout(function(){
-					objects.fileEditorOuter.css({"opacity":"1"});
-				}, 250);
-			},
+                objects.contextMenu.find('.paste').removeClass('disabled');
+            },
+            onPasteButtonClickedFromContextMenu : function(){
+                overwrite_status = null;
+                var break_each_loop = false;
 
-			closeFileEditor:function(){
-				objects.fileEditorMainContainer.css({"opacity":"0"});
-				setTimeout(function(){
-					objects.fileEditorOuter.css({"opacity":"0"});
-					objects.fileEditorMainContainer.css({"visibility":"hidden"});
-					objects.browserFilesListOuter.focused = false;
-				}, 250);
-			},
+                // Burada amacimiz ilk olarak benzer dosya veya dizin varmi diye kontrol
+                // edip ona gore ilgili popup'i gostermek. Custom popup kullandigimiz icin
+                // popup'tan cevap gelene kadar icinde bulundugumuz loop'u bekletemiyoruz
+                // o yuzden kodu bu kadar uzatmak zorunda kalıyoruz.
+                objects.browserFilesList.find('li').each(function(){
+                    if($(this).hasClass('file')){
+                        for(var i=0; i<memory.files.length; i++){
+                            if(memory.files[i].name == $(this).attr('data-name')){
+                                popupOverwriteOnFilesAndFolders();
+                                break_each_loop = true;
+                                break;
+                            }
+                        }
+                    }
+                    else{
+                        for(var i=0; i<memory.folders.length; i++){
+                            if(memory.folders[i].name == $(this).attr('data-name')){
+                                popupOverwriteOnFilesAndFolders();
+                                break_each_loop = true;
+                                break;
+                            }
+                        }
+                    }
 
-			initialize: function(properties){
-				if($("#fileEditorMainContainer").length <= 0){
-					editor_html += '<div id="fileEditorMainContainer">';
-					editor_html += '<div id="fileEditorBackHider"></div>';
-					editor_html += '<div id="fileEditorOuter">';
-					editor_html += '<div id="fileEditorOuter_InnerShell">';
-					editor_html += '<div id="fileEditorNavigationBar">';
-					editor_html += '<span id="fileEditorTitle">Dosya Editörü</span>';
-					editor_html += '<span id="btnCloseFileEditor">Editörü Kapat</span>';
-					editor_html += '</div>';
-					editor_html += '<div id="fileEditorContentsOuter">';
-					editor_html += '<div id="browserLeftCorner">';
-					editor_html += '<label class="labelFavourites browserBigTitle">Sık Kullanılanlar</label>';
-					editor_html += '<div id="browserFavouritesList"></div>';
-					editor_html += '<label class="labelDirectory browserBigTitle">Dizinler</label>';
+                    if(break_each_loop){
+                       return false;
+                    }
+                });
+
+                if(!break_each_loop){
+                    duplicateFilesAndFolders();
+                }
+            },
+            onDeleteButtonClickedFromContextMenu : function(){
+                deleteFileEditorItems(objects.browserFilesList.find("li.selected"));
+            }
+        };
+
+        var public_methods = {
+            openFileEditor: function(properties) {
+                // İlk ayarları belirle
+                options = $.extend({}, default_properties, properties);
+                //------------------------------------------------------------------
+
+                //İçerikleri yüklemeye başla
+                events.onListFavouritedDirectories();
+                events.onLoadDirectoryTree();
+                events.onLoadFiles();
+                //---------------------------------------------
+
+                // "Kullan" butonunu disable yap, çünkü henüz hiçbir dosya seçilmedi
+                objects.browserBtnUseFiles.attr("disabled", true);
+
+                // ilk açılışta içerik alanına focus olmuş kabul ediyoruz
+                objects.browserFilesListOuter.focused = true;
+
+                // Editörü göster
+                objects.fileEditorMainContainer.css({"visibility": "visible", "z-index":1000 , "opacity": "1"});
+                setTimeout(function() {
+                    objects.fileEditorOuter.css({"opacity": "1"});
+                }, 250);
+            },
+            closeFileEditor: function() {
+                objects.fileEditorMainContainer.css({"opacity": "0"});
+                setTimeout(function() {
+                    objects.fileEditorOuter.css({"opacity": "0"});
+                    objects.fileEditorMainContainer.css({"visibility": "hidden", "z-index":-1});
+                    objects.browserFilesListOuter.focused = false;
+                }, 250);
+            },
+            initialize: function(properties) {
+                if ($("#fileEditorMainContainer").length <= 0) {
+                    editor_html += '<div id="fileEditorMainContainer">';
+                    editor_html += '<div id="fileEditorBackHider"></div>';
+                    editor_html += '<div id="fileEditorOuter">';
+                    editor_html += '<div id="fileEditorOuter_InnerShell">';
+                    editor_html += '<div id="fileEditorNavigationBar">';
+                    editor_html += '<span id="fileEditorTitle">Dosya Editörü</span>';
+                    editor_html += '<span id="btnCloseFileEditor">Editörü Kapat</span>';
+                    editor_html += '</div>';
+                    editor_html += '<div id="fileEditorContentsOuter">';
+                    editor_html += '<div id="browserLeftCorner">';
+                    editor_html += '<label class="labelFavourites browserBigTitle">Sık Kullanılanlar</label>';
+                    editor_html += '<div id="browserFavouritesList"></div>';
+                    editor_html += '<label class="labelDirectory browserBigTitle">Dizinler</label>';
                     editor_html += '<div id="syncElementsOuter">';
                     editor_html += '<span id="btnSync" title="Dosya ve dizinleri senkronize et"></span>';
                     editor_html += '<span id="syncLoader"></span>';
                     editor_html += '</div>';
-					editor_html += '<div id="browserDirectoriesOuter"></div>';
-					editor_html += '</div>';
-					editor_html += '<div id="browserRightCorner">';
-					editor_html += '<div id="addressBarOuter">';
-					editor_html += '<label class="browserBigTitle">Adres:</label>';
-					editor_html += '<input id="browser_address" type="text" name="browser_address" readonly="readonly">';
-					editor_html += '<a id="browserBtn_Home" href="" title="Ana Dizin"></a>';
-					editor_html += '<a id="browserBtn_Refresh" href="" title="Yenile"></a>';
-					editor_html += '<a id="browserBtn_Fav" href="" title="Sık Kullanılanlara Ekle"></a>';
-					editor_html += '<a id="browserBtn_Prev" href="" title="Geri Dön"></a>';
-					editor_html += '<a id="browserBtn_NewDir" href="" title="Yeni Klasör"></a>';
-					editor_html += '<a id="browserBtn_UploadFile" onclick="javascript:void(0);" title="Dosya Yükle">';
-					editor_html += '<input id="fileEditorUploader" type="file" multiple="multiple">';
-					editor_html += '</a>';
-					editor_html += '</div>';
-					editor_html += '<div id="browserSearchOuter">';
-					editor_html += '<label class="browserBigTitle">Arama:</label>';
-					editor_html += '<input id="search_input" type="text" disabled="disabled" title="Yapım Aşamasında!" >';
-					editor_html += '<p id="searchAlertBox" style="display:none;">Kayıt bulunamadı!</p>';
-					editor_html += '</div>';
-					editor_html += '<div id="tempQueue" style="display:none;"></div>';
-					editor_html += '<div id="browserCotentsOuter">';
-					editor_html += '<div id="fileEditorContentsLoader"><span></span></div>';
-					editor_html += '<div id="browserFilesListOuter">';
-					editor_html += '<div id="editorDragFilesArea"><span></span></div>';
-					editor_html += '<ul id="browserFilesList">';
-					editor_html += '</ul>';
-					editor_html += '<div id="browserFilesListScroller"></div>';
-					editor_html += '</div>';
-					editor_html += '</div>';
-					editor_html += '<button id="browserBtnUseFiles" type="button">Kullan</button>';
-					editor_html += '</div>';
-					editor_html += '</div>';
-					editor_html += '</div>';
-					editor_html += '</div>';
-					editor_html += '</div>';
+                    editor_html += '<div id="browserDirectoriesOuter"></div>';
+                    editor_html += '</div>';
+                    editor_html += '<div id="browserRightCorner">';
+                    editor_html += '<div id="addressBarOuter">';
+                    editor_html += '<label class="browserBigTitle">Adres:</label>';
+                    editor_html += '<input id="browser_address" type="text" name="browser_address" readonly="readonly">';
+                    editor_html += '<a id="browserBtn_Home" href="" title="Ana Dizin"></a>';
+                    editor_html += '<a id="browserBtn_Refresh" href="" title="Yenile"></a>';
+                    editor_html += '<a id="browserBtn_Fav" href="" title="Sık Kullanılanlara Ekle"></a>';
+                    editor_html += '<a id="browserBtn_Prev" href="" title="Geri Dön"></a>';
+                    editor_html += '<a id="browserBtn_NewDir" href="" title="Yeni Klasör"></a>';
+                    editor_html += '<a id="browserBtn_UploadFile" onclick="javascript:void(0);" title="Dosya Yükle">';
+                    editor_html += '<input id="fileEditorUploader" type="file" multiple="multiple">';
+                    editor_html += '</a>';
+                    editor_html += '</div>';
+                    editor_html += '<div id="browserSearchOuter">';
+                    editor_html += '<label class="browserBigTitle">Arama:</label>';
+                    editor_html += '<input id="search_input" type="text" disabled="disabled" title="Yapım Aşamasında!" >';
+                    editor_html += '<p id="searchAlertBox" style="display:none;">Kayıt bulunamadı!</p>';
+                    editor_html += '</div>';
+                    editor_html += '<div id="tempQueue" style="display:none;"></div>';
+                    editor_html += '<div id="browserCotentsOuter">';
+                    editor_html += '<div id="contextMenu">';
+                    editor_html += '<span class="copy">Kopyala</span>';
+                    editor_html += '<span class="cut">Kes</span>';
+                    editor_html += '<span class="paste disabled">Yapıştır</span>';
+                    editor_html += '<span class="delete">Sil</span>';
+                    editor_html += '</div>';
+                    editor_html += '<div id="fileEditorContentsLoader"><span></span></div>';
+                    editor_html += '<div id="browserFilesListOuter">';
+                    editor_html += '<div id="editorDragFilesArea"><span></span></div>';
 
-					$("body").append(editor_html);
+                    editor_html += '<ul id="browserFilesList">';
+                    editor_html += '</ul>';
+                    editor_html += '<div id="browserFilesListScroller"></div>';
+                    editor_html += '</div>';
+                    editor_html += '</div>';
+                    editor_html += '<button id="browserBtnUseFiles" type="button">Kullan</button>';
+                    editor_html += '</div>';
+                    editor_html += '</div>';
+                    editor_html += '</div>';
+                    editor_html += '</div>';
+                    editor_html += '</div>';
 
-					// Özellikleri belirle
-					loadElements();
-					bindEvents();
+                    $("body").append(editor_html);
+
+                    // Özellikleri belirle
+                    loadElements();
+                    bindEvents();
 
                     // upload_limit değeri sistem tarafından otomatik olarak oluşturuluyor.
-                    if(upload_limit.match(/^[0-9]+(K|KB)$/)){
+                    if (upload_limit.match(/^[0-9]+(K|KB)$/)) {
                         upload_limit_as_byte = parseFloat(upload_limit) * 1024;
                     }
-                    else if(upload_limit.match(/^[0-9]+(M|MB)$/)){
+                    else if (upload_limit.match(/^[0-9]+(M|MB)$/)) {
                         upload_limit_as_byte = parseFloat(upload_limit) * 1024 * 1024;
                     }
-                    else if(upload_limit.match(/^[0-9]+(G|GB)$/)){
+                    else if (upload_limit.match(/^[0-9]+(G|GB)$/)) {
                         upload_limit_as_byte = parseFloat(upload_limit) * 1024 * 1024 * 1024;
                     }
-				}
-			}
-		};
+                }
+            }
+        };
 
-		return public_methods;
-	};
+        return public_methods;
+    };
 
-	function SELECTING_OBJECTS_2D(){
-		var self = this;
-		var deleteFilesList = new Array();
-		var startPosX = 0;
-		var startPosY = 0;
-		var currentPos = {};
-		var selectableAreaPos = {};
-		var placeholderWidth = 0;
-		var placeholderHeight = 0;
-		var placeholderLeft = 0;
-		var placeholderTop = 0;
-		var placeholderRight = 0;
-		var placeholderBottom = 0;
-		var selectabeObjectPos = 0;
-		var selectabeObjectLeft = 0;
-		var selectabeObjectRight = 0;
-		var selectabeObjectTop = 0;
-		var selectabeObjectBottom = 0;
+    function SELECTING_OBJECTS_2D() {
+        var self = this;
+        var deleteFilesList = new Array();
+        var startPosX = 0;
+        var startPosY = 0;
+        var currentPos = {};
+        var selectableAreaPos = {};
+        var placeholderWidth = 0;
+        var placeholderHeight = 0;
+        var placeholderLeft = 0;
+        var placeholderTop = 0;
+        var placeholderRight = 0;
+        var placeholderBottom = 0;
+        var selectabeObjectPos = 0;
+        var selectabeObjectLeft = 0;
+        var selectabeObjectRight = 0;
+        var selectabeObjectTop = 0;
+        var selectabeObjectBottom = 0;
 
-		// public_events
-		this.onCapturing = function(){};
+        // public_events
+        this.onCapturing = function() {
+        };
 
-		// public options
-		this.drag_select_enabled = false;
-		this.selector = {};
-		this.selector.selectableObjects = null;
-		this.selector.selectorPlaceHolder = null;
-		this.selector.selectableArea = null
+        // public options
+        this.drag_select_enabled = false;
+        this.selector = {};
+        this.selector.selectableObjects = null;
+        this.selector.selectorPlaceHolder = null;
+        this.selector.selectableArea = null
 
-		this.startCapturing = function(e){
-			if((self.selector.selectableObject === null) || (self.selector.selectableArea === null))
-			{
-				MESSAGEBOX.show("Hata", "'selectableObject' ve 'selectableArea' değerleri atanmamış!");
-				self.drag_select_enabled = false;
-				return false;
-			}
+        this.startCapturing = function(e) {
+            if ((self.selector.selectableObject === null) || (self.selector.selectableArea === null))
+            {
+                MESSAGEBOX.showMessage("Hata", "'selectableObject' ve 'selectableArea' değerleri atanmamış!");
+                self.drag_select_enabled = false;
+                return false;
+            }
 
-			$placeholder = $("#selectorPlaceHolder");
+            $placeholder = $("#selectorPlaceHolder");
 
-			if($placeholder.length <= 0)
-			{
-				$placeholder = $("<div id='selectorPlaceHolder'></div>");
-				self.selector.selectableArea.append($placeholder);
-				self.selector.selectorPlaceHolder = $placeholder;
-				placeholderCreated = true;
-			}
+            if ($placeholder.length <= 0)
+            {
+                $placeholder = $("<div id='selectorPlaceHolder'></div>");
+                self.selector.selectableArea.append($placeholder);
+                self.selector.selectorPlaceHolder = $placeholder;
+                placeholderCreated = true;
+            }
 
-			self.drag_select_enabled = true;
-			selectableAreaPos = self.selector.selectableArea.offset();
-			startPosX = e.pageX - selectableAreaPos.left;
-			startPosY = e.pageY - selectableAreaPos.top;
-			self.selector.selectorPlaceHolder.css("display","block");
-			self.selector.selectableArea.on("mousemove", captureObjectsEvent);
-		};
+            self.drag_select_enabled = true;
+            selectableAreaPos = self.selector.selectableArea.offset();
+            startPosX = e.pageX - selectableAreaPos.left;
+            startPosY = e.pageY - selectableAreaPos.top;
+            self.selector.selectorPlaceHolder.css("display", "block");
+            self.selector.selectableArea.on("mousemove", captureObjectsEvent);
+        };
 
-		this.stopCapturing = function(){
-			if(self.drag_select_enabled)
-			{
-				self.drag_select_enabled = false;
-				self.selector.selectorPlaceHolder.css({"width":"0","height":"0","left":"-10px","top":"-10px","display":"none"});
-				self.selector.selectableArea.off("mousemove");
-			}
-		};
+        this.stopCapturing = function() {
+            if (self.drag_select_enabled)
+            {
+                self.drag_select_enabled = false;
+                self.selector.selectorPlaceHolder.css({"width": "0", "height": "0", "left": "-10px", "top": "-10px", "display": "none"});
+                self.selector.selectableArea.off("mousemove");
+            }
+        };
 
-		// PRIVATE FUNCTIONS
-		var captureObjectsEvent = function(e){
-			if(!self.drag_select_enabled)
-				return;
+        // PRIVATE FUNCTIONS
+        var captureObjectsEvent = function(e) {
+            if (!self.drag_select_enabled)
+                return;
 
-			selectableAreaPos = self.selector.selectableArea.offset();
-			currentPos.left = e.pageX - selectableAreaPos.left;
-			currentPos.top = e.pageY - selectableAreaPos.top;
+            selectableAreaPos = self.selector.selectableArea.offset();
+            currentPos.left = e.pageX - selectableAreaPos.left;
+            currentPos.top = e.pageY - selectableAreaPos.top;
 
-			placeholderLeft = -10;
-			placeholderTop = -10;
-			placeholderWidth = 0;
-			placeholderHeight = 0;
-
-
-			// Seçim işlemi yaparken oluşturulan görsel alanın özelliklerini ayarla
-			if((currentPos.left > startPosX) && (currentPos.top > startPosY)){ // I. BÖLGE
-				placeholderLeft = startPosX;
-				placeholderTop = startPosY;
-				placeholderWidth = currentPos.left - placeholderLeft;
-				placeholderHeight = currentPos.top - placeholderTop;
-			}
-			else if((currentPos.left < startPosX) && (currentPos.top > startPosY)){ // II. BÖLGE
-				placeholderLeft = currentPos.left;
-				placeholderTop = startPosY;
-				placeholderWidth = startPosX - placeholderLeft;
-				placeholderHeight = currentPos.top - placeholderTop;
-			}
-			else if((currentPos.left > startPosX) && (currentPos.top < startPosY)){ // III. BÖLGE
-				placeholderLeft = startPosX;
-				placeholderTop = currentPos.top;
-				placeholderWidth = currentPos.left - placeholderLeft;
-				placeholderHeight = startPosY - placeholderTop;
-			}
-			else if((currentPos.left < startPosX) && (currentPos.top < startPosY)){ // IV. BÖLGE
-				placeholderLeft = currentPos.left;
-				placeholderTop = currentPos.top;
-				placeholderWidth = startPosX - placeholderLeft;
-				placeholderHeight = startPosY - placeholderTop;
-			}
-
-			self.selector.selectorPlaceHolder.css({
-				"left":placeholderLeft,
-				"top":placeholderTop,
-				"width":placeholderWidth,
-				"height":placeholderHeight
-			});
+            placeholderLeft = -10;
+            placeholderTop = -10;
+            placeholderWidth = 0;
+            placeholderHeight = 0;
 
 
-			placeholderRight = placeholderLeft + placeholderWidth;
-			placeholderBottom = placeholderTop + placeholderHeight;
+            // Seçim işlemi yaparken oluşturulan görsel alanın özelliklerini ayarla
+            if ((currentPos.left > startPosX) && (currentPos.top > startPosY)) { // I. BÖLGE
+                placeholderLeft = startPosX;
+                placeholderTop = startPosY;
+                placeholderWidth = currentPos.left - placeholderLeft;
+                placeholderHeight = currentPos.top - placeholderTop;
+            }
+            else if ((currentPos.left < startPosX) && (currentPos.top > startPosY)) { // II. BÖLGE
+                placeholderLeft = currentPos.left;
+                placeholderTop = startPosY;
+                placeholderWidth = startPosX - placeholderLeft;
+                placeholderHeight = currentPos.top - placeholderTop;
+            }
+            else if ((currentPos.left > startPosX) && (currentPos.top < startPosY)) { // III. BÖLGE
+                placeholderLeft = startPosX;
+                placeholderTop = currentPos.top;
+                placeholderWidth = currentPos.left - placeholderLeft;
+                placeholderHeight = startPosY - placeholderTop;
+            }
+            else if ((currentPos.left < startPosX) && (currentPos.top < startPosY)) { // IV. BÖLGE
+                placeholderLeft = currentPos.left;
+                placeholderTop = currentPos.top;
+                placeholderWidth = startPosX - placeholderLeft;
+                placeholderHeight = startPosY - placeholderTop;
+            }
 
-			// İlk olarak seçilen tüm elemanların seçilme durumunu sıfırla
-			if((placeholderWidth > 2) || (placeholderHeight > 2))
-				self.selector.selectableObjects.removeClass("selected");
+            self.selector.selectorPlaceHolder.css({
+                "left": placeholderLeft,
+                "top": placeholderTop,
+                "width": placeholderWidth,
+                "height": placeholderHeight
+            });
 
-			// İkinci olarak elemanların her birini tek tek kontrol edip seçilme durumlarını belirle
-			self.selector.selectableObjects.each(function(){
-				selectabeObjectPos = $(this).position();
-				selectabeObjectLeft = selectabeObjectPos.left + 20;
-				selectabeObjectRight = 0;
-				selectabeObjectTop = 0;
-				selectabeObjectBottom = 0;
 
-				if(!(placeholderRight > selectabeObjectLeft))
-					return true;
-				else
-					selectabeObjectRight = selectabeObjectLeft + 145;
+            placeholderRight = placeholderLeft + placeholderWidth;
+            placeholderBottom = placeholderTop + placeholderHeight;
 
-				if(!(placeholderLeft < selectabeObjectRight))
-					return true;
-				else
-					selectabeObjectTop = selectabeObjectPos.top + 20;
+            // İlk olarak seçilen tüm elemanların seçilme durumunu sıfırla
+            if ((placeholderWidth > 2) || (placeholderHeight > 2))
+                self.selector.selectableObjects.removeClass("selected");
 
-				if(!(placeholderBottom > selectabeObjectTop))
-					return true;
-				else
-					selectabeObjectBottom = selectabeObjectTop + 130;
+            // İkinci olarak elemanların her birini tek tek kontrol edip seçilme durumlarını belirle
+            self.selector.selectableObjects.each(function() {
+                selectabeObjectPos = $(this).position();
+                selectabeObjectLeft = selectabeObjectPos.left + 20;
+                selectabeObjectRight = 0;
+                selectabeObjectTop = 0;
+                selectabeObjectBottom = 0;
 
-				if(!(placeholderTop < selectabeObjectBottom))
-					return true;
-				else
-					$(this).addClass("selected");
-			});
+                if (!(placeholderRight > selectabeObjectLeft))
+                    return true;
+                else
+                    selectabeObjectRight = selectabeObjectLeft + 145;
 
-			// onCapturing eventini çalıştır.
-			self.onCapturing();
-		};
-	}
+                if (!(placeholderLeft < selectabeObjectRight))
+                    return true;
+                else
+                    selectabeObjectTop = selectabeObjectPos.top + 20;
 
-	var EDITOR = new FILE_EDITOR();
+                if (!(placeholderBottom > selectabeObjectTop))
+                    return true;
+                else
+                    selectabeObjectBottom = selectabeObjectTop + 130;
 
-	$.fn.fileeditor = function(action, value){
-		if((typeof(action) == "object") || !action)
-		{
-			return this.each(function(){
-				EDITOR.initialize(action);
-			});
-		}
-		else
-		{
-			if(EDITOR[action])
-			{
-				return this.each(function(){
-					EDITOR[action](value);
-				});
-			}
-			else
-			{
-				MESSAGEBOX.showMessage("Hata", action + " fonksiyonu bulunamadı!");
-				return this;
-			}
-		}
-	};
+                if (!(placeholderTop < selectabeObjectBottom))
+                    return true;
+                else
+                    $(this).addClass("selected");
+            });
+
+            // onCapturing eventini çalıştır.
+            self.onCapturing();
+        };
+    }
+
+    var EDITOR = new FILE_EDITOR();
+
+    $.fn.fileeditor = function(action, value) {
+        if ((typeof(action) == "object") || !action)
+        {
+            return this.each(function() {
+                EDITOR.initialize(action);
+            });
+        }
+        else
+        {
+            if (EDITOR[action])
+            {
+                return this.each(function() {
+                    EDITOR[action](value);
+                });
+            }
+            else
+            {
+                MESSAGEBOX.showMessage("Hata", action + " fonksiyonu bulunamadı!");
+                return this;
+            }
+        }
+    };
 }(jQuery));

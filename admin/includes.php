@@ -1,19 +1,19 @@
-<?php 
-$minPhpVersion = "5.0.0";
-if(version_compare(PHP_VERSION,$minPhpVersion,"<"))
-{
-	echo "Lütfen minimum PHP $minPhpVersion kullanın";
-	exit;	
+<?php
+
+$minPhpVersion = "5.3.0";
+if (version_compare(PHP_VERSION, $minPhpVersion, "<")) {
+    echo "Lütfen minimum PHP $minPhpVersion kullanın";
+    exit;
 }
 
+// date() fonksiyonundaki hata mesajlarini gidermek icin default timezone degerini ata
+date_default_timezone_set('Europe/Istanbul');
+
 require_once 'system/includes/init.php';
-if(!file_exists(dirname(__FILE__) . "/config.php"))
-{	
-	require_once dirname(__FILE__) . '/system/setup/setup.php';	
-}
-else
-{
-	require_once dirname(__FILE__) . "/config.php";
+if (!file_exists(dirname(__FILE__) . "/config.php")) {
+    require_once dirname(__FILE__) . '/system/setup/setup.php';
+} else {
+    require_once dirname(__FILE__) . "/config.php";
 }
 
 require_once "system/library/JSON.php";
@@ -35,7 +35,6 @@ require_once "system/classes/AUTHENTICATION.php";
 require_once "system/classes/AUTHORIZATION.php";
 require_once "system/classes/I18N.php";
 require_once "system/classes/LANGUAGE.php";
-require_once "system/classes/PHPMailerSMTP.php";
 require_once "system/classes/PHPMailer.php";
 require_once "system/classes/MESSAGE.php";
 require_once "system/classes/LOG.php";
@@ -69,41 +68,34 @@ require_once 'system/includes/sitemap.php';
 require_once 'system/includes/custom_html_parser.php';
 
 
-if(in_admin)
-{
-	require_once 'functions.php';
-	
-	// Normalde bu işlemi dil atama esnasında seçilen dile göre yapıyoruz ama panelde kullanılan dil sabit ve Türkçe olduğu için ve de
-	// sitede seçilen dil paneli etkilemesin diye burada tekrardan database'e locale ataması yapıyoruz. 
-	$DB->execute("SET LC_TIME_NAMES=tr_TR");
-}
-else
-{
-	if(maintanance_mode && !$ADMIN->AUTHENTICATION->authenticated_user)
-	{
-		global $allowed_dirs_in_maintanance_mode;
-		$allow = false;
-		$current_dir = basename(dirname($_SERVER["SCRIPT_FILENAME"]));
-		
-		if(is_array($allowed_dirs_in_maintanance_mode) && (sizeof($allowed_dirs_in_maintanance_mode) > 0))
-		{
-			foreach($allowed_dirs_in_maintanance_mode as $dir)
-			{
-				if($dir == $current_dir)
-					$allow = true;
-			}
-		}
-		
-		if(!$allow)
-		{
-			header("Location:custom_pages/uc.html");
-			exit;
-		}
-	}
+if (in_admin) {
+    require_once 'functions.php';
+
+    // Normalde bu işlemi dil atama esnasında seçilen dile göre yapıyoruz ama panelde kullanılan dil sabit ve Türkçe olduğu için ve de
+    // sitede seçilen dil paneli etkilemesin diye burada tekrardan database'e locale ataması yapıyoruz. 
+    $DB->execute("SET LC_TIME_NAMES=tr_TR");
+} else {
+    if (maintanance_mode && !$ADMIN->AUTHENTICATION->authenticated_user) {
+        global $allowed_dirs_in_maintanance_mode;
+        $allow = false;
+        $current_dir = basename(dirname($_SERVER["SCRIPT_FILENAME"]));
+
+        if (is_array($allowed_dirs_in_maintanance_mode) && (sizeof($allowed_dirs_in_maintanance_mode) > 0)) {
+            foreach ($allowed_dirs_in_maintanance_mode as $dir) {
+                if ($dir == $current_dir)
+                    $allow = true;
+            }
+        }
+
+        if (!$allow) {
+            header("Location:custom_pages/uc.html");
+            exit;
+        }
+    }
 }
 
 ob_start();
-	global $modulesContent;
-	require_once "system/includes/modules.php";
-	$modulesContent = ob_get_contents();
+global $modulesContent;
+require_once "system/includes/modules.php";
+$modulesContent = ob_get_contents();
 ob_end_clean();

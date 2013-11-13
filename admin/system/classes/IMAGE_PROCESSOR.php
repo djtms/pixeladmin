@@ -72,9 +72,9 @@ class PA_IMAGE_PROCESSOR
 	public function save($path)
 	{
 		if(preg_match("/.jpeg$|.jpg$/i",$path))
-			imagejpeg($this->image, $path);
+			imagejpeg($this->image, $path, 90);
 		else if(preg_match("/.png$/i",$path))
-			imagepng($this->image, $path);
+			imagepng($this->image, $path, 0);
 		else if(preg_match("/.gif$/i",$path))
 			imagegif($this->image, $path);
 		else
@@ -117,59 +117,52 @@ class PA_IMAGE_PROCESSOR
 	 * $return boolean
 	 */
 	public function resize($width, $height, $proportion=true, $position="center center", $bg_color=array(255, 255, 255, 0))
-	{		
-		// Çıktı olarak alacağımız "hedef resmi" yükle
-		$target = imagecreatetruecolor($width, $height);
-	
-		// Arkaplan rengini ayarla
-		if($bg_color == "transparent")
-		{
+	{
+        // Ölçüleri hesapla
+        $source_width = imagesx($this->image);
+        $source_height = imagesy($this->image);
+        $source_ratio = $source_width / $source_height;
+
+        $target_ratio = $width / $height;
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        $source_opt = (object) array("width"=>$source_width,"height"=>$source_height, "ratio"=>$source_width/$source_height);
+        $target_opt = (object) array("width"=>$width,"height"=>$height, "ratio"=>$width/$height);
+
+        // Çıktı olarak alacağımız "hedef resmi" yükle
+        $target = imagecreatetruecolor($width, $height);
+
+        // Arkaplan rengini ayarla
+		if ($bg_color == "transparent") {
 			$bg = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
 		}
-		else if(is_array($bg_color))
-		{
+		else if (is_array($bg_color)) {
 			$bg = imagecolorallocatealpha($this->image, $bg_color[0], $bg_color[1], $bg_color[2], $bg_color[3]);
 		}
-		else
-		{
+		else {
 			$color = $this->convertWebColorToRGB($bg_color);
-			$bg = imagecolorallocatealpha($target, $color->red, $color->green, $color->blue, 0);
+			$bg = imagecolorallocatealpha($this->image, $color->red, $color->green, $color->blue, 0);
 		}
 		
 		// Hedef resme arkaplan özelliğini ata
 		imagefill($target, 0, 0, $bg);
-		
-		// Ölçüleri hesapla
-		$source_width = imagesx($this->image);
-		$source_height = imagesy($this->image);
-		$source_ratio = $source_width / $source_height;
-		
-		$target_ratio = $width / $height;
-		///////////////////////////////////////////////////////////////////////////////////////
-		
-		$source_opt = (object) array("width"=>$source_width,"height"=>$source_height);
-		$target_opt = (object) array("width"=>$width,"height"=>$height);
 
-		if($proportion)
-		{
-			if($source_ratio > $target_ratio) // kaynak resim istenen resme göre geniş ise
-			{
-				$target_opt->height = $target_opt->width / $source_ratio;
-				$pos = $this->calculateImagePosition($position, 0, ($height- $target_opt->height));
+		if ($proportion) {
+			if ($source_ratio > $target_ratio) { // kaynak resim istenen resme göre geniş ise
+                $target_opt->width = $target_opt->height * $source_ratio;
+                $pos = $this->calculateImagePosition($position, ($width - $target_opt->width), 0);
 			}
-			else if($source_ratio < $target_ratio) // kaynak resim istenen resme göre  dar ise
-			{
-				$target_opt->width = $target_opt->height * $source_ratio;
-				$pos = $this->calculateImagePosition($position, ($width - $target_opt->width), 0 );
+			else if ($source_ratio < $target_ratio) { // kaynak resim istenen resme göre  dar ise
+                $target_opt->height = $target_opt->width / $source_ratio;
+                $pos = $this->calculateImagePosition($position, 0, ($height- $target_opt->height));
 			}
-			else
-			{
+			else {
+                $pos = new stdClass();
 				$pos->left = 0;
 				$pos->top = 0;
 			}
 		}
-		else if(!$proportion)
-		{
+		else if (!$proportion) {
 			$pos = (object) array("left"=>0,"top"=>0);
 		}
 		

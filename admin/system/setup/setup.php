@@ -279,10 +279,10 @@ function createDbTables($dbh,$prefix)
 	
 	$queryUser = "CREATE TABLE IF NOT EXISTS `{$prefix}user` (
 					  `user_id` int(11) NOT NULL AUTO_INCREMENT,
-					  `image_id` int(11) NOT NULL,
+					  `image_id` int(11) NOT NULL DEFAULT '-1',
 					  `username` varchar(100) NOT NULL,
 					  `displayname` varchar(100) NOT NULL,
-					  `birthday` date NOT NULL,
+					  `birthday` date DEFAULT NULL,
 					  `first_name` varchar(100) DEFAULT NULL,
 					  `last_name` varchar(100) DEFAULT NULL,
 					  `email` varchar(100) NOT NULL,
@@ -417,10 +417,10 @@ function createDbTables($dbh,$prefix)
 			  `squeeze` tinyint(1) NOT NULL DEFAULT '-1',
 			  `proportion` tinyint(1) NOT NULL DEFAULT '1',
 			  `crop_position` char(20) NOT NULL DEFAULT 'center_top',
-			  `crop_left` smallint(5) NOT NULL,
-              `crop_top` smallint(5) NOT NULL,
-              `crop_width` smallint(5) NOT NULL,
-              `crop_height` smallint(5) NOT NULL,
+			  `crop_left` smallint(5) NOT NULL DEFAULT '0',
+              `crop_top` smallint(5) NOT NULL DEFAULT '0',
+              `crop_width` smallint(5) DEFAULT NULL,
+              `crop_height` smallint(5) DEFAULT NULL,
 			  `bg_color` char(6) NOT NULL DEFAULT 'FFFFFF',
 			  `crop_type` char(25) NOT NULL DEFAULT 'auto_crop',
 			  PRIMARY KEY (`thumb_id`)

@@ -1,13 +1,12 @@
 @CHARSET "UTF-8";
 
-#fileEditorMainContainer
-{
+#fileEditorMainContainer{
 	position:absolute;
 	left:0;
 	top:0;
 	width:100%;
 	height:100%;
-	z-index:1000;
+	z-index:-1;
 	opacity:0;
 	visibility:hidden;
 	-webkit-transition: opacity 0.2s;
@@ -932,4 +931,45 @@
 .fileTree li.empty icon
 {
 	background-image: none !important;
+}
+
+#contextMenu{
+    width:100px;
+    height:103px;
+    position:absolute;
+    left:-1000px;
+    top:-1000px;
+    background: #999;
+    z-index:100;
+    padding: 1px;
+    box-shadow: 0 0 5px #999;
+}
+
+#contextMenu span{
+    width:100%;
+    height:25px;
+    float:left;
+    text-align: left;
+    text-indent: 10px;
+    line-height: 25px;
+    font-size: 14px;
+    border-bottom: solid 1px #999;
+    color:#fff;
+    cursor: pointer;
+    background: #383838;
+}
+
+#contextMenu span:last-child{
+    border:none;
+}
+
+#contextMenu span:hover{
+    background: #282828;
+    color: #fff;
+}
+
+#contextMenu span.disabled{
+    background: #555;
+    color: #aaa;
+    cursor: default;
 }

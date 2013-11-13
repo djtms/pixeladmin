@@ -1,7 +1,7 @@
 <?php
 class PA_UPLOADER extends DB{
     public $table;
-    public $error = "";
+    public $error = array();
     public $copyNameTag = "Kopya";
 
     private $public_root;
@@ -41,7 +41,7 @@ class PA_UPLOADER extends DB{
 
                 // Gecici dosyayı olustur
                 if(!file_put_contents($temporary_file, $remote_file)){
-                    $this->error = "Geçici dosya oluşturulamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
+                    $this->error[] = "Geçici dosya oluşturulamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
                     return false;
                 }
             }
@@ -81,21 +81,21 @@ class PA_UPLOADER extends DB{
 
         if($isStandartUpload){
             if($file["error"] != 0){
-                $this->error = "Upload hata kodu: " . $file["error"];
+                $this->error[] = "Upload hata kodu: " . $file["error"];
                 return false;
             }
             else if(!move_uploaded_file($file["tmp_name"], $root . $properties->url)){
-                $this->error = "Upload edilemedi!";
+                $this->error[] = "Upload edilemedi!";
                 return false;
             }
         }
         else{
             if((strlen($temporary_file) > 0) && file_exists($temporary_file) && !rename($temporary_file, ($root . $properties->url))){
-                $this->error = "Geçici dosya taşınamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
+                $this->error[] = "Geçici dosya taşınamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
                 return false;
             }
             else if(!copy($file, $root . $properties->url)){
-                $this->error = "Dosya kopyalanamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
+                $this->error[] = "Dosya kopyalanamadı! Dosya: " . __FILE__ . " Satır: " . __LINE__;
                 return false;
             }
         }
@@ -123,7 +123,7 @@ class PA_UPLOADER extends DB{
             return $file_id;
         }
         else{
-            $this->error = "Database'e kaydedilemedi!";
+            $this->error[] = "Database'e kaydedilemedi!";
             return false;
         }
     }

@@ -2,16 +2,17 @@
 
 class PA_THUMB extends DB{
 	public $baseDir;
-	
+	public $table_file;
+    public $error = array();
+
 	private $table;
-	private $table_file;
 	private $link_table;
+    private $exclamation_file_id = 33;
     private $public_root;
     private $private_root;
     private $thumbs_root;
     private $system_root;
-    public $error = array();
-	
+
 	function PA_THUMB(){
 		global $common_admin_site;
 		parent::DB();
@@ -45,8 +46,9 @@ class PA_THUMB extends DB{
 	public function getThumbInfo($file_id, $width, $height, $squeeze = false, $proportion = true, $position = "center center", $bg_color = "FFFFFF"){
 		// Thumbnail üretmek için kullanacağın dosyayı belirle.
 		if(!$file = $this->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file_id))){
-			return false; // Dosya bulunamadığı zaman geri dön.
+            $file = $this->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($this->exclamation_file_id));
         }
+
 		$thumb_file = ($file->thumb_file_id <= 0) ? $file : $this->get_row("SELECT * FROM {$this->table_file} WHERE file_id=?",array($file->thumb_file_id));
         $root_path = $this->{$thumb_file->access_type . "_root"};
 
