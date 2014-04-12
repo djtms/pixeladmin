@@ -925,6 +925,14 @@
                                         // yeni yüklenen dosyanın thumbnailinin load eventini burdan bağla, delegate veya live ile bağlanınca çalışmıyorlar
                                         objects.browserFilesList.find("#uploaded_" + index).removeAttr("id").find(".editorFileThumb").load(events.onFileThumbnailLoad).error(events.onFileThumbnailError);
                                         //-------------------------------------------------------------------------------------------------------------------
+
+                                        // eğer yüklü ise fancybox'ı bağla
+                                        if ($.fn.fancybox) {
+                                            $(".file.notload .fancybox").fancybox({
+                                                "titleShow": false,
+                                                "scrolling": "no"
+                                            });
+                                        }
                                     }, 500);
                                 }
                                 else {
