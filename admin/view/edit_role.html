@@ -1,9 +1,9 @@
 <form method="post">
-	<h2>Rol Adı:</h2>
+	<h2>{%_.ROL_ADI%}:</h2>
 	<input type="text" name="role_name" value="{%role.role_name%}" />
 	<br clear="all" /><br />
-	<h2>Yetkileri:</h2>
+	<h2>{%_.YETKILERI%}:</h2>
 	{%permissions_html%}
 	
-	<input type="submit" name="admin_action" value="Kaydet" />
+	<button type="submit" name="admin_action" value="save_role">{%_.KAYDET%}</button>
 </form>

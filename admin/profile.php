@@ -1,6 +1,6 @@
 <?php	require_once 'includes.php';
 
-if($_POST["admin_action"] == "Kaydet")
+if($_POST["admin_action"] == "save_profile_info")
 {
 	global $ADMIN;
 	extract($_POST, EXTR_OVERWRITE);

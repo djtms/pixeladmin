@@ -1,7 +1,7 @@
 <?php
 $old_permission_key = $_GET["id"];
 
-if($_POST["admin_action"] == "Kaydet")
+if($_POST["admin_action"] == "save_permission")
 {
 	extract($_POST, EXTR_OVERWRITE);
 	

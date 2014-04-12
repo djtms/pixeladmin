@@ -4,7 +4,7 @@ require_once 'includes.php';
 
 $loginAlert = "";
 
-if ($_POST["admin_action"] == "Giriş") {
+if ($_POST["admin_action"] == "user_login") {
     login(false);
 }
 

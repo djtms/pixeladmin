@@ -1,21 +1,21 @@
 <form method="post">
-	<h2>Hesap Bilgileri</h2>
-	<label>Kullanıcı Adı:</label>
+	<h2>{%_.HESAP_BILGILERI%}</h2>
+	<label>{%_.KULLANICI_ADI%}:</label>
 	<input id="username" type="text" name="username" value="" />
 	
-	<label>E-Posta Adresi:</label>
+	<label>{%_.EPOSTA_ADRESI%}:</label>
 	<input id="email" type="text" name="email" value="" />
 	
-	<label>Parola:</label>
+	<label>{%_.PAROLA%}:</label>
 	<input id="password" type="password" name="password" />
 	
-	<label>Parola (Tekrar):</label>
+	<label>{%_.PAROLA%} ({%_.TEKRAR%}):</label>
 	<input id="password_again" type="password" />
 	
 	<br clear="all" /><br /><br />
 	
-	<h2>Rolleri:</h2>
+	<h2>{%_.ROLLERI%}:</h2>
 	{%add_user_roles_html%}
 	
-	<button id="btnAddUser" type="submit" name="admin_action" value="addUser">Kullanıcı Ekle</button>
+	<button id="btnAddUser" type="submit" name="admin_action" value="addUser">{%_.KULLANICI_EKLE%}</button>
 </form>

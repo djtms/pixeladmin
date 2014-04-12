@@ -7,7 +7,7 @@ if($_GET["user"] > 0)
 	setGlobal("useraccount", $useraccount);
 	
 	
-	if($_POST["admin_action"] == "Kaydet")
+	if($_POST["admin_action"] == "update_useraccount")
 	{
 		$ADMIN->USER_ROLE->deleteUserRolesByUser($user_id);
 		$user_roles = $_POST["user_roles"];
@@ -32,7 +32,7 @@ if($_GET["user"] > 0)
 }
 else
 {
-	postMessage("Kullanıcı bulunamadı!", true);
+	postMessage($_->KULLANICI_BULUNAMADI, true);
 	header("Location:admin.php?page=useraccounts");
 	exit;
 }

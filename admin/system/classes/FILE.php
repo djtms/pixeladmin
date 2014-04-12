@@ -114,9 +114,15 @@ class PA_FILE extends PA_THUMB {
                 $pInfo = (object) pathinfo($basename);
 
                 // TODO: Burada kullanabilirsen parametreleri query icinde direk baglamak yerine pdo'ya uygun sekilde bagla
-                $similar_file_amount = 1 + $this->get_value("SELECT COUNT(*) FROM {$this->tables->file} WHERE directory_id=? AND basename REGEXP '^" . $pInfo->filename . "_[0-9]+\." . $pInfo->extension . "'", array($directory_id));
+                $similar_file_amount = $this->get_value("SELECT COUNT(*) FROM {$this->tables->file} WHERE directory_id=? AND basename REGEXP '^" . $pInfo->filename . "(-[0-9]+)?\." . $pInfo->extension . "'", array($directory_id));
 
-                $basename = $pInfo->filename . "_{$similar_file_amount}.{$pInfo->extension}";
+                $basename = $pInfo->filename;
+
+                if($similar_file_amount > 0){
+//                    $similar_file_amount++;
+                    $basename .= "-{$similar_file_amount}";
+                }
+                $basename .= ".{$pInfo->extension}";
             }
 
             $pInfo = (object) pathinfo($basename);

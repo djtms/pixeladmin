@@ -7,7 +7,7 @@ $ticket_type = "resetpassword";
 
 if($ticket_id = $ADMIN->USER->validateTicket($user_id, $ticket_key, $ticket_type))
 {
-	if($_POST["admin_action"] == "Kaydet")
+	if($_POST["admin_action"] == "save_new_password")
 	{
 		if($ADMIN->USER->changePassword($user_id, $_POST["password"]))
 		{

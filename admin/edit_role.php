@@ -2,7 +2,7 @@
 
 $role_id = $_GET["id"] > 0 ? $_GET["id"] : -1;
 
-if($_POST["admin_action"] == "Kaydet")
+if($_POST["admin_action"] == "save_role")
 {
 	$error = false;
 	

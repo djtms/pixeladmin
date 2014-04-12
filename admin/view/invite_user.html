@@ -1,10 +1,10 @@
 <form method="post">
-	<label>Adı Soyadı:</label>
+	<label>{%_.ADI_SOYADI%}:</label>
 	<input type="text" name="displayname" value="{%displayname%}" />
-	<label>E-Posta:</label>
+	<label>{%_.EPOSTA%}:</label>
 	<input type="text" name="email" value="{%email%}" />
-	<label>Kullanıcı Rolleri:</label>
+	<label>{%_.KULLANICI_ROLLERI%}:</label>
 	{%invite_user_roles_html%}
 	
-	<button id="btnInviteUser" type="submit" name="admin_action" value="inviteUser">Davet Gönder</button>
+	<button id="btnInviteUser" type="submit" name="admin_action" value="inviteUser">{%_.DAVET_GONDER%}</button>
 </form>

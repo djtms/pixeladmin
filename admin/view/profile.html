@@ -1,44 +1,44 @@
-<h2>Profil Bilgileri</h2>
+<h2>{%_.PROFIL_BILGILERI%}</h2>
 <form method="post" onsubmit="return checkUserInfo();">
 	<input type="hidden" name="user_id" value="{%user.user_id%}" />
 	<input type="hidden" name="password" value="" />
 	
-	<label>Profil Resmi:</label>
+	<label>{%_.PROFIL_RESMI%}:</label>
 	<input type="file" name="image_id" fileid="{%user.image_id%}" />
 	
-	<label>Görünen Ad:</label>
+	<label>{%_.GORUNEN_AD%}:</label>
 	<input type="text" name="displayname" value="{%user.displayname%}"/>
 	
-	<label>Doğum Tarihi:</label>
+	<label>{%_.DOGUM_TARIHI%}:</label>
 	<input type="date" name="birthday" value="{%user.birthday%}" />
 	
-	<label>Adı:</label>
+	<label>{%_.ADI%}:</label>
 	<input type="text" name="first_name" value="{%user.first_name%}" />
 	
-	<label>Soyadı:</label>
+	<label>{%_.SOYADI%}:</label>
 	<input type="text" name="last_name" value="{%user.last_name%}" />
 	
-	<label>Kullanıcı Adı:</label>
+	<label>{%_.KULLANICI_ADI%}:</label>
 	<input type="text" name="username" value="{%user.username%}" readonly="readonly"/>
 	
-	<label>E-Posta:</label>
+	<label>{%_.EPOSTA%}:</label>
 	<input id="email" type="text" name="email" value="{%user.email%}"/><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
 	
-	<label>Telefon:</label>
+	<label>{%_.TELEFON%}:</label>
 	<input type="text" name="phone" value="{%user.phone%}" />
 	
-	<label>Üyelik Tarihi:</label>
+	<label>{%_.UYELIK_TARIHI%}:</label>
 	<input type="datetime" name="register_time" value="{%user.register_time%}" readonly="readonly"/>
 	
 	<!-- <label>Kullanıcı Tipi:</label>
 	<input type="text" value="" /> -->
 	
-	<label style="color:#fc5900; margin:30px 0 0 0;">Şifre Değiştir:</label>
-	<label>Yeni Parola:</label>	
+	<label style="color:#fc5900; margin:30px 0 0 0;">{%_.PAROLA_DEGISTIR%}:</label>
+	<label>{%_.YENI_PAROLA%}:</label>
 	<input id="password" type="password" value=""/>
 	
-	<label>Yeni Parola: (tekrar)</label>	
+	<label>{%_.YENI_PAROLA%}: ({%_.TEKRAR%})</label>
 	<input id="password_again" type="password" value=""/>
 	
-	<input name="admin_action" type="submit" value="Kaydet" />
+	<button name="admin_action" type="submit" value="save_profile_info">{%_.KAYDET%}</button>
 </form>

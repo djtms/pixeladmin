@@ -2,7 +2,7 @@
 
 $page_id = strlen($_GET["id"]) > 0 ? $_GET["id"] : uniqid();
 
-if($_POST["admin_action"] == "Kaydet")
+if($_POST["admin_action"] == "save_sitemap")
 {
 	extract($_POST, EXTR_OVERWRITE);
 	

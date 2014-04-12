@@ -1,32 +1,32 @@
 <form method="post">
-	<label>Sayfa Id'si: (readonly)</label>
+	<label>{%_.SAYFA_ID_SI%}: (readonly)</label>
 	<input type="text" readonly="readonly" name="page_id" value="{%smpage.page_id%}" />
 	
-	<label>Sayfa Resmi</label>
+	<label>{%_.SAYFA_RESMI%}</label>
 	<input type="file" name="page_image" value="{%smpage.page_image%}" />
 	
-	<label>Sayfa Adresi: (url adresi)</label>
+	<label>{%_.SAYFA_ADRESI%}: ({%_.URL_ADRESI%})</label>
 	<input type="text" name="page_url" value="{%smpage.page_url%}" maxlength="255" />
 	
-	<label>Güncellenme Sıklığı:</label>
+	<label>{%_.GUNCELLENME_SIKLIGI%}:</label>
 	<select name="changefreq" checked_option='{%smpage.changefreq%}'>
-		<option value="always">Her Zaman</option>
-		<option value="hourly">Her Saat</option>
-		<option value="daily">Her Gün</option>
-		<option value="weekly">Her Hafta</option>
-		<option value="monthly">Her Ay</option>
-		<option value="yearly">Her Yıl</option>
-		<option value="never">Hiçbir Zaman</option>
+		<option value="always">{%_.HER_ZAMAN%}</option>
+		<option value="hourly">{%_.HER_SAAT%}</option>
+		<option value="daily">{%_.HER_GUN%}</option>
+		<option value="weekly">{%_.HER_HAFTA%}</option>
+		<option value="monthly">{%_.HER_AY%}</option>
+		<option value="yearly">{%_.HER_YIL%}</option>
+		<option value="never">{%_.HICBIR_ZAMAN%}</option>
 	</select>
 	
-	<label>Öncelik:</label>
+	<label>{%_.ONCELIK%}:</label>
 	<input type="text" name="priority" value="{%smpage.priority%}" />
 	
-	<label>Sayfa Başlığı: (title)</label>
+	<label>{%_.SAYFA_BASLIGI%}: (title)</label>
 	<input type="text" name="page_title" i18n="{%smpage.page_title%}" forcei18n maxlength="250" />
 	
-	<label>Sayfa Açıklaması: (description)</label>
+	<label>{%_.SAYFA_ACIKLAMASI%}: (description)</label>
 	<textarea name="page_description" i18n="{%smpage.page_description%}" forcei18n style="height:100px;" maxlength="250"></textarea>
 	
-	<input type="submit" name="admin_action" value="Kaydet" />
+	<button type="submit" name="admin_action" value="save_sitemap">{%_.KAYDET%}</button>
 </form>

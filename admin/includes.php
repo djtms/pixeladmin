@@ -10,6 +10,12 @@ if (version_compare(PHP_VERSION, $minPhpVersion, "<")) {
 date_default_timezone_set('Europe/Istanbul');
 
 require_once 'system/includes/init.php';
+
+if (in_admin){
+    require_once "language/index.php";
+}
+
+
 if (!file_exists(dirname(__FILE__) . "/config.php")) {
     require_once dirname(__FILE__) . '/system/setup/setup.php';
 } else {

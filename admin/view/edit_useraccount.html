@@ -1,27 +1,27 @@
-<h2>Profil Bilgileri</h2>
+<h2>{%_.PROFIL_BILGILERI%}</h2>
 <form method="post">
-	<label>Profil Resmi:</label>
+	<label>{%_.PROFIL_RESMI%}:</label>
 	<input type="file" fileid="{%useraccount.image_id%}" />
 	
-	<label>Görünen Ad:</label>
+	<label>{%_.GORUNEN_AD%}:</label>
 	<input type="text" name="" value="{%useraccount.displayname%}" />
 	
-	<label>Doğum Tarihi:</label>
+	<label>{%_.DOGUM_TARIHI%}:</label>
 	<input type="date" name="" value="{%useraccount.birthday%}" />
 	
-	<label>Kullanıcı Adı:</label>
+	<label>{%_.KULLANICI_ADI%}:</label>
 	<input type="text" name="" value="{%useraccount.username%}" />
 	
-	<label>E-Posta:</label>
+	<label>{%_.EPOSTA%}:</label>
 	<input type="text" name="" value="{%useraccount.email%}" />
 	
-	<label>Üyelik Tarihi:</label>
+	<label>{%_.UYELIK_TARIHI%}:</label>
 	<input type="datetime" name="" value="{%useraccount.register_date%}" />
 	
 	<br clear="all" /><br /><br />
 	{%user_roles_html%}
 	
-	<input type="submit" name="admin_action" value="Kaydet" />
+	<button type="submit" name="admin_action" value="update_useraccount">{%_.KAYDET%}</button>
 </form>
 
 
