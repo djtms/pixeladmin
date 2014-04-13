@@ -1,32 +1,32 @@
 <form method="post">
-	<label>{%_.SAYFA_ID_SI%}: (readonly)</label>
+	<label>{%GT.SAYFA_ID_SI%}: (readonly)</label>
 	<input type="text" readonly="readonly" name="page_id" value="{%smpage.page_id%}" />
 	
-	<label>{%_.SAYFA_RESMI%}</label>
+	<label>{%GT.SAYFA_RESMI%}</label>
 	<input type="file" name="page_image" value="{%smpage.page_image%}" />
 	
-	<label>{%_.SAYFA_ADRESI%}: ({%_.URL_ADRESI%})</label>
+	<label>{%GT.SAYFA_ADRESI%}: ({%GT.URL_ADRESI%})</label>
 	<input type="text" name="page_url" value="{%smpage.page_url%}" maxlength="255" />
 	
-	<label>{%_.GUNCELLENME_SIKLIGI%}:</label>
+	<label>{%GT.GUNCELLENME_SIKLIGI%}:</label>
 	<select name="changefreq" checked_option='{%smpage.changefreq%}'>
-		<option value="always">{%_.HER_ZAMAN%}</option>
-		<option value="hourly">{%_.HER_SAAT%}</option>
-		<option value="daily">{%_.HER_GUN%}</option>
-		<option value="weekly">{%_.HER_HAFTA%}</option>
-		<option value="monthly">{%_.HER_AY%}</option>
-		<option value="yearly">{%_.HER_YIL%}</option>
-		<option value="never">{%_.HICBIR_ZAMAN%}</option>
+		<option value="always">{%GT.HER_ZAMAN%}</option>
+		<option value="hourly">{%GT.HER_SAAT%}</option>
+		<option value="daily">{%GT.HER_GUN%}</option>
+		<option value="weekly">{%GT.HER_HAFTA%}</option>
+		<option value="monthly">{%GT.HER_AY%}</option>
+		<option value="yearly">{%GT.HER_YIL%}</option>
+		<option value="never">{%GT.HICBIR_ZAMAN%}</option>
 	</select>
 	
-	<label>{%_.ONCELIK%}:</label>
+	<label>{%GT.ONCELIK%}:</label>
 	<input type="text" name="priority" value="{%smpage.priority%}" />
 	
-	<label>{%_.SAYFA_BASLIGI%}: (title)</label>
+	<label>{%GT.SAYFA_BASLIGI%}: (title)</label>
 	<input type="text" name="page_title" i18n="{%smpage.page_title%}" forcei18n maxlength="250" />
 	
-	<label>{%_.SAYFA_ACIKLAMASI%}: (description)</label>
+	<label>{%GT.SAYFA_ACIKLAMASI%}: (description)</label>
 	<textarea name="page_description" i18n="{%smpage.page_description%}" forcei18n style="height:100px;" maxlength="250"></textarea>
 	
-	<button type="submit" name="admin_action" value="save_sitemap">{%_.KAYDET%}</button>
+	<button type="submit" name="admin_action" value="save_sitemap">{%GT.KAYDET%}</button>
 </form>

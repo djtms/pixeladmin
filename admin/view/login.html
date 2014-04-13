@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{%_.GIRIS_YAP%}</title>
+    <title>{%GT.GIRIS_YAP%}</title>
     <link rel="stylesheet" href="{%VIEW_URL%}css/panel.css" />
     <script type="text/javascript" src="{%VIEW_URL%}js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="{%VIEW_URL%}js/SHA1.js"></script>
@@ -27,16 +27,16 @@
 		        	<form method="post" onsubmit="encryptPassword();">
 						<input type="hidden" name="password"/>
 						<input type="hidden" name="VPK" value="{%validatePageKey%}" />
-						<label>{%_.KULLANICI_ADI%}:</label>
+						<label>{%GT.KULLANICI_ADI%}:</label>
 			            <input type="text" name="username" value="{%username%}" />
 			                
-			            <label>{%_.PAROLA%}:</label>
+			            <label>{%GT.PAROLA%}:</label>
 			            <input id="password" type="password" />
 			            
 			            {%capcha_html%}
 	
-			            <button type="submit" name="admin_action" value="user_login" style="margin:20px 44px 2px 10px; float:right;">{%_.GIRIS_YAP%}</button>
-			            <a href="resetpassword.php" style="margin:20px 0 2px 0; clear:none; float:right;" class="button button_117x86">{%_.PAROLAMI_UNUTTUM%}</a>
+			            <button type="submit" name="admin_action" value="user_login" style="margin:20px 44px 2px 10px; float:right;">{%GT.GIRIS_YAP%}</button>
+			            <a href="resetpassword.php" style="margin:20px 0 2px 0; clear:none; float:right;" class="button button_117x86">{%GT.PAROLAMI_UNUTTUM%}</a>
 			            <label style="margin:0 44px 0 0; height:auto !important; float:right; text-align:right; width:215px; color: #fc5900;">{%loginAlert%}</label> 
 		            </form>
 		        </div><!--loginOuter-->

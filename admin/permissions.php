@@ -22,17 +22,17 @@ if(strlen($_GET["delete"]) > 0)
 {
 	if($ADMIN->PERMISSION->deletePermission($_GET["delete"]))
 	{
-		postMessage("Başarıyla Silindi!");
+		postMessage($GT->BASARIYLA_SILINDI);
 		header("Location:admin.php?page=permissions");
 		exit;
 	}
 	else
 	{
-		postMessage("Hata Oluştu!", true);
+		postMessage($GT->HATA_OLUSTU, true);
 	}
 }
 
-echo "<h2>Kullanıcı Yetkileri</h2><a href='admin.php?page=add_permission' class='button' style='position:absolute; right: 338px; top:45px;'>Yeni Ekle</a>";
+echo "<h2>Kullanıcı Yetkileri</h2><a href='admin.php?page=add_permission' class='button' style='position:absolute; right: 338px; top:45px;'>" . $GT->YENI_EKLE . "</a>";
 echo $ADMIN->PERMISSION->listPermissionsByParentAsTreeGrid();
 
 ?>

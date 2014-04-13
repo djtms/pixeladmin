@@ -8,13 +8,13 @@ if($_POST["admin_action"] == "save_sitemap")
 	
 	if($ADMIN->SITEMAP->setSiteMap($page_id, $page_image, $page_url, $page_title, $page_description, $changefreq, $priority))
 	{
-		postMessage("Başarıyla Kaydedildi!");
+		postMessage($GT->BASARIYLA_KAYDEDILDI);
 		header("Location:admin.php?page=sitemap");
 		exit;
 	}
 	else
 	{
-		postMessage("Hata Oluştu!", true);
+		postMessage($GT->HATA_OLUSTU, true);
 	}
 }
 

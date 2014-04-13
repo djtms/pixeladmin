@@ -1,43 +1,43 @@
-<h2>{%_.AYARLAR%}</h2>
+<h2>{%GT.AYARLAR%}</h2>
 <form method="post">
-	<label style="color:#fc5900;">{%_.SEO_AYARLARI%}</label>
-	<label>Site Adresi</label>
+	<label style="color:#fc5900;">{%GT.SEO_AYARLARI%}</label>
+	<label>{%GT.SITE_ADRESI%}</label>
 	<input name="siteAddress" type="text"  value="{%stg.admin_site_address%}"/>
-	<label>Site Başlığı</label>
+	<label>{%GT.SITE_BASLIGI%}</label>
 	<input type="text" name="siteTitle" {%siteTitleValue%}/>
 	<label>Description</label>
 	<textarea name="description" style="height:100px;" {%siteDescriptionI18N%} >{%siteDescriptionValue%}</textarea>
 	<label>Keywords</label>
 	<textarea name="keywords" style="height:100px;" {%siteKeywordsI18N%}>{%siteKeywordsValue%}</textarea>
-	<label>Google Analytics Code</label>
+	<label>{%GT.GOOGLE_ANALYTICS_CODE%}</label>
 	<textarea name="analystics"  style="height:100px;">{%stg.admin_analystics%}</textarea>
 	
-	<label style="color:#fc5900;">Mail Ayarları</label>
+	<label style="color:#fc5900;">{%GT.MAIL_AYARLARI%}</label>
 	
-	<label>Mail Protokolü</label>
+	<label>{%GT.MAIL_PROTOKOLU%}</label>
 	<label>SMTP <input type="checkbox" name="smtp" {%stg.admin_isSmtpMail%} /></label>
 	
-	<label>Gönderen Mail Adresi:</label>
+	<label>{%GT.GONDEREN_MAIL_ADRESI%}:</label>
 	<input name="mailUser" type="text" value="{%stg.admin_mail_user%}"/>
 	
 	<div id="smtpSettingsOuter">
-		<label>Gönderen Parola:</label>
+		<label>{%GT.GONDEREN_PAROLA%}:</label>
 		<input name="mailPassword" value="{%stg.admin_mailPassword%}" type="password"/>
-		<label>Gönderen Mail Host:</label>
+		<label>{%GT.GONDEREN_MAIL_HOST%}:</label>
 		<input name="mailHost" type="text" value="{%stg.admin_mailHost%}"/>
-		<label>Gönderen Mail Port:</label>
+		<label>{%GT.GONDEREN_MAIL_PORT%}:</label>
 		<input name="mailPort" type="text" value="{%stg.admin_mail_port%}"/>
 	</div><!-- smtpSettingsOuter -->
 	
-	<label style="color:#fc5900;">Mail Yönlendirme</label>
-	<label style="width:700px;">Yönlendirme Adresi: &nbsp;&nbsp;&nbsp;&nbsp;<span class="italic">( maillerinizin yönlendirilmesini istediğiniz adresi belirtin! )</span></label>
+	<label style="color:#fc5900;">{%GT.MAIL_YONLENDIRME%}</label>
+	<label style="width:700px;">{%GT.YONLENDIRME_ADRESI%}: &nbsp;&nbsp;&nbsp;&nbsp;<span class="italic">( {%GT.YONLENDIRME_ADRESINI_BELIRTIN%} )</span></label>
 	<input name="getMailAddress" type="text" value="{%stg.admin_get_mail_address%}"/>
 	
-	<label style="color:#fc5900;">Sosyal Network Ayarları</label>
+	<label style="color:#fc5900;">{%GT.SOSYAL_MEDYA_ADRESLERI%}</label>
 	<label>Facebook:</label>
 	<input name="facebook" type="text" value="{%stg.admin_facebook%}" />
 	<label>Twitter:</label>
 	<input name="twitter" type="text" value="{%stg.admin_twitter%}"/>
-<input name="admin_action" type="submit" value="Kaydet" />
+    <button name="admin_action" type="submit" value="save_settings">{%GT.KAYDET%}</button>
 </form>
   	

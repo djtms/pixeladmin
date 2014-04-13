@@ -23,7 +23,7 @@ function EditPermissionStart()
 					success:function(response){
 						if(response == "key_exists")
 						{
-							$("#checkPermissionKeyResultText").html('* Girdiğiniz "Yetki Anahtarı" kullanımda!');
+							$("#checkPermissionKeyResultText").html(GT.YETKI_ANAHTARI_KULLANIMDA);
 						}
 						else
 						{
@@ -43,7 +43,7 @@ function EditPermissionStart()
 		}
 		else
 		{
-			$("#checkPermissionKeyResultText").html('* Lütfen geçerli bir "Yetki Anahtarı" kullanın!');
+			$("#checkPermissionKeyResultText").html(GT.GECERLI_YETKI_ANAHTARI_KULLANIN);
 		}
 		
 		return can_submit;

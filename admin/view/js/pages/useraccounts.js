@@ -14,7 +14,7 @@ function UserAccounts(){
 }
 
 function deleteUser(){
-	var del = confirm("Silmek istediğinize eminmisiniz?");
+	var del = confirm(GT.SILMEK_ISTEDIGINDEN_EMINMISIN);
 	var user_id = $(this).attr("user_id");
 	var button = $(this);
 	var row = $(this).parents("li");
@@ -31,18 +31,18 @@ function deleteUser(){
 					var result = eval("(" + response + ")");
 					if(result.error == "false")
 					{	
-						postMessage("Başarıyla Silindi!");
+						postMessage(GT.BASARIYLA_SILINDI);
 						button.css("opacity","0");
 						row.animate({"opacity":"0"},fadeSpeed,function(){row.remove();});
 					}
 					else
 					{
-						postMessage("Kullanıcı Silinemedi!", true);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.KULLANICI_SILINEMEDI, messageType.ERROR, [{"name":GT.TAMAM}]);
 					}
 				}
 				catch(e)
 				{
-                    MESSAGEBOX.showMessage("Hata", response);
+                    MESSAGEBOX.showMessage(GT.HATA_OLUSTU, response);
 				}
 			},
 			beforeSend:function(){
@@ -66,23 +66,22 @@ function checkUserInfo(){
 	if(username.length<minInputLength)
 	{
 		error = true;
-		message = "En az " + minInputLength + " karakter uzunluğunda bir \"Kullanıcı Adı\" girin!";
+		message = GT.USERNAME_MIN_ALTI_OLMALI;
 	}
 	else if(pass1.length<minInputLength)
 	{
 		error = true;
-		message = "En az " + minInputLength + " karakter uzunluğunda bir \"Parola\" girin!";
+		message = GT.PAROLA_MIN_ALTI_OLMALI;
 	}
 	else if(pass1 != pass2)
 	{
 		error = true;
-		message = "\"Parola\" lar uyuşmuyor!";
+		message = GT.HATA_PAROLALAR_ESLESMIYOR;
 	}
 	
 	if(error)
 	{
-		postMessage(message,error);
-		window.location.href = "#postMessage";
+        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, message, messageType.ERROR, [{"name":GT.TAMAM}]);
 	}
 	else
 	{
@@ -166,6 +165,6 @@ function checkEmail()
 	}
 	else
 	{
-		$("#emailCheckLoader p").html("Uygun mail adresi girin!").addClass("error");
+		$("#emailCheckLoader p").html(GT.GECERLI_EPOSTA_ADRESI_GIRIN).addClass("error");
 	}
 }

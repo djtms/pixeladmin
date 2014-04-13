@@ -7,11 +7,11 @@ function DashboardStart()
 		var checked = !$(this).is(":checked");
 
 		
-		if(!checked && confirm("Web sayfanızı \"Bakım Modu'na\" almak istediğinize eminmisiniz?"))
+		if(!checked && confirm(GT.BAKIM_MODUNA_ALINSINMI))
 		{
 			mode = "maintanance";
 		}
-		else if(checked && confirm("Web sayfanızı \"Bakım Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
+		else if(checked && confirm(GT.BAKIM_MODUNDAN_CIKSINMI))
 		{
 			mode = "public";
 		}
@@ -24,49 +24,49 @@ function DashboardStart()
 				data:"admin_action=SetDisplayMode&mode=" + mode,
 				success:function(response){
 					if((response == "error") && (mode == "maintanance"))
-					{	
-						postMessage("Site \"Bakım Modu'na\" alınamadı!",true);
+					{
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BAKIM_MODUNA_ALINAMADI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						$("#btnMaintananceMode").attr("checked",false);
 					}
 					else if((response == "error") && (mode == "public"))
 					{
-						postMessage("Site \"Bakım Modu'ndan\" çıkarılamadı!",true);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BAKIM_MODUNDAN_CIKARILAMADI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						$("#btnMaintananceMode").attr("checked",true);
 					}
 				}
 			});
 		}
 	});
-	
-	
+
+
 	$("#btnMultilanguageMode").click(function(){
 		var mode = null;
 		var checked = !$(this).is(":checked");
-		
-		if(!checked && confirm("Web sayfanızı \"Çoklu Dil Modu'na\" almak istediğinize eminmisiniz?"))
+
+		if(!checked && confirm(GT.COKLUDIL_MODUNA_ALINSINMI))
 		{
 			mode = "multilanguage";
 		}
-		else if(checked && confirm("Web sayfanızı \"Çoklu Dil Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
+		else if(checked && confirm(GT.COKLUDIL_MODUNDAN_CIKSINMI))
 		{
 			mode = "simplelanguage";
 		}
 		else
 			return false;
-		
+
 		if(mode != null)
 		{
 			$.ajax({
 				data:"admin_action=SetMultilanguageMode&mode=" + mode,
 				success:function(response){
 					if((response == "error") && (mode == "simplelanguage"))
-					{	
-						postMessage("Siteniz \"Çoklu Dil Modu'na\" alınamadı!",true);
+					{
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.COKLUDIL_MODUNA_ALINAMADI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						$("#btnMaintananceMode").attr("checked",false);
 					}
 					else if((response == "error") && (mode == "multilanguage"))
 					{
-						postMessage("Siteniz \"Çoklu Dil Modu'ndan\" çıkarılamadı!",true);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.COKLUDIL_MODUNDAN_CIKARILAMADI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						$("#btnMaintananceMode").attr("checked",true);
 					}
 					else
@@ -77,35 +77,35 @@ function DashboardStart()
 			});
 		}
 	});
-	
+
 	$("#btnDebugMode").click(function(){
 		var mode = null;
 		var checked = !$(this).is(":checked");
-		
-		if(!checked && confirm("Web sayfanızı \"Hata Ayıklama Modu'na\" almak istediğinize eminmisiniz?"))
+
+		if(!checked && confirm(GT.DEBUG_MODUNA_ALINSINMI))
 		{
 			mode = "debugmode";
 		}
-		else if(checked && confirm("Web sayfanızı \"Hata Ayıklama Modu'ndan\" çıkarmak istediğinize eminmisiniz?"))
+		else if(checked && confirm(GT.DEBUG_MODUNDAN_CIKSINMI))
 		{
 			mode = "securitymode";
 		}
 		else
 			return false;
-		
+
 		if(mode != null)
 		{
 			$.ajax({
 				data:"admin_action=SetDebugMode&mode=" + mode,
 				success:function(response){
 					if((response == "error") && (mode == "debugmode"))
-					{	
-						postMessage("Siteniz \"Hata Ayıklama Modu'na\" alınamadı!",true);
+					{
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.DEBUG_MODUNA_ALINAMADI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						$("#btnDebugMode").attr("checked",false);
 					}
 					else if((response == "error") && (mode == "securitymode"))
 					{
-						postMessage("Siteniz \"Hata Ayıklama Modu'ndan\" çıkarılamadı!",true);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.DEBUG_MODUNDAN_CIKARILAMADI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						$("#btnDebugMode").attr("checked",true);
 					}
 					else

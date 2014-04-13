@@ -12,17 +12,17 @@ function checkForm()
 	if($("[name=username]").val().length < 6)
 	{
 		canPost = false;
-		$("#resultText").html('"Kullanıcı Adı" en az 6 karakterden oluşmalı!');
+		$("#resultText").html(GT.KULLANICI_ADI_MIN_ALTI_KARAKTER);
 	}
 	else if($("#password").val().length < 6)
 	{
 		canPost = false;
-		$("#resultText").html('"Parola" en az 6 karakterden oluşmalı!');
+		$("#resultText").html(GT.PAROLA_MIN_ALTI_KARAKTER);
 	}
 	else if($("#password").val() != $("#password_again").val())
 	{
 		canPost = false;
-		$("#resultText").html("Parolalar uyuşmuyor!");
+		$("#resultText").html(GT.HATA_PAROLALAR_ESLESMIYOR);
 	}
 	else
 	{

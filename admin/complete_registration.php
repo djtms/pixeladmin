@@ -18,16 +18,16 @@ if ($ticket_id = $ADMIN->USER->validateTicket($user_id, $ticket_key, $ticket_typ
         $captcha = recaptcha_check_answer($private_key, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
 
         if (strlen($username) < 6) {
-            $resultText = '"Kullanıcı Adı" en az 6 karakterden oluşmalı!';
+            $resultText = $GT->KULLANICI_ADI_MIN_ALTI_KARAKTER;
         } else if ($ADMIN->USER->getUserByUsername($username)) {
-            $resultText = "Lütfen farklı bir kullanıcı adı girin!";
+            $resultText = $GT->FARKLI_KULLANICI_ADI_GIRIN;
         } else if (!$captcha->is_valid) {
-            $resultText = "Captcha Hatası!";
+            $resultText = $GT->CAPTCHA_HATASI;
         } else {
             $password = $_POST["password"];
 
             if ($ADMIN->USER->completeRegistration($user_id, $username, $password) && $ADMIN->USER->closeTicket($ticket_id)) {
-                postMessage("Kaydınız Başarıyla Gerçekleşti!");
+                postMessage($GT->KAYDINIZ_BASARILI);
                 $ADMIN->AUTHENTICATION->authenticate($username, $password);
                 $ADMIN->AUTHORIZATION->authorize();
                 header("Location:admin.php?page=dashboard");

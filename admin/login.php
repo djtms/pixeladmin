@@ -10,6 +10,7 @@ if ($_POST["admin_action"] == "user_login") {
 
 function login($captcha_used_correctly) {
     global $ADMIN;
+    global $GT;
     global $loginAlert;
 
     $username = $_POST["username"];
@@ -17,7 +18,7 @@ function login($captcha_used_correctly) {
 
     // Bilgilerin bizim formumuzdan gelip gelmediğini kontrol et
     if ($_SESSION["validatePageKey"] != $_POST["VPK"]) {
-        $loginAlert = "* Güvensiz Form!";
+        $loginAlert = $GT->GUVENSIZ_FORM;
     } else {
         // Kimlik doğrulaması yap
         $authentication_status = $ADMIN->AUTHENTICATION->authenticate($username, $password, $captcha_used_correctly);
@@ -27,7 +28,7 @@ function login($captcha_used_correctly) {
             // Yetkilerini al
             $ADMIN->AUTHORIZATION->authorize();
 
-            add_log("giriş yaptı");
+            add_log($GT->GIRIS_YAPTI);
             $_SESSION["USE_CAPTCHA"] = false;
             if (isset($_SESSION["back_to"])) {
                 header("Location:" . $_SESSION["back_to"]);
@@ -43,9 +44,9 @@ function login($captcha_used_correctly) {
         }
         // Hesap henüz aktif edilmemişse
         else if ($authentication_status === "account_not_activated") {
-            $loginAlert = "* Hesabınız henüz aktif edilmemiş!";
+            $loginAlert = $GT->HESABINIZ_AKTIF_EDILMEMIS;
         } else {
-            $loginAlert = "*Yanlış kullanıcı adı veya şifre!";
+            $loginAlert = $GT->YANLIS_KULLANICI_ADI_SIFRE;
         }
     }
 }
@@ -69,10 +70,10 @@ if ($_SESSION["USE_CAPTCHA"] === true) {
         login(true);
     }
 
-    $capcha_html = '<label>Captcha Kontrolü</label>';
+    $capcha_html = '<label>' . $GT->CAPTCHA_KONTROLU . '</label>';
     $capcha_html .= '<div id="recaptcha_widget" style="display:none">';
     $capcha_html .= '<div id="recaptcha_image"></div>';
-    $capcha_html .= '<a id="get_new_captcha" href="javascript:Recaptcha.reload()">Yenile</a>';
+    $capcha_html .= '<a id="get_new_captcha" href="javascript:Recaptcha.reload()">' . $GT->YENILE . '</a>';
     $capcha_html .= '<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />';
     $capcha_html .= '</div><script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=' . $public_key . '"></script>';
 }

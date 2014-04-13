@@ -1,18 +1,18 @@
 <form method="post" id="editPermissionForm">
 	<input id="old_permission_key" type="hidden" name="old_permission_key" value="{%permission.permission_key%}" />
-	<label>{%_.EBEVEYN%}</label>
+	<label>{%GT.EBEVEYN%}</label>
 	<select name=permission_parent>
-		<option value="">{%_.YOK%}</option>
+		<option value="">{%GT.YOK%}</option>
 		{%otherPermissionsHtml%}
 	</select>
 	
-	<label>{%_.YETKI_ANAHTARI%}</label>
+	<label>{%GT.YETKI_ANAHTARI%}</label>
 	<input id="new_permission_key" type="text" name="new_permission_key" value="{%permission.permission_key%}" />
 	<img id="checkPermissionKeyLoader" src="{%VIEW_URL%}images/loader.gif" />
 	<p id="checkPermissionKeyResultText"></p>
 	
-	<label>{%_.YETKI_ADI%}:</label>
+	<label>{%GT.YETKI_ADI%}:</label>
 	<input type="text" name="permission_name" value="{%permission.permission_name%}" />
 	
-	<button type="submit" name="admin_action" value="save_permission">{%_.KAYDET%}</button>
+	<button type="submit" name="admin_action" value="save_permission">{%GT.KAYDET%}</button>
 </form>

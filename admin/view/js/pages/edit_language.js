@@ -21,11 +21,11 @@ function EditLanguage()
 				}
 				else
 				{
-					postMessage("Beklenmedik hata oluştu!", true);
+                    MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 				}
 			},
 			error: function(){
-				postMessage("Beklenmedik hata oluştu!", true);
+                MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 			}
 		});
 	});
@@ -54,7 +54,7 @@ function listCountries()
 			$("[name='country']").html(cHtml).trigger("change");
 		},
 		error:function(){
-			postMessage("Hata: edit_language.js, Satır:26, Adres: admin/view/js/pages/edit_language.js", true);
+            MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 		},
 		complete: function(){
 			

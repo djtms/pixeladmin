@@ -5,45 +5,42 @@ if($_POST["admin_action"] == "save_permission")
 {
 	extract($_POST, EXTR_OVERWRITE);
 	
-	if(trim($permission_name) == "")
-	{
-		postMessage("Hata: Lütfen \"Yetki Adı\" değerini doldurun!", true);	
+	if(trim($permission_name) == "") {
+		postMessage($GT->GECERLI_YETKI_ANAHTARI_KULLANIN, true);
 	}
 	else if(strlen($old_permission_key) > 0)
 	{
 		if($ADMIN->PERMISSION->updatePermission($old_permission_key, $new_permission_key, $permission_name, $permission_parent))
 		{
-			postMessage("Başarıyla Kaydedildi!");
+			postMessage($GT->BASARIYLA_KAYDEDILDI);
 			header("Location:admin.php?page=permissions");
 			exit;
 		}
 		else
 		{
-			postMessage("Hata Oluştu!", true);
+			postMessage($GT->HATA_OLUSTU, true);
 		}
 	}
 	else
 	{
 		if($ADMIN->PERMISSION->addPermission($new_permission_key, $permission_name, $permission_parent))
 		{
-			postMessage("Başarıyla Kaydedildi!");
+			postMessage($GT->BASARIYLA_KAYDEDILDI);
 			header("Location:admin.php?page=permissions");
 			exit;
 		}
 		else
 		{
-			postMessage("Hata Oluştu!", true);
+			postMessage($GT->HATA_OLUSTU, true);
 		}
 	}
 }
 else if($_POST["admin_action"] == "checkPermissionKey")
 {
-	if($permission = $ADMIN->PERMISSION->selectPermission($_POST["permission_key"]))
-	{
+	if($permission = $ADMIN->PERMISSION->selectPermission($_POST["permission_key"])) {
 		echo "key_exists";
 	}
-	else
-	{
+	else {
 		echo "usable";
 	}
 	

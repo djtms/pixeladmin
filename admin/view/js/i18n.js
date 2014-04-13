@@ -22,7 +22,7 @@ function I18nStart()
 			if(!i18nObject.is("[forcei18n]"))
 			{
 				i18nObject.attr("disabled","disabled");
-				i18nObject.attr("title", "Lütfen \"Çoklu Dil\" modunu aktif edin!");
+				i18nObject.attr("title", GT.COKLUDIL_MODUNU_AKTIF_ET);
 				return true;
 			}
 		}
@@ -110,7 +110,7 @@ function I18nStart()
 			if(!$(this).attr("method") || $(this).attr("method").toLowerCase() == "get")
 			{
 				// FIXME: messageBox burada çalışmıyor
-				MESSAGEBOX.showMessage("Uyarı!", "Formunuzda \"Çoklu Dil\" özelliği kullandığınız için form elemanınızın veri gönderme şekli \"post\" olarak ayarlandı!", messageType.WARNING, [{name:"Tamam", click:MESSAGEBOX.hideMessage}]);
+				MESSAGEBOX.showMessage(GT.UYARI, GT.FORM_METHOD_POST_YAPILDI, messageType.WARNING, [{name:"Tamam"}]);
 			}
 			$(this).attr("method","post");
 			$(this).submit(setI18nValuesToHiddenInput);
@@ -153,7 +153,7 @@ function selectI18n()
 			$("#i18nLoader").css("display","none");
 		},
 		error: function(){
-			postMessage("\"Çoklu Dil\" içeriği yüklenirken hata oluştu!", true);
+            MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.HATA_COKLUDIL_YUKLENMESI, messageType.ERROR, [{"name":GT.TAMAM}]);
 		}
 	});
 	
@@ -241,7 +241,7 @@ function ajaxSaveI18n()
 	var xhr = new XMLHttpRequest();
 	xhr.addEventListener("load",function(){
 		selectI18n();
-		postMessage("Başarıyla Güncellendi!");
+		postMessage(GT.BASARIYLA_GUNCELLENDI);
 	});
 	xhr.open("POST", "admin.php?page=dashboard");
 	xhr.send(i18nForm);

@@ -7,10 +7,9 @@
 
 	function addUser(){
 		var error = false;
-		
+
 		if($("#username").val().trim().length < 6){
-			var messageText = "Girmiş olduğunuz <b>kullanıcı adı</b> en az 6 karakterden oluşmalıdır!";
-			MESSAGEBOX.showMessage('"Kullanıcı Adı" Hatası!', messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);	
+			MESSAGEBOX.showMessage(GT.KULLANICI_ADI_HATASI, GT.KULLANICI_ADI_MIN_ALTI_KARAKTER, messageType.WARNING, [{"name":GT.TAMAM}]);
 			error = true;
 		}
 		else{
@@ -20,20 +19,19 @@
 				success:function(response){
 					
 					if(response === "existing_user"){
-						var messageText = "Girmiş olduğunuz <b>kullanıcı adı</b> başka bir kullanıcı tarafından kullanılmaktadır! Lütfen farklı bir <b>kullanıcı adı</b> girin.";
-						MESSAGEBOX.showMessage('"Kullanıcı Adı" Kullanımda', messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}])
+						MESSAGEBOX.showMessage(GT.KULLANICI_ADI_KULLANIMDA, GT.HATA_AYNI_KULLANICI_ADI, messageType.WARNING, [{"name":GT.TAMAM}])
 						error = true;
 					}
 					else if(response === "not_exist"){
 						error = false;
 					}
 					else{
-						postMessage("Hata Oluştu!", true);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.HATA_COKLUDIL_YUKLENMESI, messageType.ERROR, [{"name":GT.TAMAM}]);
 						error = true;
 					}
 				},
 				error:function(){
-					postMessage("Hata Oluştu!", true);
+                    MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 					error = true;
 				}
 			});
@@ -41,8 +39,7 @@
 		
 		if(!error){
 			if(!VALIDATE.validateEmail($("#email").val().trim())){
-				var messageText = "Lütfen geçerli bir <b>e-posta adresi</b> giriniz!";
-				MESSAGEBOX.showMessage('"E-Posta Adresi" Hatası!', messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);	
+				MESSAGEBOX.showMessage(GT.EPOSTA_HATASI, GT.HATA_GECERLI_EPOSTA_GIRIN, messageType.WARNING, [{"name":GT.TAMAM}]);
 				error = true;
 			}
 			else
@@ -52,20 +49,19 @@
 					async:false,
 					success:function(response){
 						if(response === "existing_user"){
-							var messageText = "Girmiş olduğunuz <b>e-posta adresi</b> başka bir kullanıcı tarafından kullanılmaktadır! Lütfen farklı bir <b>e-posta adresi</b> girin.";
-							MESSAGEBOX.showMessage("E-Posta Kullanımda", messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}])
+							MESSAGEBOX.showMessage(GT.EPOSTA_KULLANIMDA, GT.HATA_AYNI_EPOSTA_ADRESI, messageType.WARNING, [{"name":GT.TAMAM}])
 							error = true;
 						}
 						else if(response === "not_exist"){
 							error = false;
 						}
 						else{
-							postMessage("Hata Oluştu!", true);
+                            MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 							error = true;
 						}
 					},
 					error:function(){
-						postMessage("Hata Oluştu!", true);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 						error = true;
 					}
 				});
@@ -74,18 +70,15 @@
 		
 		if(!error){
 			if($("#password").val().trim().length < 6){
-				var messageText = "Girmiş olduğunuz <b>parola</b> en az 6 karakterden oluşmalıdır!";
-				MESSAGEBOX.showMessage('"Parola" Hatası!', messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);	
+				MESSAGEBOX.showMessage(GT.PAROLA_HATASI, GT.PAROLA_MIN_ALTI_KARAKTER, messageType.WARNING, [{"name":GT.TAMAM}]);
 				error = true;
 			}
 			else if($("#password").val().trim() != $("#password_again").val().trim()){
-				var messageText = "Girmiş olduğunuz <b>parolalar</b> birbirleri ile eşleşmiyorlar";
-				MESSAGEBOX.showMessage('"Parola" Eşleşme Hatası!', messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);
+				MESSAGEBOX.showMessage(GT.PAROLA_ESLESME_HATASI, GT.HATA_PAROLALAR_ESLESMIYOR, messageType.WARNING, [{"name":GT.TAMAM}]);
 				error = true;
 			}
 			else if($("[name='user_roles[]']:checked").length <= 0){
-				var messageText = 'Yeni kullanıcı için en az bir "Rol" seçmeniz gerekiyor!';
-				MESSAGEBOX.showMessage('"Kullanıcı Rolleri" Hatası!', messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);	
+				MESSAGEBOX.showMessage(GT.KULLANICI_ROLLERI_HATASI, GT.HATA_MIN_BIR_ROL_SEC, messageType.WARNING, [{"name":GT.TAMAM}]);
 				error = true;
 			}
 		}

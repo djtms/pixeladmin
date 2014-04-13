@@ -4,13 +4,13 @@ extract($_POST, EXTR_SKIP);
 
 if ($admin_action == "inviteUser") {
     if ($user = $ADMIN->USER->getUserByEmail($email)) {
-        postMessage('Mail adresi kullanımda!', true);
+        postMessage($GT->MAIL_ADRESI_KULLANIMDA, true);
     } else if ($ADMIN->USER->inviteUser($displayname, $email, $_POST["user_roles"])) {
-        postMessage("Davetiyeniz başarıyla gönderildi!");
+        postMessage($GT->DAVETIYENIZ_BASARIYLA_GONDERILDI);
         header("Location:admin.php?page=useraccounts");
         exit;
     } else {
-        postMessage("Hata Oluştu!", true);
+        postMessage($GT->HATA_OLUSTU, true);
     }
 } else if ($admin_action == "checkUserStatusByEmail") {
     if ($user = $ADMIN->USER->getUserByEmail($email)) {

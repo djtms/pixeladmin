@@ -17,9 +17,8 @@ function GalleryStart(){
 				success:function(response){
 					gallery_id = response.gallery_id;
 					
-					if((gallery_id == undefined) || (gallery_id==null) || (gallery_id <= 0))
-					{
-						postMessage("Galeri yüklenirken hata oluştu!",true);
+					if((gallery_id == undefined) || (gallery_id==null) || (gallery_id <= 0)){
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.HATA_GALERI_YUKLENMESI, messageType.ERROR, [{"name":GT.TAMAM}]);
 					}
 					else
 					{

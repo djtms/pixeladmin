@@ -94,7 +94,7 @@ function GlobalI18nVariablesStart()
 							$("#" + i18n_code + "_" + column_name).val(i18n_code);
 						}
 
-                        MESSAGEBOX.showMessage("Hata", response.msg);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, response.msg);
 					}
 				},
 				complete: function(){
@@ -178,7 +178,7 @@ function GlobalI18nVariablesStart()
 			// Eğer delete tuşuna basılmışsa ve seçili bir satır varsa
 			if((e.keyCode == 46) && (spreadsheetOuter.find(".rowSelected").length > 0))
 			{
-				if(confirm("Silmek istediğinizden eminmisiniz?"))
+				if(confirm(GT.SILMEK_ISTEDIGINDEN_EMINMISIN))
 				{
 					spreadsheetOuter.trigger("removeExistingRow");
 				}

@@ -1,10 +1,6 @@
 <?php
 
-$minPhpVersion = "5.3.0";
-if (version_compare(PHP_VERSION, $minPhpVersion, "<")) {
-    echo "Lütfen minimum PHP $minPhpVersion kullanın";
-    exit;
-}
+$minPhpVersion = "5.0.0";
 
 // date() fonksiyonundaki hata mesajlarini gidermek icin default timezone degerini ata
 date_default_timezone_set('Europe/Istanbul');
@@ -12,7 +8,12 @@ date_default_timezone_set('Europe/Istanbul');
 require_once 'system/includes/init.php';
 
 if (in_admin){
-    require_once "language/index.php";
+    require_once "language/tr_TR.php";
+}
+
+if (version_compare(PHP_VERSION, $minPhpVersion, "<")) {
+    echo sprintf($GT->UYARI_MINIMUM_PHP_KULLANIN, $minPhpVersion);
+    exit;
 }
 
 
@@ -76,6 +77,8 @@ require_once 'system/includes/custom_html_parser.php';
 
 if (in_admin) {
     require_once 'functions.php';
+
+    setGlobal("GT", $GT);
 
     // Normalde bu işlemi dil atama esnasında seçilen dile göre yapıyoruz ama panelde kullanılan dil sabit ve Türkçe olduğu için ve de
     // sitede seçilen dil paneli etkilemesin diye burada tekrardan database'e locale ataması yapıyoruz. 

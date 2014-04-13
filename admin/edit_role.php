@@ -10,7 +10,7 @@ if($_POST["admin_action"] == "save_role")
 	{
 		if(!$ADMIN->ROLE->updateRole($role_id, $_POST["role_name"]))
 		{
-			postMessage("Hata Oluştu!", true);
+			postMessage($GT->HATA_OLUSTU, true);
 			$error = true;
 		}
 	}
@@ -18,7 +18,7 @@ if($_POST["admin_action"] == "save_role")
 	{
 		if(!$role_id = $ADMIN->ROLE->addRole($_POST["role_name"]))
 		{
-			postMessage("Hata Oluştu!", true);
+			postMessage($GT->HATA_OLUSTU, true);
 			$error = true;
 		}
 	}
@@ -50,13 +50,13 @@ if($_POST["admin_action"] == "save_role")
 			$ADMIN->AUTHORIZATION->authorize();
 			
 			// Sayfayı yönlendir
-			postMessage("Başarıyla Kaydedildi!");
+			postMessage($GT->BASARIYLA_KAYDEDILDI);
 			header("Location:admin.php?page=roles");
 			exit;
 		}
 		else
 		{
-			postMessage("Hata: Rol yetkileri silinemedi!", true);
+			postMessage($GT->ROL_YETKILERI_SILINEMEDI, true);
 		}
 	}
 	//-------------------------------------------------------------------------------------------

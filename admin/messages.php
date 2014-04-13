@@ -8,14 +8,14 @@ if($_GET["admin_action"] == "deleteMessage")
 {
 	if($ADMIN->MESSAGE->deleteMessage($_GET["messageId"]))
 	{
-		postMessage("Başarıyla Silinidi!");
+		postMessage($GT->BASARIYLA_SILINDI);
 		header("Location:$currentpage");
 		exit;
 	}
 	else
-		postMessage("\"Mesaj\" silinemedi!",true);
+		postMessage($GT->MESAJ_SILINEMEDI,true);
 }
 
 
 $msgList = $ADMIN->MESSAGE->listMessages();
-echo dataGrid($msgList, "Mesajlar", "messagesList", "{%fromName%}  - {%subject%}", null, "admin.php?page=readmessage&messageId={%messageId%}", "$currentpage&admin_action=deleteMessage&messageId={%messageId%}");
+echo dataGrid($msgList, $GT->MESAJLAR, "messagesList", "{%fromName%}  - {%subject%}", null, "admin.php?page=readmessage&messageId={%messageId%}", "$currentpage&admin_action=deleteMessage&messageId={%messageId%}");

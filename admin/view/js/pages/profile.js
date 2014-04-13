@@ -1,6 +1,5 @@
 $(ProfileStart);
 
-var minInputLength = 6; 
 var currentEmail;
 
 function ProfileStart()
@@ -19,19 +18,19 @@ function checkUserInfo()
 	if(!VALIDATE.validateEmail($("#email").val()))
 	{
 		error = true;
-		message = "Geçerli bir \"E-Posta\" girin!";
+		message = GT.GECERLI_EPOSTA_ADRESI_GIRIN;
 	}
 	else if((pass1 != "") || (pass2 != ""))
 	{
 		if(pass1 != pass2)
 		{
 			error = true;
-			message = "\"Parola\" lar uyuşmuyor!";
+			message = GT.HATA_PAROLALAR_ESLESMIYOR;
 		}
-		else if(pass1.length<minInputLength)
+		else if(pass1.length < 6)
 		{
 			error = true;
-			message = "En az " + minInputLength + " karakter uzunluğunda bir \"Parola\" girin!";
+			message = GT.PAROLA_MIN_ALTI_OLMALI;
 		}
 		else
 		{
@@ -42,8 +41,7 @@ function checkUserInfo()
 	
 	if(error)
 	{
-		postMessage(message,error);
-		window.location.href = "#postMessage";
+        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, message, messageType.ERROR, [{"name":GT.TAMAM}]);
 	}
 	return !error;
 }
@@ -53,7 +51,7 @@ function checkEmail()
 	var email = $.trim($(this).val());
 	if(!VALIDATE.validateEmail(email))
 	{
-		$("#emailCheckLoader p").html("Uygun mail adresi girin!").addClass("error");
+		$("#emailCheckLoader p").html(GT.GECERLI_EPOSTA_ADRESI_GIRIN).addClass("error");
 	}
 	else if(email != currentEmail)
 	{

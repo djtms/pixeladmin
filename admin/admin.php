@@ -45,7 +45,7 @@ if (file_exists($page)) {
     $master->content = $modulesContent . ob_get_contents();
     ob_end_clean();
 } else {
-    $master->content = "Sayfa Bulunamadı";
+    $master->content = $GT->SAYFA_BULUNAMADI;
 }
 
 $master->postMessage = get_option("admin_postMessage");

@@ -41,18 +41,18 @@ function SitemapStart()
 		}
 			
 		var sitemapOuter = $("<div id='sitemapOuter'></div>");
-		var sitemapHtml  = "<h2>Site Haritası & Seo Bilgileri</h2>";
+		var sitemapHtml  = "<h2>" + GT.SITE_HARITASI_SEO_BILGILERI + "</h2>";
 			sitemapHtml += "<input type='hidden' name='" + input_name + "' value='" + page_id + "' />";
 			sitemapHtml += "<input type='hidden' name='sm_page_id' value='" + page_id + "' />";
 			sitemapHtml += "<input type='hidden' name='sm_page_url' value='" + page_url + "' maxlength='255' />";
 			sitemapHtml += "<input type='hidden'  value='" + image_id + "' >";
 			sitemapHtml += "<input type='hidden' name='sm_page_title' value='" + page_title + "' />";
 			sitemapHtml += "<input type='hidden' name='sm_page_description' value='" + page_description + "' />";
-			sitemapHtml += "<label>Sayfa Resmi: </label>";
+			sitemapHtml += "<label>" + GT.SAYFA_RESMI + ": </label>";
 			sitemapHtml += "<input type='file' name='sm_image_id' fileid='" + image_id + "' />";
-			sitemapHtml += "<label>Sayfa Başlığı: (title)</label>";
+			sitemapHtml += "<label>" + GT.SAYFA_BASLIGI + ": (title)</label>";
 			sitemapHtml += "<input type='text' class='sm_page_title' i18n='" + page_title + "' forcei18n maxlength='250' />";
-			sitemapHtml += "<label>Sayfa Açıklaması: (description)</label>";
+			sitemapHtml += "<label>" + GT.SAYFA_ACIKLAMASI + ": (description)</label>";
 			sitemapHtml += "<textarea class='sm_page_description' i18n='" + page_description + "' forcei18n style='height:100px;' maxlength='250'></textarea>";
 			
 		sitemapOuter.append(sitemapHtml);

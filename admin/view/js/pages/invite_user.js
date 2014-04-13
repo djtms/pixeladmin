@@ -1,41 +1,33 @@
 $(InviteUserStart);
 
-function InviteUserStart()
-{
+function InviteUserStart(){
 	$("#btnInviteUser").click(checkUserStatusByEmail);
 }
 
-function checkUserStatusByEmail()
-{
+function checkUserStatusByEmail(){
 	var returnValue = true;
 	$.ajax({
 		data:"admin_action=checkUserStatusByEmail&email=" + $("[name='email']").val(),
 		async:false,
 		success:function(response){
-			if(response === "already_registered")
-			{
-				var messageText = "Girmiş olduğunuz <b>e-posta adresi</b> başka bir kullanıcı tarafından kullanılmaktadır! Lütfen farklı bir <b>e-posta adresi</b> girin.";
-				MESSAGEBOX.showMessage("E-Posta Kullanımda", messageText, messageType.WARNING, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}])
+			if(response === "already_registered") {
+				MESSAGEBOX.showMessage(GT.EPOSTA_KULLANIMDA, GT.HATA_AYNI_EPOSTA_ADRESI, messageType.WARNING, [{"name":GT.TAMAM}])
 				returnValue = false;
 			}
-			else if(response == "not_activated_account")
-			{
-				var messageText = "Girmiş olduğunuz <b>e-posta adresi</b> henüz aktive edilmemiş bir hesaba ait, bu kullanıcıya tekrar bir aktivasyon maili göndermek istermisiniz?";
-				MESSAGEBOX.showMessage("Aktive Edilmemiş Kullanıcı E-posta'sı", messageText, messageType.WARNING, [{name:"Aktivasyon Maili Gönder",click:reSendInvitationMail},{name:"İptal",click:MESSAGEBOX.hideMessage}]);
+			else if(response == "not_activated_account") {
+				MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.HESAP_AKTIF_DEGIL, messageType.WARNING, [{name:GT.AKTIVASYON_MAILI_GONDER,click:reSendInvitationMail},{name:GT.IPTAL}]);
 				returnValue = false;
 			}
-			else if(response === "not_exist")
-			{
+			else if(response === "not_exist") {
 				returnValue = true;
 			}
-			else
-			{
-				postMessage("Hata Oluştu!", true);
+			else {
+                MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 				returnValue = false;
 			}
 		},
 		error:function(){
-			postMessage("Hata Oluştu!", true);
+            MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 			returnValue = false;
 		}
 	});
@@ -43,25 +35,22 @@ function checkUserStatusByEmail()
 	return returnValue;
 }
 
-function reSendInvitationMail()
-{
+function reSendInvitationMail() {
 	$.ajax({
 		data:"admin_action=resendinvitationmail&email=" + $("[name='email']").val(),
 		beforeSend:MESSAGEBOX.openLoader,
 		success:function(response){
 			MESSAGEBOX.hideMessage();
-			if(response !== "succeed")
-			{
-				postMessage("Beklenmedik bir hata oluştu, lütfen tekrar deneyin!", true);
+			if(response !== "succeed") {
+                MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 			}
-			else
-			{
-				MESSAGEBOX.showMessage("Davetiye Gönderimi", "Üyelik davetiyesi başarıyla gönderildi!", messageType.INFO, [{"name":"Tamam","click":MESSAGEBOX.hideMessage}]);
+			else {
+				MESSAGEBOX.showMessage(GT.ISLEMINIZ_TAMAMLANDI, GT.UYELIK_DAVETIYESI_GONDERILDI, messageType.INFO, [{"name":GT.TAMAM}]);
 			}
 		},
 		error: function(){
 			MESSAGEBOX.hideMessage();
-			postMessage("Hata Oluştu!", true);
+            MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 		},
 		complete:MESSAGEBOX.closeLoader
 	});

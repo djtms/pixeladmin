@@ -3,12 +3,12 @@ extract($_POST,EXTR_SKIP);
 
 if($admin_action == "addUser"){
 	if($ADMIN->USER->addUser($username, $username, $email, $password)){
-		postMessage("Yeni kullanıcı sisteme başarıyla eklenmiştir!");
+		postMessage($GT->KULLANICI_EKLENDI);
 		header("Location:admin.php?page=useraccounts");
 		exit;
 	}
 	else{
-		postMessage("* Beklenmedik bir hata oluştu, lütfen tekrar deneyin!", true);
+		postMessage($GT->BEKLENMEDIK_HATA, true);
 	}
 }
 else if($admin_action == "checkUserStatusByUsername"){

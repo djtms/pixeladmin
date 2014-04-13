@@ -9,7 +9,7 @@ $msg = $ADMIN->MESSAGE->selectMessage($messageId);
 
 if($msg->messageId == null)
 {
-	postMessage("İstediğiniz mesaj kaydı bulunamadı!",true);
+	postMessage($GT->MESAJ_KAYDI_BULUNAMADI,true);
 	header("Location:admin.php?page=messages");
 	exit;
 }

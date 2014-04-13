@@ -1,21 +1,21 @@
 <form method="post">
-	<h2>{%_.HESAP_BILGILERI%}</h2>
-	<label>{%_.KULLANICI_ADI%}:</label>
+	<h2>{%GT.HESAP_BILGILERI%}</h2>
+	<label>{%GT.KULLANICI_ADI%}:</label>
 	<input id="username" type="text" name="username" value="" />
 	
-	<label>{%_.EPOSTA_ADRESI%}:</label>
+	<label>{%GT.EPOSTA_ADRESI%}:</label>
 	<input id="email" type="text" name="email" value="" />
 	
-	<label>{%_.PAROLA%}:</label>
+	<label>{%GT.PAROLA%}:</label>
 	<input id="password" type="password" name="password" />
 	
-	<label>{%_.PAROLA%} ({%_.TEKRAR%}):</label>
+	<label>{%GT.PAROLA%} ({%GT.TEKRAR%}):</label>
 	<input id="password_again" type="password" />
 	
 	<br clear="all" /><br /><br />
 	
-	<h2>{%_.ROLLERI%}:</h2>
+	<h2>{%GT.ROLLERI%}:</h2>
 	{%add_user_roles_html%}
 	
-	<button id="btnAddUser" type="submit" name="admin_action" value="addUser">{%_.KULLANICI_EKLE%}</button>
+	<button id="btnAddUser" type="submit" name="admin_action" value="addUser">{%GT.KULLANICI_EKLE%}</button>
 </form>

@@ -27,13 +27,13 @@ if(isset($admin_action))
 			{
 				if($ADMIN->LANGUAGE->addLanguage("{$language}_{$country}", $date_format))
 				{
-					postMessage("Başarıyla Kaydedildi!");
+					postMessage($GT->BASARIYLA_KAYDEDILDI);
 					header("Location:admin.php?page=languageoptions");
 					exit;
 				}
 				else
 				{
-					postMessage("Hata Oluştu!", true);
+					postMessage($GT->HATA_OLUSTU, true);
 				}
 			}
 			else
@@ -41,13 +41,13 @@ if(isset($admin_action))
 				$status = ($_POST["status"] == "active" ? null : 0);
 				if($ADMIN->LANGUAGE->updateLanguage($locale, "{$language}_{$country}", $status, $date_format))
 				{
-					postMessage("Başarıyla Kaydedildi!");
+					postMessage($GT->BASARIYLA_KAYDEDILDI);
 					header("Location:admin.php?page=languageoptions");
 					exit;
 				}
 				else
 				{
-					postMessage("Hata Oluştu!", true);
+					postMessage($GT->HATA_OLUSTU, true);
 				}
 			}
 		break;
@@ -66,11 +66,11 @@ setGlobal("selected_country_abbr", isset($selected_language->country_abbr) ? $se
 <form method="post">
 	<input type="hidden" name="locale" value="<?php echo $locale; ?>" />
 	<input type="checkbox" name="status" value="active" <?php echo ($selected_language->status > 0 ? " checked='true' " : ""); ?> />
-	<label style="clear:none; margin:2px 0 0 0;"> Aktif</label>
+	<label style="clear:none; margin:2px 0 0 0;"><?php echo $GT->AKTIF; ?></label>
 	
-	<label>Dil:</label>
+	<label><?php echo $GT->DIL; ?>:</label>
 	<select name="language">
-		<option value="null">Seçiniz</option>
+		<option value="null"><?php echo $GT->SECINIZ; ?></option>
 		<?php 
 			$languages = $ADMIN->LANGUAGE->listLanguages();
 			foreach($languages as $l)
@@ -82,15 +82,15 @@ setGlobal("selected_country_abbr", isset($selected_language->country_abbr) ? $se
 		?>
 	</select>
 	
-	<label>Ülke:</label>
+	<label><?php echo $GT->ULKE; ?>:</label>
 	<select id="country" name="country">
-		<option value="null">Seçiniz</option>
+		<option value="null"><?php echo $GT->SECINIZ; ?></option>
 	</select>
 	
-	<label>Tarih Formatı:</label>
+	<label><?php echo $GT->TARIH_FORMATI; ?>:</label>
 	<input id="date_format" type="text" name="date_format" />
 	
-	<button type="submit" name="admin_action" value="edit_language">Kaydet</button>
+	<button type="submit" name="admin_action" value="edit_language"><?php echo $GT->KAYDET; ?></button>
 </form>
 
 

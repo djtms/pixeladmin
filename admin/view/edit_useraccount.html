@@ -1,27 +1,27 @@
-<h2>{%_.PROFIL_BILGILERI%}</h2>
+<h2>{%GT.PROFIL_BILGILERI%}</h2>
 <form method="post">
-	<label>{%_.PROFIL_RESMI%}:</label>
+	<label>{%GT.PROFIL_RESMI%}:</label>
 	<input type="file" fileid="{%useraccount.image_id%}" />
 	
-	<label>{%_.GORUNEN_AD%}:</label>
+	<label>{%GT.GORUNEN_AD%}:</label>
 	<input type="text" name="" value="{%useraccount.displayname%}" />
 	
-	<label>{%_.DOGUM_TARIHI%}:</label>
+	<label>{%GT.DOGUM_TARIHI%}:</label>
 	<input type="date" name="" value="{%useraccount.birthday%}" />
 	
-	<label>{%_.KULLANICI_ADI%}:</label>
+	<label>{%GT.KULLANICI_ADI%}:</label>
 	<input type="text" name="" value="{%useraccount.username%}" />
 	
-	<label>{%_.EPOSTA%}:</label>
+	<label>{%GT.EPOSTA%}:</label>
 	<input type="text" name="" value="{%useraccount.email%}" />
 	
-	<label>{%_.UYELIK_TARIHI%}:</label>
+	<label>{%GT.UYELIK_TARIHI%}:</label>
 	<input type="datetime" name="" value="{%useraccount.register_date%}" />
 	
 	<br clear="all" /><br /><br />
 	{%user_roles_html%}
 	
-	<button type="submit" name="admin_action" value="update_useraccount">{%_.KAYDET%}</button>
+	<button type="submit" name="admin_action" value="update_useraccount">{%GT.KAYDET%}</button>
 </form>
 
 

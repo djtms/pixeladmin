@@ -2,7 +2,7 @@
 
 $IsSiteMultilanguage = (get_option("admin_multilanguage_mode") == "multilanguage") ? true  : false;
 
-if(isset($_POST["admin_action"]) == "Kaydet")
+if(isset($_POST["admin_action"]) == "save_settings")
 {
 	$isSmtp = (isset($_POST["smtp"]) && (trim($_POST["smtp"]) != "")) ? ' checked="checked" ' : "";
 	
@@ -30,21 +30,19 @@ if(isset($_POST["admin_action"]) == "Kaydet")
 					set_option("admin_keywords",$_POST["keywords"],"pa_settings");
 	}
 
-	$message = $success ? "Ayarlarınız Başarıyla Kaydedildi!" : "Hata Oluştu!";
+	$message = $success ? $GT->BASARIYLA_KAYDEDILDI : $GT->HATA_OLUSTU;
 
 	postMessage($message,!$success);
 }
 
 $stg = get_optiongroup("pa_settings");
 
-if($IsSiteMultilanguage)
-{
+if($IsSiteMultilanguage) {
 	$siteTitleValue = ' i18n="admin_site_titleI18N" ';
 	$siteDescriptionI18N = ' i18n="admin_descriptionI18N" ';
 	$siteKeywordsI18N = ' i18n="admin_keywordsI18N" ';
 }
-else
-{
+else {
 	$siteTitleValue = ' name="siteTitle" value="' . $stg->admin_site_title . '" ';
 	$siteDescriptionValue = $stg->admin_description;
 	$siteKeywordsValue = $stg->admin_keywords;

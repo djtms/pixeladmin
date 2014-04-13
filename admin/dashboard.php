@@ -52,7 +52,7 @@ if(sizeof($messagesList) > 0)
 else
 {
 	$messagesHtml  = '<li>';
-	$messagesHtml .= '<p class="content" style="color:#fc5900;">Mesaj Bulunamadı!</p>';
+	$messagesHtml .= '<p class="content" style="color:#fc5900;">' . $GT->MESAJ_BULUNAMADI . '</p>';
 	$messagesHtml .= '</li>';
 }
 

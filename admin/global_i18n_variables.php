@@ -10,7 +10,7 @@ if($_POST["admin_action"] == "updateI18nData")
 	{
 		if($ADMIN->I18N->getI18n($value)) // Eğer yeni i18n kodu database'de zaten var ise 
 		{
-			$error = "Girdiğiniz i18nCode değeri kullanımda, lütfen başka bir değer girin!";
+			$error = $GT->UYARI_I18N_KULLANIMDA;
 		}
 	}
 	
@@ -27,7 +27,7 @@ if($_POST["admin_action"] == "updateI18nData")
 		}
 		else
 		{
-			echo json_encode(array("success"=>false, "msg"=>"* Beklenmedik bir hata oluştu!"));
+			echo json_encode(array("success"=>false, "msg"=>$GT->BEKLENMEDIK_HATA));
 		}
 	}
 	else
@@ -64,43 +64,34 @@ $row_count = sizeof($i18n_data) + 1;
 $spreadSheetHeader = "";
 $spreadSheetContent = "";
 
-for($c=0; $c<$column_count; $c++)
-{
+for($c=0; $c<$column_count; $c++) {
 	// İlk column da ise
-	if($c === 0)
-	{
+	if($c === 0) {
 		$spreadSheetContent .= "<div class='column rowIndex'>";	
 	
-		for($r=0; $r<$row_count; $r++)
-		{
-			if($r == 0)
-			{
+		for($r=0; $r<$row_count; $r++) {
+			if($r == 0) {
 				$spreadSheetHeader .= "<div class='column rowIndex'>";
 				$spreadSheetHeader .= "<span class='cell header'></span>";
 				$spreadSheetHeader .= "</div>";
 			}
-			else
-			{
+			else {
 				$spreadSheetContent .= "<span row_index='{$r}' class='cell rowCorner'></span>";
 			}
 		}
 		
 		$spreadSheetContent .= "</div>";
 	}
-	else
-	{
-		
+	else {
 		$spreadSheetContent .= "<div class='column'>";
 		
 		
-		for($r=0; $r<$row_count; $r++)
-		{
+		for($r=0; $r<$row_count; $r++) {
 			$locale = $i18n_columns[$c - 1]->Field;
 			$column_name = $i18n_columns[$c -1]->Field;
 				
 			// eğer birinci satırda ise başlıkları ayarla
-			if($r == 0)
-			{
+			if($r == 0) {
 				$language = $ADMIN->LANGUAGE->selectLanguage($locale);
 				$headerText = $c == 1 ? "I18nCode" : $language->language_name . " - " . $language->country_abbr;
 				
@@ -108,8 +99,7 @@ for($c=0; $c<$column_count; $c++)
 				$spreadSheetHeader .= "<span class='cell header' column_name='" . $column_name . "'>" . $headerText . "</span>";
 				$spreadSheetHeader .= "</div>";
 			}
-			else
-			{
+			else {
 				// TODO: ilerde database'den column sırasını değiştirdiğinde sorun çıkabilir, o yüzden index numarası yerine column adı kullanarak data listelemeye çalış
 				$column_index = $c == 1 ? $c-1 : $c;
 				$i18n_code = $i18n_data[$r - 1][0];
@@ -119,9 +109,7 @@ for($c=0; $c<$column_count; $c++)
 				$spreadSheetContent .= "<input {$maxLengthAttr} tabindex='{$tab_index}' row_index='{$r}' id='{$i18n_code}_{$column_name}' class='cell' type='text' column_name='{$column_name}' i18n_code='{$i18n_code}' value='" . $i18n_data[$r - 1][$column_index] . "' />";
 			}
 		}
-		
-		
-		
+
 		$spreadSheetContent .= "</div>";
 	}
 	

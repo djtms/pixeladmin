@@ -29,7 +29,7 @@
 			},
 			onFileNotFound: function(){
 				objects.filethumb.attr("src",exclamation_image).css({"border":"none","width":125,"height":89});
-				objects.filename.html("Dosya Bulunamadı!");
+				objects.filename.html(GT.DOSYA_BULUNAMADI);
 				objects.buttons_outer.css("visibility","hidden");
 			},
             onEditButtonClicked : function(){
@@ -117,13 +117,13 @@
 				
 				// view'i oluştur
 				var view  = '<img class="filethumb" src="" />';
-					view += (readonly ? "" : '<span class="button">Değiştir</span>');
+					view += (readonly ? "" : '<span class="button">' + GT.DEGISTIR + '</span>');
 					view += '<span class="fileName"></span>';
 					view += '<span class="fileButtonsOuter">';
-					view += (readonly ? "" : '<span class="editButton fBtn" title="Düzenle" file="' + file_id + '"></span>');
-					view += '<a class="lookatButton fancybox fBtn" href="" title="İncele"></a>';
-					view += '<a class="playButton fancybox fBtn" href="" title="Oynat"></a>';
-					view += (readonly ? "" : '<span class="deleteFile fBtn" title="Kaldır"></span>');
+					view += (readonly ? "" : '<span class="editButton fBtn" title="' + GT.DUZENLE + '" file="' + file_id + '"></span>');
+					view += '<a class="lookatButton fancybox fBtn" href="" title="' + GT.INCELE + '"></a>';
+					view += '<a class="playButton fancybox fBtn" href="" title="' + GT.OYNAT + '"></a>';
+					view += (readonly ? "" : '<span class="deleteFile fBtn" title="' + GT.KALDIR + '"></span>');
 					view += '</span>';
 					view += '<input class="fileInput" type="hidden" name="' + form_name + '" value="' + file_id + '" />';
 					
@@ -166,7 +166,7 @@
 				FILE[action].call(this, properties);
 			}
 			else{
-				MESSAGEBOX.show("Hata", action + " method'u bulunamadı!");
+                MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 			}
 		});
 	};

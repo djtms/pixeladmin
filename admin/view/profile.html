@@ -1,44 +1,44 @@
-<h2>{%_.PROFIL_BILGILERI%}</h2>
+<h2>{%GT.PROFIL_BILGILERI%}</h2>
 <form method="post" onsubmit="return checkUserInfo();">
 	<input type="hidden" name="user_id" value="{%user.user_id%}" />
 	<input type="hidden" name="password" value="" />
 	
-	<label>{%_.PROFIL_RESMI%}:</label>
+	<label>{%GT.PROFIL_RESMI%}:</label>
 	<input type="file" name="image_id" fileid="{%user.image_id%}" />
 	
-	<label>{%_.GORUNEN_AD%}:</label>
+	<label>{%GT.GORUNEN_AD%}:</label>
 	<input type="text" name="displayname" value="{%user.displayname%}"/>
 	
-	<label>{%_.DOGUM_TARIHI%}:</label>
+	<label>{%GT.DOGUM_TARIHI%}:</label>
 	<input type="date" name="birthday" value="{%user.birthday%}" />
 	
-	<label>{%_.ADI%}:</label>
+	<label>{%GT.ADI%}:</label>
 	<input type="text" name="first_name" value="{%user.first_name%}" />
 	
-	<label>{%_.SOYADI%}:</label>
+	<label>{%GT.SOYADI%}:</label>
 	<input type="text" name="last_name" value="{%user.last_name%}" />
 	
-	<label>{%_.KULLANICI_ADI%}:</label>
+	<label>{%GT.KULLANICI_ADI%}:</label>
 	<input type="text" name="username" value="{%user.username%}" readonly="readonly"/>
 	
-	<label>{%_.EPOSTA%}:</label>
+	<label>{%GT.EPOSTA%}:</label>
 	<input id="email" type="text" name="email" value="{%user.email%}"/><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
 	
-	<label>{%_.TELEFON%}:</label>
+	<label>{%GT.TELEFON%}:</label>
 	<input type="text" name="phone" value="{%user.phone%}" />
 	
-	<label>{%_.UYELIK_TARIHI%}:</label>
+	<label>{%GT.UYELIK_TARIHI%}:</label>
 	<input type="datetime" name="register_time" value="{%user.register_time%}" readonly="readonly"/>
 	
 	<!-- <label>Kullanıcı Tipi:</label>
 	<input type="text" value="" /> -->
 	
-	<label style="color:#fc5900; margin:30px 0 0 0;">{%_.PAROLA_DEGISTIR%}:</label>
-	<label>{%_.YENI_PAROLA%}:</label>
+	<label style="color:#fc5900; margin:30px 0 0 0;">{%GT.PAROLA_DEGISTIR%}:</label>
+	<label>{%GT.YENI_PAROLA%}:</label>
 	<input id="password" type="password" value=""/>
 	
-	<label>{%_.YENI_PAROLA%}: ({%_.TEKRAR%})</label>
+	<label>{%GT.YENI_PAROLA%}: ({%GT.TEKRAR%})</label>
 	<input id="password_again" type="password" value=""/>
 	
-	<button name="admin_action" type="submit" value="save_profile_info">{%_.KAYDET%}</button>
+	<button name="admin_action" type="submit" value="save_profile_info">{%GT.KAYDET%}</button>
 </form>

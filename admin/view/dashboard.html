@@ -1,38 +1,38 @@
 <div id="dashboardContentsLeft">
 	<div class="container_385_Outer">
-		<div class="container_385_Header">{%_.SISTEM_AYARLARI%}</div>
+		<div class="container_385_Header">{%GT.SISTEM_AYARLARI%}</div>
 		<ul class="container_385_Contents">
 			<li>
 				<span class="title">
 					<input id="btnMaintananceMode" type="checkbox" style="height:20px;" {%maintanenceChecked%} value="maintanance" />
-					<span style="color:#fc5900;">{%_.BAKIM_MODU%}</span>
+					<span style="color:#fc5900;">{%GT.BAKIM_MODU%}</span>
 				</span>
 				<p class="content">
-					&nbsp; &nbsp; &nbsp; {%_.BAKIM_MODU_COMMENT%}.
+					&nbsp; &nbsp; &nbsp; {%GT.BAKIM_MODU_COMMENT%}.
 				</p>
 			</li>
 			<li>
 				<span class="title">
 					<input id="btnMultilanguageMode" type="checkbox" value="multilanguage" style="height:20px;" {%multilanguageChecked%} />
-					<span style="color:#fc5900;">{%_.COKLU_DIL%}</span>
+					<span style="color:#fc5900;">{%GT.COKLU_DIL%}</span>
 				</span>
 				<p class="content">
-					&nbsp; &nbsp; &nbsp; {%_.COKLU_DIL_COMMENT%}.
+					&nbsp; &nbsp; &nbsp; {%GT.COKLU_DIL_COMMENT%}.
 				</p>
 			</li>
 			<li>
 				<span class="title">
 					<input id="btnDebugMode" type="checkbox" value="debugmode" style="height:20px;" {%debugmodeChecked%} />
-					<span style="color:#fc5900;">{%_.HATA_AYIKLAMA_MODU%}</span>
+					<span style="color:#fc5900;">{%GT.HATA_AYIKLAMA_MODU%}</span>
 				</span>
 				<p class="content">
-					&nbsp; &nbsp; &nbsp; {%_.HATA_AYIKLAMA_MODU_COMMENT%}.
+					&nbsp; &nbsp; &nbsp; {%GT.HATA_AYIKLAMA_MODU_COMMENT%}.
 				</p>
 			</li>
 		</ul>
 	</div>
 	<div class="container_385_Outer">
-		<div class="container_385_Header">{%_.MESAJLAR%} </div>
+		<div class="container_385_Header">{%GT.MESAJLAR%} </div>
 		<ul class="container_385_Contents">
 			{%messagesHtml%}
 		</ul>
@@ -40,7 +40,7 @@
 </div><!-- #dashboardContentsLeft -->
 <div id="dashboardContentsRight">
 	<div class="container_385_Outer" style="float:right;">
-		<div class="container_385_Header">{%_.AKTIVITELER%}</div>
+		<div class="container_385_Header">{%GT.AKTIVITELER%}</div>
 		<ul class="container_385_Contents">
 			{%logsHtml%}
 		</ul>

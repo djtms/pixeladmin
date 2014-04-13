@@ -23,7 +23,7 @@ if($_GET["user"] > 0)
 	}
 	
 	$roles = $ADMIN->ROLE->listRoles();
-	$user_roles_html = dataGrid($roles, "Kullanıcı Rolleri", "userRolesList", "<input type='checkbox' name='user_roles[]' value='{%role_id%}' /> {%role_name%}", null, null, null);
+	$user_roles_html = dataGrid($roles, $GT->KULLANICI_ROLLERI, "userRolesList", "<input type='checkbox' name='user_roles[]' value='{%role_id%}' /> {%role_name%}", null, null, null);
 	
 	$user_roles = $ADMIN->USER_ROLE->listUserRolesByUser($user_id);
 	setGlobal("admin_user_roles_list", $user_roles);
@@ -32,7 +32,7 @@ if($_GET["user"] > 0)
 }
 else
 {
-	postMessage($_->KULLANICI_BULUNAMADI, true);
+	postMessage($GT->KULLANICI_BULUNAMADI, true);
 	header("Location:admin.php?page=useraccounts");
 	exit;
 }

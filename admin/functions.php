@@ -1,43 +1,43 @@
 <?php
 
 // DEFAULT MENUS
-addMenu("Kontrol Paneli","$VIEW_URL/images/icons/dashboard_icon.png","Kontrol Paneli","dashboard","dashboard.php",1,USER_GUEST);
-addMenu("Mesajlar","$VIEW_URL/images/icons/messages_icon.png","Mesajlar","messages","messages.php",101,USER_SUPER);
-addPage("Mesaj İçeriği","messages" ,"readmessage", "readmessage.php",USER_SUPER);
-addMenu("Kullanıcı Hesapları","$VIEW_URL/images/icons/clients_icon.png","Kullanıcı Hesapları","useraccounts","useraccounts.php",20,USER_SUPER); // 108
+addMenu($GT->KONTROL_PANELI,"$VIEW_URL/images/icons/dashboard_icon.png", $GT->KONTROL_PANELI, "dashboard","dashboard.php",1,USER_GUEST);
+addMenu($GT->MESAJLAR,"$VIEW_URL/images/icons/messages_icon.png", $GT->MESAJLAR,"messages","messages.php",101,USER_SUPER);
+addPage($GT->MESAJ_ICERIGI,"messages" ,"readmessage", "readmessage.php",USER_SUPER);
+addMenu($GT->KULLANICI_HESAPLARI,"$VIEW_URL/images/icons/clients_icon.png",$GT->KULLANICI_HESAPLARI,"useraccounts","useraccounts.php",20,USER_SUPER); // 108
 //addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraccounts", "add_user", "add_user.php", 2, USER_SUPER);
-addSubMenu("Davet Gönder", "Davet Gönder", "useraccounts", "invite_user", "invite_user.php",1, USER_SUPER);
+addSubMenu($GT->DAVET_GONDER, $GT->DAVET_GONDER, "useraccounts", "invite_user", "invite_user.php",1, USER_SUPER);
 
 
-addSubMenu("Yetkiler", "Yetkiler", "useraccounts", "permissions", "permissions.php", 3);
-addSubMenu("Roller", "Roller", "useraccounts", "roles", dirname(__FILE__) . "/roles.php", 4);
-addPage("Kullanıcı Bilgileri", "useraccounts", "edit_useraccount", "edit_useraccount.php");
-addPage("Yetki Ekle", "useraccounts", "add_permission", "edit_permission.php");
-addPage("Yetki Detayı", "useraccounts", "edit_permission", "edit_permission.php");
-addPage("Rol Ekle", "useraccounts", "add_role", "edit_role.php");
-addPage("Rol Detayı", "useraccounts", "edit_role", "edit_role.php");
-addMenu("Ayarlar","$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings","settings.php",109,USER_SUPER);
+addSubMenu($GT->YETKILER, $GT->YETKILER, "useraccounts", "permissions", "permissions.php", 3);
+addSubMenu($GT->ROLLER, $GT->ROLLER, "useraccounts", "roles", dirname(__FILE__) . "/roles.php", 4);
+addPage($GT->KULLANICI_BILGILERI, "useraccounts", "edit_useraccount", "edit_useraccount.php");
+addPage($GT->YETKI_EKLE, "useraccounts", "add_permission", "edit_permission.php");
+addPage($GT->YETKI_DETAYI, "useraccounts", "edit_permission", "edit_permission.php");
+addPage($GT->ROL_EKLE, "useraccounts", "add_role", "edit_role.php");
+addPage($GT->ROL_DETAYI, "useraccounts", "edit_role", "edit_role.php");
+addMenu($GT->AYARLAR,"$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings","settings.php",109,USER_SUPER);
 
 if(get_option("admin_multilanguage_mode") == "multilanguage")
 {
-	addSettingsMenu("Dil Seçenekleri", "Dil Seçenekleri", "languageoptions", "languages.php",1,USER_SUPER);
-	addSettingsMenu("Sabit Dil Değişkenleri", "Sabit Dil Değişkenleri", "global_i18n_variables", "global_i18n_variables.php",2,USER_SUPER);
-	addPage("Dil Ekle", "settings", "add_language", "edit_language.php");
-	addPage("Dil Bilgileri", "settings", "edit_language", "edit_language.php");
+	addSettingsMenu($GT->DIL_SECENEKLERI, $GT->DIL_SECENEKLERI, "languageoptions", "languages.php",1,USER_SUPER);
+	addSettingsMenu($GT->SABIT_DIL_DEGISKENLERI, $GT->SABIT_DIL_DEGISKENLERI, "global_i18n_variables", "global_i18n_variables.php",2,USER_SUPER);
+	addPage($GT->DIL_EKLE, "settings", "add_language", "edit_language.php");
+	addPage($GT->DIL_BILGILERI, "settings", "edit_language", "edit_language.php");
 }
 
-addSettingsMenu("Geliştiriciler", "Geliştiriciler", "developers", "developers.php",2,USER_GUEST);
+addSettingsMenu($GT->DELISTIRICILER, $GT->DELISTIRICILER, "developers", "developers.php",2,USER_GUEST);
 
-addMenu("Site Haritası", "", "Site Haritası", "sitemap", "sitemap.php", 100);
-addSubMenu("Sayfa Ekle", "Sayfa Ekle", "sitemap", "add_sitemap_page", "edit_sitemap_page.php");
-addPage("Sayfa Bilgileri", "sitemap", "edit_sitemap_page", "edit_sitemap_page.php");
+addMenu($GT->SITE_HARITASI, "", $GT->SITE_HARITASI, "sitemap", "sitemap.php", 100);
+addSubMenu($GT->SAYFA_EKLE, $GT->SAYFA_EKLE, "sitemap", "add_sitemap_page", "edit_sitemap_page.php");
+addPage($GT->SAYFA_BILGILERI, "sitemap", "edit_sitemap_page", "edit_sitemap_page.php");
 
-addMenu("Profil","$VIEW_URL/images/icons/profile_icon.png","Profil","profile","profile.php",111,USER_GUEST);
+addMenu($GT->PROFIL,"$VIEW_URL/images/icons/profile_icon.png", $GT->PROFIL,"profile","profile.php",111,USER_GUEST);
 
 global $add_modules_menu;
 
 if($add_modules_menu)
-	addMenu("Modüller","$VIEW_URL/images/icons/modules_icon.png","Modüller","modules","modules.php",107,USER_SUPER);
+	addMenu($GT->MODULLER,"$VIEW_URL/images/icons/modules_icon.png", $GT->MODULLER,"modules","modules.php",107,USER_SUPER);
 	
 global $master;
 $master->user = $ADMIN->AUTHENTICATION->authenticated_user;

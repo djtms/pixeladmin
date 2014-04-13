@@ -24,15 +24,15 @@ if(isset($_GET["admin_action"]))
 						$activeModules .= $moduleDir . ',';
 						set_option("admin_active_modules",$activeModules);
 						executeActivationCode(urldecode($moduleDir));
-						postMessage("Modül Başarıyla Etkinleştirildi!");
+						postMessage($GT->MODUL_BASARIYLA_ETKINLESTIRILDI);
 					}
 					else if($activation_result === false){
-						postMessage("Hata Oluştu!", true);
+						postMessage($GT->HATA_OLUSTU, true);
 					}
 				}
 				else
 				{
-					postMessage("Modül ana dosyası bulunamadı!",true);
+					postMessage($GT->MODUL_ANA_DOSYASI_BULUNAMADI,true);
 				}
 
 
@@ -73,12 +73,12 @@ foreach($modulesList as $module){
                 $moduleName = preg_replace("/Module Name:/i","",$match[0]);
 
                 if(in_array($moduleDir,$activeModulesList)){
-                    $activateTitle = "Pasifleştir";
+                    $activateTitle = $GT->PASIFLESTIR;
                     $activeAction = "deactivateModules";
                     $className = "deactivation";
                 }
                 else{
-                    $activateTitle = "Etkinleştir";
+                    $activateTitle = $GT->ETKINLESTIR;
                     $activeAction = "activateModule";
                     $className = "activation";
                 }
@@ -92,7 +92,7 @@ foreach($modulesList as $module){
 }
 
 if($existingModuleAmount <= 0){
-	$modulesListHtml = '<li><div class="item"><p class="text" style="color:#fc5900 !important;">Hiçbir Modül Bulunamadı!</p></li>';
+	$modulesListHtml = '<li><div class="item"><p class="text" style="color:#fc5900 !important;">' . $GT->HICBIR_MODUL_BULUNAMADI . '</p></li>';
 }
 //----------------------------------------------------------------------------------------------------------------
 
