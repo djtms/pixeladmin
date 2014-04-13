@@ -68,7 +68,7 @@ class PA_THUMB extends DB{
         // bilgilere göre tekrar crop yap, kaydi yoksa normal crop islemine devam et.
 		//---------------------------------------------------------------------------------------------------------------
 		if(!$squeeze){
-			$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
+			$thumb_filename = $thumb_file->filename . "-custom_crop-" . $width . "x" . $height;
 			$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
             $thumb_url = $this->thumbs_root . $thumb_basename;
 
@@ -97,7 +97,7 @@ class PA_THUMB extends DB{
 		$position = $this->fixCropPosition($position);
 
 		// Thumbnail'in daha önce üretilmiş olma ihtimaline karşılık arama yaparken kullanacağın,  eğer üretilmemişse üretirken kullanacağın dosya adını belirle
-		$thumb_filename = $thumb_file->file_id . "-" . $width . "-" . $height . "-" . ($squeeze ? "s-" : "") .($proportion ? "p-" : "") . ( $position . "-") . $bg_color ;
+		$thumb_filename = $thumb_file->filename . "-" . $width . "-" . $height . "-" . ($squeeze ? "s-" : "") .($proportion ? "p-" : "") . ( $position . "-") . $bg_color ;
 		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
         $thumb_url = $this->thumbs_root . $thumb_basename;
 
@@ -208,7 +208,7 @@ class PA_THUMB extends DB{
 		
 		// Thumbnail'in daha önce üretilmiş olma ihtimaline karşılık arama yaparken kullanacağın, 
 		// eğer üretilmemişse üretirken kullanacağın dosya adını belirle
-		$thumb_filename = $thumb_file->file_id . "-custom_crop-" . $width . "x" . $height;
+		$thumb_filename = $thumb_file->filename . "-custom_crop-" . $width . "x" . $height;
 		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
         $thumb_url = $this->thumbs_root . $thumb_basename;
 
@@ -300,7 +300,7 @@ class PA_THUMB extends DB{
 
 		// Thumbnail'in daha önce üretilmiş olma ihtimaline karşılık arama yaparken kullanacağın,
 		// eğer üretilmemişse üretirken kullanacağın dosya adını belirle
-		$thumb_filename = $thumb_file->file_id . "-" . $width . "-" . $height . "-" . ($squeeze ? "s-" : "") .($proportion ? "p-" : "") . ( $position . "-") . $bg_color . $retinaImageNameSuffix;
+		$thumb_filename = $thumb_file->filename . "-" . $width . "-" . $height . "-" . ($squeeze ? "s-" : "") .($proportion ? "p-" : "") . ( $position . "-") . $bg_color . $retinaImageNameSuffix;
 		$thumb_basename = $thumb_filename . "." . $thumb_file->extension;
         $thumb_url = $this->thumbs_root . $thumb_basename;
 
@@ -379,7 +379,7 @@ class PA_THUMB extends DB{
 
 		// Thumbnail'in daha önce üretilmiş olma ihtimaline karşılık arama yaparken kullanacağın,
 		// eğer üretilmemişse üretirken kullanacağın dosya adını belirle
-		$thumb_filename = $thumb_file->file_id . "-" . $width . "-" . $height . "-" . ($squeeze ? "s-" : "") .($proportion ? "p-" : "") . ( $position . "-") . $bg_color . $maskedImageNameSuffix;
+		$thumb_filename = $thumb_file->filename . "-" . $width . "-" . $height . "-" . ($squeeze ? "s-" : "") .($proportion ? "p-" : "") . ( $position . "-") . $bg_color . $maskedImageNameSuffix;
 		$thumb_basename = $thumb_filename . ".png";
         $thumb_url = $this->thumbs_root . $thumb_basename;
 
