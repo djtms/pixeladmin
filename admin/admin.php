@@ -5,7 +5,12 @@ require_once dirname(__FILE__) . '/includes.php';
 // Talep edilen sayfanın dosyasını bul 
 $pa_menuId = urldecode($_GET["page"]);
 
-foreach ($pa_menu_array as $key => $menu) {
+foreach ($pa_menu_array as $key => &$menu) {
+    if(!checkAccessStatus("ADMIN_" . $key, true, false)){
+        unset($pa_menu_array[$key]);
+        continue;
+    }
+
     if ($key == $pa_menuId) {
         $page = $menu["menuPage"];
     }
@@ -14,6 +19,11 @@ foreach ($pa_menu_array as $key => $menu) {
         foreach ($menu["subMenus"] as $order => $sm) {
             $key = key($sm);
             $sm = $sm[$key];
+
+            if(!checkAccessStatus("ADMIN_" . $key, true, false)){
+                unset($menu["subMenus"][$order]);
+                continue;
+            }
 
             if ($key == $pa_menuId) {
                 $page = $sm["menuPage"];
