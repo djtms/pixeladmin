@@ -18,15 +18,16 @@ addPage($GT->ROL_EKLE, "useraccounts", "add_role", "edit_role.php");
 addPage($GT->ROL_DETAYI, "useraccounts", "edit_role", "edit_role.php");
 addMenu($GT->AYARLAR,"$VIEW_URL/images/icons/options_icon.png","Ayarlar","settings","settings.php",109,USER_SUPER);
 
-if(get_option("admin_multilanguage_mode") == "multilanguage")
-{
+
+if(get_option("admin_multilanguage_mode") == "multilanguage"){
 	addSettingsMenu($GT->DIL_SECENEKLERI, $GT->DIL_SECENEKLERI, "languageoptions", "languages.php",1,USER_SUPER);
 	addSettingsMenu($GT->SABIT_DIL_DEGISKENLERI, $GT->SABIT_DIL_DEGISKENLERI, "global_i18n_variables", "global_i18n_variables.php",2,USER_SUPER);
-	addPage($GT->DIL_EKLE, "settings", "add_language", "edit_language.php");
+
+    addPage($GT->DIL_EKLE, "settings", "add_language", "edit_language.php");
 	addPage($GT->DIL_BILGILERI, "settings", "edit_language", "edit_language.php");
 }
 
-addSettingsMenu($GT->DELISTIRICILER, $GT->DELISTIRICILER, "developers", "developers.php",2,USER_GUEST);
+addSettingsMenu($GT->DELISTIRICILER, $GT->DELISTIRICILER, "developers", "developers.php", 5,USER_GUEST);
 
 addMenu($GT->SITE_HARITASI, "", $GT->SITE_HARITASI, "sitemap", "sitemap.php", 100);
 addSubMenu($GT->SAYFA_EKLE, $GT->SAYFA_EKLE, "sitemap", "add_sitemap_page", "edit_sitemap_page.php");
