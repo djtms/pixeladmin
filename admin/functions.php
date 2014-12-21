@@ -1,10 +1,10 @@
 <?php
 
 // DEFAULT MENUS
-addMenu($GT->KONTROL_PANELI,"$VIEW_URL/images/icons/dashboard_icon.png", $GT->KONTROL_PANELI, "dashboard","dashboard.php",1,USER_GUEST);
+addMenu($GT->KONTROL_PANELI,"$VIEW_URL/images/icons/dashboard_icon.png", $GT->KONTROL_PANELI, "dashboard","dashboard.php",0,USER_GUEST);
 addMenu($GT->MESAJLAR,"$VIEW_URL/images/icons/messages_icon.png", $GT->MESAJLAR,"messages","messages.php",101,USER_SUPER);
 addPage($GT->MESAJ_ICERIGI,"messages" ,"readmessage", "readmessage.php",USER_SUPER);
-addMenu($GT->KULLANICI_HESAPLARI,"$VIEW_URL/images/icons/clients_icon.png",$GT->KULLANICI_HESAPLARI,"useraccounts","useraccounts.php",20,USER_SUPER); // 108
+addMenu($GT->KULLANICI_HESAPLARI,"$VIEW_URL/images/icons/clients_icon.png",$GT->KULLANICI_HESAPLARI,"useraccounts","useraccounts.php",99,USER_SUPER); // 108
 //addSubMenu("Kullanıcı Ekle", "Kullanıcı Ekle", "useraccounts", "add_user", "add_user.php", 2, USER_SUPER);
 addSubMenu($GT->DAVET_GONDER, $GT->DAVET_GONDER, "useraccounts", "invite_user", "invite_user.php",1, USER_SUPER);
 

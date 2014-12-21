@@ -83,7 +83,7 @@ class PA_PERMISSION extends DB
 			$listHtml .= '<div class="item">';
 			if(!$editable)
 			{
-				$listHtml .= "<input type='checkbox' name='ADMIN_ADMINPANEL' value='permission_checked' />";
+				$listHtml .= "<input type='checkbox' name='permission_checked_ADMIN_ADMINPANEL' value='permission_checked' />";
 			}
 			$listHtml .= '<label class="text" style="clear:none !important;">Yönetim Paneli</label></div>';
 			$listHtml .= $this->listAsTreeHtmlListFromAdminPages(true, "ADMIN_ADMINPANEL", $list_sub_permissions, $editable);
