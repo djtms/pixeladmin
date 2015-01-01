@@ -490,7 +490,6 @@ function createDbTables($dbh,$prefix)
 				(1, 'ADMIN_add_sitemap_page'),
 				(1, 'ADMIN_add_user'),
 				(1, 'ADMIN_dashboard'),
-				(1, 'ADMIN_developers'),
 				(1, 'ADMIN_edit_permission'),
 				(1, 'ADMIN_edit_role'),
 				(1, 'ADMIN_edit_sitemap_page'),
