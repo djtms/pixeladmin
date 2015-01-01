@@ -55,15 +55,39 @@ class PA_USER extends PA_USER_TICKET {
         }
     }
 
-    function addUser($username, $displayname, $email, $password) {
-        if ($this->getUserCount() <= 0) {
+    function addUser($username, $displayname, $email, $password, $roles = null, $groups = null) {
+        global $ADMIN;
+
+        if ($this->getUserCount() <= 0 || checkAccessStatus("ADMIN_add_user")) {
 
             global $secretKey;
 
             $pass_key = randomString(20);
             $encryptedPassword = sha1($secretKey . $password . $pass_key);
 
-            return $this->insert($this->table, array("username" => $username, "displayname" => $displayname, "password" => $encryptedPassword, "pass_key" => $pass_key, "email" => $email, "register_time" => "NOW()"));
+            if($user_id = $this->insert($this->table, array("username" => $username, "displayname" => $displayname, "password" => $encryptedPassword, "pass_key" => $pass_key, "email" => $email, "register_time" => "NOW()"))){
+
+                // Kullanıcının rollerini ekle
+                if (($roles != null) && is_array($roles)) {
+                    $role_count = sizeof($roles);
+                    for ($i = 0; $i < $role_count; $i++) {
+                        $ADMIN->USER_ROLE->addUserRole($user_id, $roles[$i]);
+                    }
+                }
+
+                // Kullanıcının guruplarını ekle
+                /*if (($groups != null) && is_array($groups)) {
+                    $group_count = sizeof($groups);
+                    for ($i = 0; $i < $group_count; $i++) {
+                        $ADMIN->USER_ROLE->addUserRole($user_id, $groups[$i]);
+                    }
+                }*/
+
+                return $user_id;
+            }
+            else{
+                return false;
+            }
         }
     }
 

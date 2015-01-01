@@ -513,11 +513,8 @@ function createDbTables($dbh,$prefix)
 				(2, 'ADMIN_developers'),
 				(2, 'ADMIN_edit_sitemap_page'),
 				(2, 'ADMIN_messages'),
-				(2, 'ADMIN_modules'),
 				(2, 'ADMIN_profile'),
-				(2, 'ADMIN_readmessage'),
-				(2, 'ADMIN_settings'),
-				(2, 'ADMIN_sitemap');";
+				(2, 'ADMIN_readmessage')";
 	
 	
 	$queryUserGroup = "CREATE TABLE IF NOT EXISTS `{$prefix}user_group` (

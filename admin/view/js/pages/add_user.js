@@ -82,7 +82,17 @@
 				error = true;
 			}
 		}
+
+        if(!error){
+            encryptPassword();
+        }
 		
 		return !error;
 	}
+
+    function encryptPassword()
+    {
+        var password = SHA1($("#password").val());
+        $("[name=password]").val(password);
+    }
 })(jQuery);

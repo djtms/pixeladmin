@@ -1,5 +1,6 @@
 <form method="post">
-	<h2>{%GT.HESAP_BILGILERI%}</h2>
+    <input type="hidden" name="password" />
+    <h2>{%GT.HESAP_BILGILERI%}</h2>
 	<label>{%GT.KULLANICI_ADI%}:</label>
 	<input id="username" type="text" name="username" value="" />
 	
@@ -7,7 +8,7 @@
 	<input id="email" type="text" name="email" value="" />
 	
 	<label>{%GT.PAROLA%}:</label>
-	<input id="password" type="password" name="password" />
+	<input id="password" type="password" />
 	
 	<label>{%GT.PAROLA%} ({%GT.TEKRAR%}):</label>
 	<input id="password_again" type="password" />
