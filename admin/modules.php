@@ -10,23 +10,16 @@ if(isset($_GET["admin_action"]))
 	switch($_GET["admin_action"])
 	{
 		case("activateModule"):
-			if(!preg_match("/" . preg_quote($moduleDir,"/") . "/",$activeModules))
-			{
+			if(!preg_match("/" . preg_quote($moduleDir,"/") . "/",$activeModules)) {
 				$moduleMainFilePath = $moduleDir . $modules_main_file_name;
 
-				if(file_exists($moduleMainFilePath))
-				{
-					require_once "$moduleMainFilePath";
-					global $register_module_function;
-					$activation_result = call_user_func($register_module_function);
-					if($activation_result !== false)
-					{
+				if(file_exists($moduleMainFilePath)) {
+					if(executeActivationCode(urldecode($moduleDir)) !== false) {
 						$activeModules .= $moduleDir . ',';
 						set_option("admin_active_modules",$activeModules);
-						executeActivationCode(urldecode($moduleDir));
 						postMessage($GT->MODUL_BASARIYLA_ETKINLESTIRILDI);
 					}
-					else if($activation_result === false){
+					else {
 						postMessage($GT->HATA_OLUSTU, true);
 					}
 				}

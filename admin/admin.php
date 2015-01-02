@@ -6,7 +6,7 @@ require_once dirname(__FILE__) . '/includes.php';
 $pa_menuId = urldecode($_GET["page"]);
 
 foreach ($pa_menu_array as $key => &$menu) {
-    if(!checkAccessStatus("ADMIN_" . $key, true, false)){
+    if(!checkAccessStatus("ADMIN_" . $key, false)){
         unset($pa_menu_array[$key]);
         continue;
     }
@@ -20,7 +20,7 @@ foreach ($pa_menu_array as $key => &$menu) {
             $key = key($sm);
             $sm = $sm[$key];
 
-            if(!checkAccessStatus("ADMIN_" . $key, true, false)){
+            if(!checkAccessStatus("ADMIN_" . $key, false)){
                 unset($menu["subMenus"][$order]);
                 continue;
             }

@@ -1,19 +1,15 @@
 <?php
 
-if($_GET["delete"] > 0)
-{
-	if(in_array($_GET["delete"], array(1,2)))
-	{
+if($_GET["delete"] > 0) {
+	if(in_array($_GET["delete"], array(1,2))) {
 		postMessage($GT->UYARI_YETKINIZ_YOK, true);
 	}
-	else if($ADMIN->ROLE->deleteRole($_GET["delete"]))
-	{
+	else if($ADMIN->ROLE->deleteRole($_GET["delete"])) {
 		postMessage($GT->BASARIYLA_SILINDI);
 		header("Location:admin.php?page=roles");
 		exit;
 	}
-	else
-	{
+	else {
 		postMessage($GT->HATA_OLUSTU, true);
 	}
 }

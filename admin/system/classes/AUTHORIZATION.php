@@ -16,7 +16,7 @@ class PA_AUTHORIZATION extends DB {
      * Kullanıcının bulunduğu sayfaya erişim yetkisinin olup olmadığını kontrol eder
      * @return boolean
      */
-    function isAuthorized($permission_key, $full_control = true) {
+    function isAuthorized($permission_key) {
         global $secretKey;
         global $ADMIN;
 
@@ -75,9 +75,8 @@ class PA_AUTHORIZATION extends DB {
 
                     // Buraya kadar gelmişse kullanıcıda ilgili tablolardan dönen kayıtları bulamadı demektir o yüzden giriş izni vermiyoruz.
                     return false;
-                } else { // Aranan permission database de ilgili tablolarda bulunamadıysa
-                    // Eğer tam denetim yapıyorsak kullanıcıya giriş izni vermiyoruz, ama tam denetim yapmıyorsak authenticate olmuş herkese izin veriyoruz.
-                    return !$full_control;
+                } else {
+                    return false;
                 }
             } else { // Session daki hash ile eşleşmediği için illegal erişim olduğunu düşünüp izin vermiyoruz.
                 return false;

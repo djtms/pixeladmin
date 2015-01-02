@@ -22,23 +22,22 @@ if (in_admin):
     }
     //---------------------------------------------------------------------
 
-    checkAccessStatus(("ADMIN_" . $_GET["page"]), false, true);
+    checkAccessStatus(("ADMIN_" . $_GET["page"]), true);
 endif;
 
 /**
  * 
  * Verilen permission_key değerine göre kullanıcının authenticate ve authorize durumlarını kontrol eder ve boolean tipinde sonucu döndürür veya yönlendirme işlemi yapar. 
  * @param string $permission_key kontrol edilmek istenen permission anahtarı
- * @param boolean $full_control eğer bu değişken false olursa, sorgulanan anahtar database deki ilgili tablolarda kayıtlı değilse, authenticate olmuş herkese izin verilir, aksi durumda kesinlikle sorgulanan permission kullanıcıda olma şartı aranır.
  * @param boolean $redirect işlem sonucunu boolean döndürmek yerine önceden tanımlı hata sayfalarına yönlendirme işlemi yapması istendiğinde kullanılır.
  */
-function checkAccessStatus($permission_key, $full_control = true, $redirect = true) {
+function checkAccessStatus($permission_key, $redirect = true) {
     global $ADMIN;
     
     // Kullanıcının giriş yapıp yapmadığını kontrol et.
     if ($ADMIN->AUTHENTICATION->isAuthenticated()) {
         // Kullanıcının yetkilerini kontrol et
-        if (!$ADMIN->AUTHORIZATION->isAuthorized($permission_key, $full_control)) {
+        if (!$ADMIN->AUTHORIZATION->isAuthorized($permission_key)) {
             if ($redirect) {
                 header("Location:" . (in_admin ? "../" : "") . "custom_pages/403.html");
                 exit;
