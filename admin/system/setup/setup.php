@@ -466,16 +466,20 @@ function createDbTables($dbh,$prefix)
 				  PRIMARY KEY (`permission_key`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
 	
-	$queryRole = "CREATE TABLE IF NOT EXISTS `{$prefix}role` (
-				  `role_id` int(11) NOT NULL AUTO_INCREMENT,
-				  `role_name` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-				  `order_num` int(11) NOT NULL,
-				  PRIMARY KEY (`role_id`)
-				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-	
-				INSERT INTO `{$prefix}role` (`role_id`, `role_name`, `order_num`) VALUES
-				(1, 'Yönetici', 0),
-				(2, 'Sınırlı Yönetici', 0);";
+	$queryRole = "CREATE TABLE `{$prefix}role` (
+                `role_id` int(11) NOT NULL,
+                  `role_name` varchar(100) NOT NULL,
+                  `role_key` varchar(100) NOT NULL,
+                  `order_num` int(11) NOT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+                ALTER TABLE `{$prefix}role` ADD PRIMARY KEY (`role_id`), ADD UNIQUE KEY `role_key` (`role_key`);
+                ALTER TABLE `{$prefix}role` MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+                INSERT INTO `{$prefix}role` (`role_id`, `role_name`, `role_key`, `order_num`) VALUES
+                (1, 'Yönetici', 'admin', 0),
+                (2, 'Sınırlı Yönetici', 'limited-admin', 0);";
 	
 	$queryRolePermission = "CREATE TABLE IF NOT EXISTS `{$prefix}role_permission` (
 				  `role_id` int(11) NOT NULL,

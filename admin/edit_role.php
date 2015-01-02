@@ -2,13 +2,12 @@
 
 $role_id = $_GET["id"] > 0 ? $_GET["id"] : -1;
 
-if($_POST["admin_action"] == "save_role")
-{
+if($_POST["admin_action"] == "save_role") {
 	$error = false;
 	
 	if($role_id > 0)
 	{
-		if(!$ADMIN->ROLE->updateRole($role_id, $_POST["role_name"]))
+		if(!$ADMIN->ROLE->updateRole($role_id, $_POST["role_name"], $_POST["role_key"]))
 		{
 			postMessage($GT->HATA_OLUSTU, true);
 			$error = true;
@@ -16,7 +15,7 @@ if($_POST["admin_action"] == "save_role")
 	}
 	else
 	{
-		if(!$role_id = $ADMIN->ROLE->addRole($_POST["role_name"]))
+		if(!$role_id = $ADMIN->ROLE->addRole($_POST["role_name"], $_POST["role_key"]))
 		{
 			postMessage($GT->HATA_OLUSTU, true);
 			$error = true;

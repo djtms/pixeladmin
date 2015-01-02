@@ -15,11 +15,20 @@ class PA_ROLE extends DB
 	{
 		return $this->get_rows("SELECT * FROM {$this->table} ORDER BY order_num");
 	}
-	
-	function addRole($role_name)
+
+    /***
+     * @param $role_name
+     * @param $role_key unique olmalı
+     * @return bool|string
+     */
+	function addRole($role_name, $role_key)
 	{
-		return $this->insert($this->table, array("role_name"=>$role_name));
+		return $this->insert($this->table, array("role_name"=>$role_name, "role_key"=>$role_key));
 	}
+
+    function selectRoleByRoleKey($role_key){
+        return $this->get_row("SELECT * FROM {$this->table} WHERE role_key=?", array($role_key));
+    }
 	
 	function deleteRole($role_id)
 	{
@@ -48,9 +57,16 @@ class PA_ROLE extends DB
 		}
 	}
 	
-	function updateRole($role_id, $role_name)
+	function updateRole($role_id, $role_name, $role_key)
 	{
-		return $this->update($this->table, array("role_name"=>$role_name), array("role_id"=>$role_id));
+        if($role = $this->selectRoleByRoleKey($role_key)){
+            if($role->role_id != $role_id){
+                $this->error[] = "Hata: Kullandığınız role_key başka bir role tarafından kullanılıyor!";
+                return false;
+            }
+        }
+
+		return $this->update($this->table, array("role_name"=>$role_name, "role_key"=>$role_key), array("role_id"=>$role_id));
 	}
 	
 	function setRoleOrderNum($role_id, $order_num)

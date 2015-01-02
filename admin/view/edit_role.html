@@ -1,9 +1,13 @@
-<form method="post">
+<form id="roleForm" method="post">
+	<input type="hidden" name="role_id" value="{%role.role_id%}" />
 	<h2>{%GT.ROL_ADI%}:</h2>
 	<input type="text" name="role_name" value="{%role.role_name%}" />
+	<br clear="all" /><br />
+	<h2>{%GT.ROL_ANAHTAR_KELIMESI%}:</h2>
+	<input type="text" name="role_key" value="{%role.role_key%}" />
 	<br clear="all" /><br />
 	<h2>{%GT.YETKILERI%}:</h2>
 	{%permissions_html%}
 	
-	<button type="submit" name="admin_action" value="save_role">{%GT.KAYDET%}</button>
+	<button id="btnSaveRole" type="submit" name="admin_action" value="save_role">{%GT.KAYDET%}</button>
 </form>

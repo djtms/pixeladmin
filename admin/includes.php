@@ -66,6 +66,7 @@ require_once "system/includes/logs.php";
 require_once "system/includes/gui.php";
 require_once "system/includes/authentication_auhorization.php";
 require_once "system/includes/users.php";
+require_once "system/includes/role.php";
 require_once "system/includes/file.php";
 require_once "system/includes/image.php";
 require_once "system/includes/gallery.php";
