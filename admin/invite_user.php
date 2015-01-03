@@ -3,9 +3,13 @@
 extract($_POST, EXTR_SKIP);
 
 if ($admin_action == "inviteUser") {
+    $data = new \com\admin\system\objects\UserObject();
+    $data->displayname = $displayname;
+    $data->email = $email;
+
     if ($user = $ADMIN->USER->getUserByEmail($email)) {
         postMessage($GT->MAIL_ADRESI_KULLANIMDA, true);
-    } else if ($ADMIN->USER->inviteUser($displayname, $email, $_POST["user_roles"])) {
+    } else if ($ADMIN->USER->inviteUser($data, $_POST["user_roles"])) {
         postMessage($GT->DAVETIYENIZ_BASARIYLA_GONDERILDI);
         header("Location:admin.php?page=useraccounts");
         exit;

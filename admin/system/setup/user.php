@@ -36,7 +36,9 @@ if($ADMIN->USER->getUserCount() <= 0)
 		$use_template_engine = ($_POST["use_template_engine"] == "use") ? true : false;
 		// İlk kullanıcıyı oluştur
 
-        if(!$user_id = $ADMIN->USER->addUser($_POST["username"], $_POST["username"], $_POST["email"], $_POST["password"])){
+        $data = new \com\admin\system\objects\UserObject(array("username"=> $_POST["username"],  "displayname"=>$_POST["username"], "email"=>$_POST["email"], "password"=> $_POST["password"]));
+
+        if(!$user = $ADMIN->USER->addUser($data)){
             $errorMessage = "* kullanıcı oluşturma esnasında hata oluştu!";
         }
         else if(!createStartupFiles($use_template_engine)){
@@ -44,7 +46,7 @@ if($ADMIN->USER->getUserCount() <= 0)
 		}
 		else{
             // Kullanıcıya id'si "1" olan rolü ver. (Yönetici Rolüdür ve Panelden Silinemez)
-            $ADMIN->USER_ROLE->addUserRole($user_id, 1);
+            $ADMIN->USER_ROLE->addUserRole($user->user_id, 1);
 
 			// Kullanıcı başarılı şekilde kayıt olduktan sonra kullanıcıyı giriş yapmış hale getiriyoruz
 			$ADMIN->AUTHENTICATION->authenticate($_POST["username"], $_POST["password"]);

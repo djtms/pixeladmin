@@ -10,37 +10,24 @@ if($_POST["admin_action"] == "save_profile_info")
 	$user = $ADMIN->AUTHENTICATION->authenticated_user;
 	$postedEmail = $email;
 	$userEmail = $user->email;
+
+    $userObj = new \com\admin\system\objects\UserObject($_POST);
 	
-	
-	if(!$ADMIN->VALIDATE->validateEmail($email))
-	{
+	if(!$ADMIN->VALIDATE->validateEmail($email)) {
 		$error = true;
 		$message = $GT->GECERLI_EPOSTA_ADRESI_GIRIN;
 	}
-	else if($postedEmail != $userEmail) // e-mail adresini değiştirip güncelle
-	{
-		if($ADMIN->USER->getUserByEmail($postedEmail))
-		{
-			$error = true;
-			$message = $GT->EPOSTA_ADRESI_KULLANIMDA;
-		}
-		else if(!$ADMIN->USER->updateUser($user_id, $image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone, $password))
-		{
-			$error = true;
-			$message = $GT->HATA_OLUSTU;
-		}
-		else
-		{
-			$message = $GT->PROFIL_BILGILERINIZ_GUNCELLENDI;
-		}
+	else if(($postedEmail != $userEmail) && $ADMIN->USER->getUserByEmail($postedEmail)) {
+        // e-mail adresi değişmişse ve farklı bir kullanıcı kullanıyorsa hata oluştur
+        $error = true;
+        $message = $GT->EPOSTA_ADRESI_KULLANIMDA;
 	}
-	else if(!$ADMIN->USER->updateUser($user_id, $image_id, $displayname, $birthday, $first_name, $last_name, $email, $phone, $password))
-	{
+	else if(!$ADMIN->USER->updateUser($userObj)) {
 		$error = true;
 		$message = $GT->HATA_OLUSTU;
 	}
-	else
-	{
+	else {
+        $ADMIN->AUTHENTICATION->authenticated_user = $userObj->toArray();
         $message = $GT->PROFIL_BILGILERINIZ_GUNCELLENDI;
 	}
 	postMessage($message,$error);

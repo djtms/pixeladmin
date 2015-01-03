@@ -27,14 +27,14 @@ class PA_ADMIN
 	public $AUTHORIZATION;
 	public $FILE_EDITOR;
 	
-	
+
 	function PA_ADMIN()
 	{
 		global $DB;
-		
-		$this->DB = &$DB; 
+
+		$this->DB = &$DB;
 		$this->VALIDATE = new PA_VALIDATE();
-		$this->USER = new PA_USER();
+		$this->USER = new \com\admin\system\classes\User();
 		$this->I18N = new PA_I18N();
 		$this->LANGUAGE = new PA_LANGUAGE();
 		$this->MESSAGE = new PA_MESSAGE();
@@ -60,3 +60,4 @@ class PA_ADMIN
 }
 
 $ADMIN = new PA_ADMIN();
+

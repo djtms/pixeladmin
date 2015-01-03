@@ -1,12 +1,12 @@
 <?php
 
 // Authenticate işlemi'ni User sınıfından kaldırıp burada gerçekleştir.
-class PA_AUTHENTICATION extends PA_USER {
+class PA_AUTHENTICATION extends \com\admin\system\classes\User {
 
     public $authenticated_user;
 
     function PA_AUTHENTICATION() {
-        parent::PA_USER();
+        parent::__construct();
         $this->authenticated_user = $this->getAuthenticatedUser();
     }
 

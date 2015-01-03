@@ -4,6 +4,7 @@ if($_GET["user"] > 0)
 {
 	$user_id = $_GET["user"];
 	$useraccount = $ADMIN->USER->getUserById($user_id);
+
 	setGlobal("useraccount", $useraccount);
 	
 	

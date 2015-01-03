@@ -2,7 +2,9 @@
 extract($_POST,EXTR_SKIP);
 
 if($admin_action == "addUser"){
-	if($ADMIN->USER->addUser($username, $username, $email, $password, $_POST["user_roles"])){
+    $userData = new \com\admin\system\objects\UserObject(array("username"=>$username, "displayname"=>$username, "email"=>$email, "password"=>$password));
+
+	if($ADMIN->USER->addUser($userData, $_POST["user_roles"])){
 		postMessage($GT->KULLANICI_EKLENDI);
 		header("Location:admin.php?page=useraccounts");
 		exit;

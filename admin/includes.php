@@ -22,11 +22,13 @@ if (!file_exists(dirname(__FILE__) . "/config.php")) {
 } else {
     require_once dirname(__FILE__) . "/config.php";
 }
-
 require_once "system/library/JSON.php";
 require_once "system/library/MHA.php";
 require_once "system/library/recaptchalib.php";
 require_once "system/includes/constant_variables.php";
+require_once "system/utils/PixelException.php";
+require_once "system/objects/AbstractObject.php";
+require_once "system/objects/UserObject.php";
 require_once "system/classes/ROLE_PERMISSION.php";
 require_once "system/classes/GROUP_PERMISSION.php";
 require_once "system/classes/USER_ROLE.php";
