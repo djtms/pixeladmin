@@ -72,7 +72,11 @@ abstract class AbstractObject{
         }
     }
 
-    protected function _setMap($map = array()){
+    /**
+     * @param array $map
+     * @return bool
+     */
+    protected function _setMap($map){
         if(is_array($map) || is_object($map)){
             $this->_map = array();
 
@@ -88,10 +92,16 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return array
+     */
     protected function _getMap(){
         return $this->_map;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(){
         $data = array();
 
@@ -102,9 +112,13 @@ abstract class AbstractObject{
         return $data;
     }
 
-    protected function _setTableName($tableName){
-        if(gettype($tableName) === "string"){
-            $this->_table = $tableName;
+    /**
+     * @param string $tableName
+     * @return bool
+     */
+    protected function _setTableName($table){
+        if(gettype($table) === "string"){
+            $this->_table = $table;
             return true;
         }
         else{
@@ -112,6 +126,9 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return string|null
+     */
     protected function _getTableName(){
         return $this->_table;
     }
@@ -131,10 +148,17 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return string|null
+     */
     protected function _getPrimaryKey(){
         return $this->_primaryKey;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function _setPrimaryValue($value){
         if($this->_primaryKey !== null){
             $this->_properties[$this->_primaryKey] = $value;
@@ -145,6 +169,9 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return string|null
+     */
     protected function _getPrimaryValue(){
         if($this->_primaryKey !== null){
             return $this->_properties[$this->_primaryKey];
@@ -154,6 +181,10 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return bool
+     * @throws PixelException
+     */
     protected function _checkIfAvailableForDbAction(){
         if($this->$_primaryKey === null){
             throw new PixelException("Hata: primaryKey değeri atanmamış");
@@ -169,12 +200,15 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return bool
+     * @throws PixelException
+     */
     public function save(){
         $this->_checkIfAvailableForDbAction();
         $primaryValue = $this->_getPrimaryValue();
 
         if(empty($primaryValue)){
-
             return $this->insert();
         }
         else{
@@ -182,6 +216,10 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return bool
+     * @throws PixelException
+     */
     public function insert(){
         $this->_checkIfAvailableForDbAction();
 
@@ -194,12 +232,25 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @return bool
+     * @throws PixelException
+     */
     public function update(){
         $this->_checkIfAvailableForDbAction();
 
-        return $this->_DB->update($this->_table, $this->toArray(), array($this->_primaryKey=>$this->_properties[$this->_getPrimaryKey()]));
+        if($this->_DB->update($this->_table, $this->toArray(), array($this->_primaryKey=>$this->_properties[$this->_getPrimaryKey()]))){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
+    /**
+     * @return bool
+     * @throws PixelException
+     */
     public function delete(){
         $this->_checkIfAvailableForDbAction();
 
@@ -213,6 +264,10 @@ abstract class AbstractObject{
         }
     }
 
+    /**
+     * @param array $data
+     * @return static[]
+     */
     public static function convertToObjectCollection($data = array()){
         $collection = array();
 

@@ -258,6 +258,7 @@ namespace com\admin\system\classes {
          */
         function listUsers($status = "all") {
             $variables = array();
+            
             $query = "SELECT * FROM {$this->table} ";
             if ($status != "all") {
                 $query .= "WHERE status=?";
