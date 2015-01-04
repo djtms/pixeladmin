@@ -289,10 +289,12 @@ function createDbTables($dbh,$prefix)
 					  `about` text NOT NULL,
 					  `email` varchar(100) NOT NULL,
 					  `phone` varchar(30) DEFAULT NULL,
+					  `additional_data` text NOT NULL,
 					  `password` varchar(100) NOT NULL,
 					  `pass_key` varchar(30) NOT NULL,
 					  `register_time` datetime NOT NULL,
 					  `captcha_limit` tinyint(1) NOT NULL DEFAULT '3',
+					  `visible_in_admin` tinyint(1) NOT NULL DEFAULT '0',
 					  `status` varchar(50) NOT NULL DEFAULT 'active',
 					  PRIMARY KEY (`user_id`),
 					  UNIQUE KEY `username, email` (`username`,`email`)

@@ -2,7 +2,7 @@
 
 global $ADMIN;
 
-$data = $ADMIN->USER->listUsers();
+$data = $ADMIN->USER->listUsers(new \com\admin\system\objects\UserObject(array("visible_in_admin"=>1)));
 
 if($_GET["delete"] > 0) {
 	$user_id = $_GET["delete"];

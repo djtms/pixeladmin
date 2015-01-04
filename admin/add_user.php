@@ -2,7 +2,9 @@
 extract($_POST,EXTR_SKIP);
 
 if($admin_action == "addUser"){
-    $userData = new \com\admin\system\objects\UserObject(array("username"=>$username, "displayname"=>$username, "email"=>$email, "password"=>$password));
+    $_POST["visible_in_admin"] = 1;
+    $_POST["displayname"] = $_POST["username"];
+    $userData = new \com\admin\system\objects\UserObject($_POST);
 
 	if($ADMIN->USER->addUser($userData, $_POST["user_roles"])){
 		postMessage($GT->KULLANICI_EKLENDI);

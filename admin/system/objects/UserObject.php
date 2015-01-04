@@ -43,6 +43,7 @@ class UserObject extends AbstractObject{
             "pass_key",
             "register_time",
             "captcha_limit",
+            "visible_in_admin",
             "status"
         ));
         $this->_setPrimaryKey("user_id");

@@ -3,9 +3,8 @@
 extract($_POST, EXTR_SKIP);
 
 if ($admin_action == "inviteUser") {
-    $data = new \com\admin\system\objects\UserObject();
-    $data->displayname = $displayname;
-    $data->email = $email;
+    $_POST["visible_in_admin"] = 1;
+    $data = new \com\admin\system\objects\UserObject($_POST);
 
     if ($user = $ADMIN->USER->getUserByEmail($email)) {
         postMessage($GT->MAIL_ADRESI_KULLANIMDA, true);

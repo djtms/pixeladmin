@@ -40,11 +40,6 @@ class User extends \PA_USER_TICKET {
         // Kullanıcıyı ekle
         $user->insert();
 
-        echo "IDDD: " . $user->user_id;
-        print_r($user->toArray());
-
-
-
         // Kullanıcının rollerini ekle
         if (($roles != null) && is_array($roles)) {
             $role_count = sizeof($roles);
@@ -225,51 +220,78 @@ class User extends \PA_USER_TICKET {
 
     /**
      * @param $user_id
-     * @return UserObject
+     * @return UserObject|null
      */
     function getUserById($user_id) {
-        return new UserObject($this->get_row("SELECT * FROM {$this->table} WHERE user_id=?", array($user_id)));
+        if($user = $this->get_row("SELECT * FROM {$this->table} WHERE user_id=?", array($user_id))){
+            return new UserObject($user);
+        }
+        else{
+            return null;
+        }
     }
 
     /**
      * @param $username
-     * @return mixed
+     * @return UserObject|null
      */
     function getUserByUsername($username) {
-        return new UserObject($this->get_row("SELECT * FROM {$this->table} WHERE username=?", array($username)));
+        if($user = $this->get_row("SELECT * FROM {$this->table} WHERE username=?", array($username))){
+            return new UserObject($user);
+        }
+        else{
+            return null;
+        }
     }
 
     /**
      * @param $email
-     * @return UserObject
+     * @return UserObject|null
      */
     function getUserByEmail($email) {
-        return new UserObject($this->get_row("SELECT * FROM {$this->table} WHERE email=?", array($email)));
+        if($user = $this->get_row("SELECT * FROM {$this->table} WHERE email=?", array($email))){
+            return new UserObject($user);
+        }
+        else{
+            return null;
+        }
     }
 
     /**
      * @param $email_or_username
-     * @return UserObject
+     * @return UserObject|null
      */
     function getUserByEmail_OR_Username($email_or_username) {
-        return new UserObject($this->get_row("SELECT * FROM {$this->table} WHERE email=? OR username=?", array($email_or_username, $email_or_username)));
+        if($user = $this->get_row("SELECT * FROM {$this->table} WHERE email=? OR username=?", array($email_or_username, $email_or_username))){
+            return new UserObject($user);
+        }
+        else{
+            return null;
+        }
     }
 
     /**
-     * @param string $status
-     * @return UserObject[]
+     * @param UserObject $filters
+     * @return null|static[]
      */
-    function listUsers($status = "all") {
+    function listUsers(UserObject $filters = null) {
         $variables = array();
 
         $query = "SELECT * FROM {$this->table} ";
-        if ($status != "all") {
-            $query .= "WHERE status=?";
-            $variables[] = $status;
+
+        if(($filters !== null) && sizeof($filters->toArray()) > 0){
+            $query .= "WHERE ";
+            foreach($filters->toArray() as $key=>$val){
+                $query .= "{$key}=? ";
+                $variables[] = $val;
+            }
         }
 
-        $users = $this->get_rows($query, $variables);
-
-        return UserObject::convertToObjectCollection($users);
+        if($users = $this->get_rows($query, $variables)){
+            return UserObject::convertToObjectCollection($users);
+        }
+        else{
+            return null;
+        }
     }
 }
