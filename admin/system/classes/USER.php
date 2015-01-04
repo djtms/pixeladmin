@@ -207,12 +207,16 @@ class User extends \PA_USER_TICKET {
         $ADMIN->USER_GROUP->deleteUserGroupsByUser($user_id) && $this->execute("DELETE FROM {$this->table} WHERE user_id=?", array($user_id));
     }
 
-    function getUserCount($status = "all") {
+    function getUserCount(UserObject $filters = null) {
         $variables = array();
         $query = "SELECT COUNT(*) FROM {$this->table} ";
-        if ($status != "all") {
-            $query .= "WHERE status=?";
-            $variables[] = $status;
+
+        if(($filters !== null) && sizeof($filters->toArray()) > 0){
+            $query .= "WHERE ";
+            foreach($filters->toArray() as $key=>$val){
+                $query .= "{$key}=? ";
+                $variables[] = $val;
+            }
         }
 
         return $this->get_value($query, $variables);
