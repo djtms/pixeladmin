@@ -285,6 +285,8 @@ function createDbTables($dbh,$prefix)
 					  `birthday` date DEFAULT NULL,
 					  `first_name` varchar(100) DEFAULT NULL,
 					  `last_name` varchar(100) DEFAULT NULL,
+					  `gender` varchar(10) DEFAULT NULL,
+					  `about` text NOT NULL,
 					  `email` varchar(100) NOT NULL,
 					  `phone` varchar(30) DEFAULT NULL,
 					  `password` varchar(100) NOT NULL,

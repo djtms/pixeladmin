@@ -6,6 +6,7 @@ function ProfileStart()
 {
 	currentEmail = $.trim($("#email").val());
 	$("#email").blur(checkEmail);
+    $("[name='phone']").mask("0(999) 999 99 99");
 }
 
 function checkUserInfo()

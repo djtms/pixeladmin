@@ -17,23 +17,33 @@
 	
 	<label>{%GT.SOYADI%}:</label>
 	<input type="text" name="last_name" value="{%user.last_name%}" />
-	
-	<label>{%GT.KULLANICI_ADI%}:</label>
-	<input type="text" name="username" value="{%user.username%}" readonly="readonly"/>
-	
-	<label>{%GT.EPOSTA%}:</label>
-	<input id="email" type="text" name="email" value="{%user.email%}"/><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
-	
-	<label>{%GT.TELEFON%}:</label>
-	<input type="text" name="phone" value="{%user.phone%}" />
-	
+
+    <label>{%GT.CINSIYETI%}:</label>
+    <select name="gender">
+        <option value="">Seçiniz</option>
+        {%genderHtml%}
+    </select>
+
+    <label>{%GT.HAKKINDA%}:</label>
+	<textarea name="about" editor>{%user.about%}</textarea>
+
 	<label>{%GT.UYELIK_TARIHI%}:</label>
 	<input type="datetime" name="register_time" value="{%user.register_time%}" readonly="readonly"/>
 	
 	<!-- <label>Kullanıcı Tipi:</label>
 	<input type="text" value="" /> -->
-	
-	<label style="color:#fc5900; margin:30px 0 0 0;">{%GT.PAROLA_DEGISTIR%}:</label>
+
+    <label>{%GT.TELEFON%}:</label>
+    <input type="text" name="phone" value="{%user.phone%}" />
+
+    <label>{%GT.EPOSTA%}:</label>
+    <input id="email" type="text" name="email" value="{%user.email%}"/><div id="emailCheckLoader" class="portableALBOuter"><img src="{%VIEW_URL%}images/loader.gif" /><p></p></div>
+
+    <label>{%GT.KULLANICI_ADI%}:</label>
+    <input type="text" name="username" value="{%user.username%}" readonly="readonly"/>
+
+
+    <label style="color:#fc5900; margin:30px 0 0 0;">{%GT.PAROLA_DEGISTIR%}:</label>
 	<label>{%GT.YENI_PAROLA%}:</label>
 	<input id="password" type="password" value=""/>
 	

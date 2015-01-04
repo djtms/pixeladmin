@@ -12,6 +12,8 @@
  * @property string birthday
  * @property string first_name
  * @property string last_name
+ * @property string gender
+ * @property string about
  * @property string email
  * @property string phone
  * @property string password
@@ -33,6 +35,8 @@ class UserObject extends AbstractObject{
             "birthday",
             "first_name",
             "last_name",
+            "gender",
+            "about",
             "email",
             "phone",
             "password",
@@ -44,5 +48,16 @@ class UserObject extends AbstractObject{
         $this->_setPrimaryKey("user_id");
 
         parent::__construct($DB, $data);
+    }
+
+    public function __set($key, $val){
+        if($key == "password"){
+            if(empty($val)){
+                unset($this->password);
+                return null;
+            }
+        }
+
+        return parent::__set($key, $val);
     }
 }
