@@ -47,13 +47,13 @@ function MESSAGEBOX()
 				case(msgType.WARNING):
 					headerIconClass = "headerIconWarning";
 					contentIconClass = "contentIconWarning";
-                    console.warn(messageText);
+                    //console.warn(messageText);
 				break;
 
 				case(msgType.ERROR):
 					headerIconClass = "headerIconError";
 					contentIconClass = "contentIconError";
-                    console.error(messageText);
+                    //console.error(messageText);
 				break;
 			}
 

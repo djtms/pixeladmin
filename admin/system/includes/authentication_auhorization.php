@@ -1,6 +1,6 @@
 <?php
 
-if (in_admin):
+if (in_admin) {
     // Eğer panel birden fazla site için tek bir yerde ortak olarak kullanılıyorsa kişi admin'e giriş yaptığında onu ortak olan admin'e yönlendir.
     global $common_admin_site;
 
@@ -23,7 +23,7 @@ if (in_admin):
     //---------------------------------------------------------------------
 
     checkAccessStatus(("ADMIN_" . $_GET["page"]), true);
-endif;
+}
 
 /**
  * 

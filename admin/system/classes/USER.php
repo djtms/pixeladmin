@@ -37,26 +37,14 @@ class User extends \PA_USER_TICKET {
 
         $user->status = "invited";
 
-        // Kullanıcıyı ekle
-        $user->insert();
 
-        // Kullanıcının rollerini ekle
-        if (($roles != null) && is_array($roles)) {
-            $role_count = sizeof($roles);
-            for ($i = 0; $i < $role_count; $i++) {
-                $ADMIN->USER_ROLE->addUserRole($user->user_id, $roles[$i]);
-            }
-        }
+        if ($user->insert()) {
+            // Kullanıcının rollerini ekle
+            $this->setUserRoles($user->user_id, $roles);
 
-        // Kullanıcının guruplarını ekle
-        /*if (($groups != null) && is_array($groups)) {
-            $group_count = sizeof($groups);
-            for ($i = 0; $i < $group_count; $i++) {
-                $ADMIN->USER_ROLE->addUserRole($user_id, $groups[$i]);
-            }
-        }*/
+            // Kullanıcının guruplarını ekle
+//            $this->setUserGroups($user->user_id, $groups);
 
-        if ($user->user_id > 0) {
             if($this->sendInvitationMail($user->user_id)){
                 return $user;
             }
@@ -89,21 +77,9 @@ class User extends \PA_USER_TICKET {
             $user->register_time = "NOW()";
 
             if($user->insert()){
-                // Kullanıcının rollerini ekle
-                if (($roles != null) && is_array($roles)) {
-                    $role_count = sizeof($roles);
-                    for ($i = 0; $i < $role_count; $i++) {
-                        $ADMIN->USER_ROLE->addUserRole($user->user_id, $roles[$i]);
-                    }
-                }
+                $this->setUserRoles($user->user_id, $roles);
 
-                // Kullanıcının guruplarını ekle
-                /*if (($groups != null) && is_array($groups)) {
-                    $group_count = sizeof($groups);
-                    for ($i = 0; $i < $group_count; $i++) {
-                        $ADMIN->USER_ROLE->addUserRole($user_id, $groups[$i]);
-                    }
-                }*/
+//                $this->setUserGroups($user->user_id, $groups);
 
                 return $user;
             }
@@ -111,6 +87,48 @@ class User extends \PA_USER_TICKET {
                 return false;
             }
         }
+    }
+
+    /**
+     * Kullanıcı rollerini atar
+     *
+     * @param integer $user_id
+     * @param array $roles role_id dizisi
+     * @return bool
+     */
+    function setUserRoles($user_id, $roles = array()){
+        global $ADMIN;
+
+        // Kullanıcının rollerini ekle
+        if (($roles != null) && is_array($roles)) {
+            $role_count = sizeof($roles);
+            for ($i = 0; $i < $role_count; $i++) {
+                $ADMIN->USER_ROLE->addUserRole($user_id, $roles[$i]);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Kullanıcı guruplarını atar
+     *
+     * @param integer $user_id
+     * @param array $roles role_id dizisi
+     * @return bool
+     */
+    function setUserGroups($user_id, $groups = array()){
+        global $ADMIN;
+
+        // Kullanıcının rollerini ekle
+        if (($groups != null) && is_array($groups)) {
+            $group_count = sizeof($groups);
+            for ($i = 0; $i < $group_count; $i++) {
+                $ADMIN->USER_GROUP->addUserGroup($user_id, $groups[$i]);
+            }
+        }
+
+        return true;
     }
 
     function sendInvitationMail($user_id, $end_date = "0000-00-00 00:00:00") {
@@ -212,11 +230,14 @@ class User extends \PA_USER_TICKET {
         $query = "SELECT COUNT(*) FROM {$this->table} ";
 
         if(($filters !== null) && sizeof($filters->toArray()) > 0){
-            $query .= "WHERE ";
+            $stringArr = array();
+
             foreach($filters->toArray() as $key=>$val){
-                $query .= "{$key}=? ";
+                $stringArr[] = "{$key}=? ";
                 $variables[] = $val;
             }
+
+            $query .= "WHERE " . join(" AND ", $stringArr);
         }
 
         return $this->get_value($query, $variables);
@@ -276,6 +297,38 @@ class User extends \PA_USER_TICKET {
 
     /**
      * @param UserObject $filters
+     * @return UserObject|null
+     */
+    function getUser(UserObject $filters = null) {
+        $variables = array();
+
+        if($filters === null){
+            return null;
+        }
+        else if(sizeof($filters->toArray()) <= 0){
+            return null;
+        }
+        else{
+            $stringArr = array();
+
+            foreach($filters->toArray() as $key=>$val){
+                $stringArr[] = "{$key}=? ";
+                $variables[] = $val;
+            }
+
+            $query = "SELECT * FROM {$this->table} WHERE " . join(" AND ", $stringArr);
+        }
+
+        if($user = $this->get_row($query, $variables)){
+            return new UserObject($user);
+        }
+        else{
+            return null;
+        }
+    }
+
+    /**
+     * @param UserObject $filters
      * @return null|static[]
      */
     function listUsers(UserObject $filters = null) {
@@ -284,11 +337,14 @@ class User extends \PA_USER_TICKET {
         $query = "SELECT * FROM {$this->table} ";
 
         if(($filters !== null) && sizeof($filters->toArray()) > 0){
-            $query .= "WHERE ";
+            $stringArr = array();
+
             foreach($filters->toArray() as $key=>$val){
-                $query .= "{$key}=? ";
+                $stringArr[] = "{$key}=? ";
                 $variables[] = $val;
             }
+
+            $query .= "WHERE " . join(" AND ", $stringArr);
         }
 
         if($users = $this->get_rows($query, $variables)){

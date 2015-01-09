@@ -72,6 +72,15 @@ abstract class AbstractObject{
         }
     }
 
+    public function isMapped($propertyName){
+        if(in_array($propertyName, $this->_map)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     /**
      * @param array $map
      * @return bool
@@ -95,7 +104,7 @@ abstract class AbstractObject{
     /**
      * @return array
      */
-    protected function _getMap(){
+    public function getMap(){
         return $this->_map;
     }
 
@@ -239,7 +248,12 @@ abstract class AbstractObject{
     public function update(){
         $this->_checkIfAvailableForDbAction();
 
-        if($this->_DB->update($this->_table, $this->toArray(), array($this->_primaryKey=>$this->_properties[$this->_getPrimaryKey()]))){
+        $primaryValue = $this->_getPrimaryValue();
+
+        if(empty($primaryValue)){
+            throw new PixelException("PrimaryKey değeri boş olmamalı!");
+        }
+        else if($this->_DB->update($this->_table, $this->toArray(), array($this->_primaryKey=>$this->_properties[$this->_getPrimaryKey()]))){
             return true;
         }
         else{
@@ -256,12 +270,11 @@ abstract class AbstractObject{
 
         $primaryValue = $this->_getPrimaryValue();
 
-        if(empty($primaryValue)){
-            return false;
-        }
-        else{
+        if(!empty($primaryValue)){
             return $this->_DB->execute("DELETE FROM {$this->_table} WHERE {$this->_primaryKey}=?", array($primaryValue));
         }
+
+        return true;
     }
 
     /**

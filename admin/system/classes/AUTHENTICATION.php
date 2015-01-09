@@ -50,11 +50,17 @@ class PA_AUTHENTICATION extends \com\admin\system\classes\User {
     }
 
     function logout() {
+        global $ADMIN;
+
         $tracking_key = $_SESSION[$this->trackKeyName];
         $this->closeTrack($tracking_key);
+
         unset($_SESSION[$this->trackKeyName]);
+        unset($_SESSION["back_to"]);
+        unset($_SESSION[$ADMIN->AUTHORIZATION->getAuthorizationKeyName()]);
         unset($this->authenticated_user);
         header("Location:login.php");
+        exit;
     }
 
     function getAuthenticatedUser() {

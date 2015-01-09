@@ -1,6 +1,4 @@
-<?php
-
-require_once 'includes.php';
+<?php require_once 'includes.php';
 
 $loginAlert = "";
 

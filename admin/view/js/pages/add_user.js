@@ -26,7 +26,7 @@
 						error = false;
 					}
 					else{
-                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.HATA_COKLUDIL_YUKLENMESI, messageType.ERROR, [{"name":GT.TAMAM}]);
+                        MESSAGEBOX.showMessage(GT.HATA_OLUSTU, GT.BEKLENMEDIK_HATA, messageType.ERROR, [{"name":GT.TAMAM}]);
 						error = true;
 					}
 				},

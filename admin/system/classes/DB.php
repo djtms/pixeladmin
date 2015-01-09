@@ -12,6 +12,7 @@ class DB
 	public $tables;
 	public static $dbcon; // Database connection
 	private static $inTransaction = false;
+    private $dbName = "";
 	
 	/**
 	 * 
@@ -38,6 +39,9 @@ class DB
 				global $dbpass;
 				global $dbcharset;
 				global $timezone;
+
+                $this->dbName = $dbname;
+
 				$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$dbcharset}, time_zone='{$timezone}'");
 					
 				try
@@ -64,6 +68,7 @@ class DB
 			
 			try
 			{
+                $this->dbName = $arguments[0];
 				$this->dbh = new PDO("mysql:host={$arguments[1]};dbname={$arguments[0]}", $arguments[2], $arguments[3], $options);
 				global $dbh;
 				$dbh = $this->dbh;
@@ -313,6 +318,45 @@ class DB
 		
 		return false;
 	}
+
+
+    /**
+     * Veritabanında sorulan tablonun olup olmadığını döndürür
+     * @param string $name tablo adı
+     * @return bool
+     */
+    function checkIfTableExists($name){
+        $query = "SHOW FULL TABLES IN {$this->dbName} WHERE TABLE_TYPE LIKE 'BASE TABLE'";
+
+        if($tables = $this->get_rows($query, null, FETCH_NUM)){
+           foreach($tables as $r){
+               if($r[0] == $name){
+                   return true;
+               }
+           }
+        }
+
+        return false;
+    }
+
+    /**
+     * Veritabanında sorulan view'in olup olmadığını döndürür
+     * @param string $name view adı
+     * @return bool
+     */
+    function checkIfViewExists($name){
+        $query = "SHOW FULL TABLES IN {$this->dbName} WHERE TABLE_TYPE LIKE 'VIEW'";
+
+        if($tables = $this->get_rows($query, null, FETCH_NUM)){
+            foreach($tables as $r){
+                if($r[0] == $name){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 	
 	/**
 	 * 
