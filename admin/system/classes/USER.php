@@ -68,7 +68,7 @@ class User extends \PA_USER_TICKET {
     function addUser(UserObject $user, $roles = null, $groups = null) {
         global $ADMIN;
 
-        if ($this->getUserCount() <= 0 || checkAccessStatus("ADMIN_add_user")) {
+        if ($this->getUserCount() <= 0 || checkAccessStatus("ADMIN_add_user", false)) {
 
             global $secretKey;
 
