@@ -2,7 +2,7 @@ $(DataGridStart);
 
 function DataGridStart()
 {
-	$(".crossBtn").live("click",function(){
+	$(".dataGridOuter").on("click", ".crossBtn", function(){
 		if(confirm("Silmek istediğinize eminmisiniz?"))
 		{
 			$(this).css("background","none").find("img").css("display","block");
@@ -10,21 +10,17 @@ function DataGridStart()
 		}
 		
 		return false;
-	});
-	
-	$(".dataGridAddButton").live("click",function(){
+	}).on("click", ".dataGridAddButton",function(){
 		window.location.href = $(this).attr("page");
 		return false;
-	});
-	
-	$(".dataGridOuter .itemsList > ul > li").live("dblclick", function(e){
+	}).on("dblclick", ".itemsList > ul > li", function(e){
 		var href = $(this).find(".editBtn").attr("href");
 		
 		if(!((href == null) || (href == undefined) || (href == "")))
 		{
 			window.location.href = href;
 		}
-	}).live("mousedown",function(e){ e.preventDefault(); });
+	}).on("mousedown", ".itemsList > ul > li",function(e){ e.preventDefault(); });
 	
 	$(".dataGridOuter").each(function(){
 		var firstItem = $(this).find(".item:first");

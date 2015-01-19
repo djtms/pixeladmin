@@ -9,6 +9,8 @@
 
     class UserObject extends AbstractObject{
         function __construct($data = null){
+            global $DB;
+
             $this->_setTableName("table_name");
             $this->_setMap(array(
                         "user_id",
@@ -106,6 +108,13 @@ abstract class AbstractObject{
      */
     public function getMap(){
         return $this->_map;
+    }
+
+    /**
+     * @return string
+     */
+    function getTable(){
+        return $this->_table;
     }
 
     /**
@@ -234,7 +243,7 @@ abstract class AbstractObject{
 
         if($user_id = $this->_DB->insert($this->_table, $this->toArray())){
             $this->_setPrimaryValue($user_id);
-            return true;
+            return $user_id;
         }
         else{
             return false;
@@ -254,7 +263,7 @@ abstract class AbstractObject{
             throw new PixelException("PrimaryKey değeri boş olmamalı!");
         }
         else if($this->_DB->update($this->_table, $this->toArray(), array($this->_primaryKey=>$this->_properties[$this->_getPrimaryKey()]))){
-            return true;
+            return $primaryValue;
         }
         else{
             return false;

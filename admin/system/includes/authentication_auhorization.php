@@ -33,6 +33,10 @@ if (in_admin) {
  */
 function checkAccessStatus($permission_key, $redirect = true) {
     global $ADMIN;
+
+    if(in_admin){
+        $permission_key = "ADMIN_" . preg_replace("/ADMIN_/", "", $permission_key);
+    }
     
     // Kullanıcının giriş yapıp yapmadığını kontrol et.
     if ($ADMIN->AUTHENTICATION->isAuthenticated()) {

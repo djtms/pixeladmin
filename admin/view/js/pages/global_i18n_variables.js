@@ -36,7 +36,7 @@ function GlobalI18nVariablesStart()
 		});
 		
 		// Input ların eventini bağla
-		$(this).find(".spreadsheetContent input[type='text']").live("blur",function(){
+		$(this).find(".spreadsheetContent").on("blur", "input[type='text']", function(){
 			spreadsheetOuter.find(".cellSelected").removeClass("cellSelected rowSelected");
 			
 			// Eğer input değişmemişse işlemi tamamlama
@@ -102,7 +102,7 @@ function GlobalI18nVariablesStart()
 				}
 			});
 		})
-		.live("focus", function(){
+		.on("focus", "input[type='text']", function(){
 			var connectedElementId = $(this).attr("id");
 			var maxlength = $(this).attr("maxlength");
 			var text = $(this).val();
@@ -115,11 +115,11 @@ function GlobalI18nVariablesStart()
 			spreadsheetOuter.find(".rowSelected").removeClass("rowSelected");
 			$(this).addClass("cellSelected");
 		})
-		.live("input",function(){ // Inputlar değiştiğinde trigger olacak event
+		.on("input", "input[type='text']",function(){ // Inputlar değiştiğinde trigger olacak event
 			spreadsheetContentDisplay.val($(this).val()); // İçerik değiştiğinde alttaki textarea nında içeriğini değiştir
 			spreadsheetCellChanged = true;
 		})
-		.live("keyup",function(e){
+		.on("keyup", "input[type='text']",function(e){
 			//var row_index = parseInt($(this).attr("row_index"), "10");
 			
 			if(e.keyCode == 38) // Kullanıcı yukarı ok tuşuna basıyorsa
@@ -161,7 +161,7 @@ function GlobalI18nVariablesStart()
 		
 		
 		// Tüm satırı seçme butonuna tıkladığında çalışacak eventi ayarla
-		$(".rowCorner").live("click",function(){
+		$(".spreadsheetOuter").on("click", ".rowCorner",function(){
 			var rowIndex = $(this).attr("row_index");
 			$(this).addClass("rowSelected");
 			

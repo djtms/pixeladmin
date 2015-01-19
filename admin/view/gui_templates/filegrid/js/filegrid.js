@@ -2,7 +2,7 @@ $(FileGridStart);
 
 function FileGridStart()
 {
-	$(".fileGridOuter .btnEdit").live("click",function(){
+	$(".fileGridOuter").on("click", ".btnEdit",function(){
 		var btnEdit = $(this);
 		var parent  = btnEdit.parent();
 		var file_id = btnEdit.attr("file");
@@ -30,7 +30,7 @@ function FileGridStart()
 		});
 	});
 	
-	$(".fileGridOuter .btnDelete").live("click", function(){
+	$(".fileGridOuter").on("click", ".btnDelete", function(){
 		if(confirm("Dosyayı bu listeden kaldırmak istediğinizden emin misiniz?"))
 		{
 			$(this).closest(".gridFile").animate({"opacity":0},300, function(){
