@@ -34,7 +34,6 @@ function loadMenus($currentPageId = null)
 	if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
 
     global $VIEW_URL;
-	global $pa_page_permission_info_array;
 	global $default_menu_icon;
 	global $pa_menu_array;
 	global $master;
@@ -52,10 +51,7 @@ function loadMenus($currentPageId = null)
 	foreach($menuIds as $menu_id){
 		$menu = $pa_menu_array[$menu_id];
 		$menuSelected = "";
-		
-		// Permission sayfası için kullanılacak array'a menüyü ekle
-		$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" . $menu_id, "permission_parent"=>"ADMIN_ADMINPANEL", "permission_name"=>$menu["pageTitle"]);
-		
+
 		// Sayfanın seçili olup olmadığını belirle
 		if($currentPageId == $menu_id){
 			$menuSelected = ' selected ';
@@ -72,10 +68,6 @@ function loadMenus($currentPageId = null)
 		// Varsa alt sayfaları kontrol et ve talep edilen sayfa bir alt sayfa ise ve o sayfa seçilmişse onun parent menüsünü selected yapmak için aşağıdaki işlemi yap
 		if(sizeof($menu["subPages"]) > 0){
 			foreach($menu["subPages"] as $pageId=>$sp){
-				// Permission sayfası için kullanılacak array'a alt menüyü ekle
-				$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$pageId, "permission_parent"=>"ADMIN_" . $menu_id, "permission_name"=>$sp["pageTitle"]);
-				
-				
 				if($currentPageId == $pageId){
 					$menuSelected = ' selected ';
 					$master->pageTitle = $sp["pageTitle"];
@@ -99,10 +91,6 @@ function loadMenus($currentPageId = null)
 			foreach($menu["subMenus"] as $subMenuOrder=>$sm){
 				$subMenuId = key($sm);
 				$sm = $sm[$subMenuId];
-				
-				// Permission sayfası için kullanılacak array'a alt menüyü ekle
-				if($subMenuId != $menu_id) // ana menüyü buradaki alt menüye ekleme
-					$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$subMenuId, "permission_parent"=>"ADMIN_" .$menu_id, "permission_name"=>$sm["pageTitle"]);
 				
 				if($currentPageId == $subMenuId){
 					$menuSelected = ' selected ';

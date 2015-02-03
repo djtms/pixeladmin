@@ -278,4 +278,52 @@ class PA_PERMISSION extends DB
 			return "";
 		}
 	}
+    
+    
+    function getAllAdminPermissions(){
+        if(!in_admin)	return; // yönetim panelinde değil isek çalışmayacak
+
+        global $pa_page_permission_info_array;
+        global $pa_permissions_list;
+        $menuIds = array();
+
+        // Menüleri Sırala
+        foreach($pa_permissions_list as $key=>$val){
+            $menuIds[$val["menuOrder"]] = $key;
+        }
+        ksort($menuIds);
+
+        // Menu html'ini oluştur
+        foreach($menuIds as $menu_id){
+            $menu = $pa_permissions_list[$menu_id];
+
+            // Permission sayfası için kullanılacak array'a menüyü ekle
+            $pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" . $menu_id, "permission_parent"=>"ADMIN_ADMINPANEL", "permission_name"=>$menu["pageTitle"]);
+
+            // Varsa alt sayfaları kontrol et ve talep edilen sayfa bir alt sayfa ise ve o sayfa seçilmişse onun parent menüsünü selected yapmak için aşağıdaki işlemi yap
+            if(sizeof($menu["subPages"]) > 0){
+                foreach($menu["subPages"] as $pageId=>$sp){
+                    // Permission sayfası için kullanılacak array'a alt menüyü ekle
+                    $pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_" .$pageId, "permission_parent"=>"ADMIN_" . $menu_id, "permission_name"=>$sp["pageTitle"]);
+                }
+            }
+
+            /* Menü'nün "Alt Menü" lerini ekle *************************************************************/
+            if(sizeof($menu["subMenus"]) > 0){
+                ksort($menu["subMenus"]);
+
+                foreach($menu["subMenus"] as $subMenuOrder=>$sm){
+                    $subMenuId = key($sm);
+                    $sm = $sm[$subMenuId];
+
+                    // Permission sayfası için kullanılacak array'a alt menüyü ekle
+                    if($subMenuId != $menu_id) { // ana menüyü buradaki alt menüye ekleme
+                        $pa_page_permission_info_array[] = (object)array("permission_key" => "ADMIN_" . $subMenuId, "permission_parent" => "ADMIN_" . $menu_id, "permission_name" => $sm["pageTitle"]);
+                    }
+                }
+            }
+        }
+
+        return $pa_page_permission_info_array;
+    }
 }

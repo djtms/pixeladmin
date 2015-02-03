@@ -27,14 +27,16 @@ if($_POST["admin_action"] == "save_role") {
 	{
 		// Admin de kullanılan sayfaları al
 		global $pa_page_permission_info_array;
+
+        $ADMIN->PERMISSION->getAllAdminPermissions();
+
 		$pa_page_permission_info_array[] = (object)array("permission_key"=>"ADMIN_ADMINPANEL"); // Yönetim paneli sayfalarını ayıran başlığıda ekliyoruz. 
 
 		$permissions = $ADMIN->PERMISSION->listPermissions();
 		$permissions = array_merge($permissions, $pa_page_permission_info_array); // database den çektiğin permission tablosuna panelde kullandığın sayfalarıda ekle
-		//$permissions = array_merge($permissions, array());
-		
+
 		$permission_count = sizeof($permissions);
-		if($ADMIN->ROLE_PERMISSION->deleteRolePermissionByRoleId($role_id))
+		if(true)//$ADMIN->ROLE_PERMISSION->deleteRolePermissionByRoleId($role_id))
 		{
 			for($i=0; $i<$permission_count; $i++)
 			{
@@ -64,6 +66,7 @@ if($_POST["admin_action"] == "save_role") {
 setGlobal("user_permissions", $ADMIN->ROLE_PERMISSION->listRolePermissionsByRoleId($role_id));
 
 $role = $ADMIN->ROLE->selectRole($role_id);
+$ADMIN->PERMISSION->getAllAdminPermissions();
 $permissions_html = $ADMIN->PERMISSION->listPermissionsByParentAsTreeGrid("", true, false);
 
 addScript("js/pages/edit_role.js");

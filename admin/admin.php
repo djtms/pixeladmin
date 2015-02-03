@@ -5,6 +5,8 @@ require_once dirname(__FILE__) . '/includes.php';
 // Talep edilen sayfanın dosyasını bul 
 $pa_menuId = urldecode($_GET["page"]);
 
+$pa_permissions_list = $pa_menu_array;
+
 foreach ($pa_menu_array as $key => &$menu) {
     if(!checkAccessStatus("ADMIN_" . $key, false)){
         unset($pa_menu_array[$key]);
