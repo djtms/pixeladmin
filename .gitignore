@@ -1,13 +1,8 @@
 /admin/config.php
 /admin/modules/*
-/admin/upload
 /admin/upload/*
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/pixeladmin.iml
-.idea/vcs.xml
-.idea/workspace.xml
+.idea/*
+.idea
 custom_pages/401.html
 custom_pages/403.html
 custom_pages/images/401.png
@@ -19,9 +14,6 @@ includes/config.php
 index.php
 robots.txt
 sitemap.php
-view/css/defaults.css
-view/css/style.css
-view/index.html
-view/js/jquery-1.7.2.min.js
-view/master.html
+view/
+view/*
 cache/twig/*
