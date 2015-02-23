@@ -24,3 +24,4 @@ view/css/style.css
 view/index.html
 view/js/jquery-1.7.2.min.js
 view/master.html
+cache/twig/*

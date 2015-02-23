@@ -99,6 +99,9 @@ function randomString($length = 6)
 function createDirectoriesAndFiles()
 {
 	$defaultDirectories   = array();
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../vendor/";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../cache/";
+	$defaultDirectories[] = dirname(__FILE__) . "/../../../twig/";
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/";
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files";
 	$defaultDirectories[] = dirname(__FILE__) . "/../../../upload/files/public/";

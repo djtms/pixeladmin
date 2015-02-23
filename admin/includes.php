@@ -76,15 +76,28 @@ require_once "system/includes/upload.php";
 require_once 'system/includes/fileeditor.php';
 require_once 'system/includes/sitemap.php';
 require_once 'system/includes/custom_html_parser.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
+// Register Twig
+$TwigLoader = new Twig_Loader_Filesystem();
+
+$Twig = new Twig_Environment($TwigLoader, array(
+    'cache' => __DIR__ . '/../cache/twig',
+));
+
+if(debug_mode){
+    $Twig->clearCacheFiles();
+}
 
 if (in_admin) {
+    $TwigLoader->addPath(__DIR__ . "/view/");
+
     require_once 'functions.php';
 
     setGlobal("GT", $GT);
 
     // Normalde bu işlemi dil atama esnasında seçilen dile göre yapıyoruz ama panelde kullanılan dil sabit ve Türkçe olduğu için ve de
-    // sitede seçilen dil paneli etkilemesin diye burada tekrardan database'e locale ataması yapıyoruz. 
+    // sitede seçilen dil paneli etkilemesin diye burada tekrardan database'e locale ataması yapıyoruz.
     $DB->execute("SET LC_TIME_NAMES=tr_TR");
 } else {
     if (maintanance_mode && !$ADMIN->AUTHENTICATION->authenticated_user) {
