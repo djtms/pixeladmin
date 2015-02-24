@@ -76,37 +76,11 @@ require_once "system/includes/upload.php";
 require_once 'system/includes/fileeditor.php';
 require_once 'system/includes/sitemap.php';
 require_once 'system/includes/custom_html_parser.php';
-require_once __DIR__ . "/../vendor/autoload.php";
-
-// Register Twig
-$TwigLoader = new Twig_Loader_Filesystem();
-
-// Check twig cache directories, if not exists, create
-if(debug_mode){
-    $twigDirs = [
-        __DIR__ . '/../cache/',
-        __DIR__ . '/../cache/twig'
-    ];
-
-    foreach($twigDirs as $dir){
-        if(!is_dir($dir)){
-            mkdir($dir);
-        }
-    }
-}
-
-$Twig = new Twig_Environment($TwigLoader, array(
-    'cache' => __DIR__ . '/../cache/twig',
-));
+require_once 'system/includes/twig.php';
 
 
-if(debug_mode){
-    $Twig->clearCacheFiles();
-}
 
 if (in_admin) {
-    $TwigLoader->addPath(__DIR__ . "/view/");
-
     require_once 'functions.php';
 
     setGlobal("GT", $GT);
