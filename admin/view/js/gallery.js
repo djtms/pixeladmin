@@ -247,7 +247,7 @@ function loadGallery(gallery,columnsCount,rowsCount,readonly)
 		galleryObject.trigger("calculateGalleryAndFilesInfo");
 	});
 	
-	$(".galleryItem").off("click").on("click", ".delButton",function(){
+	$(".galleryList").off("click").on("click", ".delButton",function(){
 		var del = confirm("Eminmisiniz ?");
 		
 		if(del){
