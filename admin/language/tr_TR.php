@@ -211,3 +211,5 @@ $GT->PAROLA_DEGISTIRME_MAIL_GONDERILDI = '"Parola Değiştirme" maili adresinize
 $GT->UYARI_YETKINIZ_YOK = 'Bu işlemi gerçekleştirmek için yetkiniz bulunmamaktadır!';
 $GT->UYARI_MIN_BIR_ADMIN_OLMALI = 'Sistemde en az 1 adet "Yönetici" kullanıcı olmak zorunda!';
 $GT->UYARI_KULLANICI_KENDINI_SILEMEZ = 'Herhangi bir kullanıcı kendi kendini silemez!';
+$GT->DOSYA_ISLEMLERI = 'Dosya İşlemleri';
+$GT->DOSYAYA_GOZAT = 'Dosya\'ya Gözat';

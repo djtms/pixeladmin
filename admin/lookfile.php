@@ -1,4 +1,4 @@
-<?php require_once dirname(__FILE__) . '/includes.php'; 
+<?php require_once dirname(__FILE__) . '/includes.php';
 
 $url = $_GET["url"];
 $type = $_GET["type"];
