@@ -473,7 +473,7 @@ function createDbTables($dbh,$prefix)
 				  PRIMARY KEY (`permission_key`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
 	
-	$queryRole = "CREATE TABLE `{$prefix}role` (
+	$queryRole = "CREATE TABLE IF NOT EXISTS `{$prefix}role` (
                 `role_id` int(11) NOT NULL,
                   `role_name` varchar(100) NOT NULL,
                   `role_key` varchar(100) NOT NULL,
